@@ -17,4 +17,5 @@ public class ChallMemberVO {
     private Date receiveDate; // 금액입금일자
     private int clearYn; //성공여부
     private int receivePrice; // 입금금액
+	private int profileYn; //0: 공개 1:비공개
 }
