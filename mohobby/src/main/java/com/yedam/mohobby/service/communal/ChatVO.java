@@ -11,4 +11,5 @@ public class ChatVO {
     private String filePath; //파일경로
     private String msgContent; //마지막 메세지 보낸 내용
     private String msgTime; //마지막 메세지 보낸 시간
+    
 }

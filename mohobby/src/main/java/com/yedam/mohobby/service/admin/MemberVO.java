@@ -2,6 +2,8 @@ package com.yedam.mohobby.service.admin;
 
 import java.sql.Date;
 
+import lombok.Data;
+@Data
 public class MemberVO {
 	private String memberId; //멤버아이디
 	private String regionId; //지역아이디
