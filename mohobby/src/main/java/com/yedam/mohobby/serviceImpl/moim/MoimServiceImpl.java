@@ -23,7 +23,7 @@ public class MoimServiceImpl implements MoimService{
 	public void moimInsert(MoimVO moimVO) {
 		mapper.moimInsert(moimVO);	
 	}
-	
+
 	//전체조회
 	@Override
 	public List<MoimVO> moimAllSelect() {
