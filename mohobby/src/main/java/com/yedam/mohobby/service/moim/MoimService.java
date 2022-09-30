@@ -1,5 +1,7 @@
 package com.yedam.mohobby.service.moim;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service

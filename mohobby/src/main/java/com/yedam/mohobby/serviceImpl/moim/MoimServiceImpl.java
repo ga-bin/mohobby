@@ -23,9 +23,6 @@ public class MoimServiceImpl implements MoimService{
 	public void moimInsert(MoimVO moimVO) {
 		mapper.moimInsert(moimVO);	
 	}
-	
-	@Autowired
-	MoimMapper mapper;
 
 	//전체조회
 	@Override
