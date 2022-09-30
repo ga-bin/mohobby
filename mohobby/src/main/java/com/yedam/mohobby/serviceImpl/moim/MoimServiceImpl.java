@@ -24,9 +24,6 @@ public class MoimServiceImpl implements MoimService{
 		mapper.moimInsert(moimVO);	
 	}
 	
-	@Autowired
-	MoimMapper mapper;
-
 	//전체조회
 	@Override
 	public List<MoimVO> moimAllSelect() {
