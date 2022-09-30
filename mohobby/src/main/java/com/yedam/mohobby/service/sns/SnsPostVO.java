@@ -12,5 +12,4 @@ private String hashtag;
 private String content;
 private Date writeDate;
 private String thumbnail; //대표이미지
-
 }
