@@ -28,5 +28,5 @@
 
 	<!-- mapper scan -->
 	<mybatis-spring:scan
-		base-package="com.yedam.mohobby.**.mapper" />
+		base-package="com.yedam.mohobby.mapper.**" />
 </beans>
