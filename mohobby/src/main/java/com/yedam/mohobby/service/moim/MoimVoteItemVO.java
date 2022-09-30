@@ -3,7 +3,7 @@ package com.yedam.mohobby.service.moim;
 import lombok.Data;
 
 @Data
-public class MoimVoteItem {
+public class MoimVoteItemVO {
 	private int itemID; //투표항목번호
 	private int voteId; //투표번호
 	private String content; //투표항목내용

@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class MoimSchedule {
+public class MoimScheduleVO {
 	private int skedId; //일정 아이디
 	private String memberId; //회원아이디
 	private String title; //일정제목
