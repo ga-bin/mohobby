@@ -1,5 +1,7 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,3 +44,4 @@ public class MoimServiceImpl implements MoimService{
 
 	
 }
+
