@@ -12,4 +12,7 @@ public class ClassProfitVO {
     private int withdrawable; //출금가능금액
     private Date calcDate; //산정기준일자
     private int withdrawCheck; //출금여부
+    private String accountHolder;
+    private String bankCode;
+    private String account;
 }
