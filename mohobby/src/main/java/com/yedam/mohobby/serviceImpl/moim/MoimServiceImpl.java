@@ -1,11 +1,10 @@
-package com.yedam.mohobby.serviceImpl;
-
-import java.util.List;
+package com.yedam.mohobby.serviceImpl.moim;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import com.yedam.mohobby.mapper.MoimMapper;
+import com.yedam.mohobby.mapper.moim.MoimMapper;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 
@@ -13,12 +12,13 @@ import com.yedam.mohobby.service.moim.MoimVO;
 public class MoimServiceImpl implements MoimService{
 	
 	@Autowired
-	MoimMapper moimMapper;
-	
+	MoimMapper mapper;
+
+
 	@Override
-	public List<MoimVO> getMoimList() {
-		return moimMapper.getMoimList();
+	public void moimInsert(MoimVO moimVO) {
+		mapper.moimInsert(moimVO);	
 	}
 	
-
+	
 }
