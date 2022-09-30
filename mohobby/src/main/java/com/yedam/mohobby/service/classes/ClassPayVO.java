@@ -22,4 +22,6 @@ public class ClassPayVO {
     private String payType; //결제방식 카드결제,카카오페이,네이버페이,토스
     private Date payDate; //결제시간
     private String payCode; //결제코드
+    private int point;  //사용한포인트
+    private int classStatus;  //0:수강중, 1:수강완료
 }

@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class MoimVote {
+public class MoimVoteVO {
 	private int voteId; //투표번호
 	private String memberId; //회원아이디
 	private Date startDate; //시작일
