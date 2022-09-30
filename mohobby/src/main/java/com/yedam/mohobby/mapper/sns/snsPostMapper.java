@@ -8,6 +8,9 @@ public interface snsPostMapper {
 	//게시물 전체 조회
 	public List<SnsPostVO> snsPostList();
 	
+	//강사 유저 게시물 조회
+	public List<SnsPostVO> snsCPostList();
+	
 	//게시물 단건 조회
 	public SnsPostVO getSnsPost(SnsPostVO snsPostVo);
 	

@@ -1,7 +1,5 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +21,6 @@ public class MoimServiceImpl implements MoimService{
 	public void moimInsert(MoimVO moimVO) {
 		mapper.moimInsert(moimVO);	
 	}
-	
-	@Autowired
-	MoimMapper mapper;
 
 	//전체조회
 	@Override

@@ -26,6 +26,7 @@ public class MoimController {
 	public MoimVO insertMoim(MoimVO moimVO) {
 		service.moimInsert(moimVO);
 		return moimVO;
+	}
 
 	//전체조회
 	@RequestMapping("/allSelect")
