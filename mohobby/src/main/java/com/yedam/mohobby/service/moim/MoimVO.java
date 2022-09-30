@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MoimVO {
-	private int momId; //소모임id
+	private int moimId; //소모임id
 	private String moimImg; //소모임사진
 	private String moimName; //소모임 명
 	private String moimInfo; //소모임 소개글
