@@ -1,3 +1,4 @@
+
 package com.yedam.mohobby.service.moim;
 
 import java.util.List;
@@ -17,3 +18,4 @@ public interface MoimService {
 	//소모임명 조회
 	public List<MoimVO> moimNameSelect();
 }
+
