@@ -2,6 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.moim.MoimMapper">
 
+
+<insert id="moimInsert" parameterType="com.yedam.mohobby.service.moim.MoimVO">
+<selectKey keyProperty="moimId" resultType="Integer" order="BEFORE">
+	SELECT NVL(MAX(moim_id), 0)+1 FROM moim
+</selectKey>
+INSERT INTO moim (
+				moim_id,
+				moim_img,
+				moim_name,
+				moim_info,
+				moim_catg,
+				moim_region,
+				max_people
+				)
+			VALUES
+				(
+				#{moimId},
+				#{moimImg},
+				#{moimName},
+				#{moimInfo},
+				#{moimCatg},
+				#{moimRegion},
+				#{maxPeople}
+				)
+</insert>
 <!-- 전체 조회 -->
 <select id="moimAllSelect" resultType="MoimVO">
 	select * from moim ORDER BY moim_id DESC
@@ -16,5 +41,4 @@
 <select id="moimNameSelect" resultType="MoimVO">
 	select * from moim where moim_name Like '%#{moim_name}%' order by moim_id DESC;
 </select>
-
 </mapper>
