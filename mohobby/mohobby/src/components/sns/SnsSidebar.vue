@@ -35,11 +35,13 @@ export default {
   data() {
     return {
       links: [
-        { icon: "mdi-microsoft-windows", text: "Dashboard", route: "/" },
-        { icon: "mdi-account", text: "Profile", route: "/" },
-        { icon: "mdi-clipboard-list-outline", text: "Product", route: "/" },
-        { icon: "mdi-clipboard-list", text: "Order", route: "/" },
-        { icon: "mdi-alert-octagon", text: "System Settings", route: "/" },
+        { icon: "mdi-microsoft-windows", text: "내 피드", route: "/snsFeed" },
+        { icon: "mdi-account", text: "내 강의실", route: "/snsLecture" },
+        { icon: "mdi-clipboard-list-outline", text: "내 소모임", route: "/snsMoim" },
+        { icon: "mdi-clipboard-list", text: "내 챌린지", route: "/snsChall" },
+        { icon: "mdi-alert-octagon", text: "저장된 피드", route: "/snsBookmark" },
+        { icon: "mdi-alert-octagon", text: "팔로워 관리", route: "/snsFollower" },
+        { icon: "mdi-alert-octagon", text: "팔로잉 관리", route: "/snsFollowing" }
       ],
     };
   },
