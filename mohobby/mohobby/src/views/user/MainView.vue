@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="container">
     <div class="carousels">
       <v-carousel cycle>
         <v-carousel-item
@@ -47,16 +47,18 @@
     </v-container>
     <h4>새로 생성된 모임</h4>
     <moimlist></moimlist>
+    <h4>모집 중인 강의</h4>
     <moimlist></moimlist>
-    <moimlist></moimlist>
-    <moimlist></moimlist>
+    <h4>챌린저스 후기</h4>
+    <challReview></challReview>
   </div>
 </template>
 
 <script>
-import moimlist from "../../components/common/moimlist.vue";
+import moimlist from "../../components/user/Moimlist.vue";
+import challReview from "../../components/user/ChallReview.vue"
 export default {
-  components: { moimlist },
+  components: { moimlist, challReview },
   data() {
     return {
       items: [
@@ -111,11 +113,16 @@ export default {
 </script>
 
 <style>
+.container {
+  width: 100%;
+}
 .carousels {
   position: relative;
+  width: 100%;
 }
 
 .carousels .v-window {
   height: 400px !important;
+  width: 100%;
 }
 </style>
