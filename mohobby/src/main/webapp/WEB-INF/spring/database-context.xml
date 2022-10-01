@@ -10,19 +10,16 @@
 		<property name="driverClassName"
 			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
 		<property name="jdbcUrl"
-			value="jdbc:log4jdbc:oracle:thin:@127.0.0.1:1521:xe" />
-		<property name="username" value="hr" />
-		<property name="password" value="hr" />
-	</bean>
-
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName"
-			value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url"
-			value="jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=D:\mohobby\mohobby\Wallet_mohobby" />
+			value="jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=/Users/gabin/Desktop/Wallet_mohobby.zip" />
 		<property name="username" value="ADMIN" />
-		<property name="password" value="Mohobby1234&" />
+		<property name="password" value="Mohobby1234*" />
+	</bean>
+	
+<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
+		destroy-method="close">
+		<constructor-arg ref="hikariConfig" />
+	</bean>
+	 
 
 
 		<!-- mybatis SqlSessionFactory -->
