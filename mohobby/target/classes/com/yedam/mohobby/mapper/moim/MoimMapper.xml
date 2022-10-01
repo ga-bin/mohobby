@@ -40,3 +40,4 @@ INSERT INTO moim (
 <select id="moimNameSelect" resultType="com.yedam.mohobby.service.moim.MoimVO">
 	select * from moim where moim_name Like '%#{moim_name}%' order by moim_id DESC;
 </select>
+</mapper>
