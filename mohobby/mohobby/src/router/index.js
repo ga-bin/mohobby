@@ -10,6 +10,11 @@ const routes = [
     name: "Main",
     component: () => import("./../views/user/MainView"),
   },
+  { 
+    path: "login",
+    name: "Login",
+    component: () => import("./../views/user/LoginView")
+  },
   // sns
   {
     path: "/snsmain",
