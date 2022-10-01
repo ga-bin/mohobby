@@ -46,5 +46,11 @@ public class MoimController {
 		return service.moimNameSelect();
 
 	}
+	
+	//카테고리 조회
+	@GetMapping("/catgSelect")
+	public List<MoimVO> getCatgList(){
+		return service.moimCatgSelect();
+	}
 }
 

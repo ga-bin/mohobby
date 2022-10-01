@@ -17,5 +17,8 @@ public interface MoimService {
 	
 	//소모임명 조회
 	public List<MoimVO> moimNameSelect();
+	
+	//소모임 카테고리 조회
+	public List<MoimVO> moimCatgSelect();
 }
 
