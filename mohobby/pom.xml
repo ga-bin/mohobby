@@ -167,6 +167,24 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
+		<!-- spring-security -->
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>oraclepki</artifactId>
+			<version>21.5.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>osdt_cert</artifactId>
+			<version>21.5.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>osdt_core</artifactId>
+			<version>21.5.0.0</version>
+		</dependency>
 		<!-- HikariCP -->
 		<dependency>
 			<groupId>com.zaxxer</groupId>
@@ -189,7 +207,7 @@
 		</dependency>
 
 		<!-- tiles setting -->
-		
+
 		<!-- tiles-core -->
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
@@ -241,9 +259,9 @@
 				</configuration>
 			</plugin>
 			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-war-plugin</artifactId>
-			  <version>3.3.2</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
 			</plugin>
 		</plugins>
 	</build>

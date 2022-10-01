@@ -41,6 +41,12 @@ public class MoimServiceImpl implements MoimService{
 	public List<MoimVO> moimNameSelect() {
 		return mapper.moimNameSelect();
 	}	
+	
+	//소모임 카테고리 조회
+	@Override
+	public List<MoimVO> moimCatgSelect() {
+		return mapper.moimCatgSelect();
+	}	
 
 	
 }

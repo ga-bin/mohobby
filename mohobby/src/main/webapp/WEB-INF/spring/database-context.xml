@@ -15,18 +15,29 @@
 		<property name="password" value="hr" />
 	</bean>
 
-	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
-		destroy-method="close">
-		<constructor-arg ref="hikariConfig" />
-	</bean>
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url"
+			value="jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=D:\mohobby\mohobby\Wallet_mohobby" />
+		<property name="username" value="ADMIN" />
+		<property name="password" value="Mohobby1234&" />
 
-	<!-- mybatis SqlSessionFactory -->
-	<bean class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
-	</bean>
 
-	<!-- mapper scan -->
-	<mybatis-spring:scan
-		base-package="com.yedam.mohobby.mapper.**" />
+		<!-- mybatis SqlSessionFactory -->
+		<bean id="sqlSessionFactory"
+			class="org.mybatis.spring.SqlSessionFactoryBean">
+			<property name="configLocation"
+				value="classpath:mybatis/mybatis-config.xml" />
+			<property name="dataSource" ref="dataSource" />
+		</bean>
+
+		<bean id="sqlSession"
+			class="org.mybatis.spring.SqlSessionTemplate">
+			<constructor-arg ref="sqlSessionFactory" />
+		</bean>
+		<!-- mapper scan -->
+		<mybatis-spring:scan
+			base-package="com.yedam.mohobby.mapper.**" />
 </beans>
