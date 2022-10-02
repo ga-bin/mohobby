@@ -44,16 +44,6 @@
     </v-card>  
 </div>
 <div class="moreMoim">
-<v-card-actions>
-  <v-spacer></v-spacer>
-  <v-btn text>
-  <h4><v-chip       
-    class="ma-2"
-      color="green"
-      text-color="white">
-      <v-icon>mdi-plus</v-icon></v-chip>&nbsp;인기있는 소모임 모집하기</h4>
-    </v-btn>
-  </v-card-actions>
 </div>
 </div>
   </template>
