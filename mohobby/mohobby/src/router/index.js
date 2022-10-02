@@ -16,11 +16,11 @@ const routes = [
     component: () => import("./../views/user/LoginView")
   },
   // sns
-  // {
-  //   path: "/snsmain",
-  //   name: "snsmain",
-  //   component: () => import("./../views/sns/SnsMainView"),
-  // },
+  {
+    path: "/snsmain",
+    name: "snsmain",
+    component: () => import("./../views/sns/SnsMainView"),
+  },
   {
     path: "/snsFeed",
     name: "snsFeed",
