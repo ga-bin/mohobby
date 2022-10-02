@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div id="moim">
     <!-- <MoimSidebar></MoimSidebar> -->
     <h1>Mo#obby 소모임</h1>
@@ -43,12 +44,21 @@
       <p>자연/귀농</p>
     </div>
   </div>
+  <MoimMainrecruit></MoimMainrecruit>
+  <MoimMainrecruit2></MoimMainrecruit2>
+</div>
 </template>
 <script>
 import MoimSidebar from "../../components/moim/MoimSidebar.vue";
+import MoimMainrecruit from "../../components/moim/MoimMain_recruit.vue";
+import MoimMainrecruit2 from "../../components/moim/MoimMain_recruit2.vue";
 export default {
   name: "",
-  components: { MoimSidebar },
+  components: {
+    MoimSidebar,
+    MoimMainrecruit,
+    MoimMainrecruit2,
+},
   data() {
     return {
       sampleData: "",
