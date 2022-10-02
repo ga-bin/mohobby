@@ -47,31 +47,31 @@ export default {
     return {
       sampleData: "",
       cards: [
-        // {
-        //   title: "",
-        //   src: "https://img.insight.co.kr/static/2020/03/06/700/j0rpqkg2y659dw4acito.jpg",
-        //   flex: 2,
-        // },
-        // {
-        //   title: "",
-        //   src: "https://img.insight.co.kr/static/2020/03/06/700/w73pq7140798cym777d8.jpg",
-        //   flex: 2,
-        // },
-        // {
-        //   title: "",
-        //   src: "https://img.insight.co.kr/static/2020/03/06/700/d852a5r04tvpa860xz92.jpg",
-        //   flex: 2,
-        // },
-        // {
-        //   title: "",
-        //   src: "https://img.insight.co.kr/static/2020/03/06/700/o5384w751o0583qs2659.jpg",
-        //   flex: 2,
-        // },
-        // {
-        //   title: "",
-        //   src: "https://img.insight.co.kr/static/2020/03/06/700/4o5ookw8k16p4k5jgzur.jpg",
-        //   flex: 2,
-        // },
+        {
+          title: "",
+          src: "https://img.insight.co.kr/static/2020/03/06/700/j0rpqkg2y659dw4acito.jpg",
+          flex: 2,
+        },
+        {
+          title: "",
+          src: "https://img.insight.co.kr/static/2020/03/06/700/w73pq7140798cym777d8.jpg",
+          flex: 2,
+        },
+        {
+          title: "",
+          src: "https://img.insight.co.kr/static/2020/03/06/700/d852a5r04tvpa860xz92.jpg",
+          flex: 2,
+        },
+        {
+          title: "",
+          src: "https://img.insight.co.kr/static/2020/03/06/700/o5384w751o0583qs2659.jpg",
+          flex: 2,
+        },
+        {
+          title: "",
+          src: "https://img.insight.co.kr/static/2020/03/06/700/4o5ookw8k16p4k5jgzur.jpg",
+          flex: 2,
+        },
       ],
     };
   },
