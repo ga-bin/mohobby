@@ -221,6 +221,16 @@
 			<artifactId>tiles-extras</artifactId>
 			<version>${org.apache.tiles-version}</version>
 		</dependency>
+		
+		
+		<!-- spring-cloud-starter-feign -->
+		<dependency>
+		    <groupId>org.springframework.cloud</groupId>
+		    <artifactId>spring-cloud-starter-feign</artifactId>
+		    <version>1.4.7.RELEASE</version>
+		</dependency>
+		
+
 	</dependencies>
 	<build>
 		<plugins>
