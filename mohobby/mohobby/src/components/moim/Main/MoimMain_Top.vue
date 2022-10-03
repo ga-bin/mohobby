@@ -1,20 +1,19 @@
 <template>
   <div class="container">
     <!-- <MoimSidebar></MoimSidebar> -->
-  <v-card-actions>
+    <v-card-actions>
   <v-spacer></v-spacer>
-  <v-btn
-  text>
+  <v-btn text>
   <v-chip
     color="success"
     outlined
     @click=""
->
-    <v-icon left>
-      mdi-plus
-    </v-icon>
-    새로운 소모임 모집하기
-  </v-chip>
+  >
+  <v-icon left>
+    mdi-plus
+  </v-icon>
+  새로운 소모임 모집하기
+</v-chip>
 </v-btn>
 </v-card-actions>
 
@@ -26,20 +25,17 @@
     <MyMoim_leader v-if="moimRight==='2'"></MyMoim_leader>
 
     <!-- 소모임 검색창 -->
-    <v-text-field
-            outlined
-            label="Search"
-            append-icon="mdi-magnify"
-          >
-        </v-text-field>
-
+    <div>
+      <input placeholder="소모임 명을 검색하세요!"/>
+      <button type="button">검색</button>
+    </div>
     <!-- 소모임 키워드 -->
     <div>
       <v-row justify="space-around">
     <v-col
       cols="12"
-      sm="12"
-      md="12"
+      sm="30"
+      md="30"
     >
       <v-sheet
         class="py-4 px-1"
@@ -99,5 +95,9 @@
 <style scoped>
   .container {
     width : 1000px;
+  }
+
+  .h1 {
+    display: inline-block;
   }
 </style>
