@@ -6,6 +6,7 @@
     <v-slide-group class="pa-2">
       <v-slide-item
         v-for="item in items"
+        :key="item.src"
         >
         <div class="box">
         <v-list-item-avatar
@@ -25,6 +26,7 @@
     <v-slide-group class="pa-2">
       <v-slide-item
         v-for="item in items"
+        :key="item.src"
         >
         <div class="box">
         <v-list-item-avatar

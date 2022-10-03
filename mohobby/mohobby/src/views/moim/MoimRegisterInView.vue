@@ -1,4 +1,4 @@
-<template>
+
   <div>
     <RegisterIn></RegisterIn>
   </div>
@@ -19,3 +19,4 @@ export default {
 </script>
 
 <style></style>
+

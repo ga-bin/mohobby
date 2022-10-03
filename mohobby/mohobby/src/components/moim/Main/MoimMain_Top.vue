@@ -29,7 +29,6 @@
       <input placeholder="소모임 명을 검색하세요!"/>
       <button type="button">검색</button>
     </div>
-
     <!-- 소모임 키워드 -->
     <div>
       <v-row justify="space-around">
