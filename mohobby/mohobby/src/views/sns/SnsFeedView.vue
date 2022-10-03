@@ -8,24 +8,26 @@
 import SnsSidebar from '../../components/sns/SnsSidebar.vue'
 
 export default {
-  name: "",
+  name: "feed",
   components: { 
     SnsSidebar
   },
+
   data() {
     return {
       sampleData: "",
     };
   },
+
   setup() {},
   created() {
 
   },
   mounted() {
-    
+
   },
   unmounted() {
-    
+
   },
   methods: {
 

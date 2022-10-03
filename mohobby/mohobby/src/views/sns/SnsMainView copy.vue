@@ -22,11 +22,13 @@ export default {
   components: {
     listCmp
   },
+
   data() {
     return{
       card_list : []
     };
   },
+  
   methods: {
     //list dummy data
     getCard() {
