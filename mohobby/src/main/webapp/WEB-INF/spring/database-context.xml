@@ -8,9 +8,9 @@
 	<!-- datasource connection pool -->
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<property name="driverClassName"
-			value="net.sf.Log4jdbc.sql.jdbcapi.DriverSpy" />
+			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
 		<property name="jdbcUrl"
-			value="jdbc:Log4jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=/Users/gabin/mohobby/Wallet_mohobby.zip" />
+			value="jdbc:log4jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=C:/Users/User/Desktop/최종프로젝트/db/Wallet_mohobby" />
 		<property name="username" value="ADMIN" />
 		<property name="password" value="Mohobby1234*" />
 	</bean>
