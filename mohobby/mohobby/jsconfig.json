@@ -15,6 +15,6 @@
       "dom.iterable",
       "scripthost"
     ],
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": false
   }
 }

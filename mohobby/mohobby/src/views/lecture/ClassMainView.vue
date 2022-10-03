@@ -2,7 +2,7 @@
   <div>
     <ClassSidebar></ClassSidebar>
     <button @click="clearSession">clearSession</button><br/>
-    <div>
+    <div class="authBox">
       <h3>사용자 인증</h3>
       <span>code: {{ auth.code }}</span><br/>
       <span>scope: {{ auth.scope }}</span><br/>
@@ -57,9 +57,19 @@ export default {
   },
   setup() {},
   created() {},
-  mounted() {},
+  mounted: function () {
+    this.init()
+  },
   unmounted() {},
   methods: {
+    init () {
+      if (sessionStorage.auth) {
+        this.auth = JSON.parse(sessionStorage.auth)
+      }
+      if (sessionStorage.token) {
+        this.token = JSON.parse(sessionStorage.token)
+      }
+    },
     clearSession () {
       sessionStorage.auth = ''
       sessionStorage.token = ''
@@ -88,17 +98,16 @@ export default {
       this.auth = JSON.parse(sessionStorage.auth)
     },
     requestToken () {
-      fetch('https://cors-anywhere.herokuapp.com/http://localhost:8088/requestToken', {
+      fetch('http://localhost:8088/java/requestToken', {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json; charset=utf-8",
         },
         body: JSON.stringify({
-          code: this.auth.code,
-          client_id: '09076cd0-82f3-4c5b-a982-862c4c655cca',
-          client_secret: '43c3d1e6-c3dc-428c-8722-b6b388e20a35',
-          redirect_uri: 'http://localhost:8088',
-          grant_type: 'authorization_code'
+          "client_id": "09076cd0-82f3-4c5b-a982-862c4c655cca",
+          "client_secret": "43c3d1e6-c3dc-428c-8722-b6b388e20a35",
+          "scope": "oob",
+          "grant_type": "client_credentials"
         })
       }).then((response) => {
         console.log(result);
@@ -127,4 +136,26 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+  form {
+    display: inline-block;
+  }
+  .authBox {
+    padding: 20px;
+    width: 400px;
+    text-align: left;
+    border: 1px solid gray;
+  }
+  .tokenBox {
+    padding: 20px;
+    width: 400px;
+    text-align: left;
+    border: 1px solid gray;
+  }
+  button {
+    border: 1px solid gray;
+  }
+  input[type=submit] {
+    border: 1px solid gray;
+  }
+</style>

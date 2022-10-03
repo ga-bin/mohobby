@@ -1,4 +1,4 @@
-package com.yedam.mohobby.serviceImpl;
+package com.yedam.mohobby.serviceImpl.classes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
