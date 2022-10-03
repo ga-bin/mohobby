@@ -5,18 +5,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.yedam.mohobby.mapper.user.MemberMapper;
-import com.yedam.mohobby.service.admin.MemberVO;
+import com.yedam.mohobby.service.classes.ClassesVO;
+
+import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("file:/src/main/wepbapp/WEB-INF/spring/**/*-context.xml'}")
-public class membertest {
+@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/**/*-context.xml")
+@Log4j
+public class Membertest {
 
 	@Autowired
 	MemberMapper mapper;
 	
 	@Test
-	public MemberVO getMemberTest() {
-		String memberId = "gabin";
-		return mapper.getMember(memberId);
+	public void getMemberTest() {
+		mapper.getMember("gabin");
 	};
 }
