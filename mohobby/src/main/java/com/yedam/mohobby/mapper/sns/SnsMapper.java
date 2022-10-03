@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.yedam.mohobby.service.sns.SnsPostVO;
 
-public interface snsMapper {
+public interface SnsMapper {
 	//게시물 전체 조회
 	public List<SnsPostVO> snsPostList();
 	
