@@ -24,7 +24,6 @@
 <script>
 import ClassSidebar from "../../components/lecture/ClassSidebar.vue";
 export default {
-  name: "",
   components: { ClassSidebar },
   data() {
     return {

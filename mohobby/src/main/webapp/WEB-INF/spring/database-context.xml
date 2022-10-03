@@ -8,9 +8,9 @@
 	<!-- datasource connection pool -->
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<property name="driverClassName"
-			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+			value="net.sf.Log4jdbc.sql.jdbcapi.DriverSpy" />
 		<property name="jdbcUrl"
-			value="jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=/Users/gabin/Desktop/Wallet_mohobby.zip" />
+			value="jdbc:Log4jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=/Users/gabin/mohobby/Wallet_mohobby.zip" />
 		<property name="username" value="ADMIN" />
 		<property name="password" value="Mohobby1234*" />
 	</bean>
@@ -26,7 +26,7 @@
 		<bean id="sqlSessionFactory"
 			class="org.mybatis.spring.SqlSessionFactoryBean">
 			<property name="configLocation"
-				value="classpath:mybatis/mybatis-config.xml" />
+				value="classpath:mybatis-config.xml" />
 			<property name="dataSource" ref="dataSource" />
 		</bean>
 
