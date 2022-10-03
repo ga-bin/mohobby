@@ -18,7 +18,18 @@
         <input type="submit" value="requestAuth"/>
       </form>
       <button @click="saveAuth">saveAuth</button>
-      </div>
+    </div>
+    <div class="tokenBox">
+      <h3>토큰발급</h3>
+      <span>access_token: {{ token.access_token }}</span><br/>
+      <span>expires_in: {{ token.expires_in }}</span><br/>
+      <span>refresh_token: {{ token.refresh_token }}</span><br/>
+      <span>scope: {{ token.scope }}</span><br/>
+      <span>token_type: {{ token.token_type }}</span><br/>
+      <span>user_seq_no: {{ token.user_seq_no }}</span><br/><br/>
+      <button @click="requestToken">requestToken</button>
+      <button @click="saveToken">saveToken</button>
+    </div>
   </div>
 </template>
 <script>
@@ -29,10 +40,18 @@ export default {
     return {
       sampleData: "",
       auth: {
-        code: '',
+        code: '5HafwwLPu3WJ2fSvI3XKtqmi1Y562O',
+        scope: 'inquiry login transfer',
+        client_info: 'test',
+        state: 'b80BLsfigm9OokPTjy03elbJqRHOfGSY'
+      },
+      token: {
+        access_token: '',
+        expires_in: '',
+        refresh_token: '',
         scope: '',
-        client_info: '',
-        state: ''
+        token_type: '',
+        user_seq_no: ''
       }
     };
   },
@@ -67,6 +86,42 @@ export default {
         state: this.$route.query.state
       })
       this.auth = JSON.parse(sessionStorage.auth)
+    },
+    requestToken () {
+      fetch('https://cors-anywhere.herokuapp.com/http://localhost:8088/requestToken', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          code: this.auth.code,
+          client_id: '09076cd0-82f3-4c5b-a982-862c4c655cca',
+          client_secret: '43c3d1e6-c3dc-428c-8722-b6b388e20a35',
+          redirect_uri: 'http://localhost:8088',
+          grant_type: 'authorization_code'
+        })
+      }).then((response) => {
+        console.log(result);
+        if(response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok.');
+      }).then((data) => {
+        console.log(data);
+        this.token = JSON.stringify(data);
+      }).catch((error) => {
+          console.log(`error: ${error}`);
+      })
+    },
+    saveToken () {
+      sessionStorage.token = JSON.stringify({
+        access_token: this.token.access_token,
+        expires_in: this.token.expires_in,
+        refresh_token: this.token.refresh_token,
+        scope: this.token.scope,
+        token_type: this.token.token_type,
+        user_seq_no: this.token.user_seq_no
+      })
     }
   },
 };
