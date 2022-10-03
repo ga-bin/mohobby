@@ -153,3 +153,160 @@ WHERE post_id = #{ postId }
   ORDER BY
 </select>
 </mapper>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.mohobby.mapper.sns.snsPostMapper">
+<!-- 
+	피드
+ -->
+<!-- 게시글 입력 -->
+<insert id="insertFeed" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+INSERT INTO sns_post (
+				post_id,
+				member_id,
+				hashtag,
+				content,
+				write_date,
+				thumbnail
+				)
+			VALUES
+				(
+				post_id_seq.nextval,
+				#{ memberId },
+				#{ hashtag },
+				#{ content },
+				#{ writeDate },
+				#{ thumbnail }
+				)
+</insert>
+<!-- 게시물 이미지  -->
+<insert id="insertMedia" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+INSERT INTO sns_media (
+				media_id,
+				post_id,
+				media_type,
+				img_url,
+				video_url
+				)
+			VALUES
+				(
+				media_id_seq.nextval,
+				#{ postId },
+				#{ mediaType },
+				#{ imgUrl },
+				#{ videoUrl }
+				)
+</insert>
+<!-- 전체조회 -->
+<!-- 전체피드 -->
+<select id="allFeedsList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+	SELECT * FROM sns_post
+</select>
+
+<!-- 최신피드 -->
+<select id="newFeedsList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+	SELECT * FROM sns_post 
+	ORDER BY post_id DESC
+</select>
+<!-- 인기피드 -->
+<select id="hotFeedsList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+	SELECT * FROM sns_post 
+	ORDER BY likes DESC
+</select>
+<!-- 유저아이디(포함) -->
+<!-- <select id="conUserSelect" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+	SELECT * FROM sns_post
+	WHERE member_id 
+	LIKE  '%' ||  #{ memberId } || '%'
+</select> -->
+
+<!-- 단건조회 -->
+<!-- 프로필 조회 -->
+<!-- 유저아이디, 유저별명, 전체 게시글 수, 팔로워수, 팔로잉수, 취미수? -->
+<select id="feedProfile" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+	SELECT m.member_id, m.nickname, m.profile_img, m.hobbies, count(s.post_id), count(f.following_id), count(f.follower_id)
+	FROM sns_post s LEFT OUTER JOIN member m
+	ON (m.member_id = s.member_id)
+	WHERE member_id = #{ memberId }
+</select>
+
+<!-- 유저아이디(단건 - 프로필사진, 아이디, 닉네임)/(게시글번호, 썸네일) -->
+<select id="getUserProfile" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+	SELECT m.profile_img, m.member_id, m.nickname, s.post_id, s.thumbnail
+	FROM member m LEFT OUTER JOIN sns_post s
+	ON (m.member_id = s.member_id)
+	WHERE member_id = #{ memberId }
+</select>
+
+<!-- 유저아이디(닉네임.단어포함 - 프로필사진, 아이디, 닉네임) -->
+<select id="GetUsersByNick" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+	SELECT profile_img, member_id, nickname
+	FROM member
+	WHERE nickname LIKE '%' ||  #{ nickname } || '%'
+</select>
+
+<!-- 해시태그 검색 -->
+<select id="searchHashTag" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+	SELECT * FROM sns_post
+	WHERE hashtag LIKE '%' ||  #{ hashtag } || '%'
+	ORDER BY post_id DESC
+</select>
+
+<!-- 내용, 해시태그 수정 -->
+<update id="updateFeed">
+UPDATE sns_post SET contents, hashtag
+WHERE post_id = #{ postId }
+</update>
+
+<!-- 피드 삭제 -->
+<delete id="deleteFeed" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+  DELETE FROM sns_post 
+  WHERE postId = #{ post_id }
+</delete>
+
+
+<!-- 
+	팔로우 
+-->
+<!-- 팔로우 걸기 -->
+<insert id="follow" parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
+<selectKey keyProperty="followId" resultType="Integer" order="BEFORE">
+	SELECT NVL(MAX(follow_id), 0)+1 FROM follow
+</selectKey>
+	INSERT INTO follow (
+				follow_id,
+				following_id,
+				follower_id
+				)
+			VALUES
+				(
+				#{ followId },
+				#{ followingId },
+				#{ followerId }
+				)
+</insert>
+<!-- 팔로우 끊기 -->
+<delete id="unfollow" parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
+  DELETE FROM follow 
+  WHERE followerId = #{ follower_id }
+  AND followingId = #{ following_id }
+</delete>
+
+<!-- 팔로잉 리스트 조회 : 내가 팔로우 하는 사람들의 목록(내게 팔로우 당한 사람들의 목록)-->
+
+<!-- 팔로우 하는 사람, 팔로우 당한사람, 유저아이디 -->
+<select id="getFollowingList" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+  SELECT f.follower_id, f.following_id, f.follower_id, m.member_name
+  WHERE follower_id = #{ followerId }
+  ORDER BY
+</select>
+
+<!-- 팔로잉 리스트 조회 -->
+<select id="getfollowerList" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+  SELECT f.follower_id, f.following_id, f.follower_id, m.member_name
+  WHERE following_id = #{ followingId }
+  ORDER BY
+</select>
+</mapper>
+

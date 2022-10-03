@@ -125,7 +125,9 @@
         </v-btn>
       </template>
       <v-card>
-
+        <v-card-title class="justify-center">
+          <span class="text-h5">지역선택</span>
+        </v-card-title>
       </v-card>
     </v-dialog>
     </v-col>

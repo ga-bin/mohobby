@@ -7,7 +7,7 @@
   <v-chip
     color="success"
     outlined
-    @click=""
+    @click="select"
   >
   <v-icon left>
     mdi-plus
@@ -26,8 +26,11 @@
 
     <!-- 소모임 검색창 -->
     <div>
-      <input placeholder="소모임 명을 검색하세요!"/>
-      <button type="button">검색</button>
+      <v-text-field
+            outlined
+            label="Search"
+            append-icon="mdi-magnify"
+          ></v-text-field>
     </div>
     <!-- 소모임 키워드 -->
     <div>
@@ -89,6 +92,11 @@
         moimRight : '2'
       }
     },
+    methods : {
+  select : function() {
+    this.$router.push({ path: 'moimRegisterIn' })
+    }
+  }
  }
 
 </script>
