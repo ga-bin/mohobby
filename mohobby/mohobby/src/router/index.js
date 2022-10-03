@@ -4,16 +4,47 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
 const routes = [
+  // admin
+  {
+    path: "/adminuser",
+    name: "adminuser",
+    component: () => import("./../views/admin/AdminUserView")
+  },
+  {
+    path: "/adminmoim",
+    name: "adminmoim",
+    component: () => import("./../views/admin/AdminMoimView")
+  },
+  {
+    path: "/adminclass",
+    name: "adminClass",
+    component: () => import("./../views/admin/AdminClassView")
+  },
+  {
+    path: "/adminchallenge",
+    name: "adminChallenge",
+    component: () => import("./../views/admin/AdminChallengeView")
+  },
+  {
+    path: "/adminsns",
+    name: "adminsns",
+    component: () => import("./../views/admin/AdminSnsView")
+  },
   // user
   {
     path: "/",
-    name: "Main",
+    name: "main",
     component: () => import("./../views/user/MainView"),
   },
   { 
     path: "/login",
-    name: "Login",
+    name: "login",
     component: () => import("./../views/user/LoginView")
+  },
+  { 
+    path: "/register",
+    name: "register",
+    component: () => import("./../views/user/RegisterView")
   },
   // sns
   {
@@ -30,6 +61,11 @@ const routes = [
     path: "/snsFeedDetail",
     name: "snsFeedDetail",
     component: () => import("./../views/sns/SnsFeedDetailView"),
+  },
+  {
+    path: "/SnsFeedInsert",
+    name: "SnsFeedInsert",
+    component: () => import("./../views/sns/SnsFeedInsertView"),
   },
   {
     path: "/snsLecture",
@@ -77,6 +113,11 @@ const routes = [
     path: "/moimmain",
     name: "moimmain",
     component: () => import("./../views/moim/MoimMainView"),
+  },
+  {
+    path: "/moimRegisterIn",
+    name: "moimRegisterIn",
+    component: () => import("./../views/moim/MoimRegisterInView"),
   },
   // challenge
   {

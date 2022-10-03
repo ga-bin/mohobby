@@ -3,6 +3,9 @@
     <v-btn icon>
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
+    <v-btn icon>
+      <router-link to="/snsFeedInsert"><v-icon>mdi-plus-thick</v-icon></router-link>
+    </v-btn>
     <!-- 카드형5개 옆으로 슬라이드 -->
     <h3>추천 만능 재주꾼들 피드</h3>
 
