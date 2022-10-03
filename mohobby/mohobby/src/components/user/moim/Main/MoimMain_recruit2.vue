@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-    <h3>소모임 멤버를 모집합니다!</h3>
+    <h3>인기있는 소모임을 확인하세요!</h3>
     <br>
     <div class="box" v-for="item in items">
     <v-card
@@ -44,16 +44,6 @@
     </v-card>  
 </div>
 <div class="moreMoim">
-<v-card-actions>
-  <v-spacer></v-spacer>
-  <v-btn text>
-  <h4><v-chip       
-    class="ma-2"
-      color="green"
-      text-color="white">
-      <v-icon>mdi-plus</v-icon></v-chip>&nbsp;새로운 소모임 모집하기</h4>
-    </v-btn>
-  </v-card-actions>
 </div>
 </div>
   </template>
@@ -67,7 +57,7 @@
         content : '월요산방 content',
         region : '자양동',
         people : '513',
-        photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
+        photo : "https://img.animalplanet.co.kr/news/2019/08/10/700/v4q0b0ff4hcpew1g6t39.jpg",
         hobby : '운동/건강'
     },
     {
@@ -75,7 +65,7 @@
         content : '화요산방 content',
         region : '자양동',
         people : '513',
-        photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
+        photo : "https://img.animalplanet.co.kr/news/2019/08/10/700/v4q0b0ff4hcpew1g6t39.jpg",
         hobby : '운동/건강'
     },
     {
@@ -83,7 +73,7 @@
         content : '수요산방 content',
         region : '자양동',
         people : '513',
-        photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
+        photo : "https://img.animalplanet.co.kr/news/2019/08/10/700/v4q0b0ff4hcpew1g6t39.jpg",
         hobby : '운동/건강'
     },
     {
@@ -91,7 +81,7 @@
         content : '목요산방 content',
         region : '자양동',
         people : '513',
-        photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
+        photo : "https://img.animalplanet.co.kr/news/2019/08/10/700/v4q0b0ff4hcpew1g6t39.jpg",
         hobby : '운동/건강'
     },
     {
@@ -99,7 +89,7 @@
         content : '금요산방 content',
         region : '자양동',
         people : '513',
-        photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
+        photo : "https://img.animalplanet.co.kr/news/2019/08/10/700/v4q0b0ff4hcpew1g6t39.jpg",
         hobby : '운동/건강'
     },
     {
@@ -107,7 +97,7 @@
         content : '토요산방 content',
         region : '자양동',
         people : '513',
-        photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
+        photo : "https://img.animalplanet.co.kr/news/2019/08/10/700/v4q0b0ff4hcpew1g6t39.jpg",
         hobby : '운동/건강'
     },
     ]
@@ -125,7 +115,8 @@
         float: left; 
         width: 50%;
         margin-bottom: 15px;
-        cursor : pointer;    
+        cursor : pointer;
+        
     }
     .people {
         border-left : 2px solid green;
