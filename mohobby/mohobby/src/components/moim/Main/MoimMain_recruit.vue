@@ -124,7 +124,7 @@ export default {
 
 methods : {
   select : function() {
-    console.log("소모임등록")
+    this.$router.push({ path: 'moimRegisterIn' })
   }
 }
 

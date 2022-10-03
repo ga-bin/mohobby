@@ -64,19 +64,19 @@
           src : "http://picturebook-illust.com/upload_board/new_Gallery/ThumbNail/g/thumb_20202612533.jpg"
           },
           {
-          src : "https://image.idus.com/image/files/d6fabae15e924a6bbcd7595a62715a30_720.jpg"
+          src : "http://thumbnail.10x10.co.kr/webimage/image/mask/424/B004248124.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
           },
           {
-          src : "https://image.idus.com/image/files/d6fabae15e924a6bbcd7595a62715a30_720.jpg"
+          src : "https://img.lovepik.com/illus_pic/18/08/24/43b3565904ea8ce55f734c44da92eefd.jpg_wh860.jpg"
           },
           {
-          src : "https://image.idus.com/image/files/d6fabae15e924a6bbcd7595a62715a30_720.jpg"
+          src : "https://d2v80xjmx68n4w.cloudfront.net/members/portfolios/djsUH1641848055.jpg"
           },
           {
-          src : "https://image.idus.com/image/files/d6fabae15e924a6bbcd7595a62715a30_720.jpg"
+          src : "https://pbs.twimg.com/media/E2nPtJzVkAYVRvr.png:small"
           },
           {
-          src : "https://image.idus.com/image/files/d6fabae15e924a6bbcd7595a62715a30_720.jpg"
+          src : "https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/811/4ad01fcc01e90c9b519c28dcaf03c5fb_res.jpeg"
           },
       ]
       }
