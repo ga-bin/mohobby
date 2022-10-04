@@ -1,0 +1,60 @@
+package com.yedam.mohobby.web.user;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.yedam.mohobby.service.admin.MemberVO;
+import com.yedam.mohobby.service.user.MemberService;
+
+@RestController
+public class MemberController {
+	@Autowired
+	MemberService service;
+	
+	// 회원 한명 정보 가져오기(회원 마이페에지, 회원 아이디 있는지 조회)
+	@GetMapping("/member")
+	public MemberVO getMember(@RequestBody String memberId) {
+		return service.getMember(memberId);
+	}
+	
+	//회원가입 insert
+	@PostMapping("/member")
+	public void insertMember(@RequestBody MemberVO memberVO) {
+		service.insertMember(memberVO);
+	}
+	
+	// 회원탈퇴 날짜 update
+	@PutMapping("/memberdelete")
+	public void deleteMember(@RequestBody String memberId) {
+		service.deleteMember(memberId);
+	}
+	
+	
+	// 회원정보 수정 update
+	@PutMapping("/memberupdate")
+	public void updateMember(@RequestBody MemberVO memberVO) {
+		service.updateMember(memberVO);
+	}
+	
+	// 회원 비밀번호 수정
+	@PutMapping("/memberupdatepassword")
+	public void updatePassword(@RequestBody MemberVO memberVO) {
+		service.updatePassword(memberVO);
+	}
+	
+	// 챌린지 등급 update(plsql만들기)s
+	@PutMapping("/memberupdatechallgrade")
+	public void updateChallGrade(@RequestBody MemberVO memberVO) {
+		service.updateChallGrade(memberVO);
+	}
+	
+	// role변환(멋진활동가, 만능 재주꾼, 일반회원)
+	@PutMapping("/memberupdaterole")
+	public void updateRole(@RequestBody MemberVO memberVO) {
+		service.updateRole(memberVO);
+	}
+}

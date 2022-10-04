@@ -2,6 +2,59 @@
   <div class="container">
   <!-- <MoimSidebar></MoimSidebar> -->
     <v-card-actions>
+  <!--비회원 소모임 모집 -->
+  <v-card-actions  v-if="moimRight==='0'" >
+  <v-spacer></v-spacer>
+  <div class="text-center">
+    <v-dialog
+      v-model="noneuser"
+      width="500"
+    >
+  <template v-slot:activator="{ on, attrs }">
+  <v-btn text>
+  <v-chip
+    color="success"
+    outlined
+    v-bind="attrs"
+    v-on="on"
+  >
+  <v-icon left>
+    mdi-plus
+  </v-icon>
+  새로운 소모임 모집하기
+</v-chip>
+</v-btn>
+</template>
+<v-card>
+  <br><br>
+        <v-card-text class="font-weight-bold">
+          소모임을 만들기 위해서는 먼저 로그인을 해주세요!.
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            depressed
+            @click="noneuser=false"
+          >
+            닫기
+          </v-btn>
+          <v-btn
+            color="success"
+            depressed
+            @click="join"
+          >
+            로그인하러 가기
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+</v-card-actions>
+<!-- 회원 소모임 버튼 -->
+<v-card-actions v-else>
   <v-spacer></v-spacer>
   <v-btn text>
   <v-chip
@@ -15,6 +68,7 @@
   새로운 소모임 모집하기
 </v-chip>
 </v-btn>
+
 </v-card-actions>
 
     <h1>Mo#obby 소모임</h1> 
@@ -25,6 +79,7 @@
     <MyMoim_leader v-if="moimRight==='2'"></MyMoim_leader>
 
     <!-- 소모임 검색창 -->
+    <br>
     <div>
       <v-text-field
             outlined
@@ -64,7 +119,7 @@
   import MyMoim_user from "./mymoim/MyMoim_user.vue";
   import MyMoim_leader from "./mymoim/MyMoim_leader.vue";
   export default {
-    components :{MyMoim_none, MyMoim_user, MyMoim_leader},
+    components :{ MyMoim_none, MyMoim_user, MyMoim_leader },
     data() {
       return {
         catg: [
@@ -89,13 +144,19 @@
           '종교/봉사',
           '자연/귀농'
         ],
-        moimRight : '2'
+        moimRight : '0',
+        noneuser : false,
       }
     },
     methods : {
   select : function() {
-    this.$router.push({ path: 'moimRegisterIn' })
-    }
+    if (this.moimRight !== '0') {
+      this.$router.push({ path: 'moimRegisterIn' })
+      }
+    },
+    join() {
+     this.$router.push({ path: 'login' })
+    }   
   }
  }
 

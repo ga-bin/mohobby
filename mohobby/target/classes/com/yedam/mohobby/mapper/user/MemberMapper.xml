@@ -1,15 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.user.MemberMapper">
-   <!--회원정보조회 select --> 
+   <!--회원정보조회 select (회원 마이페에지, 회원 아이디 있는지 조회)--> 
    <select id="getMember" resultType="com.yedam.mohobby.service.admin.MemberVO" parameterType="String">
       select * from member where member_id = #{memberId}
    </select>
    
    <!--회원가입 insert -->
+   <insert id="insertMember" parameterType="com.yedam.mohobby.service.admin.MemberVO">
+   		insert into member 
+   			(
+   			member_id, 
+   			region_id, 
+   			password, 
+   			member_name, 
+   			nickname, 
+   			birth, 
+   			email, 
+   			phone_num, 
+   			role, 
+   			reg_date
+   			)
+		values 
+			(#{memberId}, #{regionId}, #{password}, #memberName}, #{nickName}, #{birth}, #{email}, #{phoneNum}, #{role}, #{regDate})
+   </insert>
    
-   <!-- 회원탈퇴 delete -->
-   
-   
+   <!-- 회원탈퇴 날짜 update -->
+   <update id="deleteMember" parameterType="string"> 
+   		update member set del_date = sysdate where member_id = #{memberId}
+   </u
    <!-- 회원정보 수정 update -->
-</mapper>
+   <update id="updateMember" parameterType="com.yedam.mohobby.service.admin.MemberVO">
+   		update member set region_id = #{regionId}, nickname = #{nickName}, 
+   						  email = #{email}, 
+   						  phone_num = #{phoneNum},
+   						  profile_img = #{profileImg},
+   						  intro = #{intro},
+   						  member_name = #{memberName}
+        where member_id = #{memberId}
+   </update>
+   
+   <!-- 비밀번호 update -->
+   <update id="updatePassword" parameterType="com.yedam.mohobby.service.admin.MemberVO">
+   		update member set password = #{password} where member_id = #{memberId}
+   </update>
+   
+   <!-- 챌린지 등급 update // plsql만들기 -->
+   <update id="updateChallGrade" parameterType="com.yedam.mohobby.service.admin.MemberVO">
+   		update member set chall_grade = #{challGrade} where member_id = #{memberId}
+   </update>
+   
+   <!-- role변환(멋진활동가,  -->
+   <update id="updateRole" parameterType="com.yedam.mohobby.service.admin.MemberVO">
+   		update member set role = #{role} member_id = #{memberId}
+   </update>
+   
+   </mapper>
