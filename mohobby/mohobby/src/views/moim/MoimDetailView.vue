@@ -1,11 +1,16 @@
 <template>
+  <div>
   <MoimSidebar></MoimSidebar>
+  <MoimBoard></MoimBoard>
+  </div>
 </template>
 <script>
-  import MoimSidebar from "../../components/moim/MoimSidebar.vue";
-export default {
+  import MoimSidebar from "../../components/moim/moimDetail/MoimSidebar.vue";
+  import MoimBoard from "../../components/moim/moimDetail/MoimBoard.vue";
+
+  export default {
   name: "",
-  components: { MoimSidebar },
+  components: { MoimSidebar, MoimBoard },
   data: () => ({
     }),
   setup() {},

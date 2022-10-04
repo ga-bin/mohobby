@@ -1,5 +1,7 @@
 <template>
   <div class="container">
+  <!-- <MoimSidebar></MoimSidebar> -->
+    <v-card-actions>
   <!--비회원 소모임 모집 -->
   <v-card-actions  v-if="moimRight==='0'" >
   <v-spacer></v-spacer>
