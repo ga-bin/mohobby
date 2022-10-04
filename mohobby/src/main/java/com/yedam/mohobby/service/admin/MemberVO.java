@@ -2,13 +2,14 @@ package com.yedam.mohobby.service.admin;
 
 import java.sql.Date;
 
+
 import lombok.Data;
 @Data
 public class MemberVO {
 	private String memberId; //멤버아이디
 	private String regionId; //지역아이디
 	private String nickName; //닉네임
-	private String passWord; //비밀번호
+	private String password; //비밀번호
 	private Date birth; // 생년월일
 	private String email; //이메일
 	private String phoneNum; //휴대폰번호
@@ -21,4 +22,5 @@ public class MemberVO {
 	private int challGrade; //챌린지등급
 	private Date regDate; //가입일자
 	private Date delDate; //탈퇴일자
+	private String memberName;
 }
