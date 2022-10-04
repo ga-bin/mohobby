@@ -1,7 +1,6 @@
 <template>
   <div class="container">
   <!-- <MoimSidebar></MoimSidebar> -->
-    <v-card-actions>
   <!--비회원 소모임 모집 -->
   <v-card-actions  v-if="moimRight==='0'" >
   <v-spacer></v-spacer>
@@ -144,7 +143,7 @@
           '종교/봉사',
           '자연/귀농'
         ],
-        moimRight : '0',
+        moimRight : '2',
         noneuser : false,
       }
     },
