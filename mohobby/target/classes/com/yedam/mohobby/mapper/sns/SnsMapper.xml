@@ -89,7 +89,7 @@ INSERT INTO hashtag (
 			WHERE m.role = 1
 			ORDER BY likes DESC
 		 )
-	WHERE ROWNUM <= 20
+	WHERE ROWNUM <![CDATA[ <= ]]> 20
 </select>
 <!-- 최신피드 -->
 <select id="newList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">

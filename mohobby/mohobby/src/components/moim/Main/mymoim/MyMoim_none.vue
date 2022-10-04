@@ -20,5 +20,7 @@
     text-align: center;
     padding : 80px;
   }
-
+ .box {
+  margin-top : 15px;
+ }
 </style>
