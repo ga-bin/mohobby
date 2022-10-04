@@ -26,6 +26,11 @@ const routes = [
     component: () => import("./../views/admin/AdminChallengeView")
   },
   {
+    path: "/challengepay",
+    name: "challengePay",
+    component: () => import("./../views/admin/challengePayView")
+  },
+  {
     path: "/adminsns",
     name: "adminsns",
     component: () => import("./../views/admin/AdminSnsView")

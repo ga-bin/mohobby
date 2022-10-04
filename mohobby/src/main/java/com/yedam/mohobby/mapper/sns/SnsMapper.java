@@ -1,7 +1,6 @@
 package com.yedam.mohobby.mapper.sns;
 
 import java.util.List;
-
 import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 
