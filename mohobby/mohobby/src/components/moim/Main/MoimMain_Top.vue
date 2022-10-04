@@ -54,7 +54,7 @@
   </div>
 </v-card-actions>
 <!-- 회원 소모임 버튼 -->
-<v-card-actions v-else>
+
   <v-spacer></v-spacer>
   <v-btn text>
   <v-chip
