@@ -402,7 +402,7 @@
     >
     <template v-slot:activator="{ on, attrs }">
       <div class="buttonSelect">
-            <span class="font-weight-bold">소모임 활동 지역</span>
+            <span class="h3">소모임 활동 지역</span>
           </div>
       <v-btn
           color="green"
