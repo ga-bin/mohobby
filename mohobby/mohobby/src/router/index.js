@@ -68,6 +68,11 @@ const routes = [
     component: () => import("./../views/sns/SnsFeedDetailView"),
   },
   {
+    path: "/SnsFeedInsert",
+    name: "SnsFeedInsert",
+    component: () => import("./../views/sns/SnsFeedInsertView"),
+  },
+  {
     path: "/snsLecture",
     name: "snsLecture",
     component: () => import("./../views/sns/SnsLectureView"),
@@ -88,8 +93,13 @@ const routes = [
     component: () => import("./../views/sns/SnsBookmarkView"),
   },
   {
-    path: "/snsFollow",
-    name: "snsFollow",
+    path: "/snsBookmarkDetail",
+    name: "snsBookmarkDetail",
+    component: () => import("./../views/sns/SnsBookmarkDetailView"),
+  },
+  {
+    path: "/snsFollower",
+    name: "snsFollower",
     component: () => import("./../views/sns/SnsFollowerView"),
   },
   {

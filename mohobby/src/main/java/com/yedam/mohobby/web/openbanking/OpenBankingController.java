@@ -1,3 +1,4 @@
+
 package com.yedam.mohobby.web.openbanking;
   
 import org.springframework.beans.factory.annotation.Autowired; 
@@ -37,7 +38,4 @@ public class OpenBankingController {
   
   
 //  @PostMapping("/realname") public RealNameVO getRealName()
-  
-  
-}
- 
+
