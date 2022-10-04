@@ -1,22 +1,253 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.sns.SnsMapper">
-<!-- 
-	피드
- -->
-<!-- 게시글 입력 -->
-<insert id="insertFeed" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
-INSERT INTO sns_post (
-				post_id,
-				member_id,
-				hashtag,
-				content,
-				write_date,
-				thumbnail,
-				likes,
-				cmts
-				)
+	<!-- 피드 -->
+	<!-- 게시글 입력 -->
+	<insert id="insertFeed"
+		parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+		INSERT INTO sns_post (
+		post_id,
+		member_id,
+		hashtag,
+		content,
+		write_date,
+		thumbnail,
+		likes,
+		cmts
+		)
+		VALUES
+		(
+		post_id_seq.nextval,
+		#{ memberId },
+		#{ hashtag },
+		#{ content },
+		#{ writeDate },
+		#{ thumbnail },
+		0,
+		0
+		)
+	</insert>
+	<!-- 게시물 이미지 -->
+	<insert id="insertMedia"
+		parameterType="com.yedam.mohobby.service.sns.SnsMediaVO">
+		INSERT INTO sns_media (
+		media_id,
+		post_id,
+		media_type,
+		img_url,
+		video_url
+		)
+		VALUES
+		(
+		media_id_seq.nextval,
+		#{ postId },
+		#{ mediaType },
+		#{ imgUrl },
+		#{ videoUrl }
+		)
+	</insert>
+	<!-- 별도 해시태그 테이블 - 등록된적 없는 해시태그일때 -->
+	<insert id="insertHashtag"
+		parameterType="com.yedam.mohobby.service.communal.HashtagVO">
+		INSERT INTO hashtag (
+		hashtag,
+		target_id,
+		target_type,
+		use_count
+		)
+		VALUES
+		(
+		#{ hashtag },
+		#{ targetId },
+		#{ targetType },
+		#{ useCount }
+		)
+	</insert>
+	<!-- 이미 등록되어있는 해시태그 -->
+	<update id="updateHashtagCnt"
+		parameterType="com.yedam.mohobby.service.communal.HashtagVO">
+		UPDATE hashtag SET use_count+1
+		WHERE hashtag = #{ hashtag }
+	</update>
+
+
+	<!-- 전체조회 -->
+	<!-- 전체피드 -->
+	<select id="allList"
+		resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+		SELECT post_id, member_id, thumbnail, likes, cmts FROM sns_post
+	</select>
+	<!-- 인기강사피드 top20 -->
+	<select id="hotLecturerList"
+		resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+		SELECT post_id, member_id, content, thumbnail, likes, cmts
+		FROM (
+		SELECT s.post_id
+		,s.member_id
+		,s.content
+		,s.thumbnail
+		, s.likes
+		, s.cmts
+		FROM sns_post s JOIN member m
+		ON(s.member_id = m.member_id)
+		WHERE m.role = 1
+		ORDER BY likes DESC
+		)
+		WHERE ROWNUM <![CDATA[ <= ]]>
+		20
+	</select>
+	<!-- 최신피드 -->
+	<select id="newList"
+		resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+		SELECT post_id, member_id, thumbnail, likes, cmts FROM sns_post
+		ORDER BY post_id DESC
+	</select>
+	<!-- 인기피드 -->
+	<select id="hotList"
+		resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+		SELECT post_id, member_id, thumbnail, likes, cmts FROM sns_post
+		ORDER BY likes DESC
+	</select>
+
+	<!-- 팔로워피드 -->
+
+	<!-- 유저아이디(포함) -->
+	<!-- <select id="conUserSelect" resultType="com.yedam.mohobby.service.sns.SnsPostVO"> 
+		SELECT * FROM sns_post WHERE member_id LIKE '%' || #{ memberId } || '%' </select> -->
+
+	<!-- 단건조회 -->
+	<!-- 프로필 조회 -->
+	<!-- 유저아이디, 유저별명, 전체 게시글 수, 팔로워수, 팔로잉수, 취미수? -->
+	<select id="feedProfile"
+		resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+		SELECT m.member_id, m.nickname, m.profile_img, m.hobbies, count(s.post_id),
+		count(f.following_id), count(f.follower_id)
+		FROM sns_post s LEFT OUTER JOIN member m
+		ON (m.member_id = s.member_id)
+		WHERE member_id = #{ memberId }
+	</select>
+
+	<!-- 유저아이디(단건 - 프로필사진, 아이디, 닉네임)/(게시글번호, 썸네일) -->
+	<select id="getUserProfile"
+		resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+		SELECT m.profile_img, m.member_id, m.nickname, s.post_id, s.thumbnail
+		FROM member m LEFT OUTER JOIN sns_post s
+		ON (m.member_id = s.member_id)
+		WHERE member_id = #{ memberId }
+	</select>
+
+	<!-- 유저아이디(닉네임.단어포함 - 프로필사진, 아이디, 닉네임) -->
+	<select id="GetUsersByNick"
+		resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+		SELECT profile_img, member_id, nickname
+		FROM member
+		WHERE nickname LIKE '%' || #{ nickname } || '%'
+	</select>
+
+	<!-- 리스트 해시태그 5개 -->
+	<!-- 게시글 테이블에 들어온 해시태그들(#사과,#바나나)을 특정 문자 기준으로 잘라서 별도의 해시태그 테이블에 넣는다 1. 이미 
+		테이블에 존재하는 해시태그면 update 사용횟수 2. 테이블에 존재하지 않는 해시태그면 insert -->
+
+	<!-- 해시태그 검색 -->
+	<select id="searchHashTag"
+		resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+		SELECT * FROM sns_post
+		WHERE hashtag LIKE '%' || #{ hashtag } || '%'
+		ORDER BY post_id DESC
+	</select>
+
+
+
+	<!-- 내용, 해시태그 수정 -->
+	<update id="updateFeed"
+		parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+		UPDATE sns_post SET contents = #{ contents }, hashtag = #{ hashtag }
+		WHERE post_id = #{ postId }
+	</update>
+	<!-- 피드 삭제 -->
+	<delete id="deleteFeed"
+		parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+		DELETE FROM sns_post
+		WHERE postId = #{ post_id }
+	</delete>
+	<!-- 좋아요 클릭 -->
+	<insert id="clickLike"
+		parameterType="com.yedam.mohobby.service.communal.JjimVO">
+		INSERT INTO jjim(
+		member_id
+		, status
+		, target_id
+		)
+		VALUES(
+		#{ memberId },
+		#{ status },
+		#{ targetId }
+		)
+
+	</insert>
+	<!-- 좋아요상태 업데이트 -->
+	<update id="updateLike"
+		parameterType="com.yedam.mohobby.service.communal.JjimVO">
+		UPDATE jjim SET status = 0
+		WHERE target_id = #{ targetId }
+	</update>
+		<!-- AND member_id = #{ memberId } -->
+
+		<!-- 팔로우 -->
+		<!-- 팔로우 걸기 -->
+		<insert id="follow"
+			parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
+			<selectKey keyProperty="followId" resultType="Integer"
+				order="BEFORE">
+				SELECT NVL(MAX(follow_id), 0)+1 FROM follow
+			</selectKey>
+			INSERT INTO follow (
+			follow_id,
+			following_id,
+			follower_id
+			)
 			VALUES
+			(
+			#{ followId },
+			#{ followingId },
+			#{ followerId }
+			)
+		</insert>
+		<!-- 팔로우 끊기 -->
+		<delete id="unfollow"
+			parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
+			DELETE FROM follow
+			WHERE followerId = #{ follower_id }
+			AND followingId = #{ following_id }
+		</delete>
+
+		<!-- 팔로잉 리스트 조회 : 내가 팔로우 하는 사람들의 목록(내게 팔로우 당한 사람들의 목록) -->
+
+		<!-- 팔로우 하는 사람, 팔로우 당한사람, 유저아이디 -->
+		<select id="getFollowingList"
+			resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+			SELECT f.follower_id, f.following_id, f.follower_id, m.member_name
+			FROM
+			WHERE follower_id = #{ followerId }
+			ORDER BY
+		</select>
+
+		<!-- 팔로잉 리스트 조회 -->
+		<select id="getfollowerList"
+			resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+			SELECT f.follower_id, f.following_id, f.follower_id, m.member_name
+			FROM
+			WHERE following_id = #{ followingId }
+			ORDER BY
+		</select>
+
+		<!-- 좋아요 유무 -->
+		<select id="isLike"
+			resultType="com.yedam.mohobby.service.communal.JjimVO">
+			SELECT count(*) FROM jjim WHERE target_id = #{ postId }
+			AND member_id = #{ memberId }
+		</select>
+
 				(
 				post_id_seq.nextval,
 				#{ memberId },
