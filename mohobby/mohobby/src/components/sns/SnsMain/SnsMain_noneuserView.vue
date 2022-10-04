@@ -1,4 +1,4 @@
-<!-- a post component in the list -->
+<!-- none_user random postlist component in the list -->
 <template>
   <div>
     <v-container fluid>
@@ -25,7 +25,7 @@
 </template>
 <script>
 export default {
-  name: "listCmp",
+  name: "noneUser",
   props : ["card"],
   methods : {
     
