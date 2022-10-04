@@ -30,8 +30,6 @@
    		update member set del_date = sysdate where member_id = #{memberId}
    </update>
    
-   
-   
    <!-- 회원정보 수정 update -->
    <update id="updateMember" parameterType="com.yedam.mohobby.service.admin.MemberVO">
    		update member set region_id = #{regionId}, nickname = #{nickName}, 
@@ -59,3 +57,4 @@
    </update>
    
    </mapper>
+  

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.service.communal.HashtagVO;
+import com.yedam.mohobby.service.communal.JjimVO;
 
 @Service
 public interface SnsService {
@@ -37,6 +38,12 @@ public interface SnsService {
     
     //아이디 단건조회
     public SnsPostVO getUserProfile();
+    
+    //좋아요클릭
+    public int clickLike(JjimVO jjimVO);
+    
+    //좋아요상태 변경
+    public int updateLike(JjimVO jjimVO);
     
     //게시물 등록
     public int insertFeed(SnsPostVO snsPostVO);

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.sns.SnsMapper;
 import com.yedam.mohobby.service.communal.HashtagVO;
+import com.yedam.mohobby.service.communal.JjimVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.sns.SnsService;
 
@@ -100,6 +101,14 @@ public class SnsServiceImpl implements SnsService{
     @Override
     public SnsPostVO isLike(int postId, String memberId) {
         return mapper.isLike(postId, memberId);
+    }
+    @Override
+    public int clickLike(JjimVO jjimVO) {
+        return mapper.clickLike(jjimVO);
+    }
+    @Override
+    public int updateLike(JjimVO jjimVO) {
+        return mapper.updateLike(jjimVO);
     }
 
 }

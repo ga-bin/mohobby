@@ -1,9 +1,9 @@
 <template>
-  <div id = main>
+  <div id = "container">
     <v-btn icon>
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
-    <v-btn icon>
+    <v-btn icon left>
       <router-link to="/snsFeedInsert"><v-icon>mdi-plus-thick</v-icon></router-link>
     </v-btn>
     <!-- 카드형5개 옆으로 슬라이드 -->
@@ -11,23 +11,29 @@
 
     <!-- 카드형 무한스크롤링 -->
     <h3>재주 견습생들 피드</h3>
-    <listCmp v-for="(card, i) in card_list" :key="i" 
-          :card="card_list"/>
+    <ul>
+      <li v-if="noneUser===9">   
+        <noneUser 
+                v-for="(card, i) in card_list" 
+                :key="i" 
+                :card="card_list"
+        />
+      </li>
+    </ul>
     <!-- <listCmp 
           :card="card_list"
     /> -->
   </div>
 </template>
 <script>
-import listCmp from "./SnsListView.vue";
+import noneUser from "../../components/sns/SnsMain/SnsMain_noneuserView.vue";
 export default {
   name: "snsMain",
-  components: {
-    listCmp
-  },
+  components: { noneUser },
   data() {
     return{
-      card_list : []
+      card_list : [],
+      noneUser : 9
     };
   },
   methods: {
@@ -112,7 +118,8 @@ export default {
 </script>
 
 <style>
-  #main {
+  #container {
+    list-style:none;
     margin: 20px 10%;
   }
 </style>

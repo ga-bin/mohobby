@@ -89,7 +89,7 @@
           '종교/봉사',
           '자연/귀농'
         ],
-        moimRight : '2'
+        moimRight : '1'
       }
     },
     methods : {
