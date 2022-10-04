@@ -31,9 +31,7 @@
           style="cursor: pointer"
           class="mx-5 mr-10"
         >
-          <v-badge offset-x="10" offset-y="10" color="red" content="5">
-            <v-icon>mdi-bell</v-icon>
-          </v-badge>
+
         </span>
       </template>
       <v-list three-line width="400">
@@ -65,17 +63,23 @@
         </template>
       </v-list>
     </v-menu>
+
     <v-btn icon>
-      <v-icon>mdi-magnify</v-icon>
+      <v-icon>mdi-message</v-icon>
     </v-btn>
 
     <v-btn icon>
       <v-icon>mdi-heart</v-icon>
     </v-btn>
 
+    <v-badge offset-x="10" offset-y="10" color="red" content="5">
+      <v-icon>mdi-bell</v-icon>
+    </v-badge>
+
     <v-btn icon>
-      <v-icon>mdi-dots-vertical</v-icon>
+      <v-icon>mdi-account</v-icon>
     </v-btn>
+
   </v-app-bar>
 </template>
 <script>

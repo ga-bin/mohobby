@@ -5,6 +5,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.yedam.mohobby.mapper.user.MemberMapper;
+import lombok.extern.log4j.Log4j;
 
 import lombok.extern.log4j.Log4j;
 
@@ -13,11 +14,13 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class Membertest {
 
-   @Autowired
-   MemberMapper mapper;
-   
-   @Test
-   public void getMemberTest() {
-      mapper.getMember("gabin");
-   };
+
+	@Autowired
+	MemberMapper mapper;
+	
+	@Test
+	public void getMemberTest() {
+		mapper.getMember("gabin");
+	};
 }
+

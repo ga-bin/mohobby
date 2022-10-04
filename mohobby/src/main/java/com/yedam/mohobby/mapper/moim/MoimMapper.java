@@ -9,7 +9,6 @@ public interface MoimMapper {
 	public List<MoimVO> moimAllSelect();
 	//소모임 등록
 	public void moimInsert (MoimVO moimVO);
-
 	
 	//인기소모임 조회
 	public List<MoimVO> moimPopularSelect();
