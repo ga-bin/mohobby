@@ -4,7 +4,7 @@ import lombok.Data;
 
 
 @Data
-public class flaggingVO {
+public class FlaggingVO {
     private int flagId;
     private String flagFrom;
     private String flagTo;

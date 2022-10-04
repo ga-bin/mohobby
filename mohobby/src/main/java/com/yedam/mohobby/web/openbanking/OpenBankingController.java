@@ -35,7 +35,7 @@ public class OpenBankingController {
 				  ); 
 		  return tokenResponse; 
 	  }
-  
+}
   
 //  @PostMapping("/realname") public RealNameVO getRealName()
 
