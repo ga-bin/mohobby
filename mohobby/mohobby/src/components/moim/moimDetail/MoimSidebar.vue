@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app>
+   <v-navigation-drawer app>
     <div class="text-center mt-4 pa-10">
       <v-avatar class="mb-4" color="grey darken-1" size="64">
         <v-img
@@ -49,4 +49,9 @@ export default {
 .text-center {
   background-color: #2ac187;
 }
+
+.mb-4{
+  margin-top: 0;  
+}
+
 </style>
