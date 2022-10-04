@@ -12,6 +12,7 @@
             </v-btn>
           </div>
         </div>
+
         <div id ="image_box">
           <div class="d-flex flex-column justify-space-between align-center">
             <v-slider
@@ -31,11 +32,18 @@
         </div>
           <div>
             <v-btn icon
-                  text
+                   id="full_heart"
+                   text
                   @click="likeBtn">
-              <v-icon id="full_heart" color="red lighten-2">mdi-heart</v-icon>
-              <v-icon id="empty_heart">mdi-heart-outline</v-icon>
+              <v-icon color="red lighten-2">mdi-heart</v-icon>
             </v-btn>
+            <v-btn icon
+                   id="empty_heart"
+                   text
+                  @click="likeBtn">
+              <v-icon>mdi-heart-outline</v-icon>
+            </v-btn>
+            
             {{likecnt}}
             <v-icon>mdi-chat-outline</v-icon>
             {{cmtcnt}}
@@ -46,7 +54,8 @@
     </div>
   </template>
   <script>
-    import SnsSidebar from "../../components/sns/SnsSidebar.vue";
+    import axios from 'axios'
+    import SnsSidebar from "../../components/sns/SnsCommn/SnsSidebar.vue";
     export default {
       name: "snsFeedDetail",
       components: { SnsSidebar },
@@ -54,8 +63,11 @@
       profileImg : "대충프로필",
       regDate : "2022.01.01",
       cmtcnt : 15,
+      likeStatus: 0, //좋아요 없음
       likecnt : 0,
       width: 800,
+      memberId: "user1",
+      targetId: 1
       }),
       setup() {
         
@@ -72,26 +84,51 @@
       methods: {
         likeBtn() {
         // let target = event.target.getElementById;
-        if (this.likecnt > 0) {
-          this.showEmptyHeart();
-          console.log(this.showEmptyHeart);
-          this.likecnt =- 1;
-          
+        if (this.likeStatus === 0) {
+          this.showFullHeart();
+          console.log(this.showFullHeart);
+          this.likeStatus = 1; // DB로 업데이트
+          this.likecnt++;
+          //좋아요 인서트
+          axios.post("http://localhost:8088/java/feedDetail", {
+                    status : 1,
+                    memberId : this.memberId,
+                    targetId : this.targetId
+                })
+                .then(function (response) {
+                  console.log(response);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
         }
-        this.likecnt++;
-        if (!this.showEmptyHeart()) {
-        this.hiddenEmptyHeart();
-        console.log(this.hiddenEmptyHeart);
-        } //show/hidden 함께 실행됨.
+        else{
+        this.showEmptyHeart();
+        console.log(this.showEmptyHeart);
+        this.likeStatus = 0;
+        this.likecnt--;
+        //좋아요 업데이트
+        axios.post("http://localhost:8088/java/feedDetail", {
+                    status : 0,
+                    memberId : this.memberId,
+                    targetId : this.targetId
+                })
+                .then(function (response) {
+                  console.log(response);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+        }
         
-        
+
         
         },
         showEmptyHeart() {
           document.getElementById("empty_heart").style.display = "inline-block";
           document.getElementById("full_heart").style.display = "none";
         },
-        hiddenEmptyHeart() {
+        showFullHeart() {
           document.getElementById("empty_heart").style.display = "none";
           document.getElementById("full_heart").style.display = "inline-block";
         }
