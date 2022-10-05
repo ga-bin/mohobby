@@ -10,13 +10,14 @@
       <property name="driverClassName"
          value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
       <property name="jdbcUrl"
-
-         value="jdbc:log4jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=C://Users/party/Wallet_mohobby" />
+         value="jdbc:log4jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=D:/dev/Wallet_mohobby" />
       <property name="username" value="admin" />
       <property name="password" value="Mohobby1234*" />
+ 	  <property name="maximumPoolSize" value="1000"/>
+      <property name="connectionTimeout" value="2000"/>
+      <property name="maxLifetime" value="1800000"/>
    </bean>
-   
-<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
       destroy-method="close">
       <constructor-arg ref="hikariConfig" />
    </bean>
@@ -31,11 +32,11 @@
          <property name="dataSource" ref="dataSource" />
       </bean>
 
-		<bean id="sqlSession"
-			class="org.mybatis.spring.SqlSessionTemplate">
-			<constructor-arg ref="sqlSessionFactory" />
-		</bean>
-		<!-- mapper scan -->
-		<mybatis-spring:scan
-			base-package="com.yedam.mohobby.mapper.*" />
+      <bean id="sqlSession"
+         class="org.mybatis.spring.SqlSessionTemplate">
+         <constructor-arg ref="sqlSessionFactory" />
+      </bean>
+      <!-- mapper scan -->
+      <mybatis-spring:scan
+         base-package="com.yedam.mohobby.mapper.*" />
 </beans>

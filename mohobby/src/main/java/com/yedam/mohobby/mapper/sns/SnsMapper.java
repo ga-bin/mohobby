@@ -39,12 +39,10 @@ public interface SnsMapper {
     
     //좋아요클릭 - insert(jjim)
     public int addLike(JjimVO jjimVO);
-    //좋아요상태 변경 - update(jjim)
-    public int updateLike(JjimVO jjimVO);
+    //좋아요취소 - delete(jjim)
+    public int deleteLike(JjimVO jjimVO);
     //좋아요누적 - update(snsPost)
     public int sumLikes(SnsPostVO snsPostVO);
-    //좋아요취소
-    public int deleteLike(JjimVO jjimVO);
     
     
     //게시물 등록

@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,16 +23,18 @@ public class SnsController {
     @Autowired
     SnsService service;
     
-   //전체피드
+  //전체피드
     @GetMapping("/main")
     public List<SnsPostVO> allList() {
         return service.allList();
     }
-    //인기강사피드
+   //인기강사피드
     @GetMapping("/hotLecturerList")
     public List<SnsPostVO> hotLecturerList() {
         return service.hotLecturerList();
     }
+    
+    
   //최신피드
     @GetMapping("/newList")
     public List<SnsPostVO> newList() {
@@ -49,23 +53,24 @@ public class SnsController {
     
     
   //좋아요클릭 - insert
-    @PostMapping("/feedDetail")
-    public JjimVO clickLike(@RequestBody JjimVO jjimVO) {
+    @PostMapping("/like")
+    public JjimVO addLike(@RequestBody JjimVO jjimVO) {
         service.addLike(jjimVO);
         return jjimVO;
     }
-  //좋아요누적 - update
-    @PostMapping("/feedDetail")
-    public SnsPostVO addLikes(@RequestBody SnsPostVO snsPostVO) {
+  //좋아요취소 - delete
+    @DeleteMapping("/like")
+    public JjimVO deleteLike(@RequestBody JjimVO jjimVO) {
+        service.deleteLike(jjimVO);
+        return jjimVO;
+    }
+   //좋아요누적 - update
+    @PutMapping("/like")
+    public SnsPostVO sumLikes(@RequestBody SnsPostVO snsPostVO) {
         service.sumLikes(snsPostVO);
         return snsPostVO;
     }
-  //좋아요상태 변경 - update
-    @PostMapping("/feedDetail")
-    public JjimVO updateLike(@RequestBody JjimVO jjimVO) {
-        service.updateLike(jjimVO);
-        return jjimVO;
-    }
+    
     
   //피드 상세
     @GetMapping("/feedDetail")
