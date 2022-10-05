@@ -3,17 +3,17 @@
 <mapper namespace="com.yedam.mohobby.mapper.user.MemPickKeywordMapper">
 
  <!-- 회원 관심사 list select -->
- 	<select id="selectPickKeywordList" parameterType="String" resultType="com.yedam.mohobby.service.admin.MemPickKeywordVO">
+ 	<select id="selectPickKeywordList" parameterType="String" resultType="com.yedam.mohobby.service.user.MemPickKeywordVO">
  		select member_id, keyword_id from member_pick_keyword where member_id = #{memberId}
  	</select>
  	
  <!-- 회원 관심사 insert -->
-   <insert id="insertPickKeyword" parameterType="com.yedam.mohobby.service.admin.MemPickKeywordVO">
+   <insert id="insertPickKeyword" parameterType="com.yedam.mohobby.service.user.MemPickKeywordVO">
    		insert into member_pick_keyword (member_id, keyword_id) values (#{memberId}, #{keywordId})   
    </insert>
    
    <!-- 회원 관심사 delete -->
-   <delete id="deletePickKeyword" parameterType="com.yedam.mohobby.service.admin.MemPickKeywordVO">
+   <delete id="deletePickKeyword" parameterType="com.yedam.mohobby.service.user.MemPickKeywordVO">
    		delete from member_pick_keyword where member_id = #{memberId} and keyword_id = #{keywordId}
    
    </delete>
