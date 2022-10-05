@@ -6,16 +6,11 @@
       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
    <!-- datasource connection pool -->
-   <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-      <property name="driverClassName"
-         value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
-      <property name="jdbcUrl"
-         value="jdbc:log4jdbc:oracle:thin:@mohobby_medium?TNS_ADMIN=C://Wallet_mohobby" />
-      <property name="username" value="admin" />
-      <property name="password" value="Mohobby1234*" />
- 		<property name="maximumPoolSize" value="1000"/>
-      <property name="connectionTimeout" value="180000000"/>
-      <property name="maxLifetime" value="1800000"/>
+  <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+      <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+      <property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@132.226.170.159:1521:xe"></property>
+      <property name="username" value="mohobby"></property>
+      <property name="password" value="mohobby"></property>
    </bean>
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
       destroy-method="close">
