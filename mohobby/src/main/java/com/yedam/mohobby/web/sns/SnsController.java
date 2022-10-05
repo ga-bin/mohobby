@@ -49,13 +49,13 @@ public class SnsController {
     
     
   //좋아요클릭 - insert
-    @PostMapping("/feedDetail")
+    @PostMapping("/addLike")
     public JjimVO clickLike(@RequestBody JjimVO jjimVO) {
         service.addLike(jjimVO);
         return jjimVO;
     }
   //좋아요누적 - update
-    @PostMapping("/feedDetail")
+    @PostMapping("/sumLike")
     public SnsPostVO addLikes(@RequestBody SnsPostVO snsPostVO) {
         service.sumLikes(snsPostVO);
         return snsPostVO;
