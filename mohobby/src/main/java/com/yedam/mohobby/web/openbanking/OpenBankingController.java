@@ -152,4 +152,3 @@ public class OpenBankingController {
 		return respVO;
 	}
 }
-

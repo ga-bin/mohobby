@@ -8,7 +8,7 @@
             solo
           ></v-text-field>
     </v-container>
-  </div>
+    </div>
     
     <v-card
     class="mx-auto mb-8"
@@ -61,12 +61,18 @@
           date: "2022-10-05 10:50",
           id: "관리자",
           contents: "[공지] 여러분 예담 공지를 확인하세요!"
-        }]
+        }],
+        moim: 1,
+        moimRight: 1
       }
     },
     methods : {
       goPost : function(){
-        this.$router.push({path: 'moimPost'});
+        if((this.moim===1 && (this.moimRight===0 || this.moimRight===1)) || (this.moim===0 && this.moimRight===1)){
+          this.$router.push({path: 'moimPost'});
+        } else if(this.moimRight===0){
+          this.$router.push({path:''});
+        }
       }
     },
     props :{
@@ -75,7 +81,7 @@
   }
 </script>
 <style scoped>
-  .container {
-    width : 80%;
+  .container{
+    width: 80%;
   }
 </style>
