@@ -11,7 +11,6 @@ import MoimMainrecruit from "../../components/moim/Main/MoimMain_recruit.vue";
 import MoimMainrecruit2 from "../../components/moim/Main/MoimMain_recruit2.vue";
 
 export default {
-  name: "",
   components: { MoimMain_Top, MoimMainrecruit, MoimMainrecruit2 },
   data: () => ({
     }),

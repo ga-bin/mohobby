@@ -44,22 +44,73 @@
   </v-card>  
 </div>
 <div class="moreMoim">
-<v-card-actions>
-<v-spacer></v-spacer>
-<v-btn
-text
->
+  <!--비회원 소모임 모집 -->
+  <v-card-actions  v-if="moimRight==='0'" >
+  <v-spacer></v-spacer>
+  <div class="text-center">
+    <v-dialog
+      v-model="noneuser"
+      width="500"
+    >
+  <template v-slot:activator="{ on, attrs }">
+  <v-btn text>
+  <v-chip
+    color="success"
+    outlined
+    v-bind="attrs"
+    v-on="on"
+  >
+  <v-icon left>
+    mdi-plus
+  </v-icon>
+  새로운 소모임 모집하기
+</v-chip>
+</v-btn>
+</template>
+<v-card>
+  <br><br>
+        <v-card-text class="font-weight-bold">
+          소모임을 만들기 위해서는 먼저 로그인을 해주세요!.
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            depressed
+            @click="noneuser=false"
+          >
+            닫기
+          </v-btn>
+          <v-btn
+            color="success"
+            depressed
+            @click="join"
+          >
+            로그인하러 가기
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+</v-card-actions>
+<!-- 회원 소모임 버튼 -->
+<v-card-actions v-else>
+  <v-spacer></v-spacer>
+  <v-btn text>
   <v-chip
     color="success"
     outlined
     @click="select"
->
-    <v-icon left>
-      mdi-plus
-    </v-icon>
-    새로운 소모임 모집하기
-  </v-chip>
+  >
+  <v-icon left>
+    mdi-plus
+  </v-icon>
+  새로운 소모임 모집하기
+</v-chip>
 </v-btn>
+
 </v-card-actions>
 </div>
 </div>
@@ -118,14 +169,21 @@ export default {
       photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
       hobby : '운동/건강'
   },
-  ]
+  ],
+  moimRight : '0',
+  noneuser : false,
   };
 },
 
 methods : {
   select : function() {
-    this.$router.push({ path: 'moimRegisterIn' })
-  }
+    if (this.moimRight !== '0') {
+      this.$router.push({ path: 'moimRegisterIn' })
+      }
+    },
+    join() {
+     this.$router.push({ path: 'login' })
+    }  
 }
 
 }
