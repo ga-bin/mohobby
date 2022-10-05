@@ -1,7 +1,9 @@
 package com.yedam.mohobby.mapper.sns;
 
 import java.util.List;
+
 import com.yedam.mohobby.service.communal.HashtagVO;
+import com.yedam.mohobby.service.communal.JjimVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 
 public interface SnsMapper {
@@ -34,14 +36,22 @@ public interface SnsMapper {
     //아이디 단건조회
     //public SnsPostVO getUserProfile();
     
+    
+    //좋아요클릭 - insert(jjim)
+    public int addLike(JjimVO jjimVO);
+    //좋아요상태 변경 - update(jjim)
+    public int updateLike(JjimVO jjimVO);
+    //좋아요누적 - update(snsPost)
+    public int sumLikes(SnsPostVO snsPostVO);
+    //좋아요취소
+    public int deleteLike(JjimVO jjimVO);
+    
+    
     //게시물 등록
     public int insertFeed(SnsPostVO snsPostVO);
-    
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
     //피드 삭제
     public int deleteFeed(int postId);
-    //좋아요 조회
-    public SnsPostVO isLike(int postId, String memberId);
     
 }

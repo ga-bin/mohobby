@@ -2,7 +2,7 @@
   <div class="container">
   <h3>소모임 멤버를 모집합니다!</h3>
   <br>
-  <div class="box" v-for="item in items">
+  <div class="box" v-for="item in items" :key="item.title">
   <v-card
     class="mx-3"
     max-width="550"

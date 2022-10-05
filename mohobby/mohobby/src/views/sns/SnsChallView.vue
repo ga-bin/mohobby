@@ -5,7 +5,7 @@
     </div>
   </template>
 <script>
-  import SnsSidebar from "../../components/sns/SnsSidebar.vue";
+  import SnsSidebar from "../../components/sns/SnsCommn/SnsSidebar.vue";
   export default {
     name: "snsChall",
     components: { SnsSidebar },
