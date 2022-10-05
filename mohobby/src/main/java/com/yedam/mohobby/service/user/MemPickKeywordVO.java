@@ -1,4 +1,4 @@
-package com.yedam.mohobby.service.admin;
+package com.yedam.mohobby.service.user;
 
 import lombok.Data;
 

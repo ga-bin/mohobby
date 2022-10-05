@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.user.MemPickKeywordMapper;
-import com.yedam.mohobby.service.admin.MemPickKeywordVO;
 import com.yedam.mohobby.service.user.MemPickKeywordService;
+import com.yedam.mohobby.service.user.MemPickKeywordVO;
 
 @Service
 public class MemPickKeywordServiceImpli implements MemPickKeywordService {
