@@ -30,14 +30,71 @@
       <button @click="requestToken">requestToken</button>
       <button @click="saveToken">saveToken</button>
     </div>
+    <div class="example">
+      <quill-editor
+        class="editor"
+        ref="myTextEditor"
+        :disabled="false"
+        :value="content"
+        :options="editorOption"
+        @change="onEditorChange"
+        @blur="onEditorBlur($event)"
+        @focus="onEditorFocus($event)"
+        @ready="onEditorReady($event)"
+      />
+
+      <details>
+        <summary>미리보기</summary>
+        <div class="output ql-snow">
+          <div v-html="content"></div>
+        </div>
+      </details>
+
+      <button @click="saveEditor">saveEditor</button>
+  </div>
   </div>
 </template>
 <script>
 import ClassSidebar from "../../components/lecture/ClassSidebar.vue";
+import hljs from "highlight.js";
+import debounce from "lodash/debounce";
+import { quillEditor } from "vue-quill-editor";
+
+// highlight.js style
+import "highlight.js/styles/tomorrow.css";
+
+// import theme style
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import axios from "axios";
+
 export default {
-  components: { ClassSidebar },
+  name: "quill-example-snow",
+  title: "Theme: snow",
+  components: { 
+    quillEditor,
+    ClassSidebar 
+  },
   data() {
     return {
+      editorOption: {
+        placeholder: "place holder test",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline", "strike"], // <strong>, <em>, <u>, <s>
+            [{ header: 1 }, { header: 2 }], // <h1>, <h2>
+            [{ size: ["small", false, "large", "huge"] }], //class 제어 - html로 되도록 확인
+            [{ header: [1, 2, 3, 4, 5, 6, false] }], // <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, normal
+            [{ font: [] }], // 글꼴 class로 제어
+            [{ color: [] }, { background: [] }], //style="color: rgb(230, 0, 0);", style="background-color: rgb(230, 0, 0);"
+            ["image"]
+          ],
+          syntax: {
+            highlight: (text) => hljs.highlightAuto(text).value,
+          },
+        },
+      },
+      content: "",
       sampleData: "",
       auth: {
         code: '5HafwwLPu3WJ2fSvI3XKtqmi1Y562O',
@@ -58,10 +115,23 @@ export default {
   setup() {},
   created() {},
   mounted: function () {
-    this.init()
+    this.init();
+    console.log("this is Quill instance:", this.editor);
   },
   unmounted() {},
   methods: {
+    onEditorChange: debounce(function(value) {
+      this.content = value.html;
+    }, 466),
+    onEditorBlur(editor) {
+      console.log("editor blur!", editor);
+    },
+    onEditorFocus(editor) {
+      console.log("editor focus!", editor);
+    },
+    onEditorReady(editor) {
+      console.log("editor ready!", editor);
+    },
     init () {
       if (sessionStorage.auth) {
         this.auth = JSON.parse(sessionStorage.auth)
@@ -98,7 +168,7 @@ export default {
       this.auth = JSON.parse(sessionStorage.auth)
     },
     requestToken () {
-      fetch('http://localhost:8088/java/requestToken', {
+      axios('http://localhost:8088/java/requestToken', {
         method: "POST",
         headers: {
           "Content-Type": "application/json; charset=utf-8",
@@ -131,8 +201,30 @@ export default {
         token_type: this.token.token_type,
         user_seq_no: this.token.user_seq_no
       })
+    },
+    saveEditor() {
+      axios('http://localhost:8088/java/saveClassInfo', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: this.content,
+          filename: "2"
+        })
+      }).catch((error) => {
+          console.log(`error: ${error}`);
+      })
     }
   },
+  computed: {
+    editor() {
+      return this.$refs.myTextEditor.quill;
+    },
+    contentCode() {
+      return hljs.highlightAuto(this.content).value;
+    },
+  }
 };
 </script>
 

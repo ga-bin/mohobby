@@ -1,9 +1,8 @@
 package com.yedam.mohobby.web.openbanking;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.yedam.mohobby.service.openbanking.BankRealNameRequestVO;
+import com.yedam.mohobby.service.openbanking.BankRealNameResponseVO;
 import com.yedam.mohobby.service.openbanking.RequestHeaderVO;
+import com.yedam.mohobby.service.openbanking.ResponseHeaderVO;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,17 +33,20 @@ public class OpenBankingController {
  
 	@GetMapping("/bankRealName")
 	@ApiOperation(value = "계좌번호 실명 조회", notes="해당 계좌번호와 예금주명이 일치하는지 확인합니다.")
-	public String accountNumber(
+	public BankRealNameResponseVO accountNumber(
 			@ApiParam(value = "은행 코드", required = true) @RequestParam String Bncd,
 			@ApiParam(value = "계좌 번호", required = true) @RequestParam String Acno) 
 			throws MalformedURLException 
 	{
+		
 		String response = "";
+		BankRealNameResponseVO respVO = new BankRealNameResponseVO();
 		
 		URL url;
 		StringBuilder sb = new StringBuilder();
+		OutputStream os;
 		BufferedReader br;
-		BufferedWriter bw;
+		Gson gson = new Gson();
 		
 		
 		//현재 날짜 구하기
@@ -48,7 +54,7 @@ public class OpenBankingController {
 		
 		//헤더 추가 정보
 		RequestHeaderVO header = new RequestHeaderVO();
-		if(Bncd == "011") {
+		if(Bncd.equals("011")) {
 			//농협계좌
 			url = new URL("https://developers.nonghyup.com/InquireDepositorAccountNumber.nh");
 			header.setApiNm("InquireDepositorAccountNumber");
@@ -67,8 +73,8 @@ public class OpenBankingController {
 		requestBody.setBncd(Bncd);
 		
 		//리퀘스트 바디 -> json
-		Gson gson = new Gson();
 		String bodyJson = gson.toJson(requestBody);
+		System.out.println(bodyJson);
 		
 		
 		try { 
@@ -76,7 +82,8 @@ public class OpenBankingController {
 			HttpURLConnection con = (HttpURLConnection)url.openConnection();
 		  
 			//Request Header 정의 
-			con.setRequestProperty("Content-Type", "applicaton/json");
+			con.setRequestProperty("Content-Type", "application/json");
+			con.setRequestProperty("Accept", "application/json");
 		  
 			//전송방식 
 			con.setRequestMethod("POST");
@@ -85,10 +92,11 @@ public class OpenBankingController {
 			con.setReadTimeout(5000); //읽기 타임아웃 설정(5초) 
 			con.setDoOutput(true); // URL 연결을 출력용으로 사용(true)
 			
-			bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
-			bw.write(bodyJson);
-			bw.flush();
-			bw.close();
+			
+			os = con.getOutputStream();
+			os.write(bodyJson.toString().getBytes("utf-8"));
+			os.close();
+			
 			
 			System.out.println("getContentType():" + con.getContentType());
 			System.out.println("getResponseCode():" + con.getResponseCode());
@@ -96,21 +104,51 @@ public class OpenBankingController {
 			
 			
 			if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8")); 
-				String line; 
+				br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8")); 
+				String line = null; 
 				while((line = br.readLine()) != null) { 
-					sb.append(line).append("\n"); 
+					sb.append(line + "\n"); 
 				}
 				br.close();
 				
-				response = sb.toString();
-		  }
+				response = ""+sb.toString();
+				System.out.println(response);
+				
+				//json 객체
+				@SuppressWarnings("deprecation")
+				JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
+				
+				//response 객체
+				if(respJson.has("Bncd")) {
+					respVO.setBncd(respJson.get("Bncd").getAsString());
+				}
+				if(respJson.has("Dpnm")) {
+					respVO.setDpnm(respJson.get("Dpnm").getAsString());
+				}
+				if(respJson.has("Acno")) {
+					respVO.setAcno(respJson.get("Acno").getAsString());
+				}
+				ResponseHeaderVO respHeader = new ResponseHeaderVO();
+				JsonObject respHeaderJson = (JsonObject) respJson.get("Header");
+				respHeader.setTrtm(respHeaderJson.get("Trtm").getAsString());
+				respHeader.setRsms(respHeaderJson.get("Rsms").getAsString());
+				respHeader.setApiNm(respHeaderJson.get("ApiNm").getAsString());
+				respHeader.setIsTuno(respHeaderJson.get("IsTuno").getAsString());
+				respHeader.setTsymd(respHeaderJson.get("Tsymd").getAsString());
+				respHeader.setFintechApsno(respHeaderJson.get("FintechApsno").getAsString());
+				respHeader.setIscd(respHeaderJson.get("Iscd").getAsString());
+				respHeader.setRpcd(respHeaderJson.get("Rpcd").getAsString());
+				respHeader.setApiSvcCd(respHeaderJson.get("ApiSvcCd").getAsString());
+				respVO.setHeader(respHeader);
+				
+		    }
 		  
 		  } catch(Exception e) {
 			  e.printStackTrace();
 		  }
 		 
-		System.out.println(response);
-		return response;
+		
+		System.out.println(respVO);
+		return respVO;
 	}
 }
