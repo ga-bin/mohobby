@@ -32,6 +32,8 @@
         </v-list-item-subtitle>
         <hr>
   <v-list-item-content>
+
+
         <!--주제선택-->
         <v-col
       cols="12"
@@ -59,330 +61,242 @@
         elevation="10"
         rounded="xl"
       >
-        <v-sheet
-          class="pa-3 primary text-right"
-          dark
-          rounded="t-xl"
-        >
-          <v-btn
-            class="ml-2"
-            icon
-            @click="check = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-sheet>
-
-        <div class="pa-4">
-        <!-- 취미 -->
+          <v-card-title class="justify-center">
+            <span class="font-weight-bold">지역선택</span>
+          </v-card-title>
+          <hr>
+        <div class="pa-12">
+        <!-- 취미 hobb -->
         <v-chip-group
-            active-class="primary--text"
-            column
+        active-class="light-green--text"
+        column
           >
-            <div>
-              <div>
-              <v-title>
-                취미
-              </v-title>
+          <div>
+            <div class="mt-3">
+          <span class="font-weight-bold">취미</span>
+          </div>
+          <div class="pa-1">
+                <v-chip v-for="item in hobb" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="hobby in hobb"
-              :key="hobby"
-            >
-              {{ hobby }}
-            </v-chip>
+          </div>
+        <!-- 스포츠/레저 sports -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">스포츠/레저</span>
             </div>
-            
-
-          <!-- 스포츠/레저 -->
-            <div>
-              <div>
-              <v-title>
-                  스포츠/레저
-              </v-title>
+              <div class="pa-1">
+                <v-chip v-for="item in sports" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="sport in sports"
-              :key="sport"
-            >
-              {{ sport }}
-            </v-chip>
+          </div>
+        <!-- 어학/외국어 lang -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">어학/외국어</span>
             </div>
-            <br>
-            <!-- 어학/외국어 -->
-            <div>
-              <div>
-              <v-title>
-                  어학/외국어
-              </v-title>
+              <div class="pa-1">
+                <v-chip v-for="item in lang" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="language in lang"
-              :key="language"
-            >
-              {{ language }}
-            </v-chip>
-            </div>
-            <br>
-
-            <!-- 문화/예술 -->
-            <div>
-              <div>
-              <v-title>
-                문화/예술
-              </v-title>
+          </div>
+        <!-- 문화/예술 arts -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">문화/예술</span>
+          </div>
+              <div class="pa-4">
+                <v-chip v-for="item in arts" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="culArt in arts"
-              :key="culArt"
-            >
-              {{ culArt }}
-            </v-chip>
+          </div>
+        <!-- 여행/캠핑 trip -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">여행/캠핑</span>
             </div>
-            <br>
-
-            <!-- 여행/캠핑 -->
-            <div>
-              <div>
-              <v-title>
-                여행/캠핑
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in trip" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="travel in trip"
-              :key="travel"
-            >
-              {{ travel }}
-            </v-chip>
+          </div>
+        <!-- 음악 music -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">음악</span>
             </div>
-            <br>
-
-            <!-- 음악 -->
-            <div>
-              <div>
-              <v-title>
-                음악
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in music" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="musics in music"
-              :key="musics"
-            >
-              {{ musics }}
-            </v-chip>
+          </div>
+        <!-- 건강/다이어트 diet -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">건강/다이어트</span>
             </div>
-            <br>
-
-            <!-- 건강/다이어트 -->
-            <div>
-              <div>
-              <v-title>
-                건강/다이어트
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in diet" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="diets in diet"
-              :key="diets"
-            >
-              {{ diets }}
-            </v-chip>
+          </div>
+        <!-- 친목/모임 amity -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">친목/모임</span>
             </div>
-            <br>
-
-            <!-- 친목/모임 -->
-            <div>
-              <div>
-              <v-title>
-                친목/모임
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in amity" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="friendship in amity"
-              :key="friendship"
-            >
-              {{ friendship }}
-            </v-chip>
+          </div>
+        <!-- 맛집/요리 matzip <=맛집ㅋㅋㅋㅋㅋㅋㅋㅋㅋ -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">맛집/요리</span>
             </div>
-            <br>
-
-            <!-- 맛집/요리 -->
-            <div>
-              <div>
-              <v-title>
-                맛집/요리
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in matzip" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="cook in matzip"
-              :key="cook"
-            >
-              {{ cook }}
-            </v-chip>
+          </div>
+        <!-- 인문/과학 humenities -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">인문/과학</span>
             </div>
-            <br>
-
-            <!-- 인문/과학 -->
-            <div>
-              <div>
-              <v-title>
-                인문/과학
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in humenities" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="humen in humenities"
-              :key="humen"
-            >
-              {{ humen }}
-            </v-chip>
+          </div>
+        <!--  팬클럽 fan -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">팬클럽</span>
             </div>
-            <br>
-
-            <!--  팬클럽 -->
-            <div>
-              <div>
-              <v-title>
-                팬클럽
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in fan" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="fanclub in fan"
-              :key="fanclub"
-            >
-              {{ fanclub }}
-            </v-chip>
+          </div>
+        <!--  게임 game -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">게임</span>
             </div>
-            <br>
-
-            <!--  게임 -->
-            <div>
-              <div>
-              <v-title>
-                게임
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in game" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="games in game"
-              :key="games"
-            >
-              {{ games }}
-            </v-chip>
+          </div>
+        <!--  만화/애니메이션 ani -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">만화/애니메이션</span>
             </div>
-            <br>
-
-            <!--  만화/애니메이션 -->
-            <div>
-              <div>
-              <v-title>
-                만화/애니메이션
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in ani" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="animation in ani"
-              :key="animation"
-            >
-              {{ animation }}
-            </v-chip>
+          </div>
+        <!-- 반려동물/동물 animal -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">반려동물/동물</span>
             </div>
-            <br>
-
-
-             <!-- 반려동물/동물 -->
-             <div>
-              <div>
-              <v-title>
-                반려동물/동물
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in animal" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="pet in animal"
-              :key="pet"
-            >
-              {{ pet }}
-            </v-chip>
+          </div>
+        <!-- 교육/공부 edu -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">교육/공부</span>
             </div>
-            <br>
-
-            <!-- 교육/공부 -->
-            <div>
-              <div>
-              <v-title>
-                교육/공부
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in edu" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="education in edu"
-              :key="education"
-            >
-              {{ education }}
-            </v-chip>
+          </div>
+        <!-- IT/컴퓨터 it -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">IT/컴퓨터</span>
             </div>
-            <br>
-
-            <!-- IT/컴퓨터 -->
-            <div>
-              <div>
-              <v-title>
-                IT/컴퓨터
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in it" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="computer in it"
-              :key="computer"
-            >
-              {{ computer }}
-            </v-chip>
+          </div>
+        <!-- 경제/재테크 financial -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">경제/재테크</span>
             </div>
-            <br>
-
-            <!-- 경제/재테크 -->
-            <div>
-              <div>
-              <v-title>
-                경제/재테크
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in financial" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="computer in financial"
-              :key="computer"
-            >
-              {{ computer }}
-            </v-chip>
+          </div>
+        <!-- 종교/봉사 charity -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">종교/봉사</span>
             </div>
-            <br>
-
-            <!-- 종교/봉사 -->
-            <div>
-              <div>
-              <v-title>
-                종교/봉사
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in charity" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="religion in charity"
-              :key="religion"
-            >
-              {{ religion }}
-            </v-chip>
+          </div>
+        <!-- 자연/귀농 nature -->
+        <div>
+          <div class="mt-3">
+            <span class="font-weight-bold">자연/귀농</span>
             </div>
-            <br>
-
-            <!-- 자연/귀농 -->
-            <div>
-              <div>
-              <v-title>
-                자연/귀농
-              </v-title>
+              <div class="pa-4">
+                <v-chip v-for="item in nature" :key="item" class="mr-3 mb-3">
+                  {{item}}
+                </v-chip>
               </div>
-            <v-chip
-              v-for="farming in nature"
-              :key="farming"
-            >
-              {{ farming }}
-            </v-chip>
-            </div>
-            <br>
+          </div>
           </v-chip-group>
-
+          <v-card-actions class="justify-center mr-5">
+          <v-btn
+          depressed
+          elevation="2"
+          @click="check = false"
+          >
+            취소
+          </v-btn>
+          <v-btn
+          color="success"
+          depressed
+          elevation="2"
+          @click="check = false"
+          >
+            저장
+          </v-btn>
+          </v-card-actions>
         </div>
       </v-sheet>
       </v-dialog>
@@ -420,7 +334,7 @@
         rounded="xl"
       >
       <v-card-title class="justify-center">
-          <span class="text-h5">지역선택</span>
+          <span class="font-weight-bold">지역선택</span>
       </v-card-title>
       <v-card-actions>
         
@@ -503,7 +417,6 @@
     </v-card-actions>
       </v-list-item-content>
 </v-list-item>
-    <v-vinder></v-vinder>
   </v-card>
 </template>
 <script>

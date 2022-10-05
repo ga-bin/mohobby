@@ -4,7 +4,7 @@
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
     <v-btn icon>
-      <v-icon>mdi-plus-thick</v-icon>
+      <v-icon left>mdi-plus-thick</v-icon>
     </v-btn>
     <!-- 카드형5개 옆으로 슬라이드 -->
     <h3>추천 만능 재주꾼들 피드</h3>
@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-import listCmp from "./SnsListView.vue";
+import listCmp from "../../components/sns/SnsListView.vue";
 export default {
   name: "snsMain",
   components: {

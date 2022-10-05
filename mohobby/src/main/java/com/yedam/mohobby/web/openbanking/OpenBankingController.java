@@ -7,7 +7,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -28,7 +27,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class OpenBankingController {
-
+ 
 	@GetMapping("/bankRealName")
 	@ApiOperation(value = "계좌번호 실명 조회", notes="해당 계좌번호와 예금주명이 일치하는지 확인합니다.")
 	public String accountNumber(
@@ -50,9 +49,11 @@ public class OpenBankingController {
 		//헤더 추가 정보
 		RequestHeaderVO header = new RequestHeaderVO();
 		if(Bncd == "011") {
+			//농협계좌
 			url = new URL("https://developers.nonghyup.com/InquireDepositorAccountNumber.nh");
 			header.setApiNm("InquireDepositorAccountNumber");
 		} else {
+			//타행계좌
 			url = new URL("https://developers.nonghyup.com/InquireDepositorOtherBank.nh");
 			header.setApiNm("InquireDepositorOtherBank");
 		}

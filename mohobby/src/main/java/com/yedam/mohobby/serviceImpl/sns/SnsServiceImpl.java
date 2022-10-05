@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.sns.SnsMapper;
 import com.yedam.mohobby.service.communal.HashtagVO;
+import com.yedam.mohobby.service.communal.JjimVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.sns.SnsService;
 
@@ -80,6 +81,39 @@ public class SnsServiceImpl implements SnsService{
         // TODO Auto-generated method stub
         return null;
     }
+    /*
+     * 좋아요 클릭
+     * 찜 테이블에서 postId % memberId가 존재하는지 조회
+     * 좋아요가 취소되어야 하는지 확인
+     * if 좋아요 존재 -> jjim테이블에서 postId와 memberId 삭제
+     *               sns_post테이블에서 likes업데이트
+     *               
+     * delete from jjim where target_id = #{targetId} and member_id = '#{memberId}'
+     * update sns_post set likes = (select count(*) from jjim where target_id = #{targetId})
+     * 
+     * 
+     * else 좋아요 안했을때-> 
+     * insert into jjim(target_id, member_id) values(#{targetId}, #{memberId})
+     * update sns_post set likes = (select count(*) from jjim where target_id = #{targetId})
+     */
+    
+    //좋아요클릭 - insert(jjim)
+    @Override
+    public int addLike(JjimVO jjimVO) {
+        return mapper.addLike(jjimVO);
+    }
+    //좋아요 - update(jjim)
+    @Override
+    public int updateLike(JjimVO jjimVO) {
+        return mapper.updateLike(jjimVO);
+    }
+    //좋아요누적 - insert(snspost)
+    @Override
+    public int sumLikes(SnsPostVO snsPostVO) {
+        return mapper.sumLikes(snsPostVO);
+    }
+    
+    
     //게시물 등록
     @Override
     public int insertFeed(SnsPostVO snsPostVo) {
@@ -96,10 +130,5 @@ public class SnsServiceImpl implements SnsService{
     public int deleteFeed(int postId) {
         return mapper.deleteFeed(postId);
     }  
-    //좋아요 조회
-    @Override
-    public SnsPostVO isLike(int postId, String memberId) {
-        return mapper.isLike(postId, memberId);
-    }
 
 }
