@@ -265,5 +265,4 @@
       WHERE following_id = #{ followingId }
       ORDER BY
    </select>
-
 </mapper>
