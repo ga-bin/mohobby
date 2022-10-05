@@ -129,6 +129,11 @@ const routes = [
     name: "moimDetail",
     component: () => import("./../views/moim/MoimDetailView"),
   },
+  {
+    path: "/moimPost",
+    name: "moimPost",
+    component: () => import("./../views/moim/MoimPostView"),
+  },
   // challenge
   {
     path: "/challengemain",

@@ -7,7 +7,6 @@
 <script>
 import RegisterIn from "../../components/moim/RegisterIn/RegisterIn.vue";
 export default {
-  name: "",
   components: { RegisterIn },
   data: () => ({
     }),
