@@ -188,11 +188,12 @@
    <update id="sumLikes" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
       UPDATE sns_post 
       SET likes = (
-                  SELECT count(*) 
-                  FROM jjim 
-                  WHERE target_id = #{ targetId }
-                  AND target_type = #{ targetType } 
-                )
+	                  SELECT count(*) 
+	                  FROM jjim 
+	                  WHERE target_id = #{ targetId }
+	                  AND target_type = #{ targetType } 
+                  )
+      WHERE post_id = #{ postId }
    </update>
    
    <!-- 팔로우 -->
