@@ -31,26 +31,36 @@ public class SnsController {
     public List<SnsPostVO> hotLecturerList() {
         return service.hotLecturerList();
     }
-    
   //최신피드
     @GetMapping("/newList")
     public List<SnsPostVO> newList() {
         return service.newList();
     }
-    
   //인기피드
     @GetMapping("/hotList")
     public List<SnsPostVO> hotList() {
         return service.hotList();
     }
-    
   //전체 피드
     @GetMapping("/searchHashtag")
     public List<SnsPostVO> searchHashtag() {
         return service.searchHashtag(null);
     }
-   
-  //좋아요상태 변경
+    
+    
+  //좋아요클릭 - insert
+    @PostMapping("/feedDetail")
+    public JjimVO clickLike(@RequestBody JjimVO jjimVO) {
+        service.addLike(jjimVO);
+        return jjimVO;
+    }
+  //좋아요누적 - update
+    @PostMapping("/feedDetail")
+    public SnsPostVO addLikes(@RequestBody SnsPostVO snsPostVO) {
+        service.sumLikes(snsPostVO);
+        return snsPostVO;
+    }
+  //좋아요상태 변경 - update
     @PostMapping("/feedDetail")
     public JjimVO updateLike(@RequestBody JjimVO jjimVO) {
         service.updateLike(jjimVO);
@@ -68,7 +78,7 @@ public class SnsController {
         like.setTargetId(postId);
         like.setMemberId(memberId);
         
-        model.addAttribute("like", service.isLike(postId, memberId));
+//        model.addAttribute("like", service.isLike(postId, memberId));
 //        model.addAttribute("getLike", service.getLike(postId));
        
         

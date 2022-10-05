@@ -39,11 +39,12 @@ public interface SnsService {
     //아이디 단건조회
     public SnsPostVO getUserProfile();
     
-    //좋아요클릭
-    public int clickLike(JjimVO jjimVO);
-    
-    //좋아요상태 변경
+    //좋아요클릭-insert(jjim)
+    public int addLike(JjimVO jjimVO);
+    //좋아요상태 변경-update(jjim)
     public int updateLike(JjimVO jjimVO);
+    //좋아요누적-update(snspost)
+    public int sumLikes(SnsPostVO snsPostVO);
     
     //게시물 등록
     public int insertFeed(SnsPostVO snsPostVO);
@@ -51,10 +52,7 @@ public interface SnsService {
     
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
+    
     //게시물 삭제
     public int deleteFeed(int postId);
-    
-    //좋아요 조회
-    public SnsPostVO isLike(int postId, String memberId);
-
 }

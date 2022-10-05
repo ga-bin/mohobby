@@ -107,8 +107,9 @@
         console.log(this.showEmptyHeart);
         this.likeStatus = 0;
         this.likecnt--;
+
         //좋아요 업데이트
-        axios.post("http://localhost:8088/java/feedDetail", {
+        axios.post("http://localhost:8088/java/updateLike", {
                     status : 0,
                     memberId : this.memberId,
                     targetId : this.targetId
