@@ -102,11 +102,11 @@ public class SnsServiceImpl implements SnsService{
     public int addLike(JjimVO jjimVO) {
         return mapper.addLike(jjimVO);
     }
-    //좋아요 - update(jjim)
-    @Override
-    public int updateLike(JjimVO jjimVO) {
-        return mapper.updateLike(jjimVO);
-    }
+    //좋아요취소 - delete(jjim)
+	@Override
+	public int deleteLike(JjimVO jjimVO) {
+		return mapper.deleteLike(jjimVO);
+	}  
     //좋아요누적 - insert(snspost)
     @Override
     public int sumLikes(SnsPostVO snsPostVO) {
@@ -129,6 +129,6 @@ public class SnsServiceImpl implements SnsService{
     @Override
     public int deleteFeed(int postId) {
         return mapper.deleteFeed(postId);
-    }  
+    }
 
 }
