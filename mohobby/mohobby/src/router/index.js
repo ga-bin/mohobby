@@ -114,25 +114,50 @@ const routes = [
     component: () => import("./../views/lecture/ClassMainView"),
   },
   // moim
-  {
+  { 
     path: "/moimmain",
     name: "moimmain",
     component: () => import("./../views/moim/MoimMainView"),
   },
-  {
+  { //소모임 생성
     path: "/moimRegisterIn",
     name: "moimRegisterIn",
     component: () => import("./../views/moim/MoimRegisterInView"),
   },
-  {
+  { //게시글
     path: "/moimDetail",
     name: "moimDetail",
     component: () => import("./../views/moim/MoimDetailView"),
   },
-  {
+  { //게시물 단건조회
     path: "/moimPost",
     name: "moimPost",
     component: () => import("./../views/moim/MoimPostView"),
+  },
+  { //사진첩
+    path: "/moimPhoto", 
+    name: "moimPhoto",
+    component: () => import("./../views/moim/MoimPhotoView"),
+  },
+  { //공지사항
+    path: "/moimNotice",
+    name: "moimNotice",
+    component: () => import("./../views/moim/MoimNoticeView"),
+  },
+  { //공지사항
+    path: "/moimSchedule",
+    name: "moimSchedule",
+    component: () => import("./../views/moim/MoimScheduleView"),
+  },
+  { //투표
+    path: "/moimVote",
+    name: "moimVote",
+    component: () => import("./../views/moim/MoimVoteView"),
+  },
+  { //N빵
+    path: "/moimNbbang",
+    name: "moimNbbang",
+    component: () => import("./../views/moim/MoimNbbangView"),
   },
   // challenge
   {

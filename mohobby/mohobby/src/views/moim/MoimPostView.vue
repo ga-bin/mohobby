@@ -8,7 +8,7 @@
   import MoimSidebar from "../../components/moim/moimDetail/MoimSidebar.vue";
   import MoimPost from "../../components/moim/moimDetail/MoimPost.vue";
   export default {
-  components: { MoimSidebar, MoimPost },
+  components: { MoimSidebar, MoimPost},
   data: () => ({
     }),
   setup() {},

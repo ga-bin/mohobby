@@ -32,7 +32,6 @@
           {{item.date}}
         </div>
         <v-list-item-subtitle class="content mt-5">
-        
         {{item.contents}}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>

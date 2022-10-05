@@ -4,12 +4,11 @@
   <div class="container">
   <v-card-actions>
     <v-spacer></v-spacer>
-    <v-btn class="mr-3" @click="click()">Sidebar</v-btn>
+    <v-btn color="mr-3" @click="click()">Sidebar</v-btn>
     <v-btn class="mr-3"><v-icon>mdi-account-plus</v-icon></v-btn>
     <v-btn class="mr-3"><v-icon>mdi-lead-pencil</v-icon></v-btn>
   </v-card-actions>
-  </div>
-  
+</div>
   <!-- 컴포넌트 -->
   <MoimSidebar v-if="fclick === true"></MoimSidebar>
   <MoimBoard></MoimBoard>
@@ -37,7 +36,9 @@
 </script>
 
 <style scoped>
-  .container{
-    width: 65%;
-  }
+
+.container {
+  width : 65%;
+}
+
 </style>

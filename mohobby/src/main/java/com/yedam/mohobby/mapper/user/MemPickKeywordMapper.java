@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.yedam.mohobby.service.admin.MemPickKeywordVO;
+import com.yedam.mohobby.service.user.MemPickKeywordVO;
 
 @Mapper
 public interface MemPickKeywordMapper {

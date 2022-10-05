@@ -2,7 +2,7 @@
     <div class="container">
     <h3>인기있는 소모임을 확인하세요!</h3>
     <br>
-    <div class="box" v-for="item in items">
+    <div class="box" v-for="item in items" :key="item.title">
     <v-card
       class="mx-3"
       max-width="550"
