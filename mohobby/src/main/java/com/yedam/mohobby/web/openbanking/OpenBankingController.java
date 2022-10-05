@@ -11,11 +11,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,29 +27,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class OpenBankingController {
-  
-	  @Autowired(required=false)
-	  private OpenBankingFeign openBankingFeign;
-	  
-	  @Value("${client_secret}") 
-	  private String client_secret;
-  
-	  @PostMapping("/requestToken") 
-	  public TokenResponseVO requestToken(@RequestBody TokenRequestVO tokenRequest) {
-		  tokenRequest.setClient_secret(client_secret); 
-		  TokenResponseVO tokenResponse = openBankingFeign.requestToken(
-				  tokenRequest.getCode(),
-				  tokenRequest.getClient_id(), 
-				  tokenRequest.getClient_secret(),
-				  tokenRequest.getRedirect_uri(), 
-				  tokenRequest.getGrant_type()
-				  ); 
-		  return tokenResponse; 
-	  }
-}
-  
-//  @PostMapping("/realname") public RealNameVO getRealName()
-
+ 
 	@GetMapping("/bankRealName")
 	@ApiOperation(value = "계좌번호 실명 조회", notes="해당 계좌번호와 예금주명이 일치하는지 확인합니다.")
 	public String accountNumber(
@@ -74,9 +49,11 @@ public class OpenBankingController {
 		//헤더 추가 정보
 		RequestHeaderVO header = new RequestHeaderVO();
 		if(Bncd == "011") {
+			//농협계좌
 			url = new URL("https://developers.nonghyup.com/InquireDepositorAccountNumber.nh");
 			header.setApiNm("InquireDepositorAccountNumber");
 		} else {
+			//타행계좌
 			url = new URL("https://developers.nonghyup.com/InquireDepositorOtherBank.nh");
 			header.setApiNm("InquireDepositorOtherBank");
 		}
