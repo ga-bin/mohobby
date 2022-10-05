@@ -67,6 +67,7 @@
   새로운 소모임 모집하기
 </v-chip>
 </v-btn>
+</v-card-actions>
 
     <h1>Mo#obby 소모임</h1> 
     
