@@ -68,11 +68,7 @@
     },
     methods : {
       goPost : function(){
-        if((this.moim===1 && (this.moimRight===0 || this.moimRight===1)) || (this.moim===0 && this.moimRight===1)){
           this.$router.push({path: 'moimPost'});
-        } else if(this.moimRight===0){
-          this.$router.push({path:''});
-        }
       }
     },
     props :{
