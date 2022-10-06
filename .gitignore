@@ -125,10 +125,7 @@ $RECYCLE.BIN/
 # JDT-specific (Eclopse Java Development Tools)
 .classpath
 
-#Node_modules
 node_modules/
-
-#META-INF
-target/*
 META-INF/*
 .springBeans
+target/
