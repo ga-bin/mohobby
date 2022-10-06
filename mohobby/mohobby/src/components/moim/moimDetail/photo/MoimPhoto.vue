@@ -1,8 +1,7 @@
 <template>
   <div>
-    <span>photoTest</span>
-  </div>
   
+  </div>
 </template>
 
 <script>

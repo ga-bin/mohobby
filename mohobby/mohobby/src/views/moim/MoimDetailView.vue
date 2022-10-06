@@ -7,7 +7,7 @@
     <v-btn color="mr-3" @click="click()">Sidebar</v-btn>
     <v-card-actions v-if="(moim===0 && moimRight===1) || (moim===1 && moimRight===1)">
       <v-btn class="mr-3"><v-icon>mdi-account-plus</v-icon></v-btn>
-      <v-btn class="mr-3"><v-icon>mdi-lead-pencil</v-icon></v-btn>
+      <v-btn class="mr-3" @click="write()"><v-icon>mdi-lead-pencil</v-icon></v-btn>
     </v-card-actions>
     <v-card-actions v-if="(moim===0 && moimRight===0) || (moim===1 && moimRight===0)">
       <v-btn disabled class="mr-3"><v-icon>mdi-account-plus</v-icon></v-btn>
@@ -36,7 +36,7 @@
     fclick: true,
     // 비공개 : 0, 공개 : 1
     moim: 1,
-    moimRight : 0
+    moimRight : 1
     }),
   setup() {},
   created() {},
@@ -45,6 +45,9 @@
   methods : {
      click : function() {
       this.fclick = !this.fclick
+    },
+    write : function() {
+      this.$router.push({ path : 'moimboardwrite'})
     }
   },
 };

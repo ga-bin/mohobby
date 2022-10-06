@@ -16,7 +16,7 @@
     outlined
     v-for="item in items"
     :key="item.comment"
-    @click=""    
+    @click=""
     >
      
     <v-list-item three-line>

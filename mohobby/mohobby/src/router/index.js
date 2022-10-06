@@ -129,6 +129,11 @@ const routes = [
     name: "moimDetail",
     component: () => import("./../views/moim/MoimDetailView"),
   },
+  {
+    path : "/moimboardwrite",
+    name : "moimboardwrite",
+    component : () => import ("@/views/moim/board/MoimBoardWrite"),
+  },
   { //게시물 단건조회
     path: "/moimPost",
     name: "moimPost",
@@ -164,6 +169,11 @@ const routes = [
     path: "/challengemain",
     name: "challengemain",
     component: () => import("./../views/challenge/ChallengeMainView"),
+  },
+  {
+    path: "/chat/:id",
+    name: "chat",
+    component: () => import("./../views/chat/ChatView"),
   },
 ];
 

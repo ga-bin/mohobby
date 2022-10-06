@@ -62,6 +62,8 @@
           id: "관리자",
           contents: "[공지] 여러분 예담 공지를 확인하세요!"
         }],
+        //moim : 비공개 0 공개 1 
+        //moimRight : 비회원 0 회원 1
         moim: 1,
         moimRight: 1
       }
