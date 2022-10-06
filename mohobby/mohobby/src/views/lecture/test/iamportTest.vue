@@ -10,7 +10,7 @@
             <section class="test">
                 <div class="button" @click="CertBtn">본인인증하기</div> <br />
                 <input type="text" placeholder="이름" v-model="name" > <br />
-                <input type="text" placeholder="생년월일" v-model="birth"> <br />
+                <input type="text" placeholder="생년월일" v-model="birthday"> <br />
                 <input type="text" placeholder="전화번호" v-model="phone"> <br />
             </section>
         </div>
@@ -19,7 +19,6 @@
 
 <script>
 import ClassSidebar from '@/components/lecture/ClassSidebar.vue';
-import axios from 'axios';
 
 //import IMP from 'vue-iamport';
 const { IMP } = window;
@@ -31,7 +30,7 @@ export default {
         return {
             price: 0,
             name: "",
-            birth: "",
+            birthday: "",
             phone: ""
         };
     },
@@ -48,23 +47,12 @@ export default {
                 console.log(rsp.imp_uid);
                 const imp_uid = rsp.imp_uid;
                 if (rsp.success) {
-                    console.log("인증 성공");
-
-                    const access_token = "";
-                
-                    // 인증 토큰 발급 받기
-                    const getToken = axios({
-                        url: "http://localhost:8088/java/iamport/token",
-                        data: { "imp_uid": imp_uid }
-                    }, result => {
-                        console.log(result);
-                        access_token = result.access_token;
+                    // 인증 정보 받기
+                    this.axios.get('http://localhost:8088/java/iamport/cert/'+imp_uid).then(result => {
+                        this.name = result.data.name;
+                        this.phone = result.data.phone;
+                        this.birthday = result.data.birthday;
                     });
-
-                    const certificationsInfo = getCertifications.data.response; // 조회한 인증 정보
-
-                    console.log(certificationsInfo);
-
                 }
                 else {
                     console.log("인증 실패");
@@ -75,7 +63,7 @@ export default {
             IMP.request_pay({
                 pg: "html5_inicis",
                 pay_method: "card",
-                merchant_uid: "ORD20180131-00011134",
+                merchant_uid: "ORD" + new Date().toISOString().substring(0,10).replace(/-/g,'') + "-" + new Date().getTime(),
                 name: "노르웨이 회전 의자",
                 amount: this.price,
                 buyer_email: "gildong@gmail.com",
