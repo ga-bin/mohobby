@@ -10,7 +10,7 @@
     <v-avatar 
       class="ml-10 my-10 mr-4" 
       color="grey darken-1" 
-      size="64"
+      size="50"
       >
         <v-img
           aspect-ratio="30"
@@ -19,119 +19,18 @@
       </v-avatar>
       <div class="user text-overline">{{user}}<br>{{date}}</div>
     </div>
-    </div>
-    
-    <!-- 수정, 삭제 버튼-->
-    <v-card-actions v-if="writer === 1" class="mr-15">
-      <v-spacer></v-spacer>
-      <v-btn>수정</v-btn>
-      <v-btn>삭제</v-btn>
-    </v-card-actions>
-    <v-card-actions v-if="writer === 0" class="mr-15">
-      <v-spacer></v-spacer>
-      <v-btn disabled>수정</v-btn>
-      <v-btn disabled>삭제</v-btn>
-    </v-card-actions>
-
-    <!-- 게시글 내용 -->
-    <div class="contents">
-    <v-card-text class="text--primary">
-      <p>{{content}}</p>
-    </v-card-text>
-    </div>
-
-    <div class="hashtag">
-        <v-chip
-         v-for="tag in tag"
-         :key="tag"
-         color="white"
-        >
-          {{ tag.hashtag }} 
-        </v-chip>
-    </div>
-
-    <!-- 댓글 -->
-    <BoardComment></BoardComment>
-    <div>
-      <v-card-actions>
-        <v-col cols="10">
-        <v-text-field
-        class="ml-11"
-        placeholder="댓글을 남겨보세요!"
-        filled
-        rounded
-        dense
-        hide-details
-        ></v-text-field>
-      </v-col>
-      <v-spacer></v-spacer>
-      <div style="margin-right: 80px">
-      <v-btn
-      rounded
-      color="orange"
-      text
-      >
-      <v-icon>mdi-send</v-icon>
-      </v-btn>
-      </div>
-</v-card-actions>
   </div>
-</v-card>
+  </v-card>
   </div>
 </template>
 <script>
-import BoardComment from "./BoardComment.vue";
-
-export default {
-    data() {
-        return {
-            user: "IU",
-            date: "2022-10-06 오전 10:22",
-            content: "예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다! 예담인들 다들 졸업하고도 화이팅입니다! 멋진 개발자가 되어 다시 만납시다!",
-            tag: [
-                { hashtag: "#예담" },
-                { hashtag: "#코딩" },
-                { hashtag: "#자바" },
-                { hashtag: "#히열" },
-                { hashtag: "#선진" },
-                { hashtag: "#은경" },
-                { hashtag: "#가빈" },
-                { hashtag: "#현정" },
-                { hashtag: "#히동" },
-            ],
-            writer : 0
-        };
-    },
-    components: { BoardComment },
-};
+  export default {
+    data: () => ({
+        user : IU,
+        date : '2022-10-06 오후 05:44'
+    }),
+  }
 </script>
 <style>
-
-.container{
-  margin-top: 30px;
-  height: 1000px;
-}
-
-.user {
-  display: inline-block;
-  margin-left: 5px;
-  margin-top: 40px;
-}
-
-.contents{
-  margin-left: 50px;
-  margin-right: 50px;
-  margin-top: 30px;
-  margin-bottom: 50px;
-}
- .flex {
-  display : flex;
-  height: 150px;
- }
-
- .hashtag{
-  margin-left: 50px;
-  margin-bottom: 40px;
- }
-
+  
 </style>
