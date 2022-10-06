@@ -5,8 +5,8 @@
   </div>
 </template>
 <script>
-  import MoimSidebar from "../../components/moim/moimDetail/MoimSidebar.vue";
-  import MoimSchedule from "../../components/moim/moimDetail/MoimSchedule.vue";
+  import MoimSidebar from "@/components/moim/moimDetail/MoimSidebar.vue";
+  import MoimSchedule from "@/components/moim/moimDetail/schedule/MoimSchedule.vue";
   export default {
   components: { MoimSidebar, MoimSchedule},
   data: () => ({
