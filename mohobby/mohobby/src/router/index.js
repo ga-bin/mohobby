@@ -128,6 +128,11 @@ const routes = [
     name: "iamportTest",
     component: () => import("./../views/lecture/test/iamportTest")
   },
+  {
+    path: "/AccountRealNameTest",
+    name: "AccountRealNameTest",
+    component: () => import("./../views/lecture/test/AccountRealNameTest")
+  },
   // moim
   { 
     path: "/moimmain",
