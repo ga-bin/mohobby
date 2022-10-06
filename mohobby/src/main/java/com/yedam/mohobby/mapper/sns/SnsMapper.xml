@@ -3,7 +3,7 @@
 <mapper namespace="com.yedam.mohobby.mapper.sns.SnsMapper">
    <!-- 피드 -->
    <!-- 게시글 입력 -->
-   <insert id="insertFeed" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+   <insert id="insertFeed" parameterType="int">
       INSERT INTO sns_post (
                         post_id,
                         member_id,
@@ -240,5 +240,79 @@
       WHERE following_id = #{ followingId }
       ORDER BY
    </select>
-
+	
+	
+	<!-- 
+			댓글
+	 -->
+	 <!-- 댓글입력 -->
+	 <insert id="inserCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
+	 	INSERT INTO comments (
+	 							comm_id,
+	 							member_id,
+	 							target_id,
+	 							target_type,
+	 							content,
+	 							write_date
+	    					  )
+	    			 VALUES (
+	    						 comm_seq.nextval
+	    						,#{ memberId }
+	    						,#{ targetId }
+	    						,#{ targetType }
+	    						,#{ content }
+	    						,SYSDATE
+	    					)
+	 </insert>
+	<!-- 댓글수정 -->
+	<update id="updateCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
+		UPDATE comments SET content = # { content },
+							write_date = SYSDATE
+		WHERE comm_id = #{ commId }
+	</update>
+	<!-- 댓글삭제 -->
+	<delete id="deleteCmt" parameterType="int">
+		DELETE FROM comments
+		WHERE comm_id = #{ commId } 
+	</delete>
+	
+	
+	<!-- 
+			대댓글
+	 -->
+	<!-- 대댓입력 -->
+	<insert id="insertReCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
+			 	INSERT INTO comments (
+		 							comm_id,
+		 							member_id,
+		 							parent_comm_id,
+		 							target_id,
+		 							target_type,
+		 							content,
+		 							write_date
+	    					  	)
+		    			 VALUES (
+		    						 comm_seq.nextval
+		    						,#{ memberId }
+		    						,#{ parentCommId }
+		    						,#{ targetId }
+		    						,#{ targetType }
+		    						,#{ content }
+		    						,SYSDATE
+		    					)
+	</insert>
+	<!-- 대댓수정 -->
+	<update id="updateReCmt" parameterType="int">
+		UPDATE comments SET content = # { content },
+							write_date = SYSDATE
+		WHERE comm_id = #{ commId }
+		AND 
+	</update>
+	<!-- 대댓삭제 -->
+	<delete id="deleteReCmt" parameterType="int">
+		DELETE FROM comments
+		WHERE parent_comm_id = #{ parentCommId }
+		AND comm_id = #{ commId }
+	</delete>	
+	
 </mapper>

@@ -1,6 +1,7 @@
 <template>
-    <div id="app">
-      <div>
+    <div id="container">
+      <div v-for="item in items" :key="item.postId">
+          <div @click="feedDetail(item.postId)">
           <v-hover v-slot="{ hover }">
             <v-card
               class="mx-auto"
@@ -9,7 +10,7 @@
             >
             <v-img
               :aspect-ratio="4/3"
-              :src="imgsrc"
+              :src="require(`@/assets/image/sns/${item.thumbnail}`)"
             >
               <v-expand-transition>
                 <div
@@ -17,8 +18,10 @@
                   class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal text-small white--text"
                   style="height: 100%;"
                 >
-                <v-icon color="white">mdi-heart</v-icon>{{ likecnt }}
-                <v-icon color="white">mdi-chat</v-icon>{{ cmtcnt }}
+                <div>
+                  <v-icon color="white">mdi-heart</v-icon> {{ item.likes }}
+                  <v-icon color="white">mdi-chat</v-icon> {{ item.cmts }}
+                </div>
                 </div>
               </v-expand-transition>
             </v-img>
@@ -34,6 +37,7 @@
                 small
                 right
                 top
+                @click="search()"
               >
                 <v-icon small>mdi-heart</v-icon>
               </v-btn>
@@ -51,52 +55,57 @@
               </v-btn> -->
               <div class="font-weight-light text-h7 mb-1">
                 <!-- 20자 이내 -->
-                We just can say ENTER..
+                {{ item.content }}..
               </div>
             </v-card-text>
           </v-card>
         </v-hover>
       </div>
+      </div>
     </div>
 </template>
 <script>
+    import axios from 'axios'
   export default {
     name: "HotLecturer",
     data() {
       return {
         items: [],
-        likecnt : "159",
-        cmtcnt : "10",
-        imgsrc: require(`@/assets/image/sns/기도.png`)
       };
     },
     setup() {
       
     },
     created() {
-  
+      this.search();
     },
     mounted() {
-  
+      
     },
     unmounted() {
   
     },
     methods: {
-      getItems_list() {
-            // const item = [];
-            const item_srcs = [
-                { src: require(`@/assets/image/sns/기도.png`) },
-                { src: "https://img.insight.co.kr/static/2020/03/06/700/w73pq7140798cym777d8.jpg" },
-                { src: "https://img.insight.co.kr/static/2020/03/06/700/d852a5r04tvpa860xz92.jpg" },
-                { src: "https://img.insight.co.kr/static/2020/03/06/700/o5384w751o0583qs2659.jpg" },
-                { src: "https://img.insight.co.kr/static/2020/03/06/700/4o5ookw8k16p4k5jgzur.jpg" }
-            ];
-            for (let i = 0; i <= 20; i++) {
-                this.items.push(item_srcs[Math.floor(Math.random() * item_srcs.length)]);
-            }
-        },
-    },
+      search() {
+        //hotLectureList조회
+        axios({
+            url : "http://localhost:8088/java/main/hotLecturerList",
+            methods : "GET",
+          }).then(res => {
+            console.log(res);
+            this.items = res.data;
+            
+            console.log(this.items);
+            console.log(this.items.data[0].cmts);
+          }).catch(err =>{
+            console.log(err);
+          });
+        
+      },
+      feedDetail(postId){
+        this.$router.push( '/snsFeedDetail?postId='+ postId)
+      }
+    }
   };
   </script>
   <style>

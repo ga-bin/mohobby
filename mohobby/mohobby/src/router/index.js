@@ -68,7 +68,7 @@ const routes = [
     component: () => import("./../views/sns/SnsFeedDetailView"),
   },
   {
-    path: "/SnsFeedInsert",
+    path: "/SnsFeedInsert/:memberId",
     name: "SnsFeedInsert",
     component: () => import("./../views/sns/SnsFeedInsertView"),
   },
