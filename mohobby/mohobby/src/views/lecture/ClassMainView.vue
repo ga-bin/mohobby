@@ -203,14 +203,16 @@ export default {
       })
     },
     saveEditor() {
-      axios('http://localhost:8088/java/saveClassInfo', {
+      axios({
         method: "POST",
+        url: "http://localhost:8088/java/saveClassInfo",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
         },
-        body: JSON.stringify({
+        timeout: 5000,
+        data: JSON.stringify({
           content: this.content,
-          filename: "2"
+          filename: '2'
         })
       }).catch((error) => {
           console.log(`error: ${error}`);
