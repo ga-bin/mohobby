@@ -31,7 +31,6 @@
           style="cursor: pointer"
           class="mx-5 mr-10"
         >
-
         </span>
       </template>
       <v-list three-line width="400">
@@ -79,7 +78,6 @@
     <v-btn icon>
       <v-icon>mdi-account</v-icon>
     </v-btn>
-
   </v-app-bar>
 </template>
 <script>
