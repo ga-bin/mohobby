@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.web.classes.ClassController;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -17,7 +18,10 @@ public class ClassTest {
 	
 	@Test
 	public void saveClassInfo() {
-		classController.saveClassInfo("<h1>Hello, World!</h1>", "3");
+		ClassInfoRequestVO req = new ClassInfoRequestVO();
+		req.setContent("<h1>Hello, World!</h1>");
+		req.setFilename("3");
+		classController.saveClassInfo(req);
 	}
 
 }

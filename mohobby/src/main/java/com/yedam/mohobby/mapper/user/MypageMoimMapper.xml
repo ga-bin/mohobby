@@ -4,7 +4,7 @@
 
 
 <!-- 유저가 공개중인 소모임 목록 -->
-<select id="getProfileMoim" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
+<select id="getProfileMoim" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
 select a.moim_name, a.moim_img, a.moim_catg, a.moim_region, a.reg_cnt
 from moim a join moim_member b
 on a.moim_id = b.moim_id

@@ -132,32 +132,32 @@ const routes = [
   { //게시물 단건조회
     path: "/moimPost",
     name: "moimPost",
-    component: () => import("./../views/moim/MoimPostView"),
+    component: () => import("./../views/moim/board/MoimPostView"),
   },
   { //사진첩
     path: "/moimPhoto", 
     name: "moimPhoto",
-    component: () => import("./../views/moim/MoimPhotoView"),
+    component: () => import("./../views/moim/photo/MoimPhotoView"),
   },
   { //공지사항
     path: "/moimNotice",
     name: "moimNotice",
-    component: () => import("./../views/moim/MoimNoticeView"),
+    component: () => import("./../views/moim/notice/MoimNoticeView"),
   },
   { //공지사항
     path: "/moimSchedule",
     name: "moimSchedule",
-    component: () => import("./../views/moim/MoimScheduleView"),
+    component: () => import("./../views/moim/schedule/MoimScheduleView"),
   },
   { //투표
     path: "/moimVote",
     name: "moimVote",
-    component: () => import("./../views/moim/MoimVoteView"),
+    component: () => import("./../views/moim/vote/MoimVoteView"),
   },
   { //N빵
     path: "/moimNbbang",
     name: "moimNbbang",
-    component: () => import("./../views/moim/MoimNbbangView"),
+    component: () => import("./../views/moim/Nbbang/MoimNbbangView"),
   },
   // challenge
   {
