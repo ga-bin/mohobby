@@ -68,7 +68,6 @@
 </v-chip>
 </v-btn>
 </v-card-actions>
-
     <h1>Mo#obby 소모임</h1> 
     
     <!-- 소모임 유저별 모임 리스트 -->

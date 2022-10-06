@@ -1,20 +1,21 @@
 <!-- none_user random postlist component in the list -->
 <template>
   <div>
+    <h3>재주 견습생들 피드</h3>
     <v-container fluid>
       <v-row dense>
         <v-col v-for="card in card" :key="card.title" :cols="card.flex">
         <!-- <v-col :cols="card.flex"> -->
           <v-card @click="getFeedDetail()">
             <v-img 
-             :aspect-ratio="1/1"
+              aspect-ratio="4/3"
              :src="card.src"
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="180px"
             >
-              <v-icon>mdi-heart</v-icon>{{card.likecnt}} 
-              <v-icon>mdi-chat-outline</v-icon>{{card.cmtcnt}}
+              <v-icon color="red">mdi-heart</v-icon>{{card.likecnt}} 
+              <v-icon color="#ededed">mdi-chat-outline</v-icon>{{card.cmtcnt}}
               <!-- <v-card-title v-text="card.title"></v-card-title> -->
             </v-img>
           </v-card>

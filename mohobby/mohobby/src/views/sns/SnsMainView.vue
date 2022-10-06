@@ -5,13 +5,11 @@
     <HotLecturerList></HotLecturerList>
 
     <!-- 카드형 무한스크롤링 -->
-    <h3>재주 견습생들 피드</h3>
     <ul>
       <li v-if="noneUser===9">   
-        <NoneUser 
-                v-for="(card, i) in card_list" 
-                :key="i" 
-                :card="card_list"
+        <NoneUser v-for="(card, i) in card_list" 
+                  :key="i" 
+                  :card="card_list" 
         />
       </li>
     </ul>
@@ -40,7 +38,7 @@
         const card = [];
 
         const card_titles = [
-          "1"
+         "1"
         ,"2"
         ,"3"
         ,"4"
@@ -48,12 +46,12 @@
         ,"6"
         ];
         const card_srcs = [
-        "https://img.insight.co.kr/static/2020/03/06/700/j0rpqkg2y659dw4acito.jpg"
-        ,"https://img.insight.co.kr/static/2020/03/06/700/w73pq7140798cym777d8.jpg"
-        ,"https://img.insight.co.kr/static/2020/03/06/700/d852a5r04tvpa860xz92.jpg"
-        ,"https://img.insight.co.kr/static/2020/03/06/700/o5384w751o0583qs2659.jpg"
-        ,"https://img.insight.co.kr/static/2020/03/06/700/4o5ookw8k16p4k5jgzur.jpg"
-        ,"https://img.freepik.com/premium-photo/outdoor-camping-equipment-in-a-tent-setting-on-hill-in-the-evening-at-countryside_49071-5905.jpg?w=2000"
+         require(`@/assets/image/sns/캠핑갬성1.png`)
+        ,require(`@/assets/image/sns/캠핑갬성2.png`)
+        ,require(`@/assets/image/sns/캠핑갬성3.png`)
+        ,require(`@/assets/image/sns/캠핑갬성4.png`)
+        ,require(`@/assets/image/sns/캠핑갬성5.png`)
+        ,require(`@/assets/image/sns/캠핑갬성6.png`)
         ];
         const card_likecnts = [
           "153",
