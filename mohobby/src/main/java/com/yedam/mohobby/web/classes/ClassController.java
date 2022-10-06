@@ -7,9 +7,10 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassService;
 
 @RestController
@@ -19,9 +20,9 @@ public class ClassController {
 	
 	//html 파일 생성
 	@PostMapping("/saveClassInfo")
-	public void saveClassInfo(@RequestParam("content") String content, @RequestParam("filename") String filename) {
-		System.out.println(content);
-		System.out.println(filename);
+	public void saveClassInfo(@RequestBody ClassInfoRequestVO req) {
+		System.out.println(req.getContent());
+		System.out.println(req.getFilename());
 		String path = ClassController.class.getResource("/").getPath();
 		path = path.substring(0, path.lastIndexOf("mohobby"));
 		path = path.substring(0, path.lastIndexOf("mohobby")+"mohobby".length());
@@ -29,7 +30,7 @@ public class ClassController {
 		System.out.println(path);
 		
 		path += "/mohobby/src/main/webapp/resources/html/classInfo/";
-		path += filename;
+		path += req.getFilename();
 		path += ".html";
 		System.out.println(path);
 		
@@ -37,7 +38,7 @@ public class ClassController {
 		
 		try {
 			FileOutputStream fos = new FileOutputStream(file, false);
-			fos.write(content.getBytes());
+			fos.write(req.getContent().getBytes());
 			fos.flush();
 			fos.close();
 		} catch (FileNotFoundException e) {
