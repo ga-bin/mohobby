@@ -5,7 +5,7 @@
 <!-- 챌린지 등록 -->
 <insert id="insertChall" parameterType="com.yedam.mohobby.service.challenge.ChallengeVO">
 insert into challenge (chall_id, keyword_id, day_cert, call_name, start_date, end_date, chall_info, chall_ptp, img_url, reward, sum_fee, pay_statis)
-values (#{challId}, #{keywordId}, #{dayCert}, #{challName}, #{startDate}, #{endDate}, #{challInfo], #{challPtp}, #{imgUrl}, #{reward}, #{sumFee}, #{payStatus})
+values (#{challId}, #{keywordId}, #{dayCert}, #{challName}, #{startDate}, #{endDate}, #{challInfo}, #{challPtp}, #{imgUrl}, #{reward}, #{sumFee}, #{payStatus})
 </insert>
 
 <!--  완료된 챌린지 목록 -->
@@ -18,25 +18,21 @@ where sysdate > a.end_date
 
 <!-- 정산 상태 업로드 / 정산완료, 미정산 --> 
 <update id="updateChallPayStatus" parameterType="integer">
-update challenge set pay_status = #{payStatus};
+update challenge set pay_status = #{payStatus}
 </update>
 
 <!-- 챌린지 결과 상세목록 -->
-<select>
 
-</select>
 
 <!-- 챌린지 결과 상세목록 정산 상태 업로드 -->
-<update>
-
-</update>
+ 
 <!-- 유저들 인증샷 목록 -->
-<select id="getPhotoShotList">
+<!-- <select id="getPhotoShotList">
 
-</select>
+</select> -->
 
 <!-- 인증샷 업로드 / 승인, 반려 -->
-<update id="updatePhotoShot">
-</update>
+<!-- <update id="updatePhotoShot">
+</update> -->
 <!--  -->
 </mapper>
