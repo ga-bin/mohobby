@@ -62,8 +62,6 @@
           id: "관리자",
           contents: "[공지] 여러분 예담 공지를 확인하세요!"
         }],
-        moim: 1,
-        moimRight: 1
       }
     },
     methods : {
