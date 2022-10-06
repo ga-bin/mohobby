@@ -12,30 +12,56 @@ import com.yedam.mohobby.service.classes.ClassesVO;
 import com.yedam.mohobby.service.user.MypageClassService;
 import com.yedam.mohobby.service.user.MypageClassVO;
 
+/**
+ * @create 22/10/05
+ * @author gabin
+ * @title 회원 마이페이지 강의
+ */
 @RestController
 public class MypageClassController {
 
 	@Autowired
 	MypageClassService service;
 	
+	/**
+	 * 
+	 * @param memberId
+	 * @return List<MypageClassVO>
+	 */
 	// 유저가 공개중안 강의 목록(강사만)S
 	@GetMapping("/mypageprofileclasses")
 	public List<MypageClassVO> getProfileClasses(@RequestBody String memberId) {
 		return service.getProfileClasses(memberId);
 	}
 	
+	/**
+	 * 
+	 * @param classesVO
+	 */
 	// 유저가 공개중인 강의 목록 수정
 	@PutMapping("/mypageprofileclasses")
 	public void updateProfileClasses(@RequestBody ClassesVO classesVO) {
 		service.updateProfileClasses(classesVO);
 	}
 	
+	/**
+	 * 
+	 * @param memberId
+	 * @param keywordId
+	 * @return List<MypageClassVO>
+	 */
 	// 유저가 운영중인 강의 목록(카테고리별 조회)
 	@GetMapping("/mypagemanageclasses")
 	public List<MypageClassVO> getManageClasses(@RequestBody String memberId, @RequestBody String keywordId) {
 		return service.getManageClasses(memberId, keywordId);
 	}
 	
+	/**
+	 * 
+	 * @param memberId
+	 * @param keywordId
+	 * @return List<MypageClassVO>
+	 */
 	// 유저가 참여중인 강의 목록 (카테고리별 조회)
 	@GetMapping("/mypagetakeclasses")
 	public List<MypageClassVO> getTakeClasses(@RequestBody String memberId, @RequestBody String keywordId) {

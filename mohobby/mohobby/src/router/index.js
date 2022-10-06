@@ -113,6 +113,21 @@ const routes = [
     name: "classmain",
     component: () => import("./../views/lecture/ClassMainView"),
   },
+  {
+    path: "/OpenBankingTest",
+    name: "OpenBankingTest",
+    component: () => import("./../views/lecture/test/OpenBankingTest")
+  },
+  {
+    path: "/QuillEditorTest",
+    name: "QuillEditorTest",
+    component: () => import("./../views/lecture/test/QuillEditorTest")
+  },
+  {
+    path: "/iamportTest",
+    name: "iamportTest",
+    component: () => import("./../views/lecture/test/iamportTest")
+  },
   // moim
   { 
     path: "/moimmain",

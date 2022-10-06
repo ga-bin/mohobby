@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.mohobby.mapper.admin.AdminClassMapper">
+
+
+<!-- 승인 신청한 강의 목록 -->
+<select id="getAuditClassList" resultType="com.yedam.mohobby.service.admin.AdminClassVO">
+select a.class_id, a.member_id, b.keyword_name as region_name, c.keyword_name as category_name, a.class_name, a.class_price, a.class_type, a.start_date, a.end_date, a.audit_status, a.audit_return
+from keyword b join classes a
+on a.region_id = b.keyword_id
+join keyword c
+on a.keyword_id = c.keyword_id
+</select>
+
+
+<!-- 승인 신청한 강의 정보(vue에서 상세 설명 경로 가지고오기) -->
+
+
+<!-- 신청 결과 업로드 -->
+<update id="updateAuditStatus" parameterType="com.yedam.mohobby.service.classes.ClassesVO">
+update classes set audit_status = #{auditStatus}, audit_return = #{auditReturn} where class_id = #{classId}; 
+</update>
+
+<!-- 강사, 강의, 정산 정보, 지급 여부 등등 -->
+<update id="update"></update>
+
+</mapper>
