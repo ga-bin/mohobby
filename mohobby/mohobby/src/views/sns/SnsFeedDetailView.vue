@@ -12,7 +12,13 @@
             </v-btn>
           </div>
         </div>
+        <v-app id="vapp">
+          <v-carousel ref="myCarousel" hide-delimiters :touchless="ture">
+            <v-carousel-item v-for="(item,i) in items" :key="i" :src="item.src"></v-carousel-item>
+          </v-carousel>
+        </v-app>
 
+        </v-app>
         <div id ="image_box">
           <div class="d-flex flex-column justify-space-between align-center">
             <v-slider
@@ -67,7 +73,20 @@
       likecnt : 0,
       width: 800,
       memberId: "user1",
-      targetId: 1
+      targetId: 1,
+
+      //carousel
+      move:[],
+      drag:false,
+      touch:false,
+      items:[
+          require(`@/assets/image/sns/캠핑갬성1.png`)
+          ,require(`@/assets/image/sns/캠핑갬성2.png`)
+          ,require(`@/assets/image/sns/캠핑갬성3.png`)
+          ,require(`@/assets/image/sns/캠핑갬성4.png`)
+          ,require(`@/assets/image/sns/캠핑갬성5.png`)
+          ,require(`@/assets/image/sns/캠핑갬성6.png`)
+        ]
       }),
       setup() {
         
@@ -132,8 +151,58 @@
         showFullHeart() {
           document.getElementById("empty_heart").style.display = "none";
           document.getElementById("full_heart").style.display = "inline-block";
+        },
+
+        //carousel
+        logic(e) {
+          let currentMove = this.touch ? e.touches[0].clientX : e.clientX;
+          if (this.move.length == 0) {
+            this.move.push(currentMove);
+          }
+          if (this.move[this.move.length - 1] - currentMove < -100) {
+            this.$refs.myCarousel.$el
+              .querySelector(".v-window__prev")
+              .querySelector(".v-btn")
+              .click();
+            this.drag = false;
+            this.touch = false;
+          }
+          if (this.move[this.move.length - 1] - currentMove > 100) {
+            this.$refs.myCarousel.$el
+              .querySelector(".v-window__next")
+              .querySelector(".v-btn")
+              .click();
+            this.drag = false;
+            this.touch = false;
+          }
         }
       },
+      mounted() {
+    // For touch devices
+      this.$refs.myCarousel.$el.addEventListener("touchmove", (e) => {
+        this.drag = false;
+        this.touch = true;
+        this.logic(e);
+      });
+      window.addEventListener("touchend", (e) => {
+        this.move = [];
+      });
+
+      // For non-touch devices
+      this.$refs.myCarousel.$el.addEventListener("mousedown", (e) => {
+        this.drag = true;
+        this.touch = false;
+        this.logic(e);
+      });
+      this.$refs.myCarousel.$el.addEventListener("mousemove", (e) => {
+        this.drag ? this.logic(e) : null;
+      });
+      window.addEventListener("mouseup", (e) => {
+        this.drag = false;
+        this.touch = false;
+        this.move = [];
+      });
+    }
     };
     </script>
   

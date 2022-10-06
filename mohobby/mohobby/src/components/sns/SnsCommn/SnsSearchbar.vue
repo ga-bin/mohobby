@@ -2,7 +2,7 @@
     <div id="searchbar">
         <v-container>
             <v-row dense
-                   style="height:86px">
+                   style="height:100px">
                 <v-col cols="6" 
                        class="mx-auto"
                 >
@@ -10,10 +10,15 @@
                         <v-icon>mdi-magnify</v-icon>
                     </v-btn> -->
                         <!-- 글 등록창 이동 -->
-                        <v-btn right icon class="d-flex flex-column-reverse pa-3 secondary rounded-circle d-inline-block white--text"
-                                    color="#2ac187">
-                            <router-link style=text-decoration:none; to="/snsFeedInsert"><v-icon>mdi-plus-thick</v-icon></router-link>
-                        </v-btn>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn icon 
+                                   class="d-flex flex-column-reverse pa-3 secondary rounded-circle d-inline-block white--text"
+                                   color="#2ac187"
+                                   @click="insertFeed">
+                                <v-icon>mdi-plus-thick</v-icon>
+                            </v-btn>
+                        </v-card-actions>
                     <v-autocomplete 
                         v-model="ctg" 
                         :items="ctg" 
@@ -26,6 +31,7 @@
                         @input="userInput=null"
                         menu-props="{'closeOnContentClick': true}"
                         class="rounded-xl"
+                        append-icon="mdi-magnify"
                         >
                         <!-- @change="changeCoatings" -->
                     </v-autocomplete>
@@ -81,6 +87,7 @@ export default {
 
             ],
             userInput: null,
+            memberId: 123
         }
     },
     watch: {
@@ -102,6 +109,10 @@ export default {
                 this.people = this.itemData ? this.itemData : []
             }, 500)
         },
+        insertFeed() {
+            this.$router.push({ path : 'snsFeedInsert' })
+            // this.$router.push({ name : 'snsFeedInsert', params: { memberId : this.memberId }})
+        }
     },
 
 }

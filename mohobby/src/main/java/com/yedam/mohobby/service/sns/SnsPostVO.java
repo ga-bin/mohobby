@@ -13,4 +13,5 @@ private String content; //내용
 private Date writeDate; //피드등록일
 private String thumbnail; //대표이미지
 private int likes; //좋아요 수
+private int cmts; //댓글 수
 }

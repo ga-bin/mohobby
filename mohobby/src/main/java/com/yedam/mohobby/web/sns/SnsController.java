@@ -29,19 +29,19 @@ public class SnsController {
         return service.allList();
     }
    //인기강사피드
-    @GetMapping("/hotLecturerList")
+    @GetMapping("/main/hotLecturerList")
     public List<SnsPostVO> hotLecturerList() {
         return service.hotLecturerList();
     }
     
     
   //최신피드
-    @GetMapping("/newList")
+    @GetMapping("/main/newList")
     public List<SnsPostVO> newList() {
         return service.newList();
     }
   //인기피드
-    @GetMapping("/hotList")
+    @GetMapping("/main/hotList")
     public List<SnsPostVO> hotList() {
         return service.hotList();
     }
@@ -86,7 +86,16 @@ public class SnsController {
 //        model.addAttribute("like", service.isLike(postId, memberId));
 //        model.addAttribute("getLike", service.getLike(postId));
        
-        
+//
+        //sns컨트롤러 쓰는법
+//    	// 유저가 참여한 소모임 목록(카테고리별 조회)
+//    	@Override
+//    	public List<MypageMoimVO> getTakeMoim(String memberId, String moimCatg) {
+//    		HashMap<String, String> map = new HashMap<>();
+//    		map.put("memberId", memberId);
+//    		map.put("moimCatg", moimCatg);
+//    		return mapper.getTakeMoim(map);
+//    	}
         
     }
 }
