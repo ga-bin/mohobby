@@ -41,11 +41,11 @@ export default {
       links: [
         { icon: "mdi-microsoft-windows", text: "관리하기", route: "/" },
         { icon: "mdi-account", text: "게시글", route: "/moimdetail" },
-        { icon: "mdi-clipboard-list-outline", text: "사진첩", route: "/" },
-        { icon: "mdi-clipboard-list", text: "공지사항", route: "/" },
-        { icon: "mdi-alert-octagon", text: "일정", route: "/" },
-        { icon: "mdi-alert-octagon", text: "투표", route: "/" },
-        { icon: "mdi-alert-octagon", text: "N빵", route: "/" },
+        { icon: "mdi-clipboard-list-outline", text: "사진첩", route: "/moimPhoto" },
+        { icon: "mdi-clipboard-list", text: "공지사항", route: "/moimNotice" },
+        { icon: "mdi-alert-octagon", text: "일정", route: "/moimSchedule" },
+        { icon: "mdi-alert-octagon", text: "투표", route: "/moimVote" },
+        { icon: "mdi-alert-octagon", text: "N빵", route: "/moimNbbang" },
     ]};
   },
 };

@@ -8,7 +8,7 @@
 select a.moim_name, a.moim_img, a.moim_catg, a.moim_region, a.reg_cnt
 from moim a join moim_member b
 on a.moim_id = b.moim_id
-where b.member_id = #{memberId} and b.profile_yn = #{profileYn} 
+where b.member_id = #{memberId} and b.profile_yn = 0
 </select>
 
 <!-- 유저가 공개중인 소모임 목록 수정 -->
