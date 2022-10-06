@@ -46,13 +46,21 @@ public interface SnsService {
     //좋아요누적-update(snspost)
     public int sumLikes(SnsPostVO snsPostVO);
     
+    /*
+     * 게시글
+     */
     //게시물 등록
     public int insertFeed(SnsPostVO snsPostVO);
     //게시물 썸네일 외 이미지 등록
-    
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
-    
     //게시물 삭제
     public int deleteFeed(int postId);
+    
+    
+    
+    /*
+     * 댓글
+     */
+    
 }
