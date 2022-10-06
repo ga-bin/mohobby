@@ -141,7 +141,7 @@
           '종교/봉사',
           '자연/귀농'
         ],
-        moimRight : '0',
+        moimRight : '2',
         noneuser : false,
       }
     },
