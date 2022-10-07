@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     goPost: function () {
-      this.$router.push({ path: "moimPost" });
+      this.$router.push({ name: "moimPost" });
     },
   },
   props: {},
@@ -72,6 +72,6 @@ export default {
 </script>
 <style scoped>
 .container {
-  width: 80%;
+  width: 85%;
 }
 </style>

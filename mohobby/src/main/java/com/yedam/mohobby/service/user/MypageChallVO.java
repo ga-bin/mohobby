@@ -13,4 +13,5 @@ public class MypageChallVO {
     private String imgUrl; //사진주소
     private int totalReward; // 총 상금
     private int challRate; // 달성율
+    private String success; // 성공
 }

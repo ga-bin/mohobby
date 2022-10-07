@@ -154,6 +154,7 @@ export default {
   created() {
     // App.vue가 생성되면 소켓 연결을 시도합니다.
     this.connect()
+
   },
   methods: {
     send() {

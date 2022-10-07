@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <MoimSidebar></MoimSidebar>
     <MoimBoardTitle></MoimBoardTitle>
     <MoimBoardEditor></MoimBoardEditor>
     <div class="center">
@@ -21,6 +20,9 @@
 </script>
 
 <style scoped>
+  .container{
+    width: 80%;
+  }
     .center {
       margin-top: 30px;
       display: flex;

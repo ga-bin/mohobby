@@ -7,19 +7,18 @@
 select a.chall_name, a.start_date, a.end_date, a.chall_ptp, a.img_url, a.reward + a.sum_fee as total_reward
 from challenge a join chall_member b
 on a.chall_id = b.chall_id
-where b.member_id = #{memberId} and a.keyword_id = #{keywordId}
+where b.member_id = 'user1' and a.keyword_id = '1000' and a.end_date > sysdate
 </select>
 
 
 <!-- 유저가 완료한 챌린지 목록(카테고리별 조회, 성공한 챌린지 목록) -->
 <select id="getCompleteChall" parameterType="hashMap" resultType="com.yedam.mohobby.service.user.MypageChallVO">
-select a.chall_name, a.start_date, a.end_date, a.chall_ptp, a.img_url, a.reward + a.sum_fee as total_reward, b.chall_rate
+select a.chall_name, a.start_date, a.end_date, a.chall_ptp, a.img_url, a.reward + a.sum_fee as total_reward
 from challenge a join chall_member b
 on a.chall_id = b.chall_id
-where b.member_id = #{memberId} and a.keyword_id = #{keywordId}
+<![CDATA[where b.member_id = 'user1' and a.keyword_id = '1000' and a.end_date <= sysdate]]>
 <if test="success != null and success != ''">
 	and b.chall_rate = 100
 </if>
 </select>
-
 </mapper>

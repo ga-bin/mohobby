@@ -1,6 +1,5 @@
 <template>
   <div>
-    <MoimSidebar></MoimSidebar>
     <MoimSchedule></MoimSchedule>
   </div>
 </template>
