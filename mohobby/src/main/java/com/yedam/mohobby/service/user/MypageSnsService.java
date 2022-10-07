@@ -8,10 +8,10 @@ import com.yedam.mohobby.service.sns.SnsPostVO;
 
 @Service
 public interface MypageSnsService {
-	//유저의 팔로워 목록
+	// 유저의 팔로워 목록
 	public List<String> getFollower(String memberId);
 		
-	//유저의 팔로잉 목록
+	// 유저의 팔로잉 목록
 	public List<String> getFollowing(String memberId);
 		
 	// sns 유저가 작성한 게시글 목록

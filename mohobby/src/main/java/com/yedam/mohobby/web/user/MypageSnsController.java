@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,19 +26,20 @@ public class MypageSnsController {
 	 * 
 	 * @param memberId
 	 * @return List<String>
+	 * @title 유저의 팔로워 목록
 	 */
-	@GetMapping("/mypagefollower")
-	public List<String> getFollower(@RequestBody String memberId) {
+	@GetMapping("/mypagefollower/{memberId}")
+	public List<String> getFollower(@PathVariable String memberId) {
 		return service.getFollower(memberId);
 	}
 	
 	/**
-	 * 
 	 * @param memberId
 	 * @return List<String>
+	 * @title 유저의 팔로잉 목록
 	 */
-	@GetMapping("/mypagefollowing")
-	public List<String> getFollowing(@RequestBody String memberId) {
+	@GetMapping("/mypagefollowing/{memberId}")
+	public List<String> getFollowing(@PathVariable String memberId) {
 		return service.getFollowing(memberId);
 	}
 	
@@ -45,9 +47,10 @@ public class MypageSnsController {
 	 * 
 	 * @param memberId
 	 * @return List<SnsPostVO>
+	 * @title sns 유저가 작성한 게시글 목록
 	 */
-	@GetMapping("/mypageSnspost")
-	public List<SnsPostVO> getPost(@RequestBody String memberId) {
+	@GetMapping("/mypageSnspost/{memberId}")
+	public List<SnsPostVO> getPost(@PathVariable String memberId) {
 		return service.getPost(memberId);
 	}
 	
@@ -55,9 +58,10 @@ public class MypageSnsController {
 	 * 
 	 * @param memberId
 	 * @return List<SnsPostVO>
+	 * @title sns 유저가 찜한 게시글 목록
 	 */
-	@GetMapping("/mypageSnsJjim")
-	public List<SnsPostVO> getJjim(@RequestBody String memberId) {
+	@GetMapping("/mypageSnsJjim/{memberId}")
+	public List<SnsPostVO> getJjim(@PathVariable String memberId) {
 		return service.getJjim(memberId);
 	}
 	

@@ -25,10 +25,7 @@ public class MypageChallengeServiceImpl implements MypageChallengeService {
 	}
 
 	@Override
-	public List<MypageChallVO> getCompleteChall(String memberId, String keywordId) {
-		HashMap<String, String> map = new HashMap<>();
-		map.put("memberId", memberId);
-		map.put("keywordId", keywordId);
-		return mapper.getCompleteChall(map);
+	public List<MypageChallVO> getCompleteChall(MypageChallVO mypageChallVO) {
+		return mapper.getCompleteChall(mypageChallVO);
 	}
 }

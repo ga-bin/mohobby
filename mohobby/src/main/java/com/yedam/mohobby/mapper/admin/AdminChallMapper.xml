@@ -16,23 +16,42 @@ on a.keyword_id = b.keyword_id
 where sysdate > a.end_date
 </select>
 
-<!-- 정산 상태 업로드 / 정산완료, 미정산 --> 
+<!-- 하나의 챌린지 정산 상태 업로드 / 정산완료, 미정산 --> 
 <update id="updateChallPayStatus" parameterType="integer">
 update challenge set pay_status = #{payStatus}
 </update>
 
-<!-- 챌린지 결과 상세목록 -->
+<!-- 하나의 챌린지 유저들 결과 상세목록 -->
+<select id="challMemList" parameterType="integer" resultType="com.yedam.mohobby.service.challenge.ChallMemberVO">
+select ptp_id, member_id, ptp_fee, clear_yn, receive_price, chall_rate
+from chall_member
+where chall_id = #{challId}
+</select>
+
+<!-- 하나의 챌린지 유저들 정산정보 목록 -->
+<select id="challMemPayInfo" parameterType="integer" resultType="com.yedam.mohobby.service.challenge.ChallMemberVO">
+select ptp_id, member_id, ptp_fee, bank_code, account, receive_date, receive_price, account_holder
+from chall_member
+where chall_id = #{challId}
+</select>
 
 
-<!-- 챌린지 결과 상세목록 정산 상태 업로드 -->
+<!-- 하나의 챌린지 유저들 챌린지 결과 상세목록 정산 상태 업로드 -->
+ <update id="updateMemPayStatus" parameterType="com.yedam.mohobby.service.challenge.ChallMemberVO">
+update chall_member set bank_code = #{bankCode}, receive_date = sysdate, pay_status = #{payStatus}
+where ptp_id = #{ptpId}
+ </update>
+ 
  
 <!-- 유저들 인증샷 목록 -->
-<!-- <select id="getPhotoShotList">
-
-</select> -->
+<select id="getCertList">
+select a.cert_part, a.ptp_id, b.chall_id, b.member_id, a.cert_img_url, a.cert_info, a.cert_date, a.cert_yn
+from chall_cert a join chall_member b
+on a.ptp_id = b.ptp_id
+</select>
 
 <!-- 인증샷 업로드 / 승인, 반려 -->
-<!-- <update id="updatePhotoShot">
-</update> -->
-<!--  -->
+<update id="updateCert">
+update chall_cert set cert_yn = #{certYn} where ptp_id = #{ptpId} and cert_part = #{certPart}
+</update>
 </mapper>
