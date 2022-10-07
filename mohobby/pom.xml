@@ -219,7 +219,9 @@
 			<artifactId>tiles-extras</artifactId>
 			<version>${org.apache.tiles-version}</version>
 		</dependency>
-
+		<!-- spring-cloud-starter-feign -->
+		<!-- <dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-feign</artifactId> 
+			<version>1.4.7.RELEASE</version> </dependency> -->
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -270,7 +272,6 @@
 			<artifactId>spring-messaging</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>javax.annotation-api</artifactId>
