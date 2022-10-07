@@ -78,6 +78,10 @@ export default {
   mounted() {},
   unmounted() {},
   methods: {
+    send(){
+     this.$router.push({name:"chat",params:{roomId:this.roomId}})
+
+    },
     likeBtn() {
       // let target = event.target.getElementById;
       if (this.likeStatus === 0) {

@@ -14,7 +14,8 @@
    			region_id, 
    			password, 
    			member_name, 
-   			nickname, 
+   			nickname,
+   			gender, 
    			birth, 
    			email, 
    			phone_num, 
@@ -22,7 +23,7 @@
    			reg_date
    			)
 		values 
-			(#{memberId}, #{regionId}, #{password}, #memberName}, #{nickName}, #{birth}, #{email}, #{phoneNum}, #{role}, #{regDate})
+			(#{memberId}, #{regionId}, #{password}, #{memberName}, #{nickName}, #{birth}, #{email}, #{phoneNum}, #{role}, #{regDate})
    </insert>
    
    <!-- 회원탈퇴 날짜 update -->
@@ -55,7 +56,7 @@
    
    <!-- role변환(멋진활동가,  -->
    <update id="updateRole" parameterType="com.yedam.mohobby.service.admin.MemberVO">
-   		update member set role = #{role} member_id = #{memberId}
+   		update member set role = #{role} where member_id = #{memberId}
    </update>
    
    </mapper>

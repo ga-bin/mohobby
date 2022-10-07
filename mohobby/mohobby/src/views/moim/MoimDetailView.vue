@@ -20,17 +20,14 @@
   <MoimSidebar v-if="fclick === true"></MoimSidebar>
 
   <!-- 권한에 따라 컴포넌트 다르게 보여주기 -->
-  <BoardNoAuthority v-if="moim===0 && moimRight===0"></BoardNoAuthority>
-  <MoimBoard v-else></MoimBoard>
+  <router-view></router-view>
   </div>
 </template>
 <script>
   import MoimSidebar from "@/components/moim/moimDetail/MoimSidebar.vue";
-  import MoimBoard from "@/components/moim/moimDetail/board/MoimBoard.vue";
-  import BoardNoAuthority from "@/components/moim/moimDetail/board/BoardNoAuthority.vue"
 
   export default {
-  components: { MoimSidebar, MoimBoard, BoardNoAuthority },
+  components: { MoimSidebar },
   data: () => ({
 
     fclick: true,
@@ -47,7 +44,7 @@
       this.fclick = !this.fclick
     },
     write : function() {
-      this.$router.push({ path : 'moimboardwrite'})
+      this.$router.push({ name : 'moimboardwrite'})
     }
   },
 };

@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.classes.ClassesVO;
@@ -28,9 +30,9 @@ public class MypageClassController {
 	 * @param memberId
 	 * @return List<MypageClassVO>
 	 */
-	// 유저가 공개중안 강의 목록(강사만)S
-	@GetMapping("/mypageprofileclasses")
-	public List<MypageClassVO> getProfileClasses(@RequestBody String memberId) {
+	// 유저가 공개중안 강의 목록(강사만)
+	@GetMapping("/mypageprofileclasses/{memberId}")
+	public List<MypageClassVO> getProfileClasses(@PathVariable String memberId) {
 		return service.getProfileClasses(memberId);
 	}
 	
@@ -52,7 +54,7 @@ public class MypageClassController {
 	 */
 	// 유저가 운영중인 강의 목록(카테고리별 조회)
 	@GetMapping("/mypagemanageclasses")
-	public List<MypageClassVO> getManageClasses(@RequestBody String memberId, @RequestBody String keywordId) {
+	public List<MypageClassVO> getManageClasses(@RequestParam("memberId") String memberId, @RequestParam("keywordId") String keywordId) {
 		return service.getManageClasses(memberId, keywordId);
 	}
 	
@@ -64,7 +66,7 @@ public class MypageClassController {
 	 */
 	// 유저가 참여중인 강의 목록 (카테고리별 조회)
 	@GetMapping("/mypagetakeclasses")
-	public List<MypageClassVO> getTakeClasses(@RequestBody String memberId, @RequestBody String keywordId) {
+	public List<MypageClassVO> getTakeClasses(@RequestParam("memberId") String memberId, @RequestParam("keywordId") String keywordId) {
 		return service.getTakeClasses(memberId, keywordId);
 	}
 }
