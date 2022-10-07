@@ -11,7 +11,7 @@ Vue.config.productionTip = false;
 
 Vue.prototype.axios = axios;
 Vue.prototype.$ = $;
-axios.defaults.baseURL = "http://localhost:8888/java";
+axios.defaults.baseURL = "http://localhost:8088/java";
 
 new Vue({
   vuetify,
