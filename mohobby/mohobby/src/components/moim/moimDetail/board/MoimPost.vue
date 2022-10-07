@@ -43,7 +43,7 @@
     <div class="hashtag">
         <v-chip
          v-for="tag in tag"
-         :key="tag"
+         :key="tag.hashtag"
          color="white"
         >
           {{ tag.hashtag }} 
@@ -105,7 +105,7 @@ export default {
     components: { BoardComment },
 };
 </script>
-<style>
+<style scoped>
 
 .container{
   margin-top: 30px;

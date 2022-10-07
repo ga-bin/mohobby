@@ -37,7 +37,6 @@ import "highlight.js/styles/tomorrow.css";
 // import theme style
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
-import axios from "axios";
 import ClassSidebar from "@/components/lecture/ClassSidebar.vue";
 
 export default {
@@ -90,7 +89,7 @@ export default {
       console.log("editor ready!", editor);
     },
     saveEditor() {
-      axios({
+      this.axios({
         method: "POST",
         url: "http://localhost:8088/java/saveClassInfo",
         headers: {

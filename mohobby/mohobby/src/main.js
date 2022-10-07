@@ -3,10 +3,12 @@ import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import router from './router';
 import axios from 'axios';
-import IMP from 'vue-iamport';
 import $ from 'jquery';
 
 Vue.config.productionTip = false;
+
+Vue.prototype.axios = axios;
+Vue.prototype.$ = $;
 
 new Vue({
   vuetify,
