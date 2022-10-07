@@ -8,9 +8,8 @@
     <div class="user text-overline">{{item.user}}
       <small class="date">{{item.date}}</small>
       <div class="btn">
-        <button class="update">수정</button>
-        <button class="delete">삭제</button>
-        <hr>
+        <v-btn x-small outlined color="success" class="mr-3">수정</v-btn>
+        <v-btn x-small outlined color="error">삭제</v-btn>
       </div>
       <v-card-actions class="mt-10">
       <div class="content"> {{item.content}} </div>
@@ -53,13 +52,23 @@ export default {
   margin-left: 30px;
   width: 90%;
  }
+ .profile::after {
+  content : "";
+  position : absolute;
+  left:30px;
+  height: 1px;
+  width : 100%;
+  border-bottom : 1px solid rgba(184, 189, 190, 0.8);
+ }
  .user {
   margin-top : 20px;
  }
+
  .date {
   position: absolute;
   right: 0;
  }
+
  .btn{
   position: absolute;
   right: 0;

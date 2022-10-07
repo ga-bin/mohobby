@@ -4,7 +4,9 @@ import vuetify from "./plugins/vuetify";
 import router from "./router";
 import axios from "axios";
 import $ from "jquery";
+import ImageViewer from 'vue2-viewer';
 
+Vue.use(ImageViewer);
 Vue.config.productionTip = false;
 
 Vue.prototype.axios = axios;

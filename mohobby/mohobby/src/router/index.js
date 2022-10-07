@@ -156,43 +156,50 @@ const routes = [
   },
   { //게시글
     path: "/moimDetail",
-    name: "moimDetail",
-    component: () => import("./../views/moim/MoimDetailView"),
-  },
-  {
-    path : "/moimboardwrite",
-    name : "moimboardwrite",
-    component : () => import ("@/views/moim/board/MoimBoardWrite"),
-  },
-  { //게시물 단건조회
-    path: "/moimPost",
-    name: "moimPost",
-    component: () => import("./../views/moim/board/MoimPostView"),
-  },
-  { //사진첩
-    path: "/moimPhoto", 
-    name: "moimPhoto",
-    component: () => import("./../views/moim/photo/MoimPhotoView"),
-  },
-  { //공지사항
-    path: "/moimNotice",
-    name: "moimNotice",
-    component: () => import("./../views/moim/notice/MoimNoticeView"),
-  },
-  { //공지사항
-    path: "/moimSchedule",
-    name: "moimSchedule",
-    component: () => import("./../views/moim/schedule/MoimScheduleView"),
-  },
-  { //투표
-    path: "/moimVote",
-    name: "moimVote",
-    component: () => import("./../views/moim/vote/MoimVoteView"),
-  },
-  { //N빵
-    path: "/moimNbbang",
-    name: "moimNbbang",
-    component: () => import("./../views/moim/Nbbang/MoimNbbangView"),
+    name: "",
+    component: () => import("@/views/moim/MoimDetailView"),
+      children : [
+        { //게시판
+          path: "/",
+          name: "moimBoard",
+          component : () => import ("@/views/moim/board/MoimBoardView")
+        },
+        { //게시물 단건조회
+          path: "moimPost",
+          name: "moimPost",
+          component: () => import("./../views/moim/board/MoimPostView"),
+        },
+        {
+          path : "/moimboardwrite",
+          name : "moimboardwrite",
+          component : () => import ("@/views/moim/board/MoimBoardWrite"),
+        },
+        { //사진첩
+        path: "moimPhoto", 
+        name: "moimPhoto",
+        component: () => import("@/views/moim/photo/MoimPhotoView"),
+       },
+       { //공지사항
+        path: "/moimNotice",
+        name: "moimNotice",
+        component: () => import("./../views/moim/notice/MoimNoticeView"),
+      },
+      { //공지사항
+        path: "/moimSchedule",
+        name: "moimSchedule",
+        component: () => import("./../views/moim/schedule/MoimScheduleView"),
+      },
+      { //투표
+        path: "/moimVote",
+        name: "moimVote",
+        component: () => import("./../views/moim/vote/MoimVoteView"),
+      },
+      { //N빵
+        path: "/moimNbbang",
+        name: "moimNbbang",
+        component: () => import("./../views/moim/Nbbang/MoimNbbangView"),
+      },
+      ]
   },
   // challenge
   {
@@ -201,7 +208,7 @@ const routes = [
     component: () => import("./../views/challenge/ChallengeMainView"),
   },
   {
-    path: "/chat/:id",
+    path: "/chat/:roomId",
     name: "chat",
     component: () => import("./../views/chat/ChatView"),
   },

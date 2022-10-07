@@ -65,7 +65,6 @@
     </div>
 </template>
 <script>
-    import axios from 'axios'
   export default {
     name: "HotLecturer",
     data() {
@@ -88,10 +87,7 @@
     methods: {
       search() {
         //hotLectureList조회
-        axios({
-            url : "http://localhost:8088/java/main/hotLecturerList",
-            methods : "GET",
-          }).then(res => {
+        this.axios('/main/hotLecturerList').then(res => {
             console.log(res);
             this.items = res.data;
             

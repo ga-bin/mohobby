@@ -14,5 +14,5 @@ public interface MypageChallengeMapper {
 	public List<MypageChallVO> getJoinChall(HashMap<String, String> map);
 	
 	// 유저가 완료한 챌린지 목록(카테고리별 조회, 성공한 챌린지 목록)
-	public List<MypageChallVO> getCompleteChall(HashMap<String, String> map);
+	public List<MypageChallVO> getCompleteChall(MypageChallVO mypageChallVO);
 }
