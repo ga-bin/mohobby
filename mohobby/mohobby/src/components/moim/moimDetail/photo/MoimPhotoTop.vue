@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <span>사진첩</span>
+    <h1>사진첩</h1>
+    <hr>
   </div>
 </template>
 
@@ -10,7 +11,7 @@
 
 <style scoped>
   .container {
-    width : 1000px;
+    width : 60%;
   }
 
 </style>

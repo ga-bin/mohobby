@@ -1,6 +1,5 @@
 <template>
   <div>
-    <MoimSidebar></MoimSidebar>
     <MoimPhotoTop></MoimPhotoTop>
     <MoimPhoto></MoimPhoto>
   </div>

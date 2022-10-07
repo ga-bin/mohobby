@@ -34,7 +34,7 @@ export default {
   methods: {
     connect() {
 
-      let socket = new SockJS("http://localhost:8154/java/sock");
+      let socket = new SockJS("http://localhost:8090/java/sock");
       this.stompClient = Stomp.over(socket);
      
       this.stompClient.connect(

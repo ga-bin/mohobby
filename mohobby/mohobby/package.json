@@ -20,11 +20,13 @@
     "next-images": "^1.8.4",
     "quill-emoji": "^0.2.0",
     "sockjs-client": "^1.6.1",
+    "v-viewer": "^1.6.4",
     "vue": "^2.6.14",
     "vue-iamport": "^0.1.2",
     "vue-plugin-load-script": "^2.1.1",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.5.1",
+    "vue2-viewer": "^1.0.3",
     "vuetify": "^2.6.0",
     "webpack-dev-server": "^4.11.1",
     "webstomp-client": "^1.2.6"
