@@ -48,7 +48,7 @@ export default {
                 const imp_uid = rsp.imp_uid;
                 if (rsp.success) {
                     // 인증 정보 받기
-                    this.axios.get('http://localhost:8088/java/iamport/cert/'+imp_uid).then(result => {
+                    this.axios.get('/iamport/cert/'+imp_uid).then(result => {
                         this.name = result.data.name;
                         this.phone = result.data.phone;
                         this.birthday = result.data.birthday;
