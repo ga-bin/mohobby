@@ -63,10 +63,12 @@ export default {
  .user {
   margin-top : 20px;
  }
+
  .date {
   position: absolute;
   right: 0;
  }
+
  .btn{
   position: absolute;
   right: 0;
