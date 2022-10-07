@@ -41,7 +41,6 @@
 import "highlight.js/styles/tomorrow.css";
 
 // import theme style
-import Vue from "vue";
 import ClassSidebar from "@/components/lecture/ClassSidebar.vue";
 
 export default {
@@ -109,7 +108,7 @@ export default {
       this.auth = JSON.parse(sessionStorage.auth)
     },
     requestToken () {
-      Vue.axios('http://localhost:8088/java/requestToken', {
+      this.axios('http://localhost:8088/java/requestToken', {
         method: "POST",
         headers: {
           "Content-Type": "application/json; charset=utf-8",
