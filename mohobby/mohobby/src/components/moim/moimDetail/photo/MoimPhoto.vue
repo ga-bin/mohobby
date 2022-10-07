@@ -8,11 +8,11 @@
       class="d-flex child-flex"
       cols="4"
     >
-    <!-- <v-img :src="n.src" /> -->
-    <vue-viewer
- :thumb="n.src"
- :full="n.src">
-</vue-viewer>
+    <v-img :src="n.src" />
+    <!-- <vue-viewer
+    :thumb="n.src"
+    :full="n.src">
+</vue-viewer> -->
         <template v-slot:placeholder>
           <v-row
             class="fill-height ma-0"
@@ -79,7 +79,7 @@ export default {
 
 <style scoped>
   .container {
-    width : 60%;
+    width : 70%;
   }
 
 </style>
