@@ -53,13 +53,16 @@ export default {
   margin-left: 30px;
   width: 90%;
  }
+ 
  .user {
   margin-top : 20px;
  }
+
  .date {
   position: absolute;
   right: 0;
  }
+
  .btn{
   position: absolute;
   right: 0;
