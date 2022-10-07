@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.yedam.mohobby.service.iamport.GetCertificationVO;
 import com.yedam.mohobby.web.iamport.IamportController;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -20,8 +19,6 @@ public class IamportTest {
 	
 	@Test
 	public void Test() throws MalformedURLException {
-		GetCertificationVO certVO = new GetCertificationVO();
-		certVO.setImp_uid("imp_995958977292");
-		iamport.getToken(certVO);
+		iamport.requestCertification("imp_072529125127");
 	}
 }
