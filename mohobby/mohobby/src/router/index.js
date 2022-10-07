@@ -133,6 +133,16 @@ const routes = [
     name: "AccountRealNameTest",
     component: () => import("./../views/lecture/test/AccountRealNameTest")
   },
+  {
+    path: "/AttdQRTest",
+    name: "AttdQRTest",
+    component: () => import("./../views/lecture/test/AttdQRTest")
+  },
+  {
+    path: "/KakaoMapTest",
+    name: "KakaoMapTest",
+    component: () => import("./../views/lecture/test/KakaoMapTest")
+  },
   // moim
   { 
     path: "/moimmain",

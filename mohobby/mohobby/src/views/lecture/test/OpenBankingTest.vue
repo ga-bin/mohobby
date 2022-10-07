@@ -108,7 +108,7 @@ export default {
       this.auth = JSON.parse(sessionStorage.auth)
     },
     requestToken () {
-      this.axios('http://localhost:8088/java/requestToken', {
+      this.axios('/requestToken', {
         method: "POST",
         headers: {
           "Content-Type": "application/json; charset=utf-8",

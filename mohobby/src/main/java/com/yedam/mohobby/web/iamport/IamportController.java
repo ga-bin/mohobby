@@ -35,9 +35,7 @@ public class IamportController {
 		String response = "";
 		URL url;
 		StringBuilder sb = new StringBuilder();
-		OutputStream os;
 		BufferedReader br;
-		Gson gson = new Gson();
 		
 	
 		// 인증정보 조회하기

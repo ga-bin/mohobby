@@ -91,7 +91,7 @@ export default {
     saveEditor() {
       this.axios({
         method: "POST",
-        url: "http://localhost:8088/java/saveClassInfo",
+        url: "/saveClassInfo",
         headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
