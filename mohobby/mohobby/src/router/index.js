@@ -198,7 +198,7 @@ const routes = [
     component: () => import("./../views/challenge/ChallengeMainView"),
   },
   {
-    path: "/chat/:id",
+    path: "/chat/:roomId",
     name: "chat",
     component: () => import("./../views/chat/ChatView"),
   },
