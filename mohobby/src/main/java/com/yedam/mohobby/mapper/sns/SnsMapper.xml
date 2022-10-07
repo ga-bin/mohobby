@@ -111,100 +111,81 @@
    </select>
    
    <!-- 프로필 조회 -->
+   
    <!-- 취미 수 조회-->
    
    <!-- 유자 게시글 수 조회 -->
+   <!--
    <select id="getUserPostCnt" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
 	   	SELECT count(post_id)
 	   	FROM sns_post
 	   	WHERE member_id = #{ memberId }
    </select>
+   -->
    <!-- 팔로워수 -->
+   <!--
    <select id="getUserFollowerCnt" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
 	   	SELECT count(follower_id)
 	   	FROM follow
 	   	WHERE following_id = #{ folloingId }
    </select>
+   -->
    <!-- 팔로잉수 -->
+   <!-- 
    <select id="getUserFollowingCnt" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
    		SELECT count(following_id)
 	   	FROM follow
 	   	WHERE follower_id = #{ followerId }
    </select>
-   <!-- 유저아이디, 유저별명, 전체 게시글 수, 팔로워수, 팔로잉수, 취미수? -->
-   <!--  
-   <select id="feedProfile" resultType="hashmap">
+   -->
+   <!-- 유저아이디, 유저별명, 전체 게시글 수, 팔로워수, 팔로잉수, (취미수?) --> 
+<!--<select id="feedProfile" resultType="hashmap">
       SELECT m.member_id, m.nickname, m.profile_img, m.hobbies, m.intro, count(s.post_id),
       count(f.following_id), count(f.follower_id)
       FROM
       sns_post s LEFT OUTER JOIN member m
       ON (m.member_id = s.member_id)
       WHERE member_id = #{ memberId }
-   </select>
-   -->
-   <!-- 유저피드조회 -->
+   </select>-->
+   <!-- 유저피드목록조회 -->
+   <!-- 
    <select id="getUserFeed" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
       SELECT post_id, member_id, thumbnail, likes, cmts
       FROM sns_post
       WHERE member_id = #{ memberId }
       ORDER BY post_id
-
-   </select>
+   </select
+	-->
    
    
    
    <!--
 
 			해시태그
-			
-	 -->
-   		<!-- 
+
    			게시글 테이블에 들어온 해시태그들(#사과,#바나나)을 특정 문자 기준으로 잘라서 별도의 해시태그 테이블에 넣는다 
 			   1. 이미 테이블에 존재하는 해시태그면 update 사용횟수
 			   2. 테이블에 존재하지 않는 해시태그면 insert 
-   		-->
-   <!-- sns_post에 등록된 해시태그 쪼개기 -->
-   <select id="splitHashtag" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-	   SELECT 			
-	                 s.post_id 			
-	      <![CDATA[ ,REGEXP_SUBSTR(s.hashtag, '[^,]+', 1, Level) AS hashtag ]]>			
-	                ,s.write_date 		
-	        FROM (
-	                SELECT post_id AS post_id, hashtag AS hashtag
-	                , write_date AS write_date FROM sns_post
-	            )s
-	    WHERE s.hashtag IS NOT NULL 		
-	    <![CDATA[ CONNECT BY LEVEL <= REGEXP_COUNT(s.hashtag, '[^,]+')]]>	
-	    AND PRIOR s.post_id  = s.post_id 		
-	    AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
-   </select>
-   <!-- 등록된 해시태그 조회 -->
-   <select id="isHashtag" resultType="com.yedam.mohobby.service.communal.HashtagVO">
-   		SELECT hashtag 
-   		FROM hashtag 
-   		WHERE hashtag = #{ hashtag }
-   </select>
-   <!-- 등록 - 등록된적 없는 해시태그 -->
-   <insert id="insertHashtag" parameterType="com.yedam.mohobby.service.communal.HashtagVO">
-      INSERT INTO hashtag (
-	                        hashtag,
-	                        target_id,
-	                        target_type,
-	                        use_count
-	                      )
-                  VALUES(
-	                        #{ hashtag },
-	                        #{ targetId },
-	                        #{ targetType },
-	                        #{ useCount }
-                        )
-   </insert>
+   -->
    <!-- 조회수만업뎃 - 이미 등록되어있는 해시태그 -->
-   <update id="updateHashtagCnt" parameterType="com.yedam.mohobby.service.communal.HashtagVO">
-      UPDATE hashtag SET use_count+1
-      WHERE hashtag = #{ hashtag }
+   <!-- hashVO, snsPostVO -->
+   <update id="updateHashtag" parameterType="hashmap">
+    MERGE INTO hashtag h
+        USING (SELECT 					
+       <![CDATA[REGEXP_SUBSTR(hashtag, '[^,]+', 1, Level) hashtag]]>
+                FROM sns_post
+                WHERE hashtag IS NOT NULL
+                AND post_id = #{ postId }
+       <![CDATA[CONNECT BY LEVEL <= REGEXP_COUNT(hashtag, '[^,]+')]]> 		
+                AND PRIOR post_id  = post_id 		
+                AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
+               ) p
+          ON (h.hashtag = p.hashtag)
+        WHEN MATCHED THEN UPDATE SET h.use_count = h.use_count+1
+        WHEN NOT MATCHED THEN
+            INSERT(h.hashtag)
+            VALUES(p.hashtag);
    </update>
-
  
    <!-- 
    
@@ -212,35 +193,43 @@
    
    -->
    <!-- 팔로우목록 -->
-
-   <!-- 팔로우 걸기 -->
-<!--<insert id="follow"
-      parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
-      <selectKey keyProperty="followId" resultType="Integer"
-         order="BEFORE">
-         SELECT NVL(MAX(follow_id), 0)+1 FROM follow
-      </selectKey>
-      INSERT INTO follow (
-      follow_id,
-      following_id,
-      follower_id
-      )
-      VALUES
-      (
-      #{ followId },
-      #{ followingId },
-      #{ followerId }
-      )
-   </insert> -->
-   <!-- 팔로우 끊기 -->
-<!--<delete id="unfollow" parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
+   <!-- 팔로우 -->
+   <insert id="follow" parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
+     <selectKey keyProperty="followId" resultType="Integer" order="BEFORE">
+        SELECT NVL(MAX(follow_id), 0)+1 FROM follow
+     </selectKey>
+     	INSERT INTO follow (
+					      follow_id,
+					      following_id,
+					      follower_id
+					  	)
+		       VALUES
+				       (
+					      #{ followId },
+					      #{ followingId },
+					      #{ followerId }
+   						   )
+   </insert>
+   <!-- 언팔로우 -->
+   <delete id="unfollow" parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
       DELETE FROM follow
       WHERE followerId = #{ follower_id }
       AND followingId = #{ following_id }
-   </delete> -->
-
-   
-   
+   </delete>
+   <!-- 팔로잉조회 -->
+   <select id="getfollowingList" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+   	  SELECT f.following_id, m.profile_img, m.nickname, m.intro
+   	  FROM follow f, member m
+   	  WHERE f.follower_id = m.member_id
+   	  AND follower_id = #{ followerId }
+   </select>
+   <!-- 팔로워조회 -->
+   <select id="getfollowerList" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+      SELECT f.follower_id, m.profile_img, m.nickname, m.intro 
+   	  FROM follow f, member m
+   	  WHERE f.follower_id = m.member_id
+   	  AND following_id = #{ followingId }
+   </select>
    <!-- 
 	
 			검색
@@ -273,22 +262,8 @@
       ORDER BY post_id DESC
    </select>
 
-
-   
-	
-	<!--  -->
- <!--   유저아이디(단건 - 프로필사진, 아이디, 닉네임)/(게시글번호, 썸네일) -->
-<!--    <select id="getUserProfile" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-      SELECT m.profile_img, m.member_id, m.nickname, s.post_id,
-      s.thumbnail
-      FROM member m LEFT OUTER JOIN sns_post s
-      ON (m.member_id =
-      s.member_id)
-      WHERE member_id = #{ memberId }
-   </select> -->
-
-   <!-- 유저아이디닉네임(단어포함 - 프로필사진, 아이디, 닉네임) -->
-   <select id="GetUsersByNick" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+   <!-- 유저닉네임검색(단어포함 - 프로필사진, 아이디, 닉네임) -->
+   <select id="getUsersByNick" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
       SELECT profile_img, member_id, nickname
       FROM member
       WHERE nickname LIKE '%' || #{ nickname } || '%'
@@ -298,7 +273,11 @@
    
 
 
-   <!-- 좋아요 -->
+   <!-- 
+   
+   		좋아요
+   
+    -->
    <insert id="addLike" parameterType="com.yedam.mohobby.service.communal.JjimVO">
       INSERT INTO jjim(
                     member_id
@@ -311,7 +290,7 @@
                   ,2
                   )
    </insert>
-   <!-- 좋아요 취소 -->
+   <!-- 좋아요취소 -->
    <delete id="deleteLike" parameterType="com.yedam.mohobby.service.communal.JjimVO">
       DELETE FROM jjim 
       WHERE target_id = #{ targetId } 
@@ -412,5 +391,4 @@
 		WHERE parent_comm_id = #{ parentCommId }
 		AND comm_id = #{ commId }
 	</delete>
-	
 </mapper>

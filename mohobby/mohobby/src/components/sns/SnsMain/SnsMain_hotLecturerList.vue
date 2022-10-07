@@ -7,7 +7,7 @@
         class="ma-2"
         style="width:200px"
         >
-        <!-- 카드컴포넌트 -->
+            <!-- 카드컴포넌트 -->
             <HotLecturer></HotLecturer>
         </v-slide-item>
       </v-slide-group>
