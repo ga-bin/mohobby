@@ -1,8 +1,9 @@
 package com.yedam.mohobby.web.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import com.yedam.mohobby.service.user.MemberService;
  * @title 회원 관리
  */
 @RestController
+@CrossOrigin(origins = "*")
 public class MemberController {
 	@Autowired
 	MemberService service;
@@ -27,8 +29,8 @@ public class MemberController {
 	 * @return MemberVO
 	 */
 	// 회원 한명 정보 가져오기(회원 마이페에지, 회원 아이디 있는지 조회)
-	@GetMapping("/member")
-	public MemberVO getMember(@RequestBody String memberId) {
+	@GetMapping("/member/{memberId}")
+	public MemberVO getMember(@PathVariable String memberId) {
 		return service.getMember(memberId);
 	}
 	

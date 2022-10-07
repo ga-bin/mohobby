@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.user.MypageChallVO;
@@ -28,8 +30,9 @@ public class MypageChallengeController {
  * @return List<MypageChallVO>
  */
 @GetMapping("/mypagejoinchall")
-public List<MypageChallVO> getJoinChall(@RequestBody String memberId, @RequestBody String keywordId) {
-	return service.getJoinChall(memberId, memberId);
+public List<MypageChallVO> getJoinChall(@RequestParam("memberId") String memberId, @RequestParam("keywordId") String keywordId) {
+	
+	return service.getJoinChall(memberId, keywordId);
 }
 
 /**
@@ -39,7 +42,7 @@ public List<MypageChallVO> getJoinChall(@RequestBody String memberId, @RequestBo
  * @return List<MypageChallVO>
  */
 @GetMapping("/mypagecompletechall")
-public List<MypageChallVO> getCompletechall(@RequestBody String memberId, @RequestBody String keywordId) {
-	return service.getCompleteChall(memberId, keywordId);
+public List<MypageChallVO> getCompletechall(MypageChallVO mypageChallVO) {
+	return service.getCompleteChall(mypageChallVO);
 }
 }

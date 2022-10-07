@@ -30,7 +30,7 @@ from class_pay a join class b
 on a.class_id = b.class_id
 join keyword c
 on b.keyword_id = c.keyword_id
-where a.member_id = #{memberId} and b.keywowrd_id = #{keywordId}
+where a.member_id = #{memberId} and b.keyword_id = #{keywordId}
 </select>
 
 </mapper>

@@ -20,4 +20,5 @@ public class ChallMemberVO {
   private int profileYn; // 프로필공개여부
   private int challRate; // 달성율
   private int accountHolder; // 예금주
+  private int payStatus; // 정산상태, 0:정산전 1:정산중 2:정산완료
 }

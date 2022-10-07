@@ -11,5 +11,5 @@ public interface MypageChallengeService {
 	public List<MypageChallVO> getJoinChall(String memberId, String keywordId);
 		
 	// 유저가 완료한 챌린지 목록(카테고리별 조회, 성공한 챌린지 목록)
-	public List<MypageChallVO> getCompleteChall(String memberId, String keywordId);
+	public List<MypageChallVO> getCompleteChall(MypageChallVO mypageChallVO);
 }
