@@ -2,7 +2,7 @@
   <div class="container">
   <h3>소모임 멤버를 모집합니다!</h3>
   <br>
-  <div class="box" v-for="item in items" :key="item.title">
+  <div class="box" @click="box(idx)" v-for="(item,idx) in items" :key="item.title">
   <v-card
     class="mx-3"
     max-width="550"
@@ -26,20 +26,20 @@
           {{item.people}}명 참여중
     </span>
     <v-spacer></v-spacer>
-      <v-btn 
+      <v-chip 
         outlined
         rounded
         text
       >
       {{item.region}}
-      </v-btn>
-      <v-btn
+      </v-chip>
+      <v-chip
         outlined
         rounded
         text
       >
       {{item.hobby}}
-      </v-btn>
+      </v-chip>
     </v-card-actions>
   </v-card>  
 </div>
@@ -122,6 +122,7 @@ export default {
   data() {
   return {
       items: [{
+      boardId : 1,
       title : '월요산방',
       content : '월요산방 content',
       region : '자양동',
@@ -129,7 +130,8 @@ export default {
       photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
       hobby : '운동/건강'
   },
-  {
+  {   
+      boardId : 2,
       title : '화요산방',
       content : '화요산방 content',
       region : '자양동',
@@ -137,7 +139,8 @@ export default {
       photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
       hobby : '운동/건강'
   },
-  {
+  {   
+      boardId : 3,
       title : '수요산방',
       content : '수요산방 content',
       region : '자양동',
@@ -145,7 +148,8 @@ export default {
       photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
       hobby : '운동/건강'
   },
-  {
+  {   
+      boardId : 4,
       title : '목요산방',
       content : '목요산방 content',
       region : '자양동',
@@ -153,7 +157,8 @@ export default {
       photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
       hobby : '운동/건강'
   },
-  {
+  {   
+      boardId : 5,
       title : '금요산방',
       content : '금요산방 content',
       region : '자양동',
@@ -161,7 +166,8 @@ export default {
       photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
       hobby : '운동/건강'
   },
-  {
+  {   
+    boardId : 6,
       title : '토요산방',
       content : '토요산방 content',
       region : '자양동',
@@ -183,7 +189,10 @@ methods : {
     },
     join() {
      this.$router.push({ path: 'login' })
-    }  
+    },
+    box(idx) {
+      this.$router.push({ path : 'moimDetail' , query : { boardId : this.items[idx].boardId }})
+    }
 }
 
 }

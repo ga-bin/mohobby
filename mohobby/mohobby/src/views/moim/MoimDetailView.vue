@@ -20,6 +20,7 @@
   <MoimSidebar v-if="fclick === true"></MoimSidebar>
 
   <!-- 권한에 따라 컴포넌트 다르게 보여주기 -->
+  <span>boardId : {{$route.query.boardId}}</span>
   <router-view></router-view>
   </div>
 </template>
@@ -29,11 +30,10 @@
   export default {
   components: { MoimSidebar },
   data: () => ({
-
     fclick: true,
     // 비공개 : 0, 공개 : 1
     moim: 1,
-    moimRight : 1
+    moimRight : 1,
     }),
   setup() {},
   created() {},
