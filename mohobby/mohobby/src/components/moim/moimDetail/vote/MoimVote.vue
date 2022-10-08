@@ -1,16 +1,116 @@
 <template>
   <div>
-    <span>VoteTest</span>
-  </div>
-  
-</template>
+    <v-card
+      class="mx-auto mb-8"
+      max-width="800"
+      outlined
+      v-for="item in items"
+      :key="item.date"
+      @click="goVote()"
+    >
+      <v-list-item three-line>
+        <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
+        <v-list-item-content>
+          <div class="text-overline mt-6">
+            {{ item.id }}
+            <hr />
+            {{ item.date }}
+          </div>
+          <v-list-item-subtitle class="content mt-5">
+            {{ item.contents }}</v-list-item-subtitle
+          >
+        </v-list-item-content>
+      </v-list-item>
+      <div class="vote">
 
+        <div class="voteContent">
+        <v-card>
+        <v-bold-text class="pl-4">{{item.voteName}}</v-bold-text>
+        <v-row>
+          <v-col
+            cols="12"
+            sm="4"
+            md="4"
+          >
+          <v-radio-group v-model="radioGroup">
+            <v-radio v-for="vote in item.voteLabel"
+                      :key="vote.type"
+              v-model="ex4"
+              :label="vote.type"
+              color="red"
+              v-bind:checked="checked"
+              :value="vote.type"
+              hide-details
+            ></v-radio>
+          </v-radio-group>
+          </v-col>
+        </v-row>
+      </v-card>
+      </div>
+      </div>
+
+      <v-card-actions class="mr-5">
+        <v-spacer></v-spacer>
+        <div class="text-overline mb-1 mr-2">댓글 {{commentNo}}</div>
+      </v-card-actions>
+    </v-card>
+  </div>
+</template>
 <script>
 export default {
-
-}
+  data() {
+    return {
+      commentNo: 22,
+      items: [
+        {
+          date: "2022-10-04 11:12",
+          id: "관리자",
+          voteName : "가입자 더 받기",
+          voteLabel : [{type: "ㄴㄴ",
+                        checked: 1}, 
+                      {type: "50명",
+                        checked: 0}, 
+                      {type: "100명",
+                        checked: 2}]
+        },
+        {
+          date: "2022-10-05 10:42",
+          id: "식빵이",
+          voteName : "야식 추천",
+          voteNum : 2,
+          voteLabel : [{type: "빵"}, 
+                        {type: "닭발"}, 
+                        {type: "치킨"}]
+        },
+        {
+          date: "2022-10-05 10:50",
+          id: "샹달프 미니잼",
+          voteName : "잼 대회",
+          voteNum : 3,
+          voteLabel : [{type:"오뚜끼 딸기"}, 
+                        {type: "샹달프 포도"}]
+        },
+      ],  
+    };
+  },
+  methods: {
+    goVote: function () {
+      this.$router.push({ name: "VoteDetail" });
+    },
+  },
+  props: {},
+};
 </script>
 
-<style>
-
+<style scoped>
+.container {
+  width: 85%;
+}
+.voteContent{
+  max-width: 90%;
+  margin-bottom: 3%;
+}
+.vote{
+  margin-left: 14%;
+}
 </style>
