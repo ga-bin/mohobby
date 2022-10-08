@@ -12,9 +12,9 @@
                                             <v-card-text class="mt-12">
                                                 <h1 class="text-center dispaly-2 teal--text text--accent-3">Mohobby</h1>
                                                 <div class="text-center" mt-4>
-                                                    <v-btn class="mx-2" fab color="black" outlined>
-                                                        <span class="mdi-facebook"></span>
-                                                    </v-btn>
+                                                 <a id="custom-login-btn" @click="kakaoLogin()">
+                                                    <img src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png" style ="height:60px; width:auto;"/> </a> 
+                                                </a>
                                                     <v-btn class="mx-2" fab color="black" outlined>
                                                         <span class="mdi-google-plus"></span>
                                                     </v-btn>
