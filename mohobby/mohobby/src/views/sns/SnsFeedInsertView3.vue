@@ -4,25 +4,15 @@
     max-width="80%"
     outlined
   >
-  <!-- 파일 업로드 -->
+  <upload-image
+  :processImage="customProcessImage"
+  :removeImage="customRemoveImage"
+  @update-urls="customHandleUpdatedUrls"
+  />
+
     <v-container fluid>
-      <input multiple="multiple" 
-             type="file" 
-             id="fileId" 
-             ref="fileInput"
-             @change="inputData()"
-      />
-      <v-container fluid>
-        <div v-for="(list,i) in fileList"
-              :key="i">
-          {{list.name}}
-        </div>
-      </v-container>
-      <v-container fluid>
-        <v-btn @click="uploadImage">uploadImage</v-btn>
-      </v-container>
+
     </v-container>
-    <!-- </v-container> -->
     <!-- content -->
     <v-container fluid>
       <v-textarea
@@ -110,12 +100,14 @@
           </template>
         </v-combobox>
       </v-container>
-      <v-btn @click="uploadImage">uploadImage</v-btn>
   </v-card>
 </template>
 <script>
- 
+ import UploadImage from "v-upload-image";
  export default {
+  components : {
+    UploadImage
+  },
   data: () => ({
     activator: null,
     attach: null,
@@ -144,10 +136,11 @@
     x: 0,
     search: null,
     y: 0,
+    previewImages: [], //이미지업로드1
+    uploadimageurl: [], //이미지업로드2
+    imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
+    message: "에러입니다",
 
-    //
-    fileList : [],
-    file : {}
   }),
   watch: {
     //해시태그
@@ -180,16 +173,66 @@
         this.editingIndex = -1
       }
     },
-    inputData() {
-      //파일 추가시마다 fileList배열에 파일 푸시
-      this.fileList.push(this.$refs.fileInput.files[0]);
+    //이미지 미리보기
+    selectImage () {
+          this.$refs.fileInput.click()
+      },
+      pickFile () {
+        let input = this.$refs.fileInput
+        let file = input.files
+        if (file && file[0]) {
+          let reader = new FileReader
+          reader.onload = e => {
+            this.previewImage = e.target.result
+          }
+          reader.readAsDataURL(file[0])
+          this.$emit('input', file[0])
+        }
+      },
+
+     //이미지2
+     //이미지 조건 처리
+    fileChange: function (e) {
+      const file = e.target.files;
+      let validation = true;
+      let message = '';
+
+      if (file.length > 5) {
+          validation= false;
+          message = `파일은 5개 까지만 등록 가능합니다.`
+      }
+
+      if (file[0].size > 1024 * 1024 * 2) {
+          message = `${message}, 파일은 용량은 2MB 이하만 가능합니다.`;
+          validation = false;
+      }
+
+      if (file[0].type.indexOf('image') < 0) {
+          message = `${message}, 이미지 파일만 업로드 가능합니다.`;
+          validation = false;
+      }
+
+      if (validation) {
+          this.file = file
+      }else {
+          this.file = '';
+          alert(message);
+      }
     },
-    saveData() {
-      //form데이터 객체 생성
-      const formData = new FormData();
-      //fileList에 담긴 파일들의 길이만큼 for문 -> formData 객체에 추가(append)
-      this.fileList.forEach(function(file){
-        formData.append('files', file);
+    onImageChange(file) {	// v-file-input 변경시
+      if (!file) {
+        return;
+      }
+      const formData = new FormData();	// 파일을 전송할때는 FormData 형식으로 전송
+      this.uploadimageurl = [];		// uploadimageurl은 미리보기용으로 사용
+      file.forEach((item) => {
+        formData.append('filelist', item)	// formData의 key: 'filelist', value: 이미지
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.uploadimageurl.push({url: e.target.result});
+          // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
+        };
+        reader.readAsDataURL(item);
       });
       this.axios({
           url: "/sns/myfeed",	// 이미지 저장을 위해 back서버와 통신
@@ -198,12 +241,22 @@
           data: formData,
         }).then(res => {
           console.log(res.data.message);
+          this.imagecnt = file.length;	// 이미지 개수 저장
         }).catch(err => {
-          console.log(err);
+          alert(err);
         });
-    }
-  }
+    },
+ }
 }
  </script>
  <style scoped>
+ .imagePreviewWrapper2 {
+    width: 250px;
+    height: 250px;
+    display: block;
+    cursor: pointer;
+    margin: 0 auto 30px;
+    background-size: cover;
+    background-position: center center;
+ }
 </style>

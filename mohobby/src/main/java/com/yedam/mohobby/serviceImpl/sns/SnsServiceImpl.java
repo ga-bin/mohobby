@@ -1,5 +1,6 @@
 package com.yedam.mohobby.serviceImpl.sns;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,15 @@ import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
+import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.sns.SnsService;
 import com.yedam.mohobby.service.user.MemberVO;
-
+/**
+ * @create 22/10/08
+ * @author sunjin
+ * @title sns controller
+ */
 @Service
 public class SnsServiceImpl implements SnsService{
 
@@ -27,6 +33,11 @@ public class SnsServiceImpl implements SnsService{
 	public int insertFeed(SnsPostVO snsPostVO) {
 		return mapper.insertFeed(snsPostVO);
 	}
+	//미디어 등록
+	@Override
+	public int insertMedia(SnsMediaVO snsMediaVO) {
+		return mapper.insertMedia(snsMediaVO);
+	}
 	//게시물 수정
 	@Override
 	public int updateFeed(SnsPostVO snsPostVO) {
@@ -37,35 +48,50 @@ public class SnsServiceImpl implements SnsService{
 	public int deleteFeed(int postId) {
 		return mapper.deleteFeed(postId);
 	}
-	//인기강사피드
+	//인기강사피드조회
 	@Override
 	public List<SnsPostVO> hotLecturerList() {
 		return mapper.hotLecturerList();
 	}
-	//전체피드
+	//전체피드조회
 	@Override
 	public List<SnsPostVO> allList() {
 		return mapper.allList();
 	}
-	//최신피드
+	//최신피드조회
 	@Override
 	public List<SnsPostVO> newList() {
 		return mapper.newList();
 	}
-	//인기피드
+	//인기피드조회
 	@Override
 	public List<SnsPostVO> hotList() {
 		return mapper.hotList();
 	}
-	//유저피드목록
+    //팔로잉피드조회
+    public List<SnsPostVO> getFollowingFeeds(String memberId){
+        return mapper.getFollowingFeeds(memberId);
+    }
+	//유저피드조회
 	@Override
-	public List<SnsPostVO> getUserFeed() {
-		return mapper.getUserFeed();
+	public List<SnsPostVO> getUserFeed(String memberId) {
+		return mapper.getUserFeed(memberId);
 	}
+	//프로필조회
+    @Override
+    public HashMap<String, Object> getProfile(String memberId) {
+        return mapper.getProfile(memberId);
+    }
+	//피드상세조회
+//	@Override
+//  public SnsPostVO getFeedDetail(int postId){
+//	     return mapper.getFeedDetail;
+//	}
+	
 	//해시태그 업데이트 or 삽입
 	@Override
-	public int updateHashtag(int postId, String hashtag) {
-		return mapper.updateHashtag(postId, hashtag);
+	public int updateHashtag(int postId) {
+		return mapper.updateHashtag(postId);
 	}
 	
     /*
@@ -78,38 +104,38 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//언팔로우
 	@Override
-	public int unfollow(SnsFollowVO followVO) {
-		return mapper.unfollow(followVO);
+	public int unfollow(String followerId, String followingId) {
+		return mapper.unfollow(followerId, followingId);
 	}
 	//팔로잉 조회
 	@Override
-	public List<SnsPostVO> getfollowingList(SnsPostVO snsPostVO) {
-		return mapper.getfollowingList(snsPostVO);
+	public List<SnsFollowVO> getFollowingList(String followerId) {
+		return mapper.getFollowingList(followerId);
 	}
 	//팔로워 조회
 	@Override
-	public List<SnsPostVO> getfollowerList(SnsPostVO snsPostVO) {
-		return mapper.getfollowerList(snsPostVO);
+	public List<SnsFollowVO> getFollowerList(String followingId) {
+		return mapper.getFollowerList(followingId);
 	}
 	//유저전체
 	@Override
-	public List<MemberVO> getUsers(MemberVO memberVO) {
-		return mapper.getUsers(memberVO);
+	public List<MemberVO> getUsers() {
+		return mapper.getUsers();
 	}
-	//유저단건검색
+	//유저검색
 	@Override
-	public List<MemberVO> getOneUser(MemberVO memberVO) {
-		return mapper.getOneUser(memberVO);
-	}
-	//해시태그검색
-	@Override
-	public List<SnsPostVO> searchHashtag(SnsPostVO snsPostVO) {
-		return mapper.searchHashtag(snsPostVO);
+	public List<MemberVO> searchUser(String memberId) {
+		return mapper.searchUser(memberId);
 	}
 	//유저닉네임검색
+    @Override
+    public List<SnsPostVO> getUsersByNick(String nickname) {
+        return mapper.getUsersByNick(nickname);
+    }
+	//해시태그검색
 	@Override
-	public List<SnsPostVO> getUsersByNick(SnsPostVO snsPostVO) {
-		return mapper.getUsersByNick(snsPostVO);
+	public List<SnsPostVO> searchHashtag(String hashtag) {
+		return mapper.searchHashtag(hashtag);
 	}
 	
     /*
@@ -146,13 +172,13 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//댓글삭제
 	@Override
-	public int deleteCmt(int cmtId) {
-		return mapper.deleteCmt(cmtId);
+	public int deleteCmt(int commId) {
+		return mapper.deleteCmt(commId);
 	}
 	//댓글조회
 	@Override
-	public List<CommentsVO> getCmtList(CommentsVO commentsVO) {
-		return mapper.getCmtList(commentsVO);
+	public List<CommentsVO> getCmtList(int postId) {
+		return mapper.getCmtList(postId);
 	}
     
     /*
@@ -170,8 +196,16 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//대댓삭제
 	@Override
-	public int deleteReCmt(CommentsVO commentsVO) {
-		return mapper.deleteReCmt(commentsVO);
+	public int deleteReCmt(int commId) {
+		return mapper.deleteReCmt(commId);
 	}
-
+	
+    /*
+     * 북마크
+     */
+    //북마크등록
+    
+    //북마크 이름수정
+    
+    //북마크 삭제(안의 게시물도 전부 삭제되도록)
 }

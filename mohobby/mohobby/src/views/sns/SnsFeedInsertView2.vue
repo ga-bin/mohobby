@@ -37,7 +37,6 @@
   </div>
   </template>
 <script>
-import axios from 'axios'
  
  export default {
    data: ()=>({
@@ -61,7 +60,7 @@ import axios from 'axios'
          form.append('image', image)
      
          if (num+i < 5) {
-           axios.post('/upload', form, {
+           this.axios.post('/upload', form, {
                header: { 'Content-Type': 'multipart/form-data' }
            }).then( ({data}) => {
                this.$set(this.images, num+i, data)
