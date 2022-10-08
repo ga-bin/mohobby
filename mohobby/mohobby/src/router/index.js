@@ -156,7 +156,7 @@ const routes = [
   },
   { //게시글
     path: "/moimDetail",
-    name: "",
+    name: "moimDetail",
     component: () => import("@/views/moim/MoimDetailView"),
       children : [
         { //게시판
