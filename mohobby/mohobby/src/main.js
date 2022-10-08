@@ -12,6 +12,7 @@ Vue.config.productionTip = false;
 Vue.prototype.axios = axios;
 Vue.prototype.$ = $;
 axios.defaults.baseURL = "http://localhost:8088/java";
+window.Kakao.init("157b38874395f658a48c02cc8473066b"); // 카카오 로그인 앱 키
 
 new Vue({
   vuetify,
