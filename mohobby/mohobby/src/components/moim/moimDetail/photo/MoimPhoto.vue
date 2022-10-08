@@ -1,18 +1,16 @@
 <template>
   <div>
     <div class="container">
-    <v-row>
-    <v-col
-      v-for="n in items"
-      :key="n.src"
-      class="d-flex child-flex"
-      cols="4"
-    >
-    <v-img :src="n.src" />
-    <!-- <vue-viewer
-    :thumb="n.src"
-    :full="n.src">
-</vue-viewer> -->
+      <v-row>
+        <v-col
+        v-for="n in items"
+        :key="n.src"
+        class="d-flex child-flex"
+        cols="4"
+        >
+    <div id="main-product-img">
+    <img :src="n.src" />
+    </div>
         <template v-slot:placeholder>
           <v-row
             class="fill-height ma-0"
@@ -80,6 +78,25 @@ export default {
 <style scoped>
   .container {
     width : 70%;
+  }
+  #main-product-img img {
+    width: 270px;
+    height: 300px;
+    max-width: 100%;
+    transition: all 0.2s linear;
+    border-radius: 0.8em;
+  }
+
+  #main-product-img {
+    width: 270px;
+    height: 300px;
+    border-radius: 0.8em;
+    margin: 0px auto;
+    overflow: hidden;
+  }
+
+  #main-product-img:hover img {
+    transform: scale(1.1);
   }
 
 </style>

@@ -8,15 +8,17 @@
   import MoimPost from "@/components/moim/moimDetail/board/MoimPost.vue";
   export default {
   components: { MoimSidebar, MoimPost},
+  props : ['boardId'],
   data: () => ({
     }),
   setup() {},
   created() {},
   mounted() {},
   unmounted() {},
-  methods: {},
+  methods: {
+  },
 };
 </script>
-<style>
+<style scoped>
 
 </style>
