@@ -1,7 +1,5 @@
 <template>
   <div>
-    <ClassSidebar></ClassSidebar>
-    <router-link to="/classmain" class="btn btn-info btn-sm mr-2">홈으로</router-link>
     <div class="example">
       <quill-editor
         class="editor"
@@ -37,14 +35,12 @@ import "highlight.js/styles/tomorrow.css";
 // import theme style
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
-import ClassSidebar from "@/components/lecture/ClassSidebar.vue";
 
 export default {
   name: "quill-example-snow",
   title: "Theme: snow",
   components: {
-    quillEditor,
-    ClassSidebar
+    quillEditor
 },
   data() {
     return {

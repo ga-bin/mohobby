@@ -1,7 +1,5 @@
 <template>
   <div>
-    <ClassSidebar></ClassSidebar>
-    <router-link to="/classmain" class="btn btn-info btn-sm mr-2">홈으로</router-link>
     <button @click="clearSession">clearSession</button><br/>
     <div class="authBox">
       <h3>사용자 인증</h3>
@@ -40,12 +38,9 @@
 // highlight.js style
 import "highlight.js/styles/tomorrow.css";
 
-// import theme style
-import ClassSidebar from "@/components/lecture/ClassSidebar.vue";
-
 export default {
   components: {
-    ClassSidebar
+    
 },
   data() {
     return {

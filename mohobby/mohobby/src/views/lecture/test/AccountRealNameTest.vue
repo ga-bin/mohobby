@@ -1,7 +1,5 @@
 <template>
     <div>
-        <ClassSidebar></ClassSidebar>
-        <router-link to="/classmain" class="btn btn-info btn-sm mr-2">홈으로</router-link>
         <div>
             <h3>테스트베드 계좌 내역</h3>
            <table>
@@ -50,7 +48,6 @@
 </template>
 
 <script>
-import ClassSidebar from '@/components/lecture/ClassSidebar.vue';
 
 export default {
     data() {
@@ -83,7 +80,7 @@ export default {
     methods: {
         
     },
-    components: { ClassSidebar }
+    components: { }
 }
 </script>
 

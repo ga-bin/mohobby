@@ -80,8 +80,6 @@ public class ClassController {
 	        @RequestParam String link
 	        ) throws IOException, WriterException {
 	    
-	    //String img = "https://cdn.sisamagazine.co.kr/news/photo/202208/457615_463348_1644.jpg";
-	    
 	    int width = 400;
 	    int height = 400;
 	    BitMatrix matrix = new MultiFormatWriter().encode(link, BarcodeFormat.QR_CODE, width, height);
@@ -89,21 +87,6 @@ public class ClassController {
 	    try(ByteArrayOutputStream out = new ByteArrayOutputStream();) {
 	        
 	        MatrixToImageWriter.writeToStream(matrix, "PNG", out);
-//	        BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(matrix, new MatrixToImageConfig(ClassController.Colors.WHITE.getArgb(), ClassController.Colors.ORANGE.getArgb()));
-//	        BufferedImage overly = ImageIO.read(new URL(img));
-//
-//	        int deltaHeight = qrImage.getHeight() - overly.getHeight();
-//	        int deltaWidth = qrImage.getWidth() - overly.getWidth();
-//	        
-//	        BufferedImage combined = new BufferedImage(qrImage.getHeight(), qrImage.getWidth(), BufferedImage.TYPE_INT_ARGB);
-//            Graphics2D g = (Graphics2D) combined.getGraphics();
-//            
-//            g.drawImage(qrImage, 0, 0, null);
-//            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-//            // QR코드 이미지의 정중앙 위치에 덮음.
-//            g.drawImage(overly, (int) Math.round(deltaWidth / 2), (int) Math.round(deltaHeight / 2), null);
-//            
-//            ImageIO.write(combined, "png", out);
 	        
 	       String base64 = new String(Base64.getEncoder().encode(out.toByteArray()));
 	       return "data:image/png;base64," + base64;
@@ -111,20 +94,5 @@ public class ClassController {
 	    }
 	}
 	
-	 public enum Colors {
-         BLUE(0xFF40BAD0),
-         RED(0xFFE91C43),
-         PURPLE(0xFF8A4F9E),
-         ORANGE(0xFFF4B13D),
-         WHITE(0xFFFFFFFF),
-         BLACK(0xFF000000);
-         private final int argb;
-         Colors(final int argb){
-             this.argb = argb;
-         }
-         public int getArgb(){
-             return argb;
-         }
-     }
 
 }

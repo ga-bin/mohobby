@@ -117,37 +117,48 @@ const routes = [
     path: "/classmain",
     name: "classmain",
     component: () => import("./../views/lecture/ClassMainView"),
+    children: [
+      {
+        path: "test",
+        name: "ClassTest",
+        component: () => import("./../views/lecture/test/ClassTestView"),
+        children: [
+          {
+            path: "OpenBankingTest",
+            name: "OpenBankingTest",
+            component: () => import("./../views/lecture/test/OpenBankingTest")
+          },
+          {
+            path: "QuillEditorTest",
+            name: "QuillEditorTest",
+            component: () => import("./../views/lecture/test/QuillEditorTest")
+          },
+          {
+            path: "iamportTest",
+            name: "iamportTest",
+            component: () => import("./../views/lecture/test/iamportTest")
+          },
+          {
+            path: "AccountRealNameTest",
+            name: "AccountRealNameTest",
+            component: () => import("./../views/lecture/test/AccountRealNameTest")
+          },
+          {
+            path: "AttdQRTest",
+            name: "AttdQRTest",
+            component: () => import("./../views/lecture/test/AttdQRTest")
+          },
+          {
+            path: "KakaoMapTest",
+            name: "KakaoMapTest",
+            component: () => import("./../views/lecture/test/KakaoMapTest")
+          },
+        ],
+      },
+      
+    ],
   },
-  {
-    path: "/OpenBankingTest",
-    name: "OpenBankingTest",
-    component: () => import("./../views/lecture/test/OpenBankingTest")
-  },
-  {
-    path: "/QuillEditorTest",
-    name: "QuillEditorTest",
-    component: () => import("./../views/lecture/test/QuillEditorTest")
-  },
-  {
-    path: "/iamportTest",
-    name: "iamportTest",
-    component: () => import("./../views/lecture/test/iamportTest")
-  },
-  {
-    path: "/AccountRealNameTest",
-    name: "AccountRealNameTest",
-    component: () => import("./../views/lecture/test/AccountRealNameTest")
-  },
-  {
-    path: "/AttdQRTest",
-    name: "AttdQRTest",
-    component: () => import("./../views/lecture/test/AttdQRTest")
-  },
-  {
-    path: "/KakaoMapTest",
-    name: "KakaoMapTest",
-    component: () => import("./../views/lecture/test/KakaoMapTest")
-  },
+  
   // moim
   { 
     path: "/moimmain",

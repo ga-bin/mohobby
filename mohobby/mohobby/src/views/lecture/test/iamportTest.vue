@@ -1,7 +1,5 @@
 <template>
     <div>
-        <ClassSidebar></ClassSidebar>
-        <router-link to="/classmain" class="btn btn-info btn-sm mr-2">홈으로</router-link>
         <div>
             <section class="test">
                 <input type="number" placeholder="금액 입력" v-model="price" >
@@ -18,7 +16,6 @@
 </template>
 
 <script>
-import ClassSidebar from '@/components/lecture/ClassSidebar.vue';
 
 //import IMP from 'vue-iamport';
 const { IMP } = window;
@@ -82,7 +79,7 @@ export default {
             });
         }
     },
-    components: { ClassSidebar }
+    components: {  }
 }
 </script>
 
