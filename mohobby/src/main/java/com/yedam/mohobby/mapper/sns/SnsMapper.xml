@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.sns.SnsMapper">
+    <!-- 
+		 * @create 2022/10/07
+		 * @author sunjin
+		 * @title /sns sql
+	-->
    <!-- 
    
    		피드
@@ -36,14 +41,20 @@
 						      post_id,
 						      media_type,
 						      img_url,
-						      video_url
+						      video_url,
+						      fileName,
+						      fileRealname,
+						      dirName
 						     )
 				      VALUES(
 						      media_id_seq.nextval,
 						      #{ postId },
 						      #{ mediaType },
 						      #{ imgUrl },
-						      #{ videoUrl }
+						      #{ videoUrl },
+						      #{ file_name },
+						      #{ file_realname },
+						      #{ dir_name }
 						     )
 						      
    </insert>
