@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <v-dialog max-width="600px" persistent v-model="dialog">
     <v-card>
       <v-card-title>
@@ -76,19 +76,22 @@
 
 <script>
 export default {
+  //부모한테서 값을 받아오기
+  props: ['dialog', 'calendar'],
   data() {
     return {
       startTimer: false,
       endTimer: false,
+      name: '현정'
     }
   },
   computed: {
-    dialog() {
-      return this.$store.state.calendar.dialog;
-    },
-    calendar() {
-      return this.$store.state.calendar.calendar;
-    },
+    // dialog() {
+    //   return this.$store.state.calendar.dialog;
+    // },
+    // calendar() {
+    //   return this.$store.state.calendar.calendar;
+    // },s
   },
   methods: {
     submit() {
@@ -97,7 +100,10 @@ export default {
       }
     },
     close() {
-      this.$store.commit('CLOSE_CALENDAR_DIALOG');
+      console.log(this.name);
+      //부모로 값 보내기(부모의 파라미터로)
+      this.$emit('dialogClose', this.name);
+      //this.$store.commit('CLOSE_CALENDAR_DIALOG');
     },
     selectTime() {
       this.endTimer = false;
@@ -111,4 +117,4 @@ export default {
   },
 
 }
-</script> -->
+</script>

@@ -47,6 +47,11 @@ const routes = [
     component: () => import("./../views/user/LoginView")
   },
   { 
+    path: "/kakaoLogin",
+    name: "kakaoLogin",
+    component: () => import("./../views/user/KakaoLoginView")
+  },
+  { 
     path: "/register",
     name: "register",
     component: () => import("./../views/user/RegisterView")
@@ -156,7 +161,7 @@ const routes = [
   },
   { //게시글
     path: "/moimDetail",
-    name: "",
+    name: "moimDetail",
     component: () => import("@/views/moim/MoimDetailView"),
       children : [
         { //게시판
