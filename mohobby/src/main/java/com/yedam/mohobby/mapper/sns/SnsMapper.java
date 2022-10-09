@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.JjimVO;
+import com.yedam.mohobby.service.sns.SnsBookmarkCatgVO;
+import com.yedam.mohobby.service.sns.SnsBookmarkVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
@@ -45,14 +47,13 @@ public interface SnsMapper {
     public HashMap<String, Object> getProfile(String memberId);
     
     //피드상세조회
-//  public SnsPostVO getFeedDetail(int postId);
+    public SnsPostVO getFeedDetail(int postId);
     
     /*
      * 해시태그
      */
     //해시태그 업데이트 or 삽입
     public int updateHashtag(int postId);
-
     
     /*
      * 팔로우
@@ -109,9 +110,20 @@ public interface SnsMapper {
     /*
      * 북마크
      */
-    //북마크등록
+    //컬렉션 등록
+    public int createBookmarkCtg(SnsBookmarkCatgVO bmkCtgVO);
+    //컬렉션 이름수정
+    public int updateBookmarkCtgName(SnsBookmarkCatgVO bmkCtgVO);
+    //컬렉션 삭제(안의 게시물도 전부 삭제되도록)
+    public int deleteBookmarkCtg(int catgId);
+    //컬렉션 목록
+    public List<SnsBookmarkCatgVO> getBookmarkCtgs(int catgId);
     
-    //북마크 이름수정
-    
-    //북마크 삭제(안의 게시물도 전부 삭제되도록)
+    //북마크 등록
+    public int addBookmark(SnsBookmarkVO bmkVO);
+    //북마크 삭제
+    public int deleteBookmark(SnsBookmarkVO bmkVO);
+    //북마크 조회
+    public List<SnsBookmarkVO> getBookmarks(int catgId);
+
 }	
