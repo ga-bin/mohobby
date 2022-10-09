@@ -206,6 +206,11 @@ const routes = [
         component: () => import("./../views/moim/vote/MoimVoteView"),
         props: true,
       },
+      { //투표
+        path: "/VoteDetail",
+        name: "VoteDetail",
+        component: () => import("./../views/moim/vote/VoteDetailView"),
+      },
       { //N빵
         path: "/moimNbbang",
         name: "moimNbbang",

@@ -70,6 +70,7 @@ export default {
   props: {},
 };
 </script>
+
 <style scoped>
 .container {
   width: 91%;
