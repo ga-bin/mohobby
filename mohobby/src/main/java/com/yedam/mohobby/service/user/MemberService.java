@@ -9,6 +9,9 @@ public interface MemberService {
 		// 회원 한명 정보 가져오기(회원 마이페에지, 회원 아이디 있는지 조회)
 		public MemberVO getMember(String memberId);
 		
+		// 로그인 아이디, 비밀번호가 일치하는지 체크
+		public MemberVO checkIdPassword(MemberVO memberVO);
+
 		//회원가입 insert
 		public void insertMember(MemberVO memberVO);
 		
