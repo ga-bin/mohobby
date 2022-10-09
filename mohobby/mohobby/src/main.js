@@ -5,6 +5,8 @@ import router from "./router";
 import axios from "axios";
 import $ from "jquery";
 import ImageViewer from 'vue2-viewer';
+import store from './store'
+
 
 Vue.use(ImageViewer);
 Vue.config.productionTip = false;
@@ -17,5 +19,6 @@ window.Kakao.init("157b38874395f658a48c02cc8473066b"); // 카카오 로그인 �
 new Vue({
   vuetify,
   router,
+ store,
   render: (h) => h(App),
 }).$mount("#app");

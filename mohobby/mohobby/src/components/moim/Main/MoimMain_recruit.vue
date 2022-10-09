@@ -167,7 +167,7 @@ export default {
       hobby : '운동/건강'
   },
   {   
-    boardId : 6,
+      boardId : 6,
       title : '토요산방',
       content : '토요산방 content',
       region : '자양동',
@@ -191,7 +191,7 @@ methods : {
      this.$router.push({ path: 'login' })
     },
     box(idx) {
-      this.$router.push({ path : 'moimDetail' , query : { boardId : this.items[idx].boardId }})
+      this.$router.push({ name : 'moimBoard' , params : { boardId : this.items[idx].boardId }})
     }
 }
 

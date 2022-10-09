@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <MoimNotice></MoimNotice>
   </div>
 </template>
@@ -17,6 +17,8 @@
   methods: {},
 };
 </script>
-<style>
-
+<style scoped>
+  .container {
+  width : 80%;
+}
 </style>
