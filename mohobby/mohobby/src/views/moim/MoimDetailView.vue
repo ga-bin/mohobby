@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 버튼 -->
-  <BoardButton v-if="$route.name !== 'moimSchedule'&& $route.name !== 'moimVote' && $route.name !== 'moimNbbang'" />
+  <BoardButton v-if="$route.name !== 'moimSchedule'&& $route.name !== 'moimNbbang' && $route.name !== 'nBBangDetail' && $route.name !== 'moimVote' && $route.name !== 'moimNbbang'" />
   <BoardButton v-else style="visibility:hidden"/>
   <!-- 컴포넌트 -->
   <MoimSidebar :boardId="Id" />

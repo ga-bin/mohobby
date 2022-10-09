@@ -1,12 +1,18 @@
 <template>
   <div>
+    <v-card-actions class="mb-16">
+      <v-spacer />
+      <div class="makeVote">
+      <v-btn @click="voteMake()"><v-icon>mdi-plus-circle-outline</v-icon>투표 생성하기</v-btn>
+      </div>
+    </v-card-actions>
     <v-card
       class="mx-auto mb-8"
       max-width="800"
       outlined
       v-for="item in items"
       :key="item.date"
-      @click="goVote()"
+      @click="goDetail()"
     >
       <v-list-item three-line>
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
@@ -94,17 +100,21 @@ export default {
     };
   },
   methods: {
-    goVote: function () {
-      this.$router.push({ name: "VoteDetail" });
+    voteMake: function () {
+      this.$router.push({ path: "makeVote" });
     },
-  },
+    goDetail: function () {
+      this.$router.push({ path: "voteDetail" });
+    },
   props: {},
-};
+  }
+}
 </script>
 
 <style scoped>
-.container {
-  width: 85%;
+
+.makeVote{
+  margin-right: 21%;
 }
 .voteContent{
   max-width: 90%;
