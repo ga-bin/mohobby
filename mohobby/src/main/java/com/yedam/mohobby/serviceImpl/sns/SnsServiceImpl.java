@@ -10,6 +10,8 @@ import com.yedam.mohobby.mapper.sns.SnsMapper;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
+import com.yedam.mohobby.service.sns.SnsBookmarkCatgVO;
+import com.yedam.mohobby.service.sns.SnsBookmarkVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
@@ -83,11 +85,14 @@ public class SnsServiceImpl implements SnsService{
         return mapper.getProfile(memberId);
     }
 	//피드상세조회
-//	@Override
-//  public SnsPostVO getFeedDetail(int postId){
-//	     return mapper.getFeedDetail;
-//	}
+	@Override
+	public SnsPostVO getFeedDetail(int postId){
+	     return mapper.getFeedDetail(postId);
+	}
 	
+    /*
+     * 해시태그
+     */
 	//해시태그 업데이트 or 삽입
 	@Override
 	public int updateHashtag(int postId) {
@@ -203,9 +208,39 @@ public class SnsServiceImpl implements SnsService{
     /*
      * 북마크
      */
-    //북마크등록
-    
-    //북마크 이름수정
-    
-    //북마크 삭제(안의 게시물도 전부 삭제되도록)
+    //컬렉션 등록
+    @Override
+    public int createBookmarkCtg(SnsBookmarkCatgVO bmkCtgVO) {
+        return mapper.createBookmarkCtg(bmkCtgVO);
+    }
+    //컬렉션 이름수정
+    @Override
+    public int updateBookmarkCtgName(SnsBookmarkCatgVO bmkCtgVO) {
+        return mapper.updateBookmarkCtgName(bmkCtgVO);
+    }
+    //컬렉션 삭제(안의 게시물도 전부 삭제되도록)
+    @Override
+    public int deleteBookmarkCtg(int catgId) {
+        return mapper.deleteBookmarkCtg(catgId);
+    }
+    //컬렉션 목록
+    @Override
+    public List<SnsBookmarkCatgVO> getBookmarkCtgs(int catgId) {
+        return mapper.getBookmarkCtgs(catgId);
+    }
+    //북마크 등록
+    @Override
+    public int addBookmark(SnsBookmarkVO bmkVO) {
+        return mapper.addBookmark(bmkVO);
+    }
+    //북마크 삭제
+    @Override
+    public int deleteBookmark(SnsBookmarkVO bmkVO) {
+        return mapper.deleteBookmark(bmkVO);
+    }
+    //북마크 조회
+    @Override
+    public List<SnsBookmarkVO> getBookmarks(int catgId) {
+        return mapper.getBookmarks(catgId);
+    }
 }
