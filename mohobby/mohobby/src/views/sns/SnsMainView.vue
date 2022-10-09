@@ -1,27 +1,26 @@
 <template>
   <div id = "container">
+    <div>
+      <v-btn @click="goUserFeed()">유저피드</v-btn>
+      <v-btn @click="goFeedInsert()">글쓰기</v-btn>
+    </div>
     <SnsSearchbar></SnsSearchbar>
-    <!-- 인기 만능재주꾼 피드리스트 -->
+    <!-- 인기 피드리스트 -->
+    <h3>추천 만능 재주꾼들 피드</h3>
     <HotLecturerList></HotLecturerList>
-
-    <!-- 카드형 무한스크롤링 -->
+    <h3>재주 견습생들 피드</h3>
+    <!-- 랜덤피드 무한스크롤링 -->
     <ul>
       <li v-if="noneUser===9">   
-        <NoneUser v-for="(card, i) in card_list" 
-                  :key="i" 
-                  :card="card_list" 
-        />
+        <NoneUser />
       </li>
     </ul>
-    <!-- <listCmp 
-          :card="card_list"
-    /> -->
   </div>
 </template>
 <script>
-  import SnsSearchbar from "../../components/sns/SnsCommn/SnsSearchbar"
-  import HotLecturerList from "../../components/sns/SnsMain/SnsMain_hotLecturerList";
-  import NoneUser from "../../components/sns/SnsMain/SnsMain_noneuser";
+  import SnsSearchbar from "../../components/sns/Common/Searchbar"
+  import HotLecturerList from "../../components/sns/Main/HotLecturerList";
+  import NoneUser from "../../components/sns/Main/Noneuser";
 
   export default {
     name: "snsMain",
@@ -98,8 +97,14 @@
         ) {
           const new_card = this.getCard();
         this.card_list = [...this.card_list, ...new_card];
+        }
+      },
+      goUserFeed() {
+        this.$router.push({ name: "SnsUserFeed" });
+      },
+      goFeedInsert() {
+        this.$router.push({ name: "SnsFeedInsert" });
       }
-    }
     },
 
     mounted () {

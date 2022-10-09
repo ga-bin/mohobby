@@ -31,7 +31,8 @@
               max="600"
               step="1"
             ></v-slider>
-
+            <!-- <v-img v-for="(item, i) in imagelist" :key="i" :src="require(`../../../back/uploads/${item}`)"
+       contain height="150px" width="200px" style="border: 2px solid black; margin-left:100px;"/> -->
             <v-img
               :aspect-ratio="4 / 3"
               :width="width"
@@ -57,8 +58,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-import SnsSidebar from "../../components/sns/SnsCommn/SnsSidebar.vue";
+import SnsSidebar from "../../components/sns/Common/SnsSidebar.vue";
 export default {
   name: "snsFeedDetail",
   components: { SnsSidebar },
@@ -90,9 +90,8 @@ export default {
         this.likeStatus = 1; // DB로 업데이트
         this.likecnt++;
         //좋아요 인서트
-        axios
-          .post("http://localhost:8088/java/feedDetail", {
-            status: 1,
+        this.axios
+          .post("http://localhost:8088/java/sns/like", {
             memberId: this.memberId,
             targetId: this.targetId,
           })
@@ -108,10 +107,9 @@ export default {
         this.likeStatus = 0;
         this.likecnt--;
 
-        //좋아요 업데이트
-        axios
-          .post("http://localhost:8088/java/updateLike", {
-            status: 0,
+        //좋아요 취소
+        this.axios
+          .post("http://localhost:8088/java/sns/like", {
             memberId: this.memberId,
             targetId: this.targetId,
           })

@@ -38,7 +38,7 @@
     
   </template>
   <script>
-    import SnsSidebar from "../../components/sns/SnsCommn/SnsSidebar.vue";
+    import SnsSidebar from "../../components/sns/Common/SnsSidebar.vue";
     export default {
       name: "",
       components: { SnsSidebar },

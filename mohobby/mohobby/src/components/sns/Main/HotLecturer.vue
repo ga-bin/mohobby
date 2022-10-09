@@ -1,7 +1,7 @@
 <template>
     <div id="container">
       <div v-for="item in items" :key="item.postId">
-          <div @click="feedDetail(item.postId)">
+          <div @click="feedDetail()">
           <v-hover v-slot="{ hover }">
             <v-card
               class="mx-auto"
@@ -87,7 +87,7 @@
     methods: {
       search() {
         //hotLectureList조회
-        this.axios('/main/hotLecturerList').then(res => {
+        this.axios('/sns/main/top20LecturerFeeds').then(res => {
             console.log(res);
             this.items = res.data;
             
@@ -98,8 +98,10 @@
           });
         
       },
-      feedDetail(postId){
-        this.$router.push( '/snsFeedDetail?postId='+ postId)
+      // feedDetail(postId){
+      //   this.$router.push( '/snsFeedDetail?postId='+ postId)
+      feedDetail(){
+      this.$router.push( '/snsFeedDetail');
       }
     }
   };

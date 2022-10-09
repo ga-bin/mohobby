@@ -1,41 +1,41 @@
 <template>
-  <v-card
-    class="mx-auto"
-    max-width="80%"
-    outlined
-  >
-  <!-- 파일 업로드 -->
-    <v-container fluid>
-      <input multiple="multiple" 
-             type="file" 
-             id="fileId" 
-             ref="fileInput"
-             @change="inputData()"
-      />
-      <v-container fluid>
-        <div v-for="(list,i) in fileList"
-              :key="i">
-          {{list.name}}
-        </div>
-      </v-container>
-      <v-container fluid>
-        <v-btn @click="uploadImage">uploadImage</v-btn>
-      </v-container>
-    </v-container>
-    <!-- </v-container> -->
-    <!-- content -->
-    <v-container fluid>
-      <v-textarea
-        name="content"
-        auto-grow
-        placeholder="내용을 입력해주세요!"
-        value=""
-      ></v-textarea>
-    </v-container>
-    <!-- 해시태그 -->
-    <v-container fluid>
+  <div id="app">
+    <!-- file input1 -->
+    <input
+      ref="fileInput"
+      type="file"
+      multiple
+      @input="pickFile">
+    <!-- 이미지 미리보기 -->
+    <div v-for="(previewImage,i) in previewImages"
+      :key="i" 
+      class="imagePreviewWrapper2"
+      :style="{ 'background-image': `url(${previewImage})` }"
+      @click="selectImage()">
+    </div>
+    <v-file-input class="input" 
+              type="file" 
+              counter 
+              show-size 
+              label="이미지 제출(여러개 가능)"
+              outlined 
+              dense 
+              multiple 
+              prepend-icon="mdi-camera" 
+              style="width: 400px; margin-left: 100px;"
+              @change="onImageChange"/>
+    <v-img v-for="(item,i) in uploadimageurl" 
+                :key="i" 
+                :src="item.url"
+                contain height="150px" width="200px" 
+                style="border: 2px solid #ededed; margin-left:100px;"/>
+        
+        <!-- 해시태그 등록부분 -->
+        <v-app id="inspire">
+          <v-container fluid>
             <v-combobox
               v-model="model"
+              :filter="filter"
               :hide-no-data="!search"
               :items="items"
               :search-input.sync="search"
@@ -45,7 +45,6 @@
               small-chips
               solo
             >
-            <!-- :filter="filter" -->
           <template v-slot:no-data>
             <v-list-item>
               <span class="subheading">Create</span>
@@ -110,8 +109,8 @@
           </template>
         </v-combobox>
       </v-container>
-      <v-btn @click="uploadImage">uploadImage</v-btn>
-  </v-card>
+    </v-app>
+</div>
 </template>
 <script>
  
@@ -144,13 +143,12 @@
     x: 0,
     search: null,
     y: 0,
-
-    //
-    fileList : [],
-    file : {}
+    uploadimageurl: [],
+    imagecnt: 0,
+    
   }),
+
   watch: {
-    //해시태그
     model (val, prev) {
       if (val.length === prev.length) return
 
@@ -165,12 +163,12 @@
 
           this.nonce++
         }
+
         return v
       })
     },
   },
   methods: {
-    //해시태그수정
     edit (index, item) {
       if (!this.editing) {
         this.editing = item
@@ -180,30 +178,37 @@
         this.editingIndex = -1
       }
     },
-    inputData() {
-      //파일 추가시마다 fileList배열에 파일 푸시
-      this.fileList.push(this.$refs.fileInput.files[0]);
-    },
-    saveData() {
-      //form데이터 객체 생성
-      const formData = new FormData();
-      //fileList에 담긴 파일들의 길이만큼 for문 -> formData 객체에 추가(append)
-      this.fileList.forEach(function(file){
-        formData.append('files', file);
-      });
-      this.axios({
-          url: "/sns/myfeed",	// 이미지 저장을 위해 back서버와 통신
-          method: "POST",
-          headers: {'Content-Type': 'multipart/form-data'},	// 이걸 써줘야 formdata 형식 전송가능
-          data: formData,
-        }).then(res => {
-          console.log(res.data.message);
-        }).catch(err => {
-          console.log(err);
-        });
-    }
-  }
-}
+   //이미지 미리보기
+   selectImage () {
+          this.$refs.fileInput.click()
+      },
+      pickFile () {
+        let input = this.$refs.fileInput
+        let file = input.files
+        if (file && file[0]) {
+          let reader = new FileReader
+          reader.onload = e => {
+            this.previewImage = e.target.result
+          }
+          reader.readAsDataURL(file[0])
+          this.$emit('input', file[0])
+        }
+      },
+  },
+ }
+
  </script>
  <style scoped>
+  #att_zone {
+  width: 660px;
+  min-height: 150px;
+  padding: 10px;
+  border: 1px dotted #00f;
+}
+
+#att_zone:empty:before {
+  content: attr(data-placeholder);
+  color: #999;
+  font-size: .9em;
+}
 </style>
