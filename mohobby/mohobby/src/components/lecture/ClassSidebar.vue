@@ -13,20 +13,37 @@
     <v-divider></v-divider>
 
     <v-list>
-      <v-list-item
+      <v-list-group
         v-for="link in links"
         :key="link.text"
-        @click="$router.push({ path: link.route })"
-        link
+        :prepend-icon="link.icon"
+        no-action
       >
-        <v-list-item-icon>
-          <v-icon>{{ link.icon }}</v-icon>
-        </v-list-item-icon>
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title v-text="link.text"></v-list-item-title>
+          </v-list-item-content>
+        </template>
 
-        <v-list-item-content>
-          <v-list-item-title>{{ link.text }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+        <v-list v-for="subheader in link.subheaders" :key="subheader.text" shaped subheader>
+          <v-subheader v-if="subheader.text != ''">{{ subheader.text }}</v-subheader>
+          <v-list-item-group
+            v-model="selectedItem"
+            color="primary"
+          >
+            <v-list-item 
+              v-for="child in subheader.items"
+              :key="child.text"
+              @click="$router.push({ path: child.route })"
+              link
+            >
+              <v-list-item-content style="padding-left: 55px">
+                <v-list-item-title v-text="child.text"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-list-group>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -35,11 +52,53 @@ export default {
   data() {
     return {
       links: [
-        { icon: "mdi-microsoft-windows", text: "Dashboard", route: "/" },
-        { icon: "mdi-account", text: "Profile", route: "/" },
-        { icon: "mdi-clipboard-list-outline", text: "Product", route: "/" },
-        { icon: "mdi-clipboard-list", text: "Order", route: "/" },
-        { icon: "mdi-alert-octagon", text: "System Settings", route: "/" },
+        { icon: "mdi-format-list-bulleted", text: "클래스 둘러보기", subheaders: [
+          { text: "", items: [
+            { text: "전체", route: "" }, 
+            { text: "디지털 드로잉", route: "" }, 
+            { text: "드로잉", route: "" }, 
+            { text: "공예", route: "" }, 
+            { text: "요리·음료", route: "" }, 
+            { text: "베이킹·디저트", route: "" }, 
+            { text: "음악", route: "" }, 
+            { text: "운동", route: "" }, 
+            { text: "사진·영상", route: "" },
+          ]}
+        ] },
+        { icon: "mdi-account", text: "내 클래스", subheaders: [
+          { text: "학습 관리", items: [
+            { text: "내 학습", route: "" },
+            { text: "출석관리", route: "" },
+            { text: "강의노트", route: "" },
+            { text: "작성한 글 목록", route: "" },
+          ] },
+          { text: "수강신청 관리", items: [
+            { text: "찜바구니", route: "" },
+            { text: "주문내역", route: "" },
+          ] },
+        ] },
+        { icon: "mdi-crown", text: "만능재주꾼", subheaders: [
+          { text: "클래스 개설", items: [
+            { text: "개설신청", route: "" },
+            { text: "심사확인", route: "" },
+          ] },
+          { text: "클래스 관리", items: [
+            { text: "클래스 수정", route: "" },
+            { text: "질문과 답변", route: "" },
+            { text: "출석체크", route: "" },
+            { text: "수익 관리", route: "" },
+          ] }
+        ]},
+        { icon: "mdi-ab-testing", text: "테스트", subheaders: [
+          { text:"", items: [
+            { text: "오픈뱅킹테스트", route: "/classmain/test/OpenBankingTest" }, 
+            { text: "에디터테스트", route: "/classmain/test/QuillEditorTest" }, 
+            { text: "iamport테스트", route: "/classmain/test/iamportTest" }, 
+            { text: "계좌 실명 조회 테스트", route: "/classmain/test/AccountRealNameTest" }, 
+            { text: "QR코드 생성 테스트", route: "/classmain/test/AttdQRTest" }, 
+            { text: "카카오 맵 테스트", route: "/classmain/test/KakaoMapTest" }, 
+          ] },
+        ]}
       ],
     };
   },

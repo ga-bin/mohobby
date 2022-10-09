@@ -1,7 +1,5 @@
 <template>
   <div>
-    <ClassSidebar></ClassSidebar>
-    <router-link to="/classmain" class="btn btn-info btn-sm mr-2">홈으로</router-link>
     <div class="address">
       <button class="button" @click="search">주소 찾기</button>
       <input type="text" id="address" placeholder="주소를 검색하세요." v-model="address" />
@@ -12,7 +10,6 @@
 </template>
 
 <script>
-import ClassSidebar from '@/components/lecture/ClassSidebar.vue';
 
 export default {
     data() {
@@ -78,7 +75,7 @@ export default {
 
       }
     },
-    components: { ClassSidebar }
+    components: {  }
 }
 </script>
 

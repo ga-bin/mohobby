@@ -1,7 +1,5 @@
 <template>
     <div>
-        <ClassSidebar></ClassSidebar>
-        <router-link to="/classmain" class="btn btn-info btn-sm mr-2">홈으로</router-link>
         <div>
             <input type="text" placeholder="연결할 주소를 입력하세요." v-model="link" />
             <div class="button" @click="CreateQR">QR코드 생성하기</div>
@@ -11,7 +9,6 @@
 </template>
 
 <script>
-import ClassSidebar from '@/components/lecture/ClassSidebar.vue';
 
 
 export default {
@@ -35,7 +32,7 @@ export default {
             });
         }
     },
-    components: { ClassSidebar }
+    components: {  }
 }
 </script>
 
