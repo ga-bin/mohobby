@@ -19,6 +19,11 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.getMember(memberId);
 	}
 
+	// 로그인 아이디, 비밀번호가 일치하는지 체크
+	public MemberVO checkIdPassword(MemberVO memberVO) {
+		return mMapper.checkIdPassword(memberVO);
+	}
+
 	//회원가입 insert
 	@Override
 	public void insertMember(MemberVO memberVO) {

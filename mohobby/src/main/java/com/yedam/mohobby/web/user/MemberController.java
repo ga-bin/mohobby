@@ -34,6 +34,12 @@ public class MemberController {
 		return service.getMember(memberId);
 	}
 	
+	// 로그인 아이디, 비밀번호가 일치하는지 체크
+	@PostMapping("/membercheck")
+	public MemberVO checkIdPassword(@RequestBody MemberVO memberVO) {
+		return service.checkIdPassword(memberVO);
+	}
+	
 	/**
 	 * 
 	 * @param memberVO

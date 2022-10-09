@@ -1,61 +1,113 @@
 <template>
-    <v-app>
-        <v-content>
-            <v-container class="fill-height" fluid>
-                <v-row align="center" justify="center">
-                    <v-col col="12" sm="8" md="8">
-                        <v-card class="elevation-12">
-                            <v-window v-model="step">
-                                <v-window-item :value="1">
-                                    <v-row>
-                                        <v-col cols="12" md="8">
-                                            <v-card-text class="mt-12">
-                                                <h1 class="text-center dispaly-2 teal--text text--accent-3">Mohobby</h1>
-                                                <div class="text-center" mt-4>
-                                                 <a id="custom-login-btn" @click="kakaoLogin()">
-                                                    <img src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png" style ="height:60px; width:auto;"/> </a> 
-                                                </a>
-                                                    <v-btn class="mx-2" fab color="black" outlined>
-                                                        <span class="mdi-google-plus"></span>
-                                                    </v-btn>
-                                                    <v-btn class="mx-2" fab color="black" outlined>
-                                                        <span class="mdi-linkedin"></span>
-                                                    </v-btn>
-                                                </div>
-                                                <h4 class="text-center mlt-4">Ensure your email for registratior</h4>
-                                                <v-form>
-                                                    <v-text-field label="Id" name="Id" prepend-icon="email" type="text" color="teal accent-3"></v-text-field>
-                                                    <v-text-field id="password" label="Password" name="Password" prepend-icon="lock" type="password" color="teal accent-3"></v-text-field>
-                                                </v-form>
-                                            </v-card-text>
-                                            <div id="buttonContainer" class="text-center mt-3">
-                                                <v-btn rounded color="teal accent-3" dark>로그인</v-btn>
-                                                <v-btn rounded color="teal accent-3" dark>아이디/비밀번호 찾기</v-btn>
-                                            </div>
-                                        </v-col>
-                                        <v-col cols="12" md="4" class="teal accent-3">
-                                            <v-card-text class="white--text mt-12">
-                                                <h1 class="text-center display-1">Hello, Friends !</h1>
-                                                <h5 class="text-center">Enter your personnel details and start journay with us</h5>
-                                            </v-card-text>
-                                            <div class="text-center">
-                                                <v-btn rounded outlined="" dark @click="$router.push('/register')">회원가입</v-btn>
-                                            </div>
-                                        </v-col>
-                                    </v-row>
-                                </v-window-item>
-                            </v-window>
-                        </v-card>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-content>
-    </v-app>
+ <div class="container-fluid">
+    <div class="row no-gutter">
+        <!-- The image half -->
+        <div class="col-md-6 d-none d-md-flex bg-image"></div>
+
+
+        <!-- The content half -->
+        <div class="col-md-6 bg-light">
+            <div class="login d-flex align-items-center py-5">
+
+                <!-- Demo content-->
+                <div class="container">
+                    <v-app id="inspire">
+                        <v-main class=" lighten-4">
+                            <!-- login component -->
+      <v-container style="max-width: 450px" fill-height>
+        <v-layout align-center row wrap>
+          <v-flex xs12>
+            <v-card>
+              <div class="pa-10">
+                <h1 style="text-align: center" class="mb-10">Login</h1>
+                <form v-on:submit.prevent="checkMember">
+                  <v-text-field
+                    label="ID"
+                    prepend-inner-icon="mdi-account"
+                    color="#2ac187"
+                    v-model="memberId"
+                  ></v-text-field>
+                  <v-text-field
+                    color="#2ac187"
+                    prepend-inner-icon="mdi-lock"
+                    type="password"
+                    label="Password"
+                    v-model="password"
+                  >
+                  </v-text-field>
+                  <v-btn
+                    type="submit"
+                    color="#2ac187"
+                    depressed
+                    large
+                    block
+                    dark
+                    class="mb-3"
+                  >
+                    Login
+                  </v-btn>
+                  <v-btn
+                    color="#2ac187"
+                    depressed
+                    large
+                    block
+                    dark
+                  >
+                    Sign Up
+                  </v-btn>
+                  <br>
+                  <br>
+                  <!-- <p style="text-align: center;"> -->
+                  <a id="custom-login-btn" @click="kakaoLogin()">
+                    <img src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png" style ="height:40px; width:170px; margin-right:30px"/>
+                 </a> 
+                 <!-- </p> -->
+                 <!-- <p style="text-align: center;"> -->
+                 <div id="naverIdLogin"></div>
+                </form>
+              </div>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-main>
+  </v-app>
+</div><!-- End -->
+</div>
+</div><!-- End -->
+</div>
+</div>
 </template>
+
+<style>
+.login,
+.image {
+  min-height: 100vh;
+}
+
+.bg-image {
+  background-image: url('@/assets/image/user/logo.jpeg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.btn-primary {
+  background-color: #2ac187;
+  border: #2ac187;
+}
+
+
+</style>                     
 <script>
+import router from '@/router';
 export default {
     data : () => ({
-        step: 1
+        step: 1,
+        naverLogin : null,
+        memberId : '',
+        password : '',
+        loginInfo : null
     }),
     props : {
         source : String
@@ -63,23 +115,108 @@ export default {
     beforeCreate() {},
     created() {},
     beforeMount() {},
-    mounted() {},
+    mounted() {
+        this.naverLogin = new window.naver.LoginWithNaverId({
+            clientId : "qtK4gDKw7gcdHhTwYZpV",
+            callbackUrl : "http://localhost:8081",
+            isPopup : false, // 팝업을 통한 연동 처리여부
+            loginButton: {
+                color : "green", type : 3, height: 40, width : 150 }, // 로그인 버튼의 타입을 지정
+        });
+
+        // 설정 정보를 초기화하고 연동을 준비
+        this.naverLogin.init();
+
+        this.naverLogin.getLoginStatus((status) => {
+            if (status) {
+                console.log(status);
+                console.log(this.naverLogin.user);
+
+                // 필수적으로 받아야하는 프로필 정보가 있다면 callback처리 시점에 체크
+                var email = this.naverLogin.user.getEmail();
+                if (email == "undifined" || email == null) {
+                    alert("이메일은 필수 정보입니다. 정보 제공을 동의해주세요.");
+                    // 사용자 정보 재동의를 위해 다시 네이버 동의 페이지로 이동함
+                    this.naverLogin.reprompt();
+                    return;
+                }
+                else {
+                    console.log("callback 처리에 실패하였습니다.");
+                }
+            }
+        })
+    },
     beforeUpdate() {},
     updated() {},
     beforeUnmount() {},
     unmounted() {},
-    methods: {}
+    methods: {
+       kakaoLogin() {
+            window.Kakao.Auth.loginForm({
+                scope: 'profile_nickname, account_email, gender, birthday', //동의항목 페이지에 있는 개인정보 보호 테이블의 활성화된 ID값을 넣습니다.
+                success: function(response) {
+                    console.log(response) // 로그인 성공하면 받아오는 데이터
+                    window.Kakao.API.request({ // 사용자 정보 가져오기 
+                        url: '/v2/user/me',
+                        success: (res) => {
+                            const kakao_account = res.kakao_account;
+                            console.log(kakao_account)
+                            console.log(kakao_account.profile.nickname);
+                            console.log(kakao_account.email);
+                            console.log(kakao_account.gender);
+                            console.log(kakao_account.birthday);
+                        }
+                    });
+                    // window.location.href='/' //리다이렉트 되는 코드
+                },
+                fail: function(error) {
+                    console.log(error);
+                }
+            });
+        },
+        kakaoLogout() {
+    	if (!Kakao.Auth.getAccessToken()) {
+		    console.log('Not logged in.');
+		    return;
+	    }
+	    Kakao.Auth.logout(function(response) {
+    		alert(response +' logout');
+		    // window.location.href='/'
+	    });
+        },
+
+        checkMember() {
+
+            console.log(this.memberId, this.password);
+
+            const vm = this;
+            this.axios({
+                url: 'http://localhost:8088/java/membercheck',
+                method : 'post',
+                data : {
+                    memberId : this.memberId,
+                    password : this.password
+                }
+            })
+            .then(function (response) {
+                console.log(response);
+                if (response.data != "") {
+                
+                //this.$store.commit("setId", this.memberId);
+                console.log(response.data)
+                vm.$store.state.id=vm.memberId;
+                vm.$store.commit('setUserData', response.data);
+                // vm.$store.state.user=response.data;
+                vm.$router.push("/");
+                }
+                else {
+                    alert("아이디, 비밀번호가 일치하지 않습니다.");
+                }
+            })
+            .catch(function(error) {
+           
+            })
+        }
+    }
 }
 </script>
-<style scoped>
-#buttonContainer {
-    height: 80px;
-}
-
-#buttonContainer button {
-    margin-right: 20px;
-}
-.teal--text {
-    padding-bottom: 30px;
-}
-</style>

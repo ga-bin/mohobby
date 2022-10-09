@@ -1,5 +1,6 @@
 package com.yedam.mohobby.service.sns;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public interface SnsService {
      */
     //게시물 등록
     public int insertFeed(SnsPostVO snsPostVO);
+    //미디어 등록
+    public int insertMedia(SnsMediaVO snsMediaVO);
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
     //피드 삭제
@@ -28,15 +31,20 @@ public interface SnsService {
     public List<SnsPostVO> newList();
     //인기피드
     public List<SnsPostVO> hotList();
+    //팔로잉피드조회
+    public List<SnsPostVO> getFollowingFeeds(String memberId);
     //유저피드목록
-    public List<SnsPostVO> getUserFeed();
+    public List<SnsPostVO> getUserFeed(String memberId);
     //피드프로필
+    public HashMap<String, Object> getProfile(String memberId);
+    //피드상세조회
+//  public SnsPostVO feedDetail(int postId);
     
+    /*
+     * 해시태그
+     */
     //해시태그 업데이트 or 삽입
-    public int updateHashtag(int postId, String hashtag);
-    
-    //피드상세
-//    public SnsPostVO feedDetail(int postId);
+    public int updateHashtag(int postId);
     
     /*
      * 팔로우
@@ -44,20 +52,20 @@ public interface SnsService {
     //팔로우
     public int follow(SnsFollowVO followVO);
     //언팔로우
-    public int unfollow(SnsFollowVO followVO);
+    public int unfollow(String followerId, String followingId);
     //팔로잉 조회
-    public List<SnsPostVO> getfollowingList(SnsPostVO snsPostVO);
+    public List<SnsFollowVO> getFollowingList(String followerId);
     //팔로워 조회
-    public List<SnsPostVO> getfollowerList(SnsPostVO snsPostVO);
+    public List<SnsFollowVO> getFollowerList(String followingId);
     
     //유저전체
-    public List<MemberVO> getUsers(MemberVO memberVO);
-    //유저단건검색
-    public List<MemberVO> getOneUser(MemberVO memberVO);
-    //해시태그검색
-    public List<SnsPostVO> searchHashtag(SnsPostVO snsPostVO);
+    public List<MemberVO> getUsers();
+    //유저검색
+    public List<MemberVO> searchUser(String memberId);
     //유저닉네임검색
-    public List<SnsPostVO> getUsersByNick(SnsPostVO snsPostVO);
+    public List<SnsPostVO> getUsersByNick(String nickname);
+    //해시태그검색
+    public List<SnsPostVO> searchHashtag(String hashtag);
 
     /*
      * 좋아요
@@ -77,9 +85,9 @@ public interface SnsService {
     //댓글수정
     public int updateCmt(CommentsVO commentsVO);
     //댓글삭제
-    public int deleteCmt(int cmtId);
+    public int deleteCmt(int commId);
     //댓글조회
-    public List<CommentsVO> getCmtList(CommentsVO commentsVO);
+    public List<CommentsVO> getCmtList(int postId);
     
     /*
      * 대댓글
@@ -89,6 +97,14 @@ public interface SnsService {
     //대댓수정
     public int updateReCmt(CommentsVO commentsVO);
     //대댓삭제
-    public int deleteReCmt(CommentsVO commentsVO);
+    public int deleteReCmt(int commId);
     
+    /*
+     * 북마크
+     */
+    //북마크등록
+    
+    //북마크 이름수정
+    
+    //북마크 삭제(안의 게시물도 전부 삭제되도록)
 }

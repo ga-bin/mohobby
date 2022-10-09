@@ -48,7 +48,7 @@ export default {
         {
           date: "2022-10-05 10:42",
           id: "관리자",
-          contents: "[공지] 여러분 예담 공지를 확인하세요!",
+          contents: "여러분 예담 공지를 확인하세요!",
         },
         {
           date: "2022-10-05 10:50",
@@ -70,8 +70,9 @@ export default {
   props: {},
 };
 </script>
+
 <style scoped>
 .container {
-  width: 85%;
+  width: 91%;
 }
 </style>
