@@ -22,7 +22,7 @@
                 <h1 style="text-align: center" class="mb-10">Login</h1>
                 <form v-on:submit.prevent="checkMember">
                   <v-text-field
-                    label="ID"
+                    label="아이디"
                     prepend-inner-icon="mdi-account"
                     color="#2ac187"
                     v-model="memberId"
@@ -31,7 +31,7 @@
                     color="#2ac187"
                     prepend-inner-icon="mdi-lock"
                     type="password"
-                    label="Password"
+                    label="비밀번호"
                     v-model="password"
                   >
                   </v-text-field>
@@ -107,7 +107,8 @@ export default {
         naverLogin : null,
         memberId : '',
         password : '',
-        loginInfo : null
+        loginInfo : null,
+        email : '',
     }),
     props : {
         source : String
@@ -116,9 +117,10 @@ export default {
     created() {},
     beforeMount() {},
     mounted() {
+        this.$store.commit('logout');
         this.naverLogin = new window.naver.LoginWithNaverId({
             clientId : "qtK4gDKw7gcdHhTwYZpV",
-            callbackUrl : "http://localhost:8081",
+            callbackUrl : "http://localhost:8080/login",
             isPopup : false, // 팝업을 통한 연동 처리여부
             loginButton: {
                 color : "green", type : 3, height: 40, width : 150 }, // 로그인 버튼의 타입을 지정
@@ -128,21 +130,24 @@ export default {
         this.naverLogin.init();
 
         this.naverLogin.getLoginStatus((status) => {
+            const vm = this;
             if (status) {
                 console.log(status);
                 console.log(this.naverLogin.user);
 
                 // 필수적으로 받아야하는 프로필 정보가 있다면 callback처리 시점에 체크
                 var email = this.naverLogin.user.getEmail();
-                if (email == "undifined" || email == null) {
+                if (email== "undifined" || email == null) {
                     alert("이메일은 필수 정보입니다. 정보 제공을 동의해주세요.");
                     // 사용자 정보 재동의를 위해 다시 네이버 동의 페이지로 이동함
                     this.naverLogin.reprompt();
                     return;
                 }
-                else {
-                    console.log("callback 처리에 실패하였습니다.");
-                }
+                vm.email = email;
+                vm.checkMemberByEmail();
+                
+            } else {
+                console.log("callback 처리에 실패하였습니다.");
             }
         })
     },
@@ -152,6 +157,7 @@ export default {
     unmounted() {},
     methods: {
        kakaoLogin() {
+           const vm = this;
             window.Kakao.Auth.loginForm({
                 scope: 'profile_nickname, account_email, gender, birthday', //동의항목 페이지에 있는 개인정보 보호 테이블의 활성화된 ID값을 넣습니다.
                 success: function(response) {
@@ -161,10 +167,16 @@ export default {
                         success: (res) => {
                             const kakao_account = res.kakao_account;
                             console.log(kakao_account)
+                            console.log(kakao_account.access_token);
                             console.log(kakao_account.profile.nickname);
                             console.log(kakao_account.email);
                             console.log(kakao_account.gender);
                             console.log(kakao_account.birthday);
+
+                            vm.email = kakao_account.email;
+                            console.log(vm.email);
+
+                            vm.checkMemberByEmail();
                         }
                     });
                     // window.location.href='/' //리다이렉트 되는 코드
@@ -211,6 +223,33 @@ export default {
                 }
                 else {
                     alert("아이디, 비밀번호가 일치하지 않습니다.");
+                }
+            })
+            .catch(function(error) {
+           
+            })
+        },
+        checkMemberByEmail () {
+            console.log(this.email);
+            const vm = this;
+            this.axios({
+                url: 'http://localhost:8088/java/memberEmail/' + this.email,
+                method : 'get',
+            })
+            .then(function (response) {
+                console.log(response);
+                if (response.data !== '' && response.data.constructor === Object) {
+                
+                //this.$store.commit("setId", this.memberId);
+                console.log(response.data)
+                vm.$store.state.id=vm.memberId;
+                vm.$store.commit('setUserData', response.data);
+                // vm.$store.state.user=response.data;
+                this.$router.push("/");
+                }
+                else {
+                    console.log("hello");
+                    vm.$router.push("/register");
                 }
             })
             .catch(function(error) {

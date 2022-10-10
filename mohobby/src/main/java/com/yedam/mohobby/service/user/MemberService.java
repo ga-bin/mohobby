@@ -1,5 +1,7 @@
 package com.yedam.mohobby.service.user;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.service.admin.MemberVO;
@@ -12,6 +14,12 @@ public interface MemberService {
 		// 로그인 아이디, 비밀번호가 일치하는지 체크
 		public MemberVO checkIdPassword(MemberVO memberVO);
 
+		// 이메일 통해서 회원인지 조회
+		public MemberVO getMemberByEmail(String email);
+		
+		// 회원정보 전체 조회
+		public List<MemberVO> getAllMember();
+		
 		//회원가입 insert
 		public void insertMember(MemberVO memberVO);
 		

@@ -27,7 +27,8 @@ export default new Vuex.Store({
         },
         setIsLoginFalse(state) {
             state.isLogin = false;
-        },sedId(state, memberId) {
+        },
+        sedId(state, memberId) {
             state.id = memberId;
         },
         setUserData(state, userData) {
