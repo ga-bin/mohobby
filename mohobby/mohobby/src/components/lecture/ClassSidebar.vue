@@ -26,18 +26,21 @@
         </template>
 
         <v-list v-for="subheader in link.subheaders" :key="subheader.text" shaped subheader>
-          <v-subheader v-if="subheader.text != ''">{{ subheader.text }}</v-subheader>
           <v-list-item-group
             v-model="selectedItem"
             color="primary"
           >
+            <v-subheader v-if="subheader.text != ''">{{ subheader.text }}</v-subheader>
             <v-list-item 
               v-for="child in subheader.items"
               :key="child.text"
               @click="$router.push({ path: child.route })"
               link
             >
-              <v-list-item-content style="padding-left: 55px">
+              <v-list-item-icon>
+                <v-icon></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
                 <v-list-item-title v-text="child.text"></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
@@ -54,7 +57,7 @@ export default {
       links: [
         { icon: "mdi-format-list-bulleted", text: "클래스 둘러보기", subheaders: [
           { text: "", items: [
-            { text: "전체", route: "" }, 
+            { text: "전체", route: "/classmain/list" }, 
             { text: "디지털 드로잉", route: "" }, 
             { text: "드로잉", route: "" }, 
             { text: "공예", route: "" }, 
