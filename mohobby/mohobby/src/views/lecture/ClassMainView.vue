@@ -1,7 +1,7 @@
 <template>
   <div>
     <ClassSidebar></ClassSidebar>
-    <h1>강의 메인 페이지</h1>
+    <h1></h1>
     <router-view />
   </div>
 </template>

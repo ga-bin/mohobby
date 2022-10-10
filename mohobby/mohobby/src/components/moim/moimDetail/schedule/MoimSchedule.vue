@@ -31,8 +31,7 @@
               mdi-chevron-right
             </v-icon>
           </v-btn>
-
-          <!-- 달력 -->
+          
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>

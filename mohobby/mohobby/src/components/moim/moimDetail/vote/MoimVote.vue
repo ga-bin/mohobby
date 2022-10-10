@@ -3,12 +3,17 @@
     <v-card-actions class="mb-16">
       <v-spacer />
       <div class="makeVote">
-        <v-btn @click="voteMake()">
-          <v-icon>mdi-plus-circle-outline</v-icon>투표 생성하기
-        </v-btn>
+      <v-btn @click="voteMake()"><v-icon>mdi-plus-circle-outline</v-icon>투표 생성하기</v-btn>
       </div>
     </v-card-actions>
-    <v-card class="mx-auto mb-8" max-width="800" outlined v-for="(item,idx) in items" :key="item.date" @click="goDetail()">
+    <v-card
+      class="mx-auto mb-8"
+      max-width="800"
+      outlined
+      v-for="item in items"
+      :key="item.date"
+      @click="goDetail()"
+    >
       <v-list-item three-line>
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
         <v-list-item-content>
@@ -117,12 +122,14 @@ export default {
     goDetail: function () {
       this.$router.push({ path: "voteDetail" });
     },
+  props: {},
   }
 }
 </script>
 
 <style scoped>
-.makeVote {
+
+.makeVote{
   margin-right: 21%;
 }
 
