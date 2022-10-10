@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.mohobby.mapper.chat.ChatMapper">
+
+	<select id="getChatRoom"
+		resultType="com.yedam.mohobby.service.chat.RoomVO"
+		parameterType="String">
+		SELECT
+		c.nickname,
+		c.room_no,
+		c.profile_img,
+		d.content
+		FROM
+		(
+		SELECT
+		a.nickname,
+		a.profile_img,
+		b.room_no
+		FROM
+		member a
+		JOIN room b ON ( a.member_id = b.member_id )
+		WHERE
+		b.member_id IN (
+		SELECT
+		member_id
+		FROM
+		room
+		WHERE
+		room_no IN (
+		SELECT
+		room_no
+		FROM
+		room
+		WHERE
+		member_id = #{memberId}
+		)
+		AND member_id NOT IN #{memberId}
+		)
+		ORDER BY
+		b.room_no
+		) c
+		JOIN (
+		SELECT
+		content,
+		room_no
+		FROM
+		chat
+		WHERE
+		msg_time IN (
+		SELECT
+		MAX(msg_time)
+		FROM
+		chat
+		WHERE
+		room_no IN (
+		SELECT
+		room_no
+		FROM
+		room
+		WHERE
+		member_id = #{memberId}
+		)
+		GROUP BY
+		room_no
+		)
+		) d ON ( c.room_no = d.room_no )
+	</select>
+	<select id="getChat"
+		resultType="com.yedam.mohobby.service.chat.ChatVO"
+		parameterType="String">
+		select content,member_id,room_No,to_char(msg_time,'mi')as minute,to_char(msg_time,'HH24') as hour
+		from chat
+		where room_no=#{roomNo}
+		order by chat_id
+	</select>
+
+</mapper>
