@@ -254,14 +254,12 @@
 		SELECT member_id, profile_img, nickname
 		FROM member
 		<where>
-			<choose>
-				<when test="member_id != null AND memberId != null">
-					member_id = LOWER(#{ memberId })
-				</when>
-				<otherwise>
-			        member_id like LOWER('%' || #{ memberId } || '%')
-			    </otherwise>
-			</choose>
+			<if test='member_id != null and memberId != ""'>
+				WHERE member_id like LOWER('%' || #{ memberId } || '%')
+			</if>
+			<if test='nickname != null and nickname != ""'>
+				AND nickname LIKE LOWER('%' || #{ nickname } || '%')
+			</if>
 		</where>
 	</select>
 	<!-- 유저단건조회 -->
@@ -271,20 +269,27 @@
 		WHERE member_id = LOWER(#{ memberId })
 	</select>
    <!-- 유저닉네임검색(단어포함 - 프로필사진, 아이디, 닉네임) -->
-   <select id="getUsersByNick" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+   <select id="getUsersByNick" resultType="com.yedam.mohobby.service.user.MemberVO">
       SELECT profile_img, member_id, nickname
       FROM member
       WHERE nickname LIKE '%' || #{ nickname } || '%'
    </select>
       <!-- 해시태그검색 -->
    <select id="searchHashtag" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-      SELECT * FROM sns_post
-      WHERE hashtag = #{ hashtag }
-      ORDER BY post_id DESC
+    SELECT * 
+    FROM (  SELECT    post_id, member_id, thumbnail, cmts, likes         
+   <![CDATA[         ,REGEXP_SUBSTR(hashtag, '[^,]+', 1, Level) hashtag]]>
+            FROM sns_post
+            WHERE hashtag IS NOT NULL
+            AND post_id = post_id   
+   <![CDATA[CONNECT BY LEVEL <= REGEXP_COUNT(hashtag, '[^,]+')]]>       
+            AND PRIOR post_id  = post_id       
+            AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL)
+    WHERE hashtag = #{ hashtag }
    </select>
 
    <!-- 리스트 해시태그 5개 -->
-   
+   <select id="selectHashtagForMain" resultType="com.yedam.mohobby.service.communal.HashtagVO"></select>
 
 
    <!-- 
@@ -308,7 +313,7 @@
    <delete id="deleteLike" parameterType="com.yedam.mohobby.service.communal.JjimVO">
       DELETE FROM jjim 
       WHERE target_id = #{ targetId } 
-      AND member_id = '#{ memberId }'
+      AND member_id = #{ memberId }
       AND target_type = 2
    </delete>
    <!-- 좋아요 누적 -->
@@ -350,7 +355,7 @@
 	 </insert>
 	<!-- 댓글수정 -->
 	<update id="updateCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
-		UPDATE comments SET content = # { content },
+		UPDATE comments SET content = #{ content },
 							write_date = SYSDATE
 		WHERE comm_id = #{ commId }
 	</update>
@@ -360,12 +365,15 @@
 		WHERE comm_id = #{ commId } 
 	</delete>
 	<!-- 댓글조회 -->
-	<select id="getCmtList" resultType="com.yedam.mohobby.service.communal.CommentsVO">
-		SELECT * FROM comments
-		START WITH parent_comm_id IS NULL
+	<select id="getCmtLists" resultType="com.yedam.mohobby.service.communal.CommentsVO">
+		SELECT target_type, target_id, parent_comm_id, comm_id, member_id, content, write_date
+		FROM (  SELECT * FROM comments
+		        WHERE target_id = #{ targetId }
+		        AND target_type = #{ targetType }
+		      )
+		    START WITH parent_comm_id IS NULL
 		CONNECT BY PRIOR comm_id = parent_comm_id
-		WHERE target_id = #{ targetId }
-		AND target_type = 2
+		ORDER SIBLINGS BY comm_id;
 	</select>
 	
 	<!--
@@ -464,5 +472,11 @@
 	<select id="getBookmarks" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
 		SELECT * FROM sns_bookmark
 		WHERE CATG_ID = #{ catgId }
+	</select>
+	<!-- 전체 북마크 -->
+	<select id="getAllBookmarks" resultType="hashmap">
+		SELECT c.catg_id, c.member_id, b.post_id  
+		FROM sns_bookmark_catg c, sns_bookmark b
+		WHERE c.catg_id = b.catg_id
 	</select>
 </mapper>

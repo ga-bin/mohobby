@@ -1,27 +1,15 @@
 <template>
   <div>
     <SnsSidebar></SnsSidebar>
-    <h1>sns 챌린지 관리 화면</h1>
-    <div id="app">
-      <v-app id="inspire">
+    <h1>피드디테일</h1>
         <div>
-          {{ profileImg }} {{ regDate }}
+          {{ profileImg }} {{ items.writeDate }}
           <div id="mdi-dots-vertical">
             <v-btn icon>
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </div>
         </div>
-        <v-app id="vapp">
-          <v-carousel ref="myCarousel" hide-delimiters :touchless="ture">
-            <v-carousel-item
-              v-for="(item, i) in items"
-              :key="i"
-              :src="item.src"
-            ></v-carousel-item>
-          </v-carousel>
-        </v-app>
-
         <div id="image_box">
           <div class="d-flex flex-column justify-space-between align-center">
             <v-slider
@@ -33,11 +21,15 @@
             ></v-slider>
             <!-- <v-img v-for="(item, i) in imagelist" :key="i" :src="require(`../../../back/uploads/${item}`)"
        contain height="150px" width="200px" style="border: 2px solid black; margin-left:100px;"/> -->
-            <v-img
+       <v-carousel ref="myCarousel" hide-delimiters :touchless="ture">
+            <v-carousel-item
               :aspect-ratio="4 / 3"
               :width="width"
-              src="https://img.insight.co.kr/static/2020/03/06/700/j0rpqkg2y659dw4acito.jpg"
-            ></v-img>
+              :src="require(`@/assets/image/sns/${items.thumbnail}`)"
+            ></v-carousel-item>
+            <!-- v-for="item in items"
+              :key="item.postId" -->
+          </v-carousel>
           </div>
         </div>
         <div>
@@ -47,14 +39,12 @@
           <v-btn icon id="empty_heart" text @click="likeBtn">
             <v-icon>mdi-heart-outline</v-icon>
           </v-btn>
-
-          {{ likecnt }}
+          {{ tiems.content }}
+          {{ items.likes }}
           <v-icon>mdi-chat-outline</v-icon>
-          {{ cmtcnt }}
+          {{ items.cmts }}
           <v-icon @click="send">mdi-send</v-icon>
         </div>
-      </v-app>
-    </div>
   </div>
 </template>
 <script>
@@ -65,33 +55,44 @@ export default {
   data: () => ({
     profileImg: "대충프로필",
     regDate: "2022.01.01",
-    cmtcnt: 15,
     likeStatus: 0, //좋아요 없음
-    likecnt: 0,
     width: 800,
     memberId: "user1",
     targetId: 1,
     roomId: 0,
+    items:[]
   }),
   setup() {},
-  created() {},
+  created() {
+      this.showDetail();
+    },
   mounted() {},
   unmounted() {},
   methods: {
+    showDetail() {
+        //Detail조회
+        this.axios('/sns/user/feed_detail/' + this.postId).then(res => {
+            this.items = res.data;
+            console.log(this.items);
+            console.log(this.items.cmts);
+          }).catch(err =>{
+            console.log(err);
+          });
+      },
     send(){
      this.$router.push({name:"chat",params:{roomId:this.roomId}})
 
     },
     likeBtn() {
+      //좋아요
       // let target = event.target.getElementById;
-      if (this.likeStatus === 0) {
+      if (this.likeStatus == 0) {
         this.showFullHeart();
         console.log(this.showFullHeart);
         this.likeStatus = 1; // DB로 업데이트
-        this.likecnt++;
-        //좋아요 인서트
+       
         this.axios
-          .post("http://localhost:8088/java/sns/like", {
+          .post("/sns/like", {
             memberId: this.memberId,
             targetId: this.targetId,
           })
@@ -101,16 +102,16 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
-      } else {
+
+      } else { //좋아요 취소
         this.showEmptyHeart();
         console.log(this.showEmptyHeart);
         this.likeStatus = 0;
-        this.likecnt--;
 
-        //좋아요 취소
         this.axios
-          .post("http://localhost:8088/java/sns/like", {
+          .delete("/sns/like/" + this.targetId +  "/" + this.memberId, {
             memberId: this.memberId,
+            // memberId: this.$store.state.id,
             targetId: this.targetId,
           })
           .then(function (response) {

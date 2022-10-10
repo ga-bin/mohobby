@@ -1,34 +1,37 @@
+<!-- 인기강사TOP20피드 -->
 <template>
     <div id="container">
-      <div v-for="item in items" :key="item.postId">
+      <v-container fluid>
+        <div v-for="item in items" :key="item.postId">
           <div @click="feedDetail()">
-          <v-hover v-slot="{ hover }">
-            <v-card
-              class="mx-auto"
-              color="grey lighten-4"
-              max-width="250"
-            >
-            <v-img
-              :aspect-ratio="4/3"
-              :src="require(`@/assets/image/sns/${item.thumbnail}`)"
-            >
-              <v-expand-transition>
-                <div
-                  v-if="hover"
-                  class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal text-small white--text"
-                  style="height: 100%;"
-                >
-                <div>
-                  <v-icon color="white">mdi-heart</v-icon> {{ item.likes }}
-                  <v-icon color="white">mdi-chat</v-icon> {{ item.cmts }}
-                </div>
-                </div>
-              </v-expand-transition>
-            </v-img>
-            <v-card-text
-              class="pt-5"
-              style="position: relative;"
-            >
+            <v-hover v-slot="{ hover }">
+              <v-card
+                class="mx-auto"
+                color="grey lighten-4"
+                max-width="250"
+              >
+              <v-img
+                style="display:flex"
+                :aspect-ratio="4/3"
+                :src="require(`@/assets/image/sns/${item.thumbnail}`)"
+              >
+                <v-expand-transition>
+                  <div
+                    v-if="hover"
+                    class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal text-small white--text"
+                    style="height: 100%;"
+                  >
+                  <div>
+                    <v-icon color="white">mdi-heart</v-icon> {{ item.likes }}
+                    <v-icon color="white">mdi-chat</v-icon> {{ item.cmts }}
+                  </div>
+                  </div>
+                </v-expand-transition>
+              </v-img>
+              <v-card-text
+                class="pt-5"
+                style="position: relative;"
+              >
               <v-btn
                 absolute
                 color="red"
@@ -62,11 +65,12 @@
         </v-hover>
       </div>
       </div>
-    </div>
+    </v-container>
+  </div>
 </template>
 <script>
   export default {
-    name: "HotLecturer",
+    name: "HotLecturerList",
     data() {
       return {
         items: [],
@@ -76,7 +80,7 @@
       
     },
     created() {
-      this.search();
+      this.getHotLecturerList();
     },
     mounted() {
       
@@ -85,7 +89,7 @@
   
     },
     methods: {
-      search() {
+      getHotLecturerList() {
         //hotLectureList조회
         this.axios('/sns/main/top20LecturerFeeds').then(res => {
             console.log(res);
@@ -96,7 +100,6 @@
           }).catch(err =>{
             console.log(err);
           });
-        
       },
       // feedDetail(postId){
       //   this.$router.push( '/snsFeedDetail?postId='+ postId)
@@ -107,6 +110,11 @@
   };
   </script>
   <style>
+    #container{
+      box-sizing: border-box;
+      margin:0 auto;
+      width: 80%;
+    }
     .v-card--reveal {
     align-items: center;
     bottom: 0;

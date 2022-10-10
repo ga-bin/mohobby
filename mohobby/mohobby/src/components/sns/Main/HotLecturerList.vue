@@ -6,9 +6,10 @@
         class="ma-2"
         style="width:200px"
         >
-          <div>
-            <!-- 카드컴포넌트 -->
-            <HotLecturer />
+          <div style="display:flex">
+            <!-- 인기강사피드 (로그인X)-->
+            <HotLecturerList />
+            <!-- 취미기반강사피드 (로그인O) -->
           </div>
         </v-slide-item>
       </v-slide-group>
@@ -17,11 +18,11 @@
 </template>
 <script>
 
-  import HotLecturer from "./HotLecturer";
+  import HotLecturerList from "./HotLecturer";
 
 export default {
-    name: "HotLecturerList",
-    components: {HotLecturer},
+    name: "HotLecturerSpace",
+    components: { HotLecturerList },
     data() {
         return {
             

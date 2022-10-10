@@ -16,12 +16,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.JjimVO;
+import com.yedam.mohobby.service.sns.SnsBookmarkCatgVO;
+import com.yedam.mohobby.service.sns.SnsBookmarkVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
@@ -35,17 +38,15 @@ import com.yedam.mohobby.service.user.MemberVO;
  * @title sns controller
  */
 @RestController
+@RequestMapping("/sns")
 @CrossOrigin
 public class SnsController {
     
     @Autowired
     SnsService service;
     
-    SnsPostVO snspostVO = new SnsPostVO();
-    
-    
     //게시물 등록 - 파일등록 처리중..
-    @PostMapping(value = "/sns/myfeed", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/myfeed", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public String insertFeed(@RequestPart MultipartFile file, @RequestPart SnsPostVO postvo) {
         try {
 			//날짜별로 폴더를 생성해서 파일을 관리
@@ -114,11 +115,11 @@ public class SnsController {
 			return "fail";
 		}
     }
-    
-   //게시물 수정
-    @PutMapping("/sns/myfeed")
-    public String updateFeed(@RequestBody SnsPostVO snsPostVO) {
+   //게시물 수정 - 테스트완료
+    @PutMapping("/myfeed/{postId}")
+    public String updateFeed(@PathVariable int postId, @RequestBody SnsPostVO snsPostVO) {
         try {
+            snsPostVO.setPostId(postId);
             service.updateFeed(snsPostVO);
             System.out.println("글 수정 완료");
             return "success";
@@ -127,12 +128,10 @@ public class SnsController {
             return "fail";
         }
     }
-
    //피드 삭제 - 테스트완료
-    @DeleteMapping("/sns/myfeed/{postId}")
+    @DeleteMapping("/myfeed/{postId}")
     public String deleteFeed(@PathVariable int postId){
         try {
-            snspostVO.setPostId(postId);
             service.deleteFeed(postId);
             System.out.println("글 삭제 완료");
             return "success";
@@ -141,66 +140,54 @@ public class SnsController {
             return "fail";
         }
     }
-
    //인기강사피드조회 - 테스트완료
-    @GetMapping("/sns/main/top20LecturerFeeds")
+    @GetMapping("/main/top20LecturerFeeds")
     public List<SnsPostVO> hotLecturerList() {
         return service.hotLecturerList();
     }
    //전체피드조회 - 테스트완료
-    @GetMapping("/sns/main/allFeeds")
+    @GetMapping("/main/allFeeds")
     public List<SnsPostVO> allList() {
         return service.allList();
     }
    //최신피드조회 - 테스트완료
-    @GetMapping("/sns/main/newFeeds")
+    @GetMapping("/main/newFeeds")
     public List<SnsPostVO> newList() {
         return service.newList();
     }
    //인기피드조회 - 테스트완료(좀 느림)
-    @GetMapping("/sns/main/hotFeeds")
+    @GetMapping("/main/hotFeeds")
     public List<SnsPostVO> hotList() {
         return service.hotList();
     }
-   //팔로잉피드조회
-    @GetMapping("/sns/main/followingFeeds/{memberId}")
+   //팔로잉피드조회 - 
+    @GetMapping("/main/followingFeeds/{memberId}")
     public List<SnsPostVO> getFollowingFeeds(@PathVariable String memberId) {
         return service.getFollowingFeeds(memberId);
     }
    //유저피드목록
-    @GetMapping("sns/user/feed/{memberId}")
+    @GetMapping("/user/user_feeds/{memberId}")
     public List<SnsPostVO> getUserFeed(@PathVariable String memberId) {
         return service.getUserFeed(memberId);
     }
   //프로필조회
-    @GetMapping("sns/user/profile/{memberId}")
-    public String getProfile(@PathVariable("memberId") String memberId, Model model) {
-        try {
-            model.addAttribute("feed", service.getProfile(memberId));
-            return "success"; //컬럼명과 컬럼값이 키와 값으로 매핑이 된다. ㄴ
-        } catch (Exception e) {
-            System.out.println("프로필조회 실패: " + e.getMessage());
-            return "fail";
-        }
+    @GetMapping("/user/profile/{memberId}")
+    public Model getProfile(@PathVariable("memberId") String memberId, Model model) {
+        	return model.addAttribute("feed", service.getProfile(memberId));//컬럼명과 컬럼값이 키와 값으로 매핑이 된다. ㄴ
     }
    //피드상세조회
-    @GetMapping("sns/user/profile/{postId}")
-    public String getFeedDetail(@PathVariable int postId) {
-        try {
-            service.getFeedDetail(postId);
-            return "success";
-        } catch (Exception e) {
-            System.out.println("프로필조회 실패: " + e.getMessage());
-            return "fail";
-        }
+    @GetMapping("/user/feed_detail/{postId}")
+    public SnsPostVO getFeedDetail(@PathVariable int postId) {
+        	System.out.println("프로필조회 성공");
+            return service.getFeedDetail(postId);
     }
     
     /*
      * 해시태그
      */
    //해시태그 업데이트 or 삽입 - 테스트완료
-    @PutMapping("/sns/updateHashtag/{postId}")
-    public String searchHashtag(@PathVariable("postId") int postId) {
+    @PutMapping("/updateHashtag/{postId}")
+    public String searchHashtag(@PathVariable int postId) {
         try {
             service.updateHashtag(postId);
             System.out.println("해시태그 처리 완료");
@@ -215,7 +202,7 @@ public class SnsController {
      * 팔로우
      */
    //팔로우 - 테스트완료
-    @PostMapping("/sns/follow")
+    @PostMapping("/follow")
     public String follow(@RequestBody SnsFollowVO followVO) {
         try {
             service.follow(followVO);
@@ -227,8 +214,8 @@ public class SnsController {
         }
     }
    //언팔로우 - 테스트완료
-    @DeleteMapping("/sns/follow/{followerId}/{followingId}")
-    public String unfollow(@PathVariable("followerId") String followerId, @PathVariable("followingId") String followingId) {
+    @DeleteMapping("/follow/{followerId}/{followingId}")
+    public String unfollow(@PathVariable String followerId, @PathVariable String followingId) {
         try {
             service.unfollow(followerId,followingId);
             System.out.println("언팔로우 완료");
@@ -239,55 +226,53 @@ public class SnsController {
         }
     }
    //팔로잉 조회 - 테스트완료
-    @GetMapping("/sns/follow/search/following/{followerId}")
-    public List<SnsFollowVO> getFollowingList(@PathVariable("followerId") String followerId){
+    @GetMapping("/follow/search/following/{followerId}")
+    public List<SnsFollowVO> getFollowingList(@PathVariable String followerId){
         return service.getFollowingList(followerId);
     }
     
    //팔로워 조회 - 테스트완료
-    @GetMapping("/sns/follow/search/follower/{followingId}")
-    public List<SnsFollowVO> getFollowerList(@PathVariable("followingId") String followingId){
+    @GetMapping("/follow/search/follower/{followingId}")
+    public List<SnsFollowVO> getFollowerList(@PathVariable String followingId){
         return service.getFollowerList(followingId);
     }
     
-   //유저전체
-    @GetMapping("/sns/search/allUsers")
+   //유저전체 - 테스트완료
+    @GetMapping("/search/allUsers")
     public List<MemberVO> gerUsers() {
         return service.getUsers();
     }
-   //유저단건검색
-    @GetMapping("/sns/search/user/{memberId}")
-    public List<MemberVO> searchUser(@PathVariable String memberId){
-        return service.searchUser(memberId);
+   //유저 아이디, 닉네임검색 - 테스트완료
+    @GetMapping("/search/user")
+    public List<MemberVO> searchUser(@PathVariable String memberId, @PathVariable String nickname){
+        return service.searchUser(memberId, nickname);
     }
-   //유저닉네임검색
-    @GetMapping("/sns/search/nickname/{nickname}")
+   //유저닉네임검색 - 테스트완료
+    @GetMapping("/search/nick/{nickname}")
     public List<MemberVO> getUsersByNick(@PathVariable String nickname){
-        return service.searchUser(nickname);
+        return service.getUsersByNick(nickname);
     }
-   //해시태그검색
-    @GetMapping("/sns/search/hashtag/{hashtag}")
-    public List<MemberVO> searchHashtag(@PathVariable String hashtag){
-        return service.searchUser(hashtag);
+   //해시태그검색 - 
+    @GetMapping("/search/hashtag/{hashtag}")
+    public List<SnsPostVO> searchHashtag(@PathVariable String hashtag){
+        return service.searchHashtag(hashtag);
     }
     
     /*
      * 좋아요
      */
   //좋아요
-    @PostMapping("/sns/like")
-    public String addLike(@RequestBody JjimVO jjimVO) {
-        service.addLike(jjimVO);
-        return "success";
+    @PostMapping("/like")
+    public int addLike(@RequestBody JjimVO jjimVO) {
+    	return service.addLike(jjimVO);
     }
   //좋아요취소
-    @DeleteMapping("/sns/like")
-    public String deleteLike(@RequestBody JjimVO jjimVO) {
-        service.deleteLike(jjimVO);
-        return "success";
+    @DeleteMapping("/like/{targetId}/{memberId}")
+    public int deleteLike(@PathVariable int targetId,@PathVariable String memberId) {
+    	return service.deleteLike(targetId, memberId);
     }
    //좋아요누적
-    @PutMapping("/sns/like")
+    @PutMapping("/like")
     public String sumLikes(@RequestBody SnsPostVO snsPostVO) {
         service.sumLikes(snsPostVO);
         return "success";
@@ -296,22 +281,28 @@ public class SnsController {
     /*
      * 댓글
      */
-   //댓글입력
-    @PostMapping("/sns/cmt")
+   //댓글입력 - 테스트완료
+    @PostMapping("/cmt") 
     public String insertCmt(@RequestBody CommentsVO commentsVO) {
         service.inserCmt(commentsVO);
         System.out.println("댓글입력 완료");
         return "success";
     }
    //댓글수정
-    @PutMapping("/sns/cmt")
-    public String updateCmt(@RequestBody CommentsVO commentsVO) {
-        service.updateCmt(commentsVO);
-        System.out.println("댓글수정 완료");
-        return "success";
+    @PutMapping("/cmt/{commId}")
+    public String updateCmt(@PathVariable int commId, @RequestBody CommentsVO commentsVO) {
+        try {
+        	commentsVO.setCommId(commId);
+            service.updateCmt(commentsVO);
+            System.out.println("댓글수정 완료");
+            return "success";
+        } catch (Exception e) {
+            System.out.println("댓글수정 실패");
+            return "fail";
+        }
     }
    //댓글삭제
-    @DeleteMapping("/sns/cmt/{commId}")
+    @DeleteMapping("/cmt/{commId}")
     public String deleteCmt(@PathVariable("cmtId") int commId){
         try {
             service.deleteFeed(commId);
@@ -323,19 +314,19 @@ public class SnsController {
         }
     }
    //댓글조회
-    @GetMapping("/sns/cmt/{postId}")
-    public List<CommentsVO> getCmtList(@PathVariable int postId) {
-        return service.getCmtList(postId);
+    @GetMapping("/cmt/{postId}")
+    public List<CommentsVO> getCmtLists(@PathVariable int postId) {
+        return service.getCmtLists(postId);
     }
     
     /*
      * 대댓글
      */
-    //대댓입력
-    @PostMapping("/sns/recmt")
-    public String insertReCmt(@RequestBody CommentsVO ommentsVO) {
+    //대댓입력 - 테스트완료
+    @PostMapping("/recmt")
+    public String insertReCmt(@RequestBody CommentsVO commentsVO) {
         try {
-            service.insertReCmt(ommentsVO);
+            service.insertReCmt(commentsVO);
             return "success";
         } catch (Exception e) {
             System.out.println("댓글입력 실패: " + e.getMessage());
@@ -343,20 +334,20 @@ public class SnsController {
         }
     }
     //대댓수정
-    @PutMapping("/sns/recmt")
-    public String updateReCmt(@RequestBody CommentsVO commentsVO) {
+    @PutMapping("/recmt/{commId}")
+    public String updateReCmt(@PathVariable int commId, @RequestBody CommentsVO commentsVO) {
         try {
+          commentsVO.setCommId(commId);
           service.updateReCmt(commentsVO);
           return "success";
         } catch (Exception e) {
             System.out.println("댓글수정 실패: " + e.getMessage());
             return "fail";
         }
-
     }
     //대댓삭제
-    @DeleteMapping("/sns/recmt/{commId}")
-    public String deleteReCmt(@PathVariable("cmt") int commId) {
+    @DeleteMapping("/recmt/{commId}")
+    public String deleteReCmt(@PathVariable int commId) {
          try {
              service.deleteReCmt(commId);
              System.out.println("대댓글삭제 완료");
@@ -371,8 +362,71 @@ public class SnsController {
      * 북마크
      */
     //컬렉션등록
-    
+    @PostMapping("/bookmark/collection") 
+    public String createBookmarkCtg(@RequestBody SnsBookmarkCatgVO bmCtgVO) {
+        try {
+        	service.createBookmarkCtg(bmCtgVO);
+        	System.out.println("컬렉션추가 완료");
+        	return "success";
+		} catch (Exception e) {
+			System.out.println("컬렉션추가 실패: " + e.getMessage() );
+			return "fail";
+		}
+    }
     //컬렉션이름수정
-    
+    @PutMapping("/collection/{catgId}")
+    public String updateReCmt(@PathVariable int catgId, @RequestBody SnsBookmarkCatgVO bmCtgVO) {
+        try {
+          bmCtgVO.setCatgId(catgId);
+          service.updateBookmarkCtgName(bmCtgVO);
+          System.out.println("컬렉션수정 완료");
+          return "success";
+        } catch (Exception e) {
+            System.out.println("컬렉션수정 실패: " + e.getMessage());
+            return "fail";
+        }
+    }
     //컬렉션삭제(안의 게시물도 전부 삭제되도록)
+    @DeleteMapping("/collection/{catgId}")
+    public String deleteBookmarkCtg(@PathVariable int catgId) {
+         try {
+             service.deleteBookmarkCtg(catgId);
+             System.out.println("컬렉션삭제 완료");
+             return "success";
+        } catch (Exception e) {
+            System.out.println("컬렉션삭제 실패" + e.getMessage());
+            return "fail";
+        }
+    }
+    //북마크 등록
+    @PostMapping("/collection/bookmark")
+    public String addBookmark(@RequestBody SnsBookmarkVO bmVO) {
+    	try {
+			service.addBookmark(bmVO);
+			System.out.println("북마크완료");
+			return "success";
+		} catch (Exception e) {
+			System.out.println("북마크실패: " + e.getMessage());
+			return "fail";
+		}
+    }
+    //북마크 삭제
+    @DeleteMapping("/collection/bookmark/{postId}")
+    public String deleteBookmark(@PathVariable int postId) {
+    	try {
+			service.deleteBookmark(postId);
+			System.out.println("북마크삭제 완료");
+			return "success";
+		} catch (Exception e) {
+			System.out.println("북마크삭제 실패: " + e.getMessage());
+			return "fail";
+		}
+    }
+    //컬렉션별 북마크 조회
+    @GetMapping("/collection/bookmark/{catgId}")
+    public List<SnsBookmarkVO> getBookmarks(@PathVariable int catgId){
+			System.out.println("북마크조회 완료");
+			return service.getBookmarks(catgId);
+    }
 }
+
