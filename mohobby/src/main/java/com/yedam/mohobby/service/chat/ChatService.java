@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service;
 public interface ChatService {
 public List<RoomVO>getChatRoom(String memberId);
 public List<ChatVO>getChat(String roomNo);
+public ChatUserVO getOtherUser(ChatUserVO chatUserVO);
+public int insertMessage(MessageVO message);
 }

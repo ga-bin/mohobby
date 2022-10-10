@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.chat.ChatMapper">
 
+	<!-- 채팅방 추출 -->
 	<select id="getChatRoom"
 		resultType="com.yedam.mohobby.service.chat.RoomVO"
 		parameterType="String">
@@ -18,7 +19,8 @@
 		b.room_no
 		FROM
 		member a
-		JOIN room b ON ( a.member_id = b.member_id )
+		JOIN room b ON (
+		a.member_id = b.member_id )
 		WHERE
 		b.member_id IN (
 		SELECT
@@ -65,13 +67,42 @@
 		)
 		) d ON ( c.room_no = d.room_no )
 	</select>
+	<!-- 채팅내역 추출 -->
 	<select id="getChat"
 		resultType="com.yedam.mohobby.service.chat.ChatVO"
 		parameterType="String">
-		select content,member_id,room_No,to_char(msg_time,'mi')as minute,to_char(msg_time,'HH24') as hour
+		select
+		content,member_id,room_No,to_char(msg_time,'mi')as
+		minute,to_char(msg_time,'HH24') as hour
 		from chat
-		where room_no=#{roomNo}
+		where
+		room_no=#{roomNo}
 		order by chat_id
 	</select>
-
+	<!-- 채팅상대 추출 -->
+	<select id="getOtherUser"
+		resultType="com.yedam.mohobby.service.chat.ChatUserVO"
+		parameterType="com.yedam.mohobby.service.chat.ChatUserVO">
+		select member_id
+		from chat
+		where room_no =#{roomNO}
+		and not
+		member_id =#{memberId}
+	</select>
+	<insert id="insertMessage"
+		parameterType="com.yedam.mohobby.service.chat.MessageVO">
+		insert into chat(
+		CHAT_ID,
+		ROOM_NO,
+		MSG_TIME,
+		CONTENT,
+		MEMBER_ID)
+		values(
+		#{CHAT_ID},
+		#{ROOM_NO},
+		#{MSG_TIME},
+		#{CONTENT},
+		#{MEMBER_ID}
+		)
+	</insert>
 </mapper>

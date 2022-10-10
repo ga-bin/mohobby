@@ -41,12 +41,12 @@ const routes = [
     name: "main",
     component: () => import("./../views/user/MainView"),
   },
-  { 
+  {
     path: "/login",
     name: "login",
     component: () => import("./../views/user/LoginView")
   },
-  { 
+  {
     path: "/register",
     name: "register",
     component: () => import("./../views/user/RegisterView")
@@ -161,12 +161,12 @@ const routes = [
         name: "ClassListAll",
         component: () => import("./../views/lecture/list/listAll")
       },
-      
+
     ],
   },
-  
+
   // moim
-  { 
+  {
     path: "/moimmain",
     name: "moimmain",
     component: () => import("./../views/moim/MoimMainView"),
@@ -179,39 +179,39 @@ const routes = [
   { //게시글
     path: "/moimDetail",
     component: () => import("@/views/moim/MoimDetailView"),
-    props: true ,
-      children : [
-        { //게시판
-          path: "",
-          name: "moimBoard",
-          component : () => import ("@/views/moim/board/MoimBoardView"),
-          props : true,
-        },
-        { //게시판
-          path: "moiminvite",
-          name: "moiminvite",
-          component : () => import ("@/views/moim/MoimInviteView"),
-          props : true,
-        },
-        { //게시물 단건조회
-          path: "moimPost",
-          name: "moimPost",
-          component: () => import("./../views/moim/board/MoimPostView"),
-          props: true,
-        },
-        {
-          path : "moimboardwrite",
-          name : "moimboardwrite",
-          component : () => import ("@/views/moim/board/MoimBoardWrite"),
-          props: true,
-        },
-        { //사진첩
-        path: "moimPhoto", 
+    props: true,
+    children: [
+      { //게시판
+        path: "",
+        name: "moimBoard",
+        component: () => import("@/views/moim/board/MoimBoardView"),
+        props: true,
+      },
+      { //게시판
+        path: "moiminvite",
+        name: "moiminvite",
+        component: () => import("@/views/moim/MoimInviteView"),
+        props: true,
+      },
+      { //게시물 단건조회
+        path: "moimPost",
+        name: "moimPost",
+        component: () => import("./../views/moim/board/MoimPostView"),
+        props: true,
+      },
+      {
+        path: "moimboardwrite",
+        name: "moimboardwrite",
+        component: () => import("@/views/moim/board/MoimBoardWrite"),
+        props: true,
+      },
+      { //사진첩
+        path: "moimPhoto",
         name: "moimPhoto",
         component: () => import("@/views/moim/photo/MoimPhotoView"),
         props: true,
-       },
-       { //공지사항
+      },
+      { //공지사항
         path: "moimNotice",
         name: "moimNotice",
         component: () => import("./../views/moim/notice/MoimNoticeView"),
@@ -250,6 +250,7 @@ const routes = [
         name: "makeNbbang",
         component: () => import("./../views/moim/Nbbang/MakeNbbangView"),
         props: true,
+      },
       { //N빵 디테일
         path: "/nBBangDetail",
         name: "nBBangDetail",
@@ -266,7 +267,7 @@ const routes = [
         name: "registerSetting",
         component: () => import("./../views/moim/setting/RegisterSettingView"),
       }
-      ]
+    ]
   },
   // challenge
   {
@@ -275,7 +276,7 @@ const routes = [
     component: () => import("./../views/challenge/ChallengeMainView"),
   },
   {
-    path: "/chat/:roomId",
+    path: "/chat",
     name: "chat",
     component: () => import("./../views/chat/ChatView"),
   },
