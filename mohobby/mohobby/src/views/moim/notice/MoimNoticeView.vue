@@ -1,13 +1,14 @@
 <template>
   <div class="container">
+    <BoardButton></BoardButton>
     <MoimNotice></MoimNotice>
   </div>
 </template>
 <script>
-  import MoimSidebar from "@/components/moim/moimDetail/MoimSidebar.vue";
   import MoimNotice from "@/components/moim/moimDetail/notice/MoimNotice.vue";
+import BoardButton from "@/components/moim/moimDetail/board/BoardButton.vue";
   export default {
-  components: { MoimSidebar, MoimNotice},
+  components: {MoimNotice, BoardButton },
   data: () => ({
     }),
   setup() {},
