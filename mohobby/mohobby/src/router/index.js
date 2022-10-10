@@ -192,6 +192,12 @@ const routes = [
           component : () => import ("@/views/moim/board/MoimBoardView"),
           props : true,
         },
+        { //게시판
+          path: "moiminvite",
+          name: "moiminvite",
+          component : () => import ("@/views/moim/MoimInviteView"),
+          props : true,
+        },
         { //게시물 단건조회
           path: "moimPost",
           name: "moimPost",
@@ -199,7 +205,7 @@ const routes = [
           props: true,
         },
         {
-          path : "/moimboardwrite",
+          path : "moimboardwrite",
           name : "moimboardwrite",
           component : () => import ("@/views/moim/board/MoimBoardWrite"),
           props: true,
@@ -211,19 +217,19 @@ const routes = [
         props: true,
        },
        { //공지사항
-        path: "/moimNotice",
+        path: "moimNotice",
         name: "moimNotice",
         component: () => import("./../views/moim/notice/MoimNoticeView"),
         props: true,
       },
       { //일정
-        path: "/moimSchedule",
+        path: "moimSchedule",
         name: "moimSchedule",
         component: () => import("./../views/moim/schedule/MoimScheduleView"),
         props: true,
       },
       { //투표
-        path: "/moimVote",
+        path: "moimVote",
         name: "moimVote",
         component: () => import("./../views/moim/vote/MoimVoteView"),
         props: true,
@@ -244,6 +250,11 @@ const routes = [
         component: () => import("./../views/moim/Nbbang/MoimNbbangView"),
         props: true,
       },
+      { //N빵 생성
+        path: "makeNbbang",
+        name: "makeNbbang",
+        component: () => import("./../views/moim/Nbbang/MakeNbbangView"),
+        props: true,
       { //N빵 디테일
         path: "/nBBangDetail",
         name: "nBBangDetail",
