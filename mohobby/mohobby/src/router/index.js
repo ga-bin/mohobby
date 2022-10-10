@@ -187,6 +187,12 @@ const routes = [
           component : () => import ("@/views/moim/board/MoimBoardView"),
           props : true,
         },
+        { //게시판
+          path: "moiminvite",
+          name: "moiminvite",
+          component : () => import ("@/views/moim/MoimInviteView"),
+          props : true,
+        },
         { //게시물 단건조회
           path: "moimPost",
           name: "moimPost",

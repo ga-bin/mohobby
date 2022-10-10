@@ -6,7 +6,8 @@
     $route.name !== 'makeVote' && 
     $route.name !== 'voteDetail' && 
     $route.name !== 'moimNbbang' && 
-    $route.name !== 'makeNbbang' 
+    $route.name !== 'makeNbbang' &&
+    $route.name !== 'moiminvite' 
     " />
     <BoardButton v-else style="visibility:hidden" />
     <!-- 컴포넌트 -->

@@ -8,6 +8,14 @@
         ></v-img>
       </v-avatar>
       <h4 class="white--text">IU</h4>
+      <div class="right">
+      <v-btn
+      text
+      @click="invite()">
+      <v-icon small color="white">mdi-plus-circle-outline</v-icon>
+      <div style="color:white">초대하기</div>
+    </v-btn>
+  </div>
     </div>
 
     <v-divider></v-divider>
@@ -70,7 +78,7 @@ export default {
     return {
       links: [
         { icon: "mdi-format-list-bulleted", 
-          text: "클래스 둘러보기", 
+          text: "관리하기", 
           subheaders: [
             { 
               text: "", 
@@ -89,10 +97,19 @@ export default {
         { icon: "mdi-alert-octagon", text: "N빵", route: "moimNbbang" },]
     };
   },
+  methods : {
+    invite() {
+      this.$router.push({ name : 'moiminvite' })
+    }
+  }
 };
 </script>
 <style scoped>
 .text-center {
   background-color: #2ac187;
+}
+.right {
+  float:right;
+  margin-right:-30px;
 }
 </style>
