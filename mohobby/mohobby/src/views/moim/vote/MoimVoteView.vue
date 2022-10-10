@@ -1,13 +1,12 @@
 <template>
   <div>
-    <MoimPhoto></MoimPhoto>
+    <MoimVote></MoimVote>
   </div>
 </template>
 <script>
-  import MoimSidebar from "@/components/moim/moimDetail/MoimSidebar.vue";
-  import MoimPhoto from "@/components/moim/moimDetail/vote/MoimVote.vue";
+  import MoimVote from "@/components/moim/moimDetail/vote/MoimVote.vue";
   export default {
-  components: { MoimSidebar, MoimPhoto},
+  components: {MoimVote},
   data: () => ({
     }),
   setup() {},

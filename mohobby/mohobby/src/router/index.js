@@ -223,17 +223,38 @@ const routes = [
         component: () => import("./../views/moim/vote/MoimVoteView"),
         props: true,
       },
-      { //투표
-        path: "/VoteDetail",
-        name: "VoteDetail",
+      { //투표 생성
+        path: "/makeVote",
+        name: "makeVote",
+        component: () => import("./../views/moim/vote/MakeVoteView"),
+      },
+      { //투표 디테일 메인
+        path: "/voteDetail",
+        name: "voteDetail",
         component: () => import("./../views/moim/vote/VoteDetailView"),
       },
-      { //N빵
+      { //N빵 메인
         path: "/moimNbbang",
         name: "moimNbbang",
         component: () => import("./../views/moim/Nbbang/MoimNbbangView"),
         props: true,
       },
+      { //N빵 디테일
+        path: "/nBBangDetail",
+        name: "nBBangDetail",
+        component: () => import("./../views/moim/Nbbang/NbbangDetailView"),
+        props: true,
+      },
+      { //소모임 관리하기
+        path: "/moimSetting",
+        name: "moimSetting",
+        component: () => import("./../views/moim/setting/MoimSettingView"),
+      },
+      { //소모임 관리하기
+        path: "/registerSetting",
+        name: "registerSetting",
+        component: () => import("./../views/moim/setting/RegisterSettingView"),
+      }
       ]
   },
   // challenge

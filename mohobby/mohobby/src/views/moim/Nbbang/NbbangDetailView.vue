@@ -1,12 +1,13 @@
 <template>
   <div>
-    <MoimNbbang></MoimNbbang>
+    <NbbangDetail></NbbangDetail>
   </div>
 </template>
 <script>
-  import MoimNbbang from "@/components/moim/moimDetail/Nbbang/MoimNbbang.vue";
+import NbbangDetail from "../../../components/moim/moimDetail/Nbbang/NbbangDetail.vue";
+  
   export default {
-  components: {MoimNbbang},
+  components: { NbbangDetail },
   data: () => ({
     }),
   setup() {},
