@@ -129,12 +129,12 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//유저검색
 	@Override
-	public List<MemberVO> searchUser(String memberId) {
-		return mapper.searchUser(memberId);
+	public List<MemberVO> searchUser(String memberId, String nickname) {
+		return mapper.searchUser(memberId, nickname);
 	}
 	//유저닉네임검색
     @Override
-    public List<SnsPostVO> getUsersByNick(String nickname) {
+    public List<MemberVO> getUsersByNick(String nickname) {
         return mapper.getUsersByNick(nickname);
     }
 	//해시태그검색
@@ -153,8 +153,8 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//좋아요취소
 	@Override
-	public int deleteLike(JjimVO jjimVO) {
-		return mapper.deleteLike(jjimVO);
+	public int deleteLike(int postId, String memberId) {
+		return mapper.deleteLike(postId, memberId);
 	}
 	//좋아요누적
 	@Override
@@ -182,8 +182,8 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//댓글조회
 	@Override
-	public List<CommentsVO> getCmtList(int postId) {
-		return mapper.getCmtList(postId);
+	public List<CommentsVO> getCmtLists(int postId) {
+		return mapper.getCmtLists(postId);
 	}
     
     /*
@@ -235,12 +235,16 @@ public class SnsServiceImpl implements SnsService{
     }
     //북마크 삭제
     @Override
-    public int deleteBookmark(SnsBookmarkVO bmkVO) {
-        return mapper.deleteBookmark(bmkVO);
+    public int deleteBookmark(int postId) {
+        return mapper.deleteBookmark(postId);
     }
     //북마크 조회
     @Override
     public List<SnsBookmarkVO> getBookmarks(int catgId) {
         return mapper.getBookmarks(catgId);
+    }
+    //전체 북마크
+    public List<SnsBookmarkVO> getAllBookmarks(){
+    	return mapper.getAllBookmarks();
     }
 }

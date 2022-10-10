@@ -69,10 +69,10 @@ public interface SnsMapper {
     
     //유저전체
     public List<MemberVO> getUsers();
-    //유저검색
-    public List<MemberVO> searchUser(String memberId);
+    //유저 아이디, 닉네임 검색
+    public List<MemberVO> searchUser(String memberId, String nickname);
     //유저닉네임검색
-    public List<SnsPostVO> getUsersByNick(String nickname);
+    public List<MemberVO> getUsersByNick(String nickname);
     //해시태그검색
     public List<SnsPostVO> searchHashtag(String hashtag);
 
@@ -81,7 +81,7 @@ public interface SnsMapper {
      */
     public int addLike(JjimVO jjimVO);
     //좋아요취소
-    public int deleteLike(JjimVO jjimVO);
+	public int deleteLike(int postId, String memberId);
     //좋아요누적
     public int sumLikes(SnsPostVO snsPostVO);
     
@@ -95,7 +95,7 @@ public interface SnsMapper {
     //댓글삭제
     public int deleteCmt(int commId);
     //댓글조회
-    public List<CommentsVO> getCmtList(int postId);
+    public List<CommentsVO> getCmtLists(int postId);
     
     /*
      * 대댓글
@@ -122,8 +122,11 @@ public interface SnsMapper {
     //북마크 등록
     public int addBookmark(SnsBookmarkVO bmkVO);
     //북마크 삭제
-    public int deleteBookmark(SnsBookmarkVO bmkVO);
+    public int deleteBookmark(int postId);
     //북마크 조회
     public List<SnsBookmarkVO> getBookmarks(int catgId);
+    //북마크 전체조회
+	public List<SnsBookmarkVO> getAllBookmarks();
+
 
 }	

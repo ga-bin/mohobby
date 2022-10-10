@@ -1,26 +1,55 @@
+<!-- 글쓰기폼 -->
 <template>
   <v-card
     class="mx-auto"
     max-width="80%"
     outlined
-  >
-  <!-- 파일 업로드 -->
-    <v-container fluid>
-      <input multiple="multiple" 
-             type="file" 
-             id="fileId" 
-             ref="fileInput"
-             @change="inputData()"
+>
+<!-- 파일 업로드 -->
+  <!-- <v-container fluid>
+    <input multiple="multiple" 
+            type="file" 
+            id="fileId" 
+            ref="fileInput"
+            @change="inputData()"
+    /> -->
+<!-- 파일 업로드 -->
+<v-container fluid>
+  <v-file-input
+        class="mx-auto" 
+        label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)"
+        type="file"
+        filled
+        prepend-icon="mdi-camera"
+        counter
+        show-size
+        dense
+        multiple
+        @change="onImageChange"
       />
-      <v-container fluid>
-        <div v-for="(list,i) in fileList"
-              :key="i">
-          {{list.name}}
-        </div>
-      </v-container>
-      <v-container fluid>
-        <v-btn @click="uploadImage">uploadImage</v-btn>
-      </v-container>
+  </v-container>
+    <!-- 이미지 미리보기 -->
+    <!-- <v-container fluid> -->
+    <div style="display:inline-flex; margin-left: 10px;">
+      <v-img v-for="(item,i) in uploadimageurl" 
+            :key="i" 
+            :src="item.url"
+            aspect-ratio="4/3"
+            height="150px" 
+            width="200px"
+            lazy-src
+            error 
+            style="margin-right: 10px;"
+      />
+    </div>
+    <v-container fluid>
+      <div v-for="(list,i) in fileList"
+            :key="i">
+        {{list.name}}
+      </div>
+    </v-container>
+    <v-container fluid>
+    </v-container>
     </v-container>
     <!-- </v-container> -->
     <!-- content -->
@@ -116,6 +145,7 @@
 <script>
  
  export default {
+  name:'RegisterForm',
   data: () => ({
     activator: null,
     attach: null,
@@ -144,6 +174,8 @@
     x: 0,
     search: null,
     y: 0,
+    uploadimageurl: [], //이미지업로드2
+    imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
 
     //
     fileList : [],
@@ -201,9 +233,83 @@
         }).catch(err => {
           console.log(err);
         });
-    }
+    },
+     //이미지2
+     //이미지 조건 처리
+     fileChange: function (e) {
+      const file = e.target.files;
+      let validation = true;
+      let message = '';
+
+      if (file.length > 5) {
+          validation= false;
+          message = `파일은 5개 까지만 등록 가능합니다.`
+      }
+
+      if (file[0].size > 1024 * 1024 * 2) {
+          message = `${message}, 파일은 용량은 2MB 이하만 가능합니다.`;
+          validation = false;
+      }
+
+      if (file[0].type.indexOf('image') < 0) {
+          message = `${message}, 이미지 파일만 업로드 가능합니다.`;
+          validation = false;
+      }
+
+      if (validation) {
+          this.file = file
+      }else {
+          this.file = '';
+          alert(message);
+      }
+    },
+    onImageChange(file) {	// v-file-input 변경시
+      if (!file) {
+        console.log(file);
+        return;
+      }
+      const formData = new FormData();	// 파일을 전송할때는 FormData 형식으로 전송
+      console.log(formData)
+      this.uploadimageurl = [];		// uploadimageurl은 미리보기용으로 사용
+      console.log(this.uploadimageurl[0])
+      file.forEach((item) => {
+        console.log(item.name)//name:파일명, size:바이트(인듯),type:image/png
+        formData.append('filelist', item)	// formData의 key: 'filelist', value: 이미지
+        const reader = new FileReader();
+        console.log(reader)//
+        reader.onload = (e) => {
+          console.log({url: e.target.result})
+          this.uploadimageurl.push({url: e.target.result});
+          // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
+        };
+        reader.readAsDataURL(item);
+      });
+    },
+    uploadImage() {
+      this.axios({
+          url: "/sns/myfeed",	// 이미지 저장을 위해 back서버와 통신
+          method: "POST",
+          headers: {'Content-Type': 'multipart/form-data'},	// 이걸 써줘야 formdata 형식 전송가능
+          data: formData,
+        }).then(res => {
+          console.log(res.data.message);
+          this.imagecnt = file.length;	// 이미지 개수 저장
+        }).catch(err => {
+          alert(err);
+        });
+    },
   }
 }
  </script>
  <style scoped>
+  .imagePreviewWrapper2 {
+    width: 250px;
+    height: 250px;
+    display: block;
+    cursor: pointer;
+    margin: 0 auto 30px;
+    background-size: cover;
+    background-position: center center;
+ }
+
 </style>

@@ -1,30 +1,27 @@
 <template>
   <div id = "container">
-    <div>
-      <v-btn @click="goUserFeed()">유저피드</v-btn>
-      <v-btn @click="goFeedInsert()">글쓰기</v-btn>
-    </div>
     <SnsSearchbar></SnsSearchbar>
+    <div>
+      <v-btn @click="goUserFeed()">유저피드테스트</v-btn>
+    </div>
     <!-- 인기 피드리스트 -->
     <h3>추천 만능 재주꾼들 피드</h3>
-    <HotLecturerList></HotLecturerList>
+    <HotLecturerSpace></HotLecturerSpace>
     <h3>재주 견습생들 피드</h3>
     <!-- 랜덤피드 무한스크롤링 -->
-    <ul>
-      <li v-if="noneUser===9">   
+      <!-- <ul v-if="noneUser===9">    -->
         <NoneUser />
-      </li>
-    </ul>
+    <!-- </ul> -->
   </div>
 </template>
 <script>
   import SnsSearchbar from "../../components/sns/Common/Searchbar"
-  import HotLecturerList from "../../components/sns/Main/HotLecturerList";
+  import HotLecturerSpace from "../../components/sns/Main/HotLecturerList";
   import NoneUser from "../../components/sns/Main/Noneuser";
 
   export default {
     name: "snsMain",
-    components: { SnsSearchbar, HotLecturerList, NoneUser, SnsSearchbar },
+    components: { SnsSearchbar, HotLecturerSpace, NoneUser, SnsSearchbar },
     data() {
       return{
         card_list : [],
@@ -102,9 +99,6 @@
       goUserFeed() {
         this.$router.push({ name: "SnsUserFeed" });
       },
-      goFeedInsert() {
-        this.$router.push({ name: "SnsFeedInsert" });
-      }
     },
 
     mounted () {

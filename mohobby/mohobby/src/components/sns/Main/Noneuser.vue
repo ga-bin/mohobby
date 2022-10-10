@@ -3,15 +3,16 @@
   <div>
     <v-container fluid>
       <v-row dense>
-        <v-col v-for="card in cards" :key="card.title" :cols="card.flex">
+        <v-col v-for="card in cards" :key="card.title" :cols="2">
         <!-- <v-col :cols="card.flex"> -->
           <v-card @click="getFeedDetail()">
             <v-img 
-              aspect-ratio="4/3"
+             :aspect-ratio="4/3"
              :src="require(`@/assets/image/sns/${card.thumbnail}`)"
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="180px"
+              height="150px"
+              width="180px"
             >
               <v-icon color="red">mdi-heart</v-icon>{{card.likes}} 
               <v-icon color="#ededed">mdi-chat-outline</v-icon>{{card.cmts}}

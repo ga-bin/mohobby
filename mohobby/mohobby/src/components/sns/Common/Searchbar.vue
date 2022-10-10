@@ -1,24 +1,28 @@
 <template>
     <div id="searchbar">
         <v-container>
+            <!-- 글 등록창 이동 -->
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <div id="used-main-dropbox">
+                    <v-select @change="dropVal()" v-model="select" :items="items" item-text="name" item-value="value" label="정렬"
+                        color="#212529" persistent-hint return-object single-line dense width="50">
+                    </v-select>
+                </div>
+                <v-btn  icon 
+                        class="d-flex flex-column-reverse pa-3 secondary rounded-circle d-inline-block white--text"
+                        color="#2ac187"
+                        small
+                        @click="goRegForm()">
+                    <v-icon small>mdi-plus-thick</v-icon>
+                </v-btn>
+            </v-card-actions>
             <v-row dense
-                   style="height:100px">
+                   style="height:50px">
                 <v-col cols="6" 
                        class="mx-auto"
                 >
-                    <!-- <v-btn icon right>
-                        <v-icon>mdi-magnify</v-icon>
-                    </v-btn> -->
-                        <!-- 글 등록창 이동 -->
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn icon 
-                                   class="d-flex flex-column-reverse pa-3 secondary rounded-circle d-inline-block white--text"
-                                   color="#2ac187"
-                                   @click="insertFeed">
-                                <v-icon>mdi-plus-thick</v-icon>
-                            </v-btn>
-                        </v-card-actions>
+                    <!-- 검색창 -->
                     <v-autocomplete 
                         v-model="ctg" 
                         :items="ctg" 
@@ -32,16 +36,17 @@
                         menu-props="{'closeOnContentClick': true}"
                         class="rounded-xl"
                         append-icon="mdi-magnify"
+                        @change="search()"
                         >
                         <!-- @change="changeCoatings" -->
                     </v-autocomplete>
                 </v-col>
             </v-row>
 
-            <!-- 핫한 해시태그 5개 -->
+            <!-- 해시태그 검색 -->
             <div id="chip">
                 <v-row justify="space-around">
-                    <v-col cols="6">
+                    <v-col cols="8">
                         <v-sheet >
                             <v-chip-group active-class="primary--text">
                                 <v-chip v-for="hotTag in hotTags" 
@@ -61,7 +66,6 @@
 </template>
 <script>
 // import skills from "./skills.js";
-
 export default {
     name: "snsSearchbar",
     data() {
@@ -87,7 +91,18 @@ export default {
 
             ],
             userInput: null,
-            memberId: 123
+            memberId: 123,
+            items: [{
+                name: '최신순',
+                value: '최신순'
+                },
+                {
+                name: '인기순',
+                value: '인기순'
+                },
+            ],
+            data: [],
+            word: ""
         }
     },
     watch: {
@@ -109,18 +124,77 @@ export default {
                 this.people = this.itemData ? this.itemData : []
             }, 500)
         },
-        insertFeed() {
-            this.$router.push({ path : 'snsFeedInsert' })
-            // this.$router.push({ name : 'snsFeedInsert', params: { memberId : this.memberId }})
-        }
-    },
+        goRegForm() {
+            this.$router.push({ name: "snsFeedRegister" });
+        },
+        search(){
+            //유저 아이디 or 닉네임 조회
+            let searchValue = document.querySelector("#rounded-xl").value;
 
-}
+            this.axios({
+            url : '/sns/search/user',        
+            params : {
+                memberId : searchValue,
+                nickname : searchValue,
+            }
+            }).then(res => {
+            console.log(res);
+            this.data = res.data;
+            console.log(this.data);
+
+            }).catch(err =>{
+            console.log(err);
+            });
+        },
+        enterkey: function (e) {
+            if (window.event.keyCode == 13) {
+            this.search(e);
+        }
+      },
+      checkbox: function () {
+        const ckbox = document.querySelector(".form-check-input");
+        const is_cked = ckbox.checked;
+        var isChecked = document.querySelector(".form-check-input").innerText = is_cked
+        console.log(isChecked);
+        // axios({
+        //   url: "http://localhost:8088/zippy/used/main",
+        //   methods: "GET",
+        //   params: {
+        //     keyword: "",
+        //     location: "",
+        //     category: "",
+        //     checked: isChecked
+        //   }
+        // }).then(res => {
+        //   console.log(res);
+        //   this.data = res.data;
+        // }).catch(err => {
+        //   console.log(err)
+        // })
+      },
+      dropVal: function () {
+        let dropValue = this.select.value;
+        console.log(dropValue);
+        axios({
+          url : "http://localhost:8088/zippy/used/main",
+          methods : "GET",
+          params : {
+            keyword: "",
+            location: "",
+            category: "",
+            checked: "",
+            dropbox : dropValue
+          }
+        })
+       }
+      }
+    }
+
 
 </script>
 <style scoped>
-body {
-    margin-bottom: 24px;
+#searchbar{
+    width:80%;
     margin: 0 auto;
 }
 
