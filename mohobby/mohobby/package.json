@@ -27,6 +27,7 @@
     "vue": "^2.7.10",
     "vue-iamport": "^0.1.2",
     "vue-media-upload": "^1.1.4",
+    "vue-moment": "^4.1.0",
     "vue-plugin-load-script": "^2.1.1",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.5.1",

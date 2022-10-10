@@ -161,6 +161,11 @@ const routes = [
           },
         ],
       },
+      {
+        path: "list",
+        name: "ClassListAll",
+        component: () => import("./../views/lecture/list/listAll")
+      },
       
     ],
   },
