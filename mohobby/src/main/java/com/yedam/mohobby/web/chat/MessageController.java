@@ -1,4 +1,4 @@
-package com.yedam.mohobby.web.sns;
+package com.yedam.mohobby.web.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -15,6 +15,6 @@ public class MessageController {
 	SimpMessageSendingOperations sendTemplate;
 	@MessageMapping("/chat")
 	public void send(ChatVO chat) {
-	sendTemplate.convertAndSend("/topic/room/"+chat.getRoomId(),chat.getContent());
+	sendTemplate.convertAndSend("/topic/room/"+chat.getRoomNo(),chat.getContent());
 	}
 }
