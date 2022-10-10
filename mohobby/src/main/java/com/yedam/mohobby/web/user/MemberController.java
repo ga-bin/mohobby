@@ -1,5 +1,7 @@
 package com.yedam.mohobby.web.user;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +29,19 @@ public class MemberController {
 	 * 
 	 * @param memberId
 	 * @return MemberVO
+	 * @title 회원 한명 정보 가져오기(회원 마이페에지, 회원 아이디 있는지 조회)
 	 */
-	// 회원 한명 정보 가져오기(회원 마이페에지, 회원 아이디 있는지 조회)
 	@GetMapping("/member/{memberId}")
 	public MemberVO getMember(@PathVariable String memberId) {
 		return service.getMember(memberId);
 	}
 	
-	// 로그인 아이디, 비밀번호가 일치하는지 체크
+	/**
+	 * 
+	 * @param memberVO
+	 * @return MemberVO
+	 * @title 로그인 아이디, 비밀번호가 일치하는지 체크
+	 */
 	@PostMapping("/membercheck")
 	public MemberVO checkIdPassword(@RequestBody MemberVO memberVO) {
 		return service.checkIdPassword(memberVO);
@@ -42,9 +49,31 @@ public class MemberController {
 	
 	/**
 	 * 
-	 * @param memberVO
+	 * @param email
+	 * @return MemberVO
+	 * @title 이메일 통해서 회원인지 조회
 	 */
-	//회원가입 insert
+	@GetMapping("/memberEmail/{email}")
+		public MemberVO getMemberByEmail(@PathVariable String email) {
+			return service.getMemberByEmail(email);
+		}
+	
+	
+	/**
+	 * 
+	 * @return List<MemberVO>
+	 * @title 회원정보 전체 조회
+	 */
+	@GetMapping("/memberAll")
+		public List<MemberVO> getAllMember() {
+		return service.getAllMember();
+	}
+	
+	/**
+	 * 
+	 * @param memberVO
+	 * @title 회원가입 insert
+	 */
 	@PostMapping("/member")
 	public void insertMember(@RequestBody MemberVO memberVO) {
 		service.insertMember(memberVO);
@@ -53,8 +82,8 @@ public class MemberController {
 	/**
 	 * 
 	 * @param memberId
+	 * @title 회원탈퇴 날짜 update 
 	 */
-	// 회원탈퇴 날짜 update
 	@PutMapping("/memberdelete")
 	public void deleteMember(@RequestBody String memberId) {
 		service.deleteMember(memberId);
@@ -63,8 +92,8 @@ public class MemberController {
 	/**
 	 * 
 	 * @param memberVO
+	 * @title 회원정보 수정 update
 	 */
-	// 회원정보 수정 update
 	@PutMapping("/memberupdate")
 	public void updateMember(@RequestBody MemberVO memberVO) {
 		service.updateMember(memberVO);
@@ -73,8 +102,8 @@ public class MemberController {
 	/**
 	 * 
 	 * @param memberVO
+	 * @title 회원 비밀번호 수정
 	 */
-	// 회원 비밀번호 수정
 	@PutMapping("/memberupdatepassword")
 	public void updatePassword(@RequestBody MemberVO memberVO) {
 		service.updatePassword(memberVO);
@@ -83,8 +112,8 @@ public class MemberController {
 	/**
 	 * 
 	 * @param memberVO
+	 * @title 챌린지 등급 update(plsql만들기)
 	 */
-	// 챌린지 등급 update(plsql만들기)s
 	@PutMapping("/memberupdatechallgrade")
 	public void updateChallGrade(@RequestBody MemberVO memberVO) {
 		service.updateChallGrade(memberVO);
@@ -93,8 +122,8 @@ public class MemberController {
 	/**
 	 * 
 	 * @param memberVO
+	 * @title role변환(멋진활동가, 만능 재주꾼, 일반회원)
 	 */
-	// role변환(멋진활동가, 만능 재주꾼, 일반회원)
 	@PutMapping("/memberupdaterole")
 	public void updateRole(@RequestBody MemberVO memberVO) {
 		service.updateRole(memberVO);

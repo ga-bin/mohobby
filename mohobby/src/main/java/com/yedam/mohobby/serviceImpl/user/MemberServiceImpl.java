@@ -1,5 +1,7 @@
 package com.yedam.mohobby.serviceImpl.user;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +20,22 @@ public class MemberServiceImpl implements MemberService {
 	public MemberVO getMember(String memberId) {
 		return mMapper.getMember(memberId);
 	}
-
+	
 	// 로그인 아이디, 비밀번호가 일치하는지 체크
 	public MemberVO checkIdPassword(MemberVO memberVO) {
 		return mMapper.checkIdPassword(memberVO);
 	}
 
+	// 이메일 통해서 회원인지 조회
+	public MemberVO getMemberByEmail(String email) {
+		return mMapper.getMemberByEmail(email);
+	}
+	
+	// 회원정보 전체 조회
+	public List<MemberVO> getAllMember() {
+		return mMapper.getAllMember();
+	}
+	
 	//회원가입 insert
 	@Override
 	public void insertMember(MemberVO memberVO) {

@@ -47,11 +47,6 @@ const routes = [
     component: () => import("./../views/user/LoginView")
   },
   { 
-    path: "/kakaoLogin",
-    name: "kakaoLogin",
-    component: () => import("./../views/user/KakaoLoginView")
-  },
-  { 
     path: "/register",
     name: "register",
     component: () => import("./../views/user/RegisterView")
