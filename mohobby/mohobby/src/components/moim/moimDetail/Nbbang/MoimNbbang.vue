@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="container">
     <!-- N빵 생성하기 -->
-    <div class="makeVote">
+    <div class="margin">
     <v-card-actions class="mb-16">
       <v-spacer />
-      <v-btn @click="makeNbbang()"><v-icon>mdi-plus-circle-outline</v-icon>투표 생성하기</v-btn>
+      <v-btn @click="makeNbbang()"><v-icon>mdi-plus-circle-outline</v-icon>N빵 생성하기</v-btn>
     </v-card-actions>
     </div>
 
@@ -83,13 +83,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .container {
-  width: 91%;
+  width: 85%;
 }
-
-.makeVote{
-  margin-right: 18%;
+.margin {
+  margin-right: 10.5%;
 }
 
 </style>

@@ -35,22 +35,12 @@
 
     <!-- 게시글 내용 -->
     <div class="contents">
-    <v-head></v-head>
-    <v-card-text class="text--primary" v-for="item in content">
+    
+    <v-card-text class="text--primary" v-for="item in content" :key="item.radio">
       <p>{{item.radio}}</p>
       <v-progress-linear :value=item.no>
       </v-progress-linear>
     </v-card-text>
-    </div>
-
-    <div class="hashtag">
-        <v-chip
-         v-for="tag in tag"
-         :key="tag.hashtag"
-         color="white"
-        >
-          {{ tag.hashtag }} 
-        </v-chip>
     </div>
 
     <!-- 댓글 -->
@@ -88,12 +78,19 @@ export default {
             user: "IU",
             date: "2022-10-06 오전 10:22",
             content: [
-                    {radio: "티라미수 케잌",
-                     no : 5},
-                    {radio: "크림치즈 라즈베리 쿠키",
-                     no : 1},
-                    {radio: "잠봉뵈르 시오빵",
-                     no : 3},
+                    {
+                    radio: "티라미수 케잌",
+                    no : 5
+                    },
+                    {
+                    radio: "크림치즈 라즈베리 쿠키",
+                    no : 1,
+                  }
+                    ,
+                    {
+                      radio: "잠봉뵈르 시오빵",
+                      no : 3
+                    },
                     ],
             writer : 0,
         };
