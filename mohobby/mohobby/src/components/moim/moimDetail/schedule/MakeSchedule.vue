@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="600px" persistent v-model="dialog">
+  <v-dialog max-width="600px" v-model="dialog">
     <v-card>
       <v-card-title>
         <h3>일정 추가</h3>

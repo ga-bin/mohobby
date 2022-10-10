@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <BoardButton></BoardButton>
     <BoardNoAuthority v-if="moim===0 && moimRight===0"></BoardNoAuthority>
     <MoimBoard v-else></MoimBoard>
   </div>
@@ -8,9 +9,10 @@
 <script>
     import MoimBoard from "@/components/moim/moimDetail/board/MoimBoard.vue";
     import BoardNoAuthority from "@/components/moim/moimDetail/board/BoardNoAuthority.vue"
+import BoardButton from "@/components/moim/moimDetail/board/BoardButton.vue";
 
     export default {
-  components: {MoimBoard, BoardNoAuthority },
+  components: { MoimBoard, BoardNoAuthority, BoardButton },
   data: () => ({
 
     fclick: true,

@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <v-row justify="end">
-            <v-dialog v-model="dialog" persistent max-width="500">
+            <v-dialog v-model="dialog" max-width="500">
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn color="green" dark text x-large v-bind="attrs" v-on="on">
                         멤버 선택 >

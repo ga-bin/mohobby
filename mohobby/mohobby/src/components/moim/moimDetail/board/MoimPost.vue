@@ -108,8 +108,8 @@ export default {
 <style scoped>
 
 .container{
+  width : 85%;
   margin-top: 30px;
-  height: 1000px;
 }
 
 .user {
