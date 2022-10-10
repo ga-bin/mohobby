@@ -21,6 +21,7 @@
               <div class="pa-10">
                 <h1 style="text-align: center" class="mb-10">회원가입</h1>
                 <form>
+                  <!-- 아이디입력 -->
                   <v-text-field
                     label="아이디"
                     prepend-inner-icon="mdi-account"
@@ -29,6 +30,7 @@
                     @input="checkId()"
                     :messages="idCheckMessage"
                   ></v-text-field>
+                  <!-- 비밀번호입력 -->
                   <v-text-field
                     color="#2ac187"
                     prepend-inner-icon="mdi-lock"
@@ -38,6 +40,7 @@
                     @input="checkPassword()"
                     :messages="passwordCheckMessage"
                   ></v-text-field>
+                  <!-- 비밀번호확인입력 -->
                   <v-text-field
                     color="#2ac187"
                     prepend-inner-icon="mdi-lock"
@@ -48,21 +51,120 @@
                     :messages="password2CheckMessage"
                   >
                   </v-text-field>
+                  <!-- 이름입력 -->
+                  <v-text-field  
+                    color="#2ac187"
+                    prepend-inner-icon="mdi-account-outline"
+                    label="이름"
+                    v-model="memberName">
+                  </v-text-field>
+                  <!-- 닉네임입력 -->
+                  <v-text-field  
+                    color="#2ac187"
+                    prepend-inner-icon="mdi-account-outline"
+                    label="닉네임"
+                    v-model="nickname">
+                  </v-text-field>
+                  <!-- 생년월일입력 -->
+                  <v-col
+                    cols="24"
+                    sm="20"
+                    md="20"
+                  >
+                    <v-dialog
+                      ref="dialog"
+                      color="#2ac187"
+                      v-model="modal"
+                      :return-value.sync="birth"
+                      persistent
+                      width="290px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          color="#2ac187"
+                          v-model="birth"
+                          label="Picker in dialog"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        color="#2ac187"
+                        v-model="birth"
+                        scrollable
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text
+                          color="#2ac187"
+                          @click="modal = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="#2ac187"
+                          @click="$refs.dialog.save(birth)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-dialog>
+                  </v-col>
+                  <!-- 성별입력 -->
+                  <v-col>
                   <v-radio-group label="성별" row>
                       <v-radio
                         label="여성"
                         value="f"
+                        color="#2ac187"
                       ></v-radio>
                       <v-radio
                         label="남성"
-                        value="radio-2"
+                        value="m"
+                        color="#2ac187"
                       ></v-radio>
                        <v-radio
                         label="선택안함"
-                        value="radio-2"
+                        value="null"
+                        color="#2ac187"
                       ></v-radio>
                     </v-radio-group>
-                  <v-btn
+                    </v-col>
+                    <!-- 지역 입력 -->
+                    <v-col>
+                    <v-select
+                      :items="keywordNameList"
+                      :value="keywordIdList"
+                      label="지역"
+                      dense>
+                    </v-select>
+                  </v-col>
+
+                    <!-- 이메일입력 -->
+                    <v-text-field
+                    color="#2ac187"
+                    prepend-inner-icon="mdi-email"
+                    type="text"
+                    label="이메일"
+                    v-model="email"
+                    @input="checkEmail()"
+                    :messages="emailCheckMessage"
+                    ></v-text-field>
+                    <!-- 휴대전화번호 입력 -->
+                    <v-text-field
+                    color="#2ac187"
+                    prepend-inner-icon="mdi-cellphone"
+                    type="text"
+                    label="휴대전화"
+                    v-model="phoneNum"
+                    @input="inputPhoneNumber()"
+                    :messages="'-를 제외하고 입력해주세요'"
+                    ></v-text-field>
+                    <!-- 회원가입버튼 -->
+                    <v-btn
                     type="submit"
                     color="#2ac187"
                     depressed
@@ -70,6 +172,7 @@
                     block
                     dark
                     class="mb-3"
+                    @click="register()"
                   >
                     회원가입
                   </v-btn>
@@ -121,11 +224,44 @@ export default {
             password2: '',
             passwordCheckMessage: '',
             password2CheckMessage: '',
-            canRegister: ''
+            canRegister: '',
+            memberName: '',
+            nickname: '',
+            birth: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+            menu: false,
+            modal: false,
+            menu2: false,
+            emailCheckMessage: '',
+            email: '',
+            phoneNum: '',
+            regionList : [],
+            keywordIdList : [],
+            keywordNameList : []
     }
 },
     beforeCreate() {},
-    created() {},
+    created() {
+      this.axios({
+                url: 'http://localhost:8088/java/regionAll',
+                method : 'get',
+            })
+            .then(function (response) {
+                console.log(response);
+                if (response.data != "") {
+                console.log(response.data)
+                vm.regionList = response.data;
+                for(let i = 0; i < vm.regionList.length; i++) {
+                  vm.keywordIdList[i] = vm.regionList[i].keywordId;
+                  vm.keywordNameList[i] = vm.regionList[i].keywordName;
+                }
+                console.log(vm.keywordIdList);
+                console.log(vm.keywordNameList);
+                }
+            })
+            .catch(function(error) {
+              console.log(error);
+            })
+    },
     beforeMount() {},
     mounted() {
       const vm = this;
@@ -198,7 +334,80 @@ export default {
           this.password2CheckMessage = '비밀번호가 일치합니다.';
           this.canRegister = 'true';
         }
+      },
+
+      checkEmail() {
+        let reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+        for(let i = 0; i < this.allMember.length; i++) {
+          if(this.allMember[i].email === this.email) {
+            this.emailCheckMessage = '이미 사용중인 이메일입니다.';
+            this.canRegister = false;
+            return;
+          }
+        }
+          if(!reg_email.test(this.email)) {
+            this.emailCheckMessage = '이메일 형식이 아닙니다.';
+            this.canRegister = false;
+          } 
+          else {
+            this.emailCheckMessage = '사용 가능한 이메일 입니다.';
+            this.canRegister = true;
+          }
+          },
+
+        inputPhoneNumber() {
+          var number = this.phoneNum.replace(/[^0-9]/g, "");
+          var phone = "";
+          if(number.length < 4) {
+              return number;
+          } else if(number.length < 7) {
+              phone += number.substr(0, 3);
+              phone += "-";
+              phone += number.substr(3);
+          } else if(number.length < 11) {
+              phone += number.substr(0, 3);
+              phone += "-";
+              phone += number.substr(3, 3);
+              phone += "-";
+              phone += number.substr(6);
+          } else {
+              phone += number.substr(0, 3);
+              phone += "-";
+              phone += number.substr(3, 4);
+              phone += "-";
+              phone += number.substr(7);
+          }
+          this.phoneNum = phone;
+      },
+      register() {
+        this.axios({
+                url: 'http://localhost:8088/java/member',
+                method : 'post',
+                data : {
+                    memberId : this.memberId,
+                    password : this.password,
+                    regionId : this.region,
+                }
+            })
+            .then(function (response) {
+                console.log(response);
+                if (response.data != "") {
+                
+                //this.$store.commit("setId", this.memberId);
+                console.log(response.data)
+                vm.$store.state.id=vm.memberId;
+                vm.$store.commit('setUserData', response.data);
+                // vm.$store.state.user=response.data;
+                vm.$router.push("/");
+                }
+                else {
+                    alert("아이디, 비밀번호가 일치하지 않습니다.");
+                }
+            })
+            .catch(function(error) {
+           
+            })
       }
     }
-}
+  }
 </script>

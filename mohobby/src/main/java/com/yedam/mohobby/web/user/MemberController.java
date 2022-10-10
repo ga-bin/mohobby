@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.admin.MemberVO;
+import com.yedam.mohobby.service.communal.KeywordVO;
 import com.yedam.mohobby.service.user.MemberService;
 
 /**
@@ -66,8 +67,18 @@ public class MemberController {
 	 */
 	@GetMapping("/memberAll")
 		public List<MemberVO> getAllMember() {
-		return service.getAllMember();
+			return service.getAllMember();
 	}
+	
+	/**
+	 * 
+	 * @return List<KeywordVO>
+	 * @title 지역전체 조회 
+	 */
+	@GetMapping("/regionAll")
+		public List<KeywordVO> getRegion() {
+			return service.getRegion();
+		}
 	
 	/**
 	 * 

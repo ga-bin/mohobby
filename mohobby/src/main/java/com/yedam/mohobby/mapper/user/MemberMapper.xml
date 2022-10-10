@@ -21,6 +21,11 @@
   	select * from member
   </select>
   
+  <!--지역 전체 조회 -->
+  <select id="getRegion" resultType="com.yedam.mohobby.service.communal.KeywordVO">
+  	select keyword_id, keyword_name from keyword where keyword_id not like '1___'
+  </select>
+  
   
    <!--회원가입 insert -->
    <insert id="insertMember" parameterType="com.yedam.mohobby.service.admin.MemberVO">
@@ -39,7 +44,7 @@
    			reg_date
    			)
 		values 
-			(#{memberId}, #{regionId}, #{password}, #{memberName}, #{nickName}, #{birth}, #{email}, #{phoneNum}, #{role}, #{regDate})
+			(#{memberId}, #{regionId}, #{password}, #{memberName}, #{nickName}, #{birth}, #{email}, #{phoneNum}, 0, sysdate)
    </insert>
    
    <!-- 회원탈퇴 날짜 update -->
