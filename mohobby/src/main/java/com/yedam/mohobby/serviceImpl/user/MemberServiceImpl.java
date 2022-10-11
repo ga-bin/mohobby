@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.user.MemberMapper;
 import com.yedam.mohobby.service.admin.MemberVO;
+import com.yedam.mohobby.service.communal.KeywordVO;
 import com.yedam.mohobby.service.user.MemberService;
 
 @Service
@@ -34,6 +35,11 @@ public class MemberServiceImpl implements MemberService {
 	// 회원정보 전체 조회
 	public List<MemberVO> getAllMember() {
 		return mMapper.getAllMember();
+	}
+	
+	// 지역 전체 조회
+	public List<KeywordVO> getRegion() {
+		return mMapper.getRegion();
 	}
 	
 	//회원가입 insert
