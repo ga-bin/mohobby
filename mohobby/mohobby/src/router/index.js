@@ -41,12 +41,12 @@ const routes = [
     name: "main",
     component: () => import("./../views/user/MainView"),
   },
-  { 
+  {
     path: "/login",
     name: "login",
     component: () => import("./../views/user/LoginView")
   },
-  { 
+  {
     path: "/register",
     name: "register",
     component: () => import("./../views/user/RegisterView")
@@ -161,12 +161,12 @@ const routes = [
         name: "ClassListAll",
         component: () => import("./../views/lecture/list/listAll")
       },
-      
+
     ],
   },
-  
+
   // moim
-  { 
+  {
     path: "/moimmain",
     name: "moimmain",
     component: () => import("./../views/moim/MoimMainView"),
@@ -216,8 +216,8 @@ const routes = [
         name: "moimPhoto",
         component: () => import("@/views/moim/photo/MoimPhotoView"),
         props: true,
-       },
-       { //공지사항
+      },
+      { //공지사항
         path: "moimNotice",
         name: "moimNotice",
         component: () => import("./../views/moim/notice/MoimNoticeView"),
@@ -273,7 +273,7 @@ const routes = [
         name: "registerSetting",
         component: () => import("./../views/moim/setting/RegisterSettingView"),
       }
-      ]
+    ]
   },
   // challenge
   {
@@ -282,7 +282,7 @@ const routes = [
     component: () => import("./../views/challenge/ChallengeMainView"),
   },
   {
-    path: "/chat/:roomId",
+    path: "/chat",
     name: "chat",
     component: () => import("./../views/chat/ChatView"),
   },
