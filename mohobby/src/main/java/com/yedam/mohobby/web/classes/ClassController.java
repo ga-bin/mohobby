@@ -1,17 +1,11 @@
 package com.yedam.mohobby.web.classes;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Base64;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
@@ -93,6 +86,10 @@ public class ClassController {
 	       
 	    }
 	}
+	
+	
+	//강의 전체 조회
+	
 	
 
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.chat.ChatMapper">
 
-	<!-- 채팅방 추출 -->
+	<!-- 1:1 채팅방 추출 -->
 	<select id="getChatRoom"
 		resultType="com.yedam.mohobby.service.chat.RoomVO"
 		parameterType="String">
@@ -10,7 +10,8 @@
 		c.nickname,
 		c.room_no,
 		c.profile_img,
-		d.content
+		d.content,
+		d.msg_time
 		FROM
 		(
 		SELECT
@@ -44,7 +45,8 @@
 		JOIN (
 		SELECT
 		content,
-		room_no
+		room_no,
+		msg_time
 		FROM
 		chat
 		WHERE
@@ -61,13 +63,57 @@
 		room
 		WHERE
 		member_id = #{memberId}
+		and moim_id=0
 		)
 		GROUP BY
 		room_no
 		)
 		) d ON ( c.room_no = d.room_no )
 	</select>
+	<!-- 소모임 채팅목록 추출 -->
+	<select id="getChatMoimRoom"
+		resultType="com.yedam.mohobby.service.chat.RoomVO"
+		parameterType="String">
+		select a.content as content, a.msg_time,b.moim_name as nickname,room_no , b.moim_img as
+		profile_img from(
+		SELECT
+		content,
+		room_no,
+		msg_time
+		FROM
+		chat
+		WHERE
+		msg_time IN (
+		SELECT
+		MAX(msg_time)
+		FROM
+		chat
+		WHERE
+		room_no IN (
+		SELECT
+		room_no
+		FROM
+		room
+		WHERE
+		member_id = #{memberId}
+		and moim_id=1
+		)
+		GROUP BY
+		room_no
+		)) a join(
+		select moim_id,moim_img,moim_name
+		from moim
+		where moim_id in(
+		SELECT
+		room_no
+		FROM
+		room
+		WHERE
+		member_id = #{memberId}
+		and moim_id=1)) b on (a.room_no=b.moim_id)
+	</select>
 	<!-- 채팅내역 추출 -->
+
 	<select id="getChat"
 		resultType="com.yedam.mohobby.service.chat.ChatVO"
 		parameterType="String">
@@ -104,5 +150,57 @@
 		#{CONTENT},
 		#{MEMBER_ID}
 		)
+	</insert>
+	<insert id="createRoom"
+		parameterType="com.yedam.mohobby.service.chat.CreateRoomVO">
+		DECLARE
+		v_check VARCHAR2(100);
+		v_room_id room.room_no%TYPE := chat_room_id_seq.nextval;
+		v_my_id room.member_id%TYPE := #{myId};
+		v_target_id room.member_id%TYPE := #{targetId};
+		BEGIN
+		SELECT
+		CASE
+		WHEN NOT EXISTS (
+		SELECT
+		room_no
+		FROM
+		room
+		WHERE
+		room_no IN (
+		SELECT
+		room_no
+		FROM
+		room
+		WHERE
+		member_id = v_my_id
+		AND moim_id = 0
+		)
+		AND member_id = v_target_id
+		) THEN
+		0
+		END test
+		INTO v_check
+		FROM
+		dual;
+
+		IF v_check = 0 THEN
+		FOR i IN 1..2 LOOP
+		INSERT INTO room (
+		room_no,
+		member_id,
+		moim_id,
+		CHECK_IN
+		) VALUES (
+		v_room_id,
+		v_my_id,
+		0,
+		0
+		);
+		v_my_id :=
+		v_target_id;
+		END LOOP;
+		END IF;
+		END
 	</insert>
 </mapper>

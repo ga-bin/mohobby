@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+ 
     <v-app>
       <v-container class="fill-height pa-0 ">
         <v-row class="no-gutters elevation-4">
@@ -87,8 +88,14 @@ export default {
   created() {
     this.connect()
     this.getRoom()
+    this.sortRoom()
   },
   methods: {
+    //채팅내역 정렬
+    sortRoom()
+    {
+      console.log(this.getRoom());
+    },
     //날짜변환
     todate() {
       var today = new Date();
@@ -116,7 +123,7 @@ export default {
           memberId: this.memberId,
           msgTime: this.createAt
         }
-        this.axios.post('http://localhost:8088/java/InsertMessage/',  {msg1 
+        this.axios.post('/InsertMessage/',  {msg1 
         })
           .then(function (res) {
             console.log(res);
@@ -125,6 +132,7 @@ export default {
             console.log(error);
           })
         this.stompClient.send("/app/chat", JSON.stringify(msg), res => {
+          console.log(res)
         });
       }
       this.message = ""
@@ -137,7 +145,7 @@ export default {
       this.roomId = roomNo;
       this.messages = [];
       //채팅내역 불러오기
-      this.axios.get('http://localhost:8088/java/ChatList/' + this.roomId, {
+      this.axios.get('/ChatList/' + this.roomId, {
       })
         .then(function (res) {
           for (let i = 0; i < res.data.length; i++) {
@@ -147,7 +155,7 @@ export default {
             else {
               res.data[i].memberId = false;
             }
-            if (res.data[i].hour > 12) {
+            if (res.data[i].hour >= 12) {
               res.data[i].hour = res.data[i].hour - 12 + ":" + res.data[i].minute + " pm"
             }
             else {
@@ -169,7 +177,7 @@ export default {
         else {
           rev.memberId = false;
         }
-        if (rev.hour.substr(11, 2) > 12) {
+        if (rev.hour.substr(11, 2) >= 12) {
           rev.hour = rev.hour.substr(11, 2) - 12 + ":" + rev.hour.substr(14, 2) + " pm"
         } else {
           rev.hour = rev.hour.substr(11, 2) + ":" + rev.hour.substr(14, 2) + " am"
@@ -183,7 +191,19 @@ export default {
     //채팅방 리스트출력
     getRoom() {
       var vm = this;
-      this.axios.get('http://localhost:8088/java/ChatRoom/' + this.memberId, {
+      //1:1
+      this.axios.get('/ChatRoom/' + this.memberId, {
+      })
+        .then(function (res) {
+          for (let i = 0; i < res.data.length; i++) {
+            vm.roomList.push(res.data[i]);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        //소모임
+        this.axios.get('/ChatMoimRoom/' + this.memberId, {
       })
         .then(function (res) {
           for (let i = 0; i < res.data.length; i++) {
@@ -197,10 +217,9 @@ export default {
 
     // 소켓연결
     connect() {
-      const serverURL = "http://localhost:8088/java/sock"
+      const serverURL = " http://192.168.0.85:8088//java/sock"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
       this.stompClient.connect(
         {},
         frame => {

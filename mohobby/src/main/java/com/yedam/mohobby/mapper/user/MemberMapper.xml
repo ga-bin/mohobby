@@ -44,7 +44,7 @@
    			reg_date
    			)
 		values 
-			(#{memberId}, #{regionId}, #{password}, #{memberName}, #{nickName}, #{birth}, #{email}, #{phoneNum}, 0, sysdate)
+			(#{memberId}, #{regionId}, #{password}, #{memberName}, #{nickName}, #{gender}, #{birth}, #{email}, #{phoneNum}, 0, sysdate)
    </insert>
    
    <!-- 회원탈퇴 날짜 update -->
