@@ -83,6 +83,8 @@
             label="Search"
             append-icon="mdi-magnify"
             hide-details
+            @keyup.enter="submit"
+            v-model="search"
           ></v-text-field>
     </div>
     <!-- 소모임 키워드 -->
@@ -144,6 +146,7 @@
         ],
         moimRight : '2',
         noneuser : false,
+        search : '',
       }
     },
     methods : {
@@ -154,7 +157,11 @@
     },
     join() {
      this.$router.push({ path: 'login' })
-    }   
+    },
+    submit() {
+      console.log(this.search)
+      this.$emit('search', this.search)
+    }
   }
  }
 
