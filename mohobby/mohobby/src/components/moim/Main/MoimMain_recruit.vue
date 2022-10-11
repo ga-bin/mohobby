@@ -131,7 +131,7 @@ created()  {
 
 methods : {
   getList() {
-    this.axios.get("/recruitMember")
+    this.axios.get("/moimRecruitMember")
     .then((resp) => {
       this.items = resp.data;
     })
