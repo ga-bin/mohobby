@@ -5,7 +5,7 @@
   </template>
   <script>
 
-import MoimInvite from "../../components/moim/moimSetting/MoimInvite.vue";
+import MoimInvite from "@/components/moim/setting/MoimInvite.vue";
   
   export default {
     components: { MoimInvite },
