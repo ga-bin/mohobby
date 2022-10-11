@@ -11,6 +11,8 @@ public interface MoimService {
 	public void moimInsert(MoimVO moimVO);
 	//전체조회
 	public List<MoimVO> moimAllSelect();
+	//소모임 멤버 모집
+	public List<MoimVO> moimrecruitMember();
 	
 	//인기목록 조회
 	public List<MoimVO> moimPopularSelect();

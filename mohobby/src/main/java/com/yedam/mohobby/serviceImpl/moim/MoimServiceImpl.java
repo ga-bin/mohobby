@@ -13,6 +13,7 @@ import com.yedam.mohobby.service.moim.MoimVO;
 public class MoimServiceImpl implements MoimService{
 
 	
+
 	@Autowired
 	MoimMapper mapper;
 
@@ -28,6 +29,10 @@ public class MoimServiceImpl implements MoimService{
 		return mapper.moimAllSelect();
 	}
 
+	@Override
+	public List<MoimVO> moimrecruitMember() {
+		return mapper.moimrecruitMember();
+	}
 	//인기목록 조회
 	@Override
 	public List<MoimVO> moimPopularSelect() {

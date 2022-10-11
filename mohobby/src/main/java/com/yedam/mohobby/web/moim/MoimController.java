@@ -40,6 +40,12 @@ public class MoimController {
 		return service.moimPopularSelect();
 	}
 	
+	//소모임 멤버 모집
+	@GetMapping("/moimRecruitMember")
+	public List<MoimVO> getmoimrecruitMember() {
+		return service.moimrecruitMember();
+	}
+	
 	//소모임명 조회
 	@GetMapping("/moimNameSelect")
 	public List<MoimVO> getNameList(){
