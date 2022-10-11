@@ -187,11 +187,17 @@ const routes = [
           component : () => import ("@/views/moim/board/MoimBoardView"),
           props : true,
         },
-        { //게시판
+        { //초대하기
           path: "moiminvite",
           name: "moiminvite",
-          component : () => import ("@/views/moim/MoimInviteView"),
+          component : () => import ("@/views/moim/setting/MoimInviteView"),
           props : true,
+        },
+        {
+          path: "moimJoin",
+          name: "moimJoin",
+          component : () => import ("@/views/moim/setting/MoimJoinView"),
+          props : true
         },
         { //게시물 단건조회
           path: "moimPost",
@@ -230,17 +236,17 @@ const routes = [
         props: true,
       },
       { //투표 생성
-        path: "/makeVote",
+        path: "makeVote",
         name: "makeVote",
         component: () => import("./../views/moim/vote/MakeVoteView"),
       },
       { //투표 디테일 메인
-        path: "/voteDetail",
+        path: "voteDetail",
         name: "voteDetail",
         component: () => import("./../views/moim/vote/VoteDetailView"),
       },
       { //N빵 메인
-        path: "/moimNbbang",
+        path: "moimNbbang",
         name: "moimNbbang",
         component: () => import("./../views/moim/Nbbang/MoimNbbangView"),
         props: true,
@@ -249,20 +255,21 @@ const routes = [
         path: "makeNbbang",
         name: "makeNbbang",
         component: () => import("./../views/moim/Nbbang/MakeNbbangView"),
-        props: true,
+        props: true
+      },
       { //N빵 디테일
-        path: "/nBBangDetail",
+        path: "nBBangDetail",
         name: "nBBangDetail",
         component: () => import("./../views/moim/Nbbang/NbbangDetailView"),
         props: true,
       },
       { //소모임 관리하기
-        path: "/moimSetting",
+        path: "moimSetting",
         name: "moimSetting",
         component: () => import("./../views/moim/setting/MoimSettingView"),
       },
-      { //소모임 관리하기
-        path: "/registerSetting",
+      { //소모임 기본설정
+        path: "registerSetting",
         name: "registerSetting",
         component: () => import("./../views/moim/setting/RegisterSettingView"),
       }
