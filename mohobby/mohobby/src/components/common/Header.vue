@@ -7,7 +7,7 @@
     >
     <v-spacer />
     <v-btn text class="ml-2" to="/snsmain">sns</v-btn>
-    <v-btn text class="ml-2" to="/classmain/list">클래스</v-btn>
+    <v-btn text class="ml-2" to="/classmain">강의</v-btn>
     <v-btn text class="ml-2" to="/moimmain">소모임</v-btn>
     <v-btn text class="ml-2" to="/challengemain">챌린지</v-btn>
     <v-spacer />
@@ -23,14 +23,13 @@
       </v-form>
     </v-col>
     <v-spacer />
-    <v-menu offset-y>
+
+    <v-menu offset-y v-if="this.$store.state.id">
       <template v-slot:activator="{ on, attrs }">
-        <span
-          v-bind="attrs"
-          v-on="on"
-          style="cursor: pointer"
-          class="mx-5 mr-10"
-        >
+        <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer">
+          <v-badge offset-x="10" offset-y="10" color="red" content="5">
+            <v-icon>mdi-bell</v-icon>
+          </v-badge>
         </span>
       </template>
       <v-list three-line width="400">
@@ -62,16 +61,26 @@
         </template>
       </v-list>
     </v-menu>
-
     <v-btn icon>
-      <v-icon>mdi-message</v-icon>
+      <v-icon v-if="!this.$store.state.id" @click="$router.push('/login')"
+        >mdi-arrow-left-box</v-icon
+      >
     </v-btn>
-    <v-badge offset-x="10" offset-y="10" color="red" content="5">
-      <v-icon>mdi-bell</v-icon>
-    </v-badge>
 
-    <v-btn icon>
-      <v-icon>mdi-account</v-icon>
+    <v-icon v-if="!this.$store.state.id" @click="$router.push('/register')"
+      >mdi-account-multiple-plus</v-icon
+    >
+
+    <v-btn v-if="this.$store.state.id" icon>
+      <v-icon>mdi-chat-processing-outline</v-icon>
+    </v-btn>
+
+    <v-btn v-if="this.$store.state.id" icon>
+      <v-icon @click="$router.push('/mypagemain')">mdi-account</v-icon>
+    </v-btn>
+
+    <v-btn v-if="this.$store.state.id" @click="logout()" icon>
+      <v-icon>mdi-arrow-right-box</v-icon>
     </v-btn>
   </v-app-bar>
 </template>
@@ -124,3 +133,8 @@ export default {
   methods: {},
 };
 </script>
+<style scoped>
+#bellspan {
+  width: 3px;
+}
+</style>

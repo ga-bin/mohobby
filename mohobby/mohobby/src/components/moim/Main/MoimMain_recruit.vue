@@ -11,19 +11,19 @@
     <v-list-item three-line>
       <v-list-item-content>
         <div class="text-overline mb-4">
-          {{item.title}}
+          {{item.moimName}}
         </div>
         <v-list-item-subtitle>{{item.content}}</v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-avatar
         tile
         size="80">
-        <img :src="item.photo" />
+        <img :src="item.moimImg" />
       </v-list-item-avatar>
     </v-list-item>
     <v-card-actions>
       <span class="people">
-          {{item.people}}명 참여중
+          {{item.regCnt}}명 참여중
     </span>
     <v-spacer></v-spacer>
       <v-chip 
@@ -31,14 +31,14 @@
         rounded
         text
       >
-      {{item.region}}
+      {{item.moimRegion}}
       </v-chip>
       <v-chip
         outlined
         rounded
         text
       >
-      {{item.hobby}}
+      {{item.moimCatg}}
       </v-chip>
     </v-card-actions>
   </v-card>  
@@ -117,81 +117,38 @@
 </template>
 
 <script>
-
 export default {
   data() {
   return {
-      items: [{
-      boardId : 1,
-      title : '월요산방',
-      content : '월요산방 content',
-      region : '자양동',
-      people : '513',
-      photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
-      hobby : '운동/건강'
-  },
-  {   
-      boardId : 2,
-      title : '화요산방',
-      content : '화요산방 content',
-      region : '자양동',
-      people : '513',
-      photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
-      hobby : '운동/건강'
-  },
-  {   
-      boardId : 3,
-      title : '수요산방',
-      content : '수요산방 content',
-      region : '자양동',
-      people : '513',
-      photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
-      hobby : '운동/건강'
-  },
-  {   
-      boardId : 4,
-      title : '목요산방',
-      content : '목요산방 content',
-      region : '자양동',
-      people : '513',
-      photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
-      hobby : '운동/건강'
-  },
-  {   
-      boardId : 5,
-      title : '금요산방',
-      content : '금요산방 content',
-      region : '자양동',
-      people : '513',
-      photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
-      hobby : '운동/건강'
-  },
-  {   
-      boardId : 6,
-      title : '토요산방',
-      content : '토요산방 content',
-      region : '자양동',
-      people : '513',
-      photo : "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
-      hobby : '운동/건강'
-  },
-  ],
+  items: [],
   moimRight : '0',
   noneuser : false,
   };
 },
+created()  {
+  this.getList()
+},
 
 methods : {
+  getList() {
+    this.axios.get("/recruitMember")
+    .then((resp) => {
+      this.items = resp.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+  },
   select : function() {
     if (this.moimRight !== '0') {
       this.$router.push({ path: 'moimRegisterIn' })
       }
     },
-    join() {
+    join() { 
      this.$router.push({ path: 'login' })
     },
     box(idx) {
-      this.$router.push({ name : 'moimBoard' , params : { boardId : this.items[idx].boardId }})
+      this.$router.push({ name : 'moimBoard' , params : { boardId : this.items[idx].moimId }})
     }
 }
 

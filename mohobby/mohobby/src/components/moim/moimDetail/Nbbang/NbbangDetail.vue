@@ -14,12 +14,12 @@
       </div>
 
       <!-- 수정, 삭제 버튼-->
-      <v-card-actions v-if="writer === 1" class="mr-15">
+      <v-card-actions v-if="writer === 1" class="mr-15 mb-8">
         <v-spacer></v-spacer>
         <v-btn text>수정</v-btn>
         <v-btn text>삭제</v-btn>
       </v-card-actions>
-      <v-card-actions v-if="writer === 0" class="mr-15">
+      <v-card-actions v-if="writer === 0" class="mr-15 mb-8">
         <v-spacer></v-spacer>
         <v-btn disabled>수정</v-btn>
         <v-btn disabled>삭제</v-btn>
@@ -57,6 +57,48 @@
               </div>
             </v-list>
           </v-card>
+          <v-row justify="center">
+        <v-dialog
+          v-model="dialog"
+          persistent
+          max-width="500"
+        >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+          class="mb-7"
+          color="light-green"
+          dark
+          v-bind="attrs"
+          v-on="on">
+          저장
+        </v-btn>
+      </template>
+      <v-card>
+      <v-card-title>
+          N빵을 완료하면 변경할 수 없습니다.
+          <br> 
+          계속하시겠습니까? 
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="light-green"
+            text
+            @click="dialog = false"
+          >
+            취소
+          </v-btn>
+          <v-btn
+            color="light-green"
+            text
+            @click="dialog = false"
+          >
+            저장
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
         </v-col>
       </v-row>
     </v-card>
@@ -68,7 +110,8 @@
 export default {
   data() {
     return {
-      writer : 1,
+      dialog: false,
+      writer : 0,
       user: "IU",
       date: "2022-10-06 오전 10:22",
       money: '9,000',
