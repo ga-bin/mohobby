@@ -3,6 +3,7 @@ package com.yedam.mohobby.serviceImpl.sns;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
 import com.yedam.mohobby.service.sns.SnsBookmarkCatgVO;
 import com.yedam.mohobby.service.sns.SnsBookmarkVO;
+import com.yedam.mohobby.service.sns.SnsFeedVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
@@ -86,7 +88,7 @@ public class SnsServiceImpl implements SnsService{
     }
 	//피드상세조회
 	@Override
-	public SnsPostVO getFeedDetail(int postId){
+	public SnsFeedVO getFeedDetail(int postId){
 	     return mapper.getFeedDetail(postId);
 	}
 	
@@ -142,6 +144,11 @@ public class SnsServiceImpl implements SnsService{
 	public List<SnsPostVO> searchHashtag(String hashtag) {
 		return mapper.searchHashtag(hashtag);
 	}
+	//인기해시태그
+    @Override
+    public List<HashtagVO> selectHashtagForMain() {
+        return mapper.selectHashtagForMain();
+    }
 	
     /*
      * 좋아요
@@ -153,13 +160,13 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//좋아요취소
 	@Override
-	public int deleteLike(int postId, String memberId) {
-		return mapper.deleteLike(postId, memberId);
+	public int deleteLike(int targetId, String memberId) {
+		return mapper.deleteLike(targetId, memberId);
 	}
 	//좋아요누적
 	@Override
-	public int sumLikes(SnsPostVO snsPostVO) {
-		return mapper.sumLikes(snsPostVO);
+	public int sumLikes(int targetId, int postId) {
+		return mapper.sumLikes(targetId, postId);
 	}
 	
     /*
@@ -247,4 +254,5 @@ public class SnsServiceImpl implements SnsService{
     public List<SnsBookmarkVO> getAllBookmarks(){
     	return mapper.getAllBookmarks();
     }
+
 }

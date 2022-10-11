@@ -66,6 +66,7 @@ const routes = [
     path: "/snsFeedDetail",
     name: "snsFeedDetail",
     component: () => import("./../views/sns/SnsFeedDetailView"),
+    props:true,
   },
   {
     // path: "/SnsFeedInsert/:memberId",
@@ -250,6 +251,7 @@ const routes = [
         name: "makeNbbang",
         component: () => import("./../views/moim/Nbbang/MakeNbbangView"),
         props: true,
+      },
       { //N빵 디테일
         path: "/nBBangDetail",
         name: "nBBangDetail",
