@@ -44,8 +44,15 @@ public class MoimServiceImpl implements MoimService{
 	@Override
 	public List<MoimVO> moimCatgSelect() {
 		return mapper.moimCatgSelect();
+	}
+
+	//소모임 종합 검색
+	@Override
+	public List<MoimVO> moimAllSearch() {
+		return mapper.moimAllSearch();
 	}	
 
+	
 	
 }
 
