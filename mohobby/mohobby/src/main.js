@@ -18,7 +18,7 @@ axios.defaults.baseURL = "http://localhost:8088/java";
 window.Kakao.init("157b38874395f658a48c02cc8473066b"); // 카카오 로그인 앱 키
 
 Vue.filter('toFixed', (val, num) => {
-  return parseFloat(val),toFixed(num);
+  return parseFloat(val).toFixed(num);
 });
 Vue.filter('comma', (val) => {
   return String(Math.round(val)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
