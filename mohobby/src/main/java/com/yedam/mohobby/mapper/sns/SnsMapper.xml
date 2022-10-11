@@ -121,7 +121,7 @@
    
    <!-- 프로필 조회
 		유저아이디, 유저별명, 전체 게시글 수, 팔로워수, 팔로잉수 --> 
-	<select id="getProfile" parameterType="String" resultType="hashmap">
+	<select id="getProfile" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsProfileVO">
       SELECT m.member_id, m.nickname, m.profile_img, POST_CNT, FOLLOWER_CNT, FOLLOWING_CNT
       FROM member m,
            (  SELECT member_id, COUNT(post_id) POST_CNT

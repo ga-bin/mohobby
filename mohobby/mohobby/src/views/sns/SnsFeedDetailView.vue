@@ -1,4 +1,13 @@
 <template>
+  <div>
+    <div class="container">
+
+      <div class="profile">
+
+        <div class="profile-image">
+
+          <img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces" alt="">
+
   <div id="container">
     <SnsSidebar></SnsSidebar>
     <h1>피드디테일</h1>
@@ -71,32 +80,57 @@
           </div>
           </div>
         </div>
-      </v-card>
-      <v-col col="12">
-        <Comment></Comment>
-      </v-col>
-    </v-container>
+
+        <div class="profile-user-settings">
+
+          <h1 class="profile-user-name">janedoe_</h1>
+
+          <button class="btn profile-edit-btn">Edit Profile</button>
+
+          <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
+
+        </div>
+
+        <div class="profile-stats">
+
+          <ul>
+            <li><span class="profile-stat-count">164</span> posts</li>
+            <li><span class="profile-stat-count">188</span> followers</li>
+            <li><span class="profile-stat-count">206</span> following</li>
+          </ul>
+
+        </div>
+
+        <div class="profile-bio">
+
+          <p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️</p>
+
+        </div>
+
+      </div>
+      <!-- End of profile section -->
+
+    </div>
+    <!-- End of container -->
+    <!-- 피드 컴포넌트 -->
+    <div>
+      <Feeds></Feeds>
+    </div>
   </div>
 </template>
 <script>
-import SnsSidebar from "../../components/sns/Common/SnsSidebar.vue";
-import Comment from "../../components/sns/FeedDetail/Comment.vue";
+import Feeds from "@/components/sns/FeedDetail/Feeds.vue"
+import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
 export default {
-  name: "snsFeedDetail",
-  components: { SnsSidebar, Comment },
+  name: "UserProfile",
+  components: { SnsSidebar, Feeds },
   data: () => ({
-    profileImg: "대충프로필",
-    regDate: "2022.01.01",
-    likeStatus: 0, //좋아요 없음
-    width: 800,
-    roomId: 0,
-    items: [],
-    hashtags: [],
-    feeds : [],
-    show : true,
+    infoes:[],
+    memberId:'user1',//더미아이디
   }),
   setup() { },
   created() {
+        this.loadUserProfile();
     console.log(this.$route.query.id);
     console.log(this.$store.state.id);
     this.showDetail();
@@ -192,138 +226,400 @@ export default {
         })
       //this.$router.push({name:"chat",params:{roomId:this.roomId}})
     },
-    likeBtn() {
-      let memberId = this.$store.state.id;
-      let postId = this.$route.query.id;
-      //좋아요
-      // let target = event.target.getElementById;
-      if (!memberId) {
-        alert('로그인이 필요합니다!');
-      } else {
-        if (this.likeStatus == 0) {
-          this.showFullHeart();
-          console.log(this.showFullHeart);
-          this.likeStatus = 1; // DB로 업데이트
-
-          this.axios
-            .post("/sns/like", {
-              memberId: memberId,
-              targetId: postId,
-            })
-            .then(function (response) {
-              console.log("좋아요: " + response);
-            })
-            .catch(function (error) {
-              console.log("좋아요실패: " + error);
-            });
-          this.axios
-            .put("/sns/like", {
-              params: {
-                targetId: postId,
-                postId: postId,
-              }
-            })
-            .then(function (response) {
-              console.log("좋아요수 업댓성공: " + response);
-            })
-            .catch(function (error) {
-              console.log("좋아요수 업댓실패: " + error);
-            });
-        } else { //좋아요 취소
-          this.showEmptyHeart();
-          console.log(this.showEmptyHeart);
-          this.likeStatus = 0;
-
-          this.axios
-            .delete("/sns/like", {
-              params: {
-                memberId: memberId,
-                targetId: postId,
-              }
-            })
-            .then(function (response) {
-              console.log("좋아요삭제: " + response);
-            })
-            .catch(function (error) {
-              console.log("좋아요삭제 실패: " + error);
-            });
-          this.axios
-            .put("/sns/like", {
-              params: {
-                targetId: postId,
-                postId: postId,
-              }
-            })
-            .then(function (response) {
-              console.log("좋아요수 업댓성공: " + response);
-            })
-            .catch(function (error) {
-              console.log("좋아요수 업댓실패: " + error);
-            });
+    methods: {
+      loadUserProfile() {
+          this.axios('/sns/user/profile/' + this.memberId)
+          .then(res => {
+            this.infoes = res.data;
+            console.log(infoes);
+          }).catch(err => {
+            console.log(err);
+          });  
         }
-      }
     },
-    showEmptyHeart() {
-      document.getElementById("empty_heart").style.display = "inline-block";
-      document.getElementById("full_heart").style.display = "none";
-    },
-    showFullHeart() {
-      document.getElementById("empty_heart").style.display = "none";
-      document.getElementById("full_heart").style.display = "inline-block";
-    },
-
-    //carousel
-    logic(e) {
-      let currentMove = this.touch ? e.touches[0].clientX : e.clientX;
-      if (this.move.length == 0) {
-        this.move.push(currentMove);
-      }
-      if (this.move[this.move.length - 1] - currentMove < -100) {
-        this.$refs.myCarousel.$el
-          .querySelector(".v-window__prev")
-          .querySelector(".v-btn")
-          .click();
-        this.drag = false;
-        this.touch = false;
-      }
-      if (this.move[this.move.length - 1] - currentMove > 100) {
-        this.$refs.myCarousel.$el
-          .querySelector(".v-window__next")
-          .querySelector(".v-btn")
-          .click();
-        this.drag = false;
-        this.touch = false;
-      }
-    },
-  },
+  mounted() {},
+  unmounted() { },
 };
 </script>
-
 <style scoped>
-#container {
-  margin: 0 auto;
-  width: 550px;
+/*
+
+All grid code is placed in a 'supports' rule (feature query) at the bottom of the CSS (Line 310). 
+        
+The 'supports' rule will only run if your browser supports CSS grid.
+
+Flexbox and floats are used as a fallback so that browsers which don't support grid will still recieve a similar layout.
+
+*/
+
+/* Base Styles */
+
+:root {
+    font-size: 10px;
 }
 
-#mdi-dots-vertical {
-  float: right;
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-#image_box {
-  width: 550px;
-  height: 500px;
+body {
+    font-family: "Open Sans", Arial, sans-serif;
+    min-height: 100vh;
+    background-color: #fafafa;
+    color: #262626;
+    padding-bottom: 3rem;
 }
 
-.box {
-  display: inline-block
+img {
+    display: block;
 }
 
-#like_box {
-  width: 550;
-  margin: 0 auto;
+.container {
+    max-width: 93.5rem;
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
-#full_heart {
-  display: none;
+.btn {
+    display: inline-block;
+    font: inherit;
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 0;
+    cursor: pointer;
 }
+
+.btn:focus {
+    outline: 0.5rem auto #4d90fe;
+}
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+/* Profile Section */
+
+.profile {
+    padding: 5rem 0;
+}
+
+.profile::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.profile-image {
+    float: left;
+    width: calc(33.333% - 1rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 3rem;
+}
+
+.profile-image img {
+    border-radius: 50%;
+}
+
+.profile-user-settings,
+.profile-stats,
+.profile-bio {
+    float: left;
+    width: calc(66.666% - 2rem);
+}
+
+.profile-user-settings {
+    margin-top: 1.1rem;
+}
+
+.profile-user-name {
+    display: inline-block;
+    font-size: 3.2rem;
+    font-weight: 300;
+}
+
+.profile-edit-btn {
+    font-size: 1.4rem;
+    line-height: 1.8;
+    border: 0.1rem solid #dbdbdb;
+    border-radius: 0.3rem;
+    padding: 0 2.4rem;
+    margin-left: 2rem;
+}
+
+.profile-settings-btn {
+    font-size: 2rem;
+    margin-left: 1rem;
+}
+
+.profile-stats {
+    margin-top: 2.3rem;
+}
+
+.profile-stats li {
+    display: inline-block;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-right: 4rem;
+    cursor: pointer;
+}
+
+.profile-stats li:last-of-type {
+    margin-right: 0;
+}
+
+.profile-bio {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-top: 2.3rem;
+}
+
+.profile-real-name,
+.profile-stat-count,
+.profile-edit-btn {
+    font-weight: 600;
+}
+
+/* Gallery Section */
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -1rem -1rem;
+    padding-bottom: 3rem;
+}
+
+.gallery-item {
+    position: relative;
+    flex: 1 0 22rem;
+    margin: 1rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+.gallery-item:hover .gallery-item-info,
+.gallery-item:focus .gallery-item-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.gallery-item-info {
+    display: none;
+}
+
+.gallery-item-info li {
+    display: inline-block;
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+.gallery-item-likes {
+    margin-right: 2.2rem;
+}
+
+.gallery-item-type {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2.5rem;
+    text-shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.1);
+}
+
+.fa-clone,
+.fa-comment {
+    transform: rotateY(180deg);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Loader */
+
+.loader {
+    width: 5rem;
+    height: 5rem;
+    border: 0.6rem solid #999;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    margin: 0 auto;
+    animation: loader 500ms linear infinite;
+}
+
+/* Media Query */
+
+@media screen and (max-width: 40rem) {
+    .profile {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 4rem 0;
+    }
+
+    .profile::after {
+        display: none;
+    }
+
+    .profile-image,
+    .profile-user-settings,
+    .profile-bio,
+    .profile-stats {
+        float: none;
+        width: auto;
+    }
+
+    .profile-image img {
+        width: 7.7rem;
+    }
+
+    .profile-user-settings {
+        flex-basis: calc(100% - 10.7rem);
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .profile-user-name {
+        font-size: 2.2rem;
+    }
+
+    .profile-edit-btn {
+        order: 1;
+        padding: 0;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .profile-edit-btn {
+        margin-left: 0;
+    }
+
+    .profile-bio {
+        font-size: 1.4rem;
+        margin-top: 1.5rem;
+    }
+
+    .profile-edit-btn,
+    .profile-bio,
+    .profile-stats {
+        flex-basis: 100%;
+    }
+
+    .profile-stats {
+        order: 1;
+        margin-top: 1.5rem;
+    }
+
+    .profile-stats ul {
+        display: flex;
+        text-align: center;
+        padding: 1.2rem 0;
+        border-top: 0.1rem solid #dadada;
+        border-bottom: 0.1rem solid #dadada;
+    }
+
+    .profile-stats li {
+        font-size: 1.4rem;
+        flex: 1;
+        margin: 0;
+    }
+
+    .profile-stat-count {
+        display: block;
+    }
+}
+
+/* Spinner Animation */
+
+@keyframes loader {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/*
+
+The following code will only run if your browser supports CSS grid.
+
+Remove or comment-out the code block below to see how the browser will fall-back to flexbox & floated styling. 
+
+*/
+
+@supports (display: grid) {
+    .profile {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-template-rows: repeat(3, auto);
+        grid-column-gap: 3rem;
+        align-items: center;
+    }
+
+    .profile-image {
+        grid-row: 1 / -1;
+    }
+
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+        grid-gap: 2rem;
+    }
+
+    .profile-image,
+    .profile-user-settings,
+    .profile-stats,
+    .profile-bio,
+    .gallery-item,
+    .gallery {
+        width: auto;
+        margin: 0;
+    }
+
+    @media (max-width: 40rem) {
+        .profile {
+            grid-template-columns: auto 1fr;
+            grid-row-gap: 1.5rem;
+        }
+
+        .profile-image {
+            grid-row: 1 / 2;
+        }
+
+        .profile-user-settings {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 1rem;
+        }
+
+        .profile-edit-btn,
+        .profile-stats,
+        .profile-bio {
+            grid-column: 1 / -1;
+        }
+
+        .profile-user-settings,
+        .profile-edit-btn,
+        .profile-settings-btn,
+        .profile-bio,
+        .profile-stats {
+            margin: 0;
+        }
+    }
+}
+
 </style>

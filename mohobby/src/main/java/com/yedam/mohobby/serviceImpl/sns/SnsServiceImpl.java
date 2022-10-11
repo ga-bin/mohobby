@@ -1,9 +1,7 @@
 package com.yedam.mohobby.serviceImpl.sns;
 
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +15,7 @@ import com.yedam.mohobby.service.sns.SnsFeedVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
+import com.yedam.mohobby.service.sns.SnsProfileVO;
 import com.yedam.mohobby.service.sns.SnsService;
 import com.yedam.mohobby.service.user.MemberVO;
 /**
@@ -83,7 +82,7 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//프로필조회
     @Override
-    public HashMap<String, Object> getProfile(String memberId) {
+    public SnsProfileVO getProfile(String memberId) {
         return mapper.getProfile(memberId);
     }
 	//피드상세조회

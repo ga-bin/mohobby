@@ -1,6 +1,5 @@
 package com.yedam.mohobby.mapper.sns;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -14,6 +13,7 @@ import com.yedam.mohobby.service.sns.SnsFeedVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
+import com.yedam.mohobby.service.sns.SnsProfileVO;
 import com.yedam.mohobby.service.user.MemberVO;
 /**
  * @create 22/10/08
@@ -46,7 +46,7 @@ public interface SnsMapper {
     //유저피드조회
     public List<SnsPostVO> getUserFeed(String memberId);
     //프로필조회
-    public HashMap<String, Object> getProfile(String memberId);
+    public SnsProfileVO getProfile(String memberId);
     //인기해시태그
     public List<HashtagVO> selectHashtagForMain();
     
