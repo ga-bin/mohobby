@@ -30,6 +30,9 @@ INSERT INTO moim (
 <select id="moimAllSelect" resultType="com.yedam.mohobby.service.moim.MoimVO">
 	select * from moim ORDER BY moim_id DESC
 </select>
+<select id="moimrecruitMember" resultType="com.yedam.mohobby.service.moim.MoimVO">
+	select * from moim <![CDATA[where rownum <= 6]]>
+</select>
 
 <!-- 인기 목록 조회 -->
 <select id="moimPopularSelect" resultType="com.yedam.mohobby.service.moim.MoimVO">
