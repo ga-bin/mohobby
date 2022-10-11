@@ -44,9 +44,7 @@ export default {
         this.axios('/sns/main/allFeeds').then(res => {
             console.log(res);
             this.feeds = res.data;
-            
-            console.log(this.feeds);
-            console.log(this.feeds.data[0].cmts);
+            console.log("noneUser 로드 성공")
           }).catch(err =>{
             console.log(err);
           });

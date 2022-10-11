@@ -288,7 +288,7 @@
             AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL)
     <where>
 		<if test='hashtag != null and hashtag != ""'>
-			WHERE hashtag = #{ hashtag }
+			hashtag = #{ hashtag }
 		</if>
 	</where>
    </select>

@@ -1,3 +1,4 @@
+
 <!-- 글쓰기폼 -->
 <template>
   <v-card
@@ -49,7 +50,6 @@
       </div>
     </v-container>
     <v-container fluid>
-    </v-container>
     </v-container>
     <!-- </v-container> -->
     <!-- content -->

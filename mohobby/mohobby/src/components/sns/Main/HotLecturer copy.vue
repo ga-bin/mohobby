@@ -5,7 +5,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-row text-center>
-            <v-col v-for="item in items" :key="item.postId" cols="2">
+            <v-col v-for="(item,i) in items" :key="i" cols="2">
               <div @click="getFeedDetail(item.postId)" style="width:200px;">
                 <v-hover v-slot="{ hover }">
                   <v-card
@@ -74,15 +74,11 @@
     </div>
 </template>
 <script>
-
   export default {
-    name: "HotLecturer",
-    props:{
-      items : []
-    },
+    name: "HotLecturerList",
     data() {
       return {
-        // items: [],
+        items: [],
       };
     },
     setup() {
@@ -108,7 +104,9 @@
         this.axios('/sns/main/top20LecturerFeeds').then(res => {
             console.log(res);
             this.items = res.data;
-            console.log("getHotLecturerList받아오기 성공")
+            
+            console.log(this.items);
+            console.log(this.items.data[0].cmts);
           }).catch(err =>{
             console.log(err);
           });
