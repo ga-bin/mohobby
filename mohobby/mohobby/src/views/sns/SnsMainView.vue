@@ -1,49 +1,221 @@
 <template>
-  <div id = "container">
-    <SnsSearchbar></SnsSearchbar>
-    <div>
-      <v-btn @click="goUserFeed()">유저피드테스트</v-btn>
-    </div>
-    <!-- 인기 피드리스트 -->
-    <h3>추천 만능 재주꾼들 피드</h3>
-    <HotLecturerSpace />
-    <h3>재주 견습생들 피드</h3>
-    <!-- 랜덤피드 무한스크롤링 -->
-      <!-- <ul v-if="noneUser===9">    -->
-    <NoneUser />
-    <!-- </ul> -->
+    <div id = "container">
+        <div id="searchbar">
+            <div class="regFeed">
+                <!-- 로그인폼: 비회원일때-->
+                <v-card-actions  v-if="!this.member" >
+                    <v-spacer></v-spacer>
+                    <div class="text-center">
+                        <v-dialog
+                                v-model="noneuser"
+                                width="500"
+                        >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn text>
+                                <v-chip
+                                color="success"
+                                outlined
+                                v-bind="attrs"
+                                v-on="on"
+                                >
+                                <v-icon left>mdi-plus</v-icon>글쓰기
+                                </v-chip>
+                            </v-btn>
+                        </template>
+                            <v-card>
+                                <br><br>
+                                <v-card-text class="font-weight-bold center">
+                                    로그인이 필요합니다 !
+                                </v-card-text>
+                                <v-divider></v-divider>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                    color="success"
+                                    depressed
+                                    @click="login()"
+                                    >로그인하러 가기</v-btn>
+                                    <v-btn
+                                    depressed
+                                    @click="noneuser=false"
+                                    >닫기</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </div>
+                </v-card-actions>
+
+                <!-- 글쓰기폼: 회원일때 -->
+                <v-card-actions v-else>
+                    <v-spacer></v-spacer>
+                    <v-btn text>
+                        <v-chip
+                        color="success"
+                        outlined
+                        @click="select"
+                        >
+                        <v-icon left>mdi-plus</v-icon>
+                        글쓰기
+                        </v-chip>
+                    </v-btn>
+                </v-card-actions>
+            </div>
+
+        <!-- 검색창 -->
+        <div>
+          <!-- 키워드 검색(해시태그) -->
+          <v-card-actions>
+              <v-spacer></v-spacer>
+              <div id="chip">
+                  <v-row justify="space-around">
+                      <v-col cols="12">
+                          <v-sheet ref="getHashtag" >
+                              <v-chip-group active-class="primary--text">
+                                  <v-chip v-for="(item,i) in items" 
+                                          :key="i"
+                                          @click="searchHashtag(item.hashtag)"
+                                           color="#2ac187"
+                                           class="mx-auto white--text font-weight-bold">
+                                      {{ item.hashtag }}
+                                  </v-chip>
+                              </v-chip-group>
+                          </v-sheet>
+                      </v-col>
+                  </v-row>
+              </div>
+          </v-card-actions>
+      </div>
   </div>
-</template>
-<script>
-  import SnsSearchbar from "../../components/sns/Common/Searchbar"
-  import HotLecturerSpace from "../../components/sns/Main/HotLecturerList";
-  import NoneUser from "../../components/sns/Main/Noneuser";
 
-  export default {
-    name: "snsMain",
-    components: { SnsSearchbar, HotLecturerSpace, NoneUser, SnsSearchbar },
-    data() {
-      return{
-        card_list : [],
-        noneUser : 9 //memberId=="" && !memberId
-      }
-    },
-    methods: {
-      goUserFeed() {
-        this.$router.push({ name: "SnsUserFeed" });
+    <!-- 검색컴포넌트 -->
+    <div id="searchResult">
+        <SearchPage :feeds="feeds" />
+            <div id = "noSearchResult">
+            <h1> 검색 결과가 없습니다 !</h1>
+            </div>
+        </div>
+
+        <!-- 메인 컴포넌트 -->
+        <div id="hotLecturers">
+        <!-- 인기 피드리스트 -->
+            <h3>추천 만능 재주꾼들 피드</h3>
+            <HotLecturer name="this.items" />
+        </div>
+
+        <div id="nonuserFeeds">
+            <h3>재주 견습생들 피드</h3>
+            <!-- 랜덤피드 무한스크롤링 -->
+            <NoneUser />
+        </div>   
+    </div>
+  </template>
+  <script>
+    import SearchPage from "@/views/sns/SnsSearchPage.vue";
+    import SnsSearchbar from "@/components/sns/Common/Searchbar"
+    import HotLecturer from "@/components/sns/Main/HotLecturer";
+    import NoneUser from "@/components/sns/Main/Noneuser";
+  
+    export default {
+      name: "snsMain",
+      components: { SnsSearchbar, HotLecturer, NoneUser, SnsSearchbar, SearchPage },
+     
+      data() {
+          return {
+              feeds: [],
+              word: "",
+              noneuser : false,
+              items: [],
+              member : this.$store.state.id,
+          }
       },
-    },
+      watch: {},
+      created() {
+          this.getHotHashtags();//함수실행
+          this.feeds=this.$route.params.sfeeds; //피드디테일에서 받아옴
+          console.log(this.$route.params.sfeeds);
+          console.log(this.$route.params.show);
+          console.log(this.$store.state.id);
+      },
+      methods: {
+          //상단바에 표시되는 top6해시태그
+          getHotHashtags() {
+              this.axios('/sns/main/hashtag').then(res => {
+              this.items = res.data;
+            }).catch(err =>{
+              console.log(err);
+            });
+          },
 
-};
-</script>
+          //해시태그 검색
+          searchHashtag(getHashtag){
+              console.log("받아온 해시태그");
+              console.log(getHashtag);
+              this.axios('/sns/search/hashtag', {
+                  params : {
+                      hashtag : getHashtag
+                  }
+              }).then(res => {
+                  console.log(res);
+                  this.feeds = res.data;
+                  console.log("피드받아옴"+this.feeds);
+                  if (this.feeds.length === 0){
+                      document.getElementById('searchResult').style.display = "block";
+                      document.getElementById('noSearchResult').style.display = "block";
+                      document.getElementById('hotLecturers').style.display = "none";
+                      document.getElementById('hotLecturers').style.display = "none";
+                  } else {
+                      document.getElementById('searchResult').style.display = "block"; 
+                      document.getElementById('hotLecturers').style.display = "none";
+                      document.getElementById('nonuserFeeds').style.display = "none";
+                  }
+                  
+              }).catch(err =>{
+                  console.log(err);
+              });
+          },
+          
+          //글 등록 이동
+          select : function() {
+              if (this.member) {
+              this.$router.push({ path: 'snsFeedRegister' })
+              }
+          },
+          //로그인폼으로 이동
+          login() {
+              this.$router.push({ path: 'login' })
+          },
 
-<style scoped>
-  * {
-    list-style:none;
-  }
-  #container {
-    width : 80%;
-    list-style:none;
-    margin: 0 auto;
-  }
-</style>
+        }
+    };
+  </script>
+  
+  <style scoped>
+      * {
+        list-style:none;
+      }
+      
+      #container {
+        width : 80%;
+        list-style:none;
+        margin: 0 auto;
+      }
+  
+      #searchbar{
+          width:80%;
+          margin: 0 auto;
+      }
+  
+      label {
+          margin-right: 3px;
+      }
+  
+      #searchResult{
+          display : none;
+      }
+  
+      #noSearchResult{
+          display : none;
+      }
+  
+  
+  </style>

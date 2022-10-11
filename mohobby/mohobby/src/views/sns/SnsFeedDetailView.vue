@@ -11,7 +11,7 @@
             <div>
               <div class="flex">
                 <v-avatar class="ml-10 my-10 mr-4" color="grey darken-1" size="64">
-                  <v-img aspect-ratio="30" :src="require(`@/assets/image/sns/${items.profileImg}`)" />
+                  <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${items.profileImg}`)" />
                 </v-avatar>
                 <div class="user text-overline">{{items.memberId}}<br>{{
                 this.$moment(items.writeDate).format('YYYY.MM.DD') }}</div>
@@ -48,8 +48,8 @@
         <v-col col="12">
           <div>{{ items.content }}</div>
         </v-col>
-        <v-col col="12">
-          <div>{{ items.hashtag }}</div>
+        <v-col col="12" v-for="hashtag in hashtags" :key="hashtag">
+          <div @click="search($event)">#{{ hashtag }}</div>
         </v-col>
         <div style="display=flex;">
           <div id="like_box">
@@ -91,9 +91,14 @@ export default {
     width: 800,
     roomId: 0,
     items: [],
+    hashtags: [],
+    feeds : [],
+    show : true,
   }),
   setup() { },
   created() {
+    console.log(this.$route.query.id);
+    console.log(this.$store.state.id);
     this.showDetail();
   },
   mounted() {
@@ -133,6 +138,10 @@ export default {
         }
       }).then(res => {
         this.items = res.data;
+        let str = this.items.hashtag;
+        let hashtag = str.split(',');
+        console.log(hashtag);
+        this.hashtags = hashtag;
         console.log(this.items);
         console.log(this.items.cmts);
       }).catch(err => {
@@ -140,7 +149,36 @@ export default {
       });
     },
 
+    search(e){
+            //유저 아이디 or 닉네임 조회
+            let getHashtag = e.target.innerText;
+            let hashtag = getHashtag.slice(1);
+            console.log(hashtag);
+            this.axios('/sns/search/hashtag', {
+                params : {
+                    hashtag : hashtag
+                }
+            }).then(res => {
+                console.log(res);
+                this.feeds = res.data;
+                this.goSearchPage(this.feeds);
+                console.log("검색성공:"+this.feeds);
+
+            }).catch(err =>{
+                console.log(err);
+            });
+       
+    },
+    goSearchPage(feeds){
+      console.log("goSearchPage실행"+feeds);
+      
+
+      this.$router.push({ name: "snsmain", params: {  sfeeds: feeds } })
+
+    },
+
     send() {
+      this.$router.push({ name: "chat", params: { roomId: this.roomId } })
       let vm = this;
       this.axios.post('http://localhost:8088/java/CreateRoom/', {
         myId: vm.$store.state.id,

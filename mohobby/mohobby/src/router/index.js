@@ -62,64 +62,64 @@ const routes = [
   {
     path: "/snsmain",
     name: "snsmain",
-    component: () => import("./../views/sns/SnsMainView"),
+    component: () => import("@/views/sns/SnsMainView"),
   },
   {
     path: "/snsFeed",
     name: "snsFeed",
-    component: () => import("./../views/sns/SnsFeedView"),
+    component: () => import("@/views/sns/SnsFeedView"),
   },
   {
     path: "/snsFeedDetail",
     name: "snsFeedDetail",
-    component: () => import("./../views/sns/SnsFeedDetailView"),
-    props: true,
+    component: () => import("@/views/sns/SnsFeedDetailView"),
+    props:true,
   },
   {
     // path: "/SnsFeedInsert/:memberId",
     path: "/snsFeedRegister",
     name: "snsFeedRegister",
-    component: () => import("./../views/sns/SnsFeedRegister"),
+    component: () => import("@/views/sns/SnsFeedRegister"),
   },
   {
     path: "/SnsUserFeed",
     name: "SnsUserFeed",
-    component: () => import("./../views/sns/SnsUserFeed"),
+    component: () => import("@/views/sns/SnsUserFeed"),
   },
   {
     path: "/snsLecture",
     name: "snsLecture",
-    component: () => import("./../views/sns/SnsLectureView"),
+    component: () => import("@/views/sns/SnsLectureView"),
   },
   {
     path: "/snsMoim",
     name: "snsMoim",
-    component: () => import("./../views/sns/SnsMoimView"),
+    component: () => import("@/views/sns/SnsMoimView"),
   },
   {
     path: "/snsChall",
     name: "snsChall",
-    component: () => import("./../views/sns/SnsChallView"),
+    component: () => import("@/views/sns/SnsChallView"),
   },
   {
     path: "/snsBookmark",
     name: "snsBookmark",
-    component: () => import("./../views/sns/SnsBookmarkView"),
+    component: () => import("@/views/sns/SnsBookmarkView"),
   },
   {
     path: "/snsBookmarkDetail",
     name: "snsBookmarkDetail",
-    component: () => import("./../views/sns/SnsBookmarkDetailView"),
+    component: () => import("@/views/sns/SnsBookmarkDetailView"),
   },
   {
     path: "/snsFollower",
     name: "snsFollower",
-    component: () => import("./../views/sns/SnsFollowerView"),
+    component: () => import("@/views/sns/SnsFollowerView"),
   },
   {
     path: "/snsFollowing",
     name: "snsFollowing",
-    component: () => import("./../views/sns/SnsFollowingView"),
+    component: () => import("@/views/sns/SnsFollowingView"),
   },
   // lecture
   {
