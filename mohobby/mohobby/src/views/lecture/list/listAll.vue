@@ -1,6 +1,62 @@
 <template>
 <v-container>
     <v-row>
+    <v-stepper 
+        non-linear
+        rounded
+        flat
+        width="209"
+        
+    >
+      <v-stepper-header>
+        <v-stepper-step
+          editable
+          step="All"
+          class="stepAll"
+          color="green"
+        >
+        </v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step
+          editable
+          step="ON"
+          color="green"
+        >
+        </v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step
+          step="OFF"
+          editable
+          color="green"
+        >
+        </v-stepper-step>
+      </v-stepper-header>
+    </v-stepper>
+    <v-btn 
+        icon 
+        v-for="select in selectList"
+        :key="select.title"
+    >
+      {{ select.title }}
+    </v-btn>
+    <v-col
+        class="d-flex"
+        cols="5"
+        sm="2"
+    >
+    <v-select
+        :items="items"
+        label="Outlined style"
+        dense
+        outlined
+    ></v-select>
+    </v-col>
+    </v-row>
+    <v-row>
         <v-badge
             overlap
             left
@@ -22,7 +78,6 @@
                 
                 <v-btn
                     :color="item.heart ? 'pink' : 'gray'"
-                    fab
                     icon
                     small
                     absolute
@@ -52,6 +107,12 @@ export default {
     data() {
         return {
             heart: true,
+            selectList: [
+                {
+                    title: 'All',
+                    click: true,
+                },
+            ],
             itemList: [
                 {
                     title: '초보 그림러가 인기 작가가 되는 법, 콕스의 독학비법서',
@@ -120,9 +181,22 @@ export default {
             ]
         }
     },
+    mounted() {
+        console.log(document.querySelector('.stepAll'));
+        document.querySelector('.stepAll').click();
+    }
 
 }
 </script>
 
-<style>
+<style scoped>
+    .v-stepper__step__step { 
+        width: 35px; 
+        height: 35px; 
+        font-size: 0.8em;
+    }  
+    .v-stepper__step--editable:hover {
+        background-color: transparent !important;
+    }
+    
 </style>
