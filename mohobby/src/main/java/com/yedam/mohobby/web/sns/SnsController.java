@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +30,7 @@ import com.yedam.mohobby.service.sns.SnsFeedVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
+import com.yedam.mohobby.service.sns.SnsProfileVO;
 import com.yedam.mohobby.service.sns.SnsService;
 import com.yedam.mohobby.service.user.MemberVO;
 
@@ -180,8 +180,8 @@ public class SnsController {
     }
   //프로필조회
     @GetMapping("/user/profile/{memberId}")
-    public Model getProfile(@PathVariable("memberId") String memberId, Model model) {
-        	return model.addAttribute("feed", service.getProfile(memberId));//컬럼명과 컬럼값이 키와 값으로 매핑이 된다. ㄴ
+    public SnsProfileVO getProfile(@PathVariable("memberId") String memberId) {
+        	return service.getProfile(memberId);//컬럼명과 컬럼값이 키와 값으로 매핑이 된다. ㄴ
     }
    //피드상세조회 - 테스트완료
     @GetMapping("/user/feed_detail")

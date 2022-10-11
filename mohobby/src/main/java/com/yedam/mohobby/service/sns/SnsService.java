@@ -37,7 +37,7 @@ public interface SnsService {
     //유저피드목록
     public List<SnsPostVO> getUserFeed(String memberId);
     //피드프로필
-    public HashMap<String, Object> getProfile(String memberId);
+    public SnsProfileVO getProfile(String memberId);
     //피드상세조회
     public SnsFeedVO getFeedDetail(int postId);
     
