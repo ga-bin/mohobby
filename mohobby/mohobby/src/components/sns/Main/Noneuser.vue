@@ -3,20 +3,18 @@
   <div>
     <v-container fluid>
       <v-row dense>
-        <v-col v-for="card in cards" :key="card.title" :cols="2">
-        <!-- <v-col :cols="card.flex"> -->
-          <v-card @click="getFeedDetail()">
+        <v-col v-for="feed in feeds" :key="feed.title" :cols="2">
+          <v-card @click="getFeedDetail(feed.postId)">
             <v-img 
              :aspect-ratio="4/3"
-             :src="require(`@/assets/image/sns/${card.thumbnail}`)"
+             :src="require(`@/assets/image/sns/${feed.thumbnail}`)"
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="150px"
               width="180px"
             >
-              <v-icon color="red">mdi-heart</v-icon>{{card.likes}} 
-              <v-icon color="#ededed">mdi-chat-outline</v-icon>{{card.cmts}}
-              <!-- <v-card-title v-text="card.title"></v-card-title> -->
+              <v-icon color="red">mdi-heart</v-icon>{{feed.likes}} 
+              <v-icon color="#ededed">mdi-chat-outline</v-icon>{{feed.cmts}}
             </v-img>
           </v-card>
         </v-col>
@@ -30,28 +28,45 @@ export default {
   // props : ["card"],
   data() {
       return {
-        cards: [],
+        feeds: [],
       };
     },
     created() {
       this.search();
+    }, 
+    mounted () {
+      // this.feeds;
+      window.addEventListener('scroll', this.handleScroll);
     },
     methods : {
-        search() {
-          //AllList조회
-          this.axios('/sns/main/allFeeds').then(res => {
-              console.log(res);
-              this.cards = res.data;
-              
-              console.log(this.cards);
-              console.log(this.cards.data[0].cmts);
-            }).catch(err =>{
-              console.log(err);
-            });
+      search() {
+        //AllList조회
+        this.axios('/sns/main/allFeeds').then(res => {
+            console.log(res);
+            this.feeds = res.data;
+            
+            console.log(this.feeds);
+            console.log(this.feeds.data[0].cmts);
+          }).catch(err =>{
+            console.log(err);
+          });
       },
-      getFeedDetail() {
-        this.$router.push({ name: "snsFeedDetail" });
-      }
+      //디테일피드 테스트버튼
+      getFeedDetail(postId) {
+        this.$router.push({ name: 'snsFeedDetail',
+                            query: {id : postId} 
+                          });
+      },
+      //infinite scroll
+      handleScroll() {
+      if (
+        window.scrollY + window.innerHeight >=
+        document.body.scrollHeight - 50
+        ) {
+          const new_feeds = this.feeds;
+        this.feeds = [...this.feeds, ...new_feeds];
+        }
+      },  
   }
 };
 

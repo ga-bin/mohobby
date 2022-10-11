@@ -3,6 +3,7 @@ package com.yedam.mohobby.service.sns;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
@@ -38,7 +39,7 @@ public interface SnsService {
     //피드프로필
     public HashMap<String, Object> getProfile(String memberId);
     //피드상세조회
-    public SnsPostVO getFeedDetail(int postId);
+    public SnsFeedVO getFeedDetail(int postId);
     
     /*
      * 해시태그
@@ -66,6 +67,8 @@ public interface SnsService {
     public List<MemberVO> getUsersByNick(String nickname);
     //해시태그검색
     public List<SnsPostVO> searchHashtag(String hashtag);
+    //인기해시태그
+    public List<HashtagVO> selectHashtagForMain();
 
     /*
      * 좋아요
@@ -73,9 +76,9 @@ public interface SnsService {
     //좋아요
     public int addLike(JjimVO jjimVO);
     //좋아요취소
-	public int deleteLike(int postId, String memberId);
+	public int deleteLike(int targetId, String memberId);
     //좋아요누적
-    public int sumLikes(SnsPostVO snsPostVO);
+    public int sumLikes(int targetId, int postId);
     
     /*
      * 댓글
