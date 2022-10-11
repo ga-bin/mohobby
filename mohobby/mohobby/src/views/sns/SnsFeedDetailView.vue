@@ -66,7 +66,9 @@
             {{ items.cmts }}
           </div>
           <div>
-            <v-icon @click="send">mdi-send</v-icon>
+            <div v-if="this.$store.state.id !== items.memberId">
+              <v-icon @click="send">mdi-send</v-icon>
+          </div>
           </div>
         </div>
       </v-card>
@@ -172,9 +174,23 @@ export default {
       
 
       this.$router.push({ name: "snsmain", params: {  sfeeds: feeds } })
+
     },
+
     send() {
       this.$router.push({ name: "chat", params: { roomId: this.roomId } })
+      let vm = this;
+      this.axios.post('http://localhost:8088/java/CreateRoom/', {
+        myId: vm.$store.state.id,
+        tarId: vm.items.memberId
+      })
+        .then(function (res) {
+          console.log(res);
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+      //this.$router.push({name:"chat",params:{roomId:this.roomId}})
     },
     likeBtn() {
       let memberId = this.$store.state.id;

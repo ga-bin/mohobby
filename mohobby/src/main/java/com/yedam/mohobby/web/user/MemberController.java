@@ -87,6 +87,7 @@ public class MemberController {
 	 */
 	@PostMapping("/member")
 	public void insertMember(@RequestBody MemberVO memberVO) {
+		System.out.println(memberVO.getNickName());
 		service.insertMember(memberVO);
 	}
 	

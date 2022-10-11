@@ -39,13 +39,13 @@ export default {
   data() {
     return {
       links: [
-        { icon: "mdi-microsoft-windows", text: "관리하기", route: "/" },
-        { icon: "mdi-account", text: "게시글", route: "moimBoard" },
-        { icon: "mdi-clipboard-list-outline", text: "사진첩", route: "moimPhoto" },
-        { icon: "mdi-clipboard-list", text: "공지사항", route: "moimNotice" },
-        { icon: "mdi-alert-octagon", text: "일정", route: "moimSchedule" },
-        { icon: "mdi-alert-octagon", text: "투표", route: "moimVote" },
-        { icon: "mdi-alert-octagon", text: "N빵", route: "moimNbbang" },
+        { icon: "mdi-plus-box", text: "관리하기", route: "/" },
+        { icon: "mdi-note-text", text: "게시글", route: "moimBoard" },
+        { icon: "mdi-image", text: "사진첩", route: "moimPhoto" },
+        { icon: "mdi-clipboard-check", text: "공지사항", route: "moimNotice" },
+        { icon: "mdi-calendar-text", text: "일정", route: "moimSchedule" },
+        { icon: "mdi-chart-gantt", text: "투표", route: "moimVote" },
+        { icon: "mdi-chart-pie", text: "N빵", route: "moimNbbang" },
     ]};
   },
 };

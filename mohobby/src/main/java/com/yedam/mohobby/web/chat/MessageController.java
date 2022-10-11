@@ -16,7 +16,6 @@ public class MessageController {
 	SimpMessageSendingOperations sendTemplate;
 	@MessageMapping("/chat")
 	public void send(ContentVO content) {
-		
 	sendTemplate.convertAndSend("/topic/room/"+content.getRoomNo(),content);
 	}
 	@MessageMapping("/chat1")

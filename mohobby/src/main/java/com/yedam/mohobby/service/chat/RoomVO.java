@@ -8,5 +8,6 @@ public class RoomVO {
 	private int roomNo;
 	private String profileImg;
 	private String content;
+	private String msgTime;
 	
 }
