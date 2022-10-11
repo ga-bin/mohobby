@@ -4,11 +4,15 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.yedam.mohobby.service.chat.ChatUserVO;
 import com.yedam.mohobby.service.chat.ChatVO;
+import com.yedam.mohobby.service.chat.MessageVO;
 import com.yedam.mohobby.service.chat.RoomVO;
 
 @Mapper
 public interface ChatMapper {
 public List<RoomVO>getChatRoom(String memberId);
 public List<ChatVO>getChat(String roomNo);
+public ChatUserVO getOtherUser(ChatUserVO chatUser);
+public int insertMessage(MessageVO message);
 }

@@ -82,6 +82,7 @@
             outlined
             label="Search"
             append-icon="mdi-magnify"
+            hide-details
           ></v-text-field>
     </div>
     <!-- 소모임 키워드 -->

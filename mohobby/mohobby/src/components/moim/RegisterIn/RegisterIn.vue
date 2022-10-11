@@ -40,7 +40,6 @@
       sm="5">
     <v-dialog
       v-model="check"
-      persistent
       max-width="600px"
       >
       <template v-slot:activator="{ on, attrs }">
@@ -311,7 +310,6 @@
       sm="12">
     <v-dialog
       v-model="region"
-      persistent
       max-width="600px"
     >
     <template v-slot:activator="{ on, attrs }">
