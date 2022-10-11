@@ -1,29 +1,68 @@
 <template>
     <div id="searchbar">
-        <v-container>
-            <!-- 글 등록창 이동 -->
-            <v-card-actions>
+        <div class="regFeed">
+            <!-- 글쓰기: 비회원-로그인폼 -->
+            <v-card-actions  v-if="role===0" >
                 <v-spacer></v-spacer>
-                <div id="used-main-dropbox">
-                    <v-select @change="dropVal()" v-model="select" :items="items" item-text="name" item-value="value" label="정렬"
-                        color="#212529" persistent-hint return-object single-line dense width="50">
-                    </v-select>
+                <div class="text-center">
+                    <v-dialog
+                            v-model="noneuser"
+                            width="500"
+                    >
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn text>
+                            <v-chip
+                            color="success"
+                            outlined
+                            v-bind="attrs"
+                            v-on="on"
+                            >
+                            <v-icon left>mdi-plus</v-icon>글쓰기
+                            </v-chip>
+                        </v-btn>
+                    </template>
+                        <v-card>
+                            <br><br>
+                            <v-card-text class="font-weight-bold center">
+                                로그인이 필요합니다 !
+                            </v-card-text>
+                            <v-divider></v-divider>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                color="success"
+                                depressed
+                                @click="join"
+                                >로그인하러 가기</v-btn>
+                                <v-btn
+                                depressed
+                                @click="noneuser=false"
+                                >닫기</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
                 </div>
-                <v-btn  icon 
-                        class="d-flex flex-column-reverse pa-3 secondary rounded-circle d-inline-block white--text"
-                        color="#2ac187"
-                        small
-                        @click="goRegForm()">
-                    <v-icon small>mdi-plus-thick</v-icon>
+            </v-card-actions>
+            <!-- 글쓰기: 회원-글쓰기폼 -->
+            <v-card-actions v-else>
+                <v-spacer></v-spacer>
+                <v-btn text>
+                    <v-chip
+                    color="success"
+                    outlined
+                    @click="select"
+                    >
+                    <v-icon left>mdi-plus</v-icon>
+                    글쓰기
+                    </v-chip>
                 </v-btn>
             </v-card-actions>
-            <v-row dense
-                   style="height:50px">
-                <v-col cols="6" 
-                       class="mx-auto"
-                >
-                    <!-- 검색창 -->
-                    <v-autocomplete 
+        </div>
+        <!-- 검색창 -->
+        <div>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+                <v-autocomplete 
                         v-model="ctg" 
                         :items="ctg" 
                         item-text="tag" 
@@ -37,31 +76,31 @@
                         class="rounded-xl"
                         append-icon="mdi-magnify"
                         @change="search()"
-                        >
-                        <!-- @change="changeCoatings" -->
-                    </v-autocomplete>
-                </v-col>
-            </v-row>
-
-            <!-- 해시태그 검색 -->
+                        style="height:50px"
+                />
+        </v-card-actions>
+        <!-- 해시태그 검색 -->
+        <v-card-actions>
+            <v-spacer></v-spacer>
             <div id="chip">
                 <v-row justify="space-around">
-                    <v-col cols="8">
-                        <v-sheet >
+                    <v-col cols="12">
+                        <v-sheet ref="getHashtag" @click="search($event)">
                             <v-chip-group active-class="primary--text">
-                                <v-chip v-for="hotTag in hotTags" 
-                                        :key="hotTag"
+                                <v-chip v-for="hashtag in hashtags" 
+                                        :key="hashtag"
                                          color="#2ac187"
                                          class="mx-auto white--text font-weight-bold"
                                          >
-                                    #{{ hotTag }}
+                                    {{ hashtag.hashtag }}
                                 </v-chip>
                             </v-chip-group>
                         </v-sheet>
                     </v-col>
                 </v-row>
             </div>
-        </v-container>
+        </v-card-actions>
+    </div>
     </div>
 </template>
 <script>
@@ -101,8 +140,14 @@ export default {
                 value: '인기순'
                 },
             ],
+            //검색
             data: [],
-            word: ""
+            word: "",
+            //moim
+            role : 0,
+            noneuser : false,
+            hashtags: [],
+
         }
     },
     watch: {
@@ -113,7 +158,48 @@ export default {
             this.fetchEntriesDebounced()
         },
     },
+    created() {
+        this.getHotHashtags();
+    },
     methods: {
+        //top6해시태그
+        getHotHashtags() {
+            this.axios('/sns/main/hashtag').then(res => {
+            console.log(res);
+            this.hashtags = res.data;
+            console.log(this.hashtags);
+          }).catch(err =>{
+            console.log(err);
+          });
+        },
+        //해시태그 가져오기
+        search(e){
+            //유저 아이디 or 닉네임 조회
+            let getHashtag = e.target.innerText;
+            console.log(getHashtag);
+            this.axios('/sns/search/hashtag', {
+                params : {
+                    hashtag : getHashtag
+                }
+            }).then(res => {
+                console.log(res);
+                this.data = res.data;
+                console.log(this.data);
+
+            }).catch(err =>{
+                console.log(err);
+            });
+        },
+        //dialog
+        select : function() {
+            if (this.role !== 0 ) {
+            this.$router.push({ path: 'snsFeedRegister' })
+            }
+        },
+        join() {
+            this.$router.push({ path: 'login' })
+        },
+        //
         fetchEntriesDebounced() {
             // cancel pending call
             clearTimeout(this._timerId)
@@ -127,25 +213,27 @@ export default {
         goRegForm() {
             this.$router.push({ name: "snsFeedRegister" });
         },
-        search(){
-            //유저 아이디 or 닉네임 조회
-            let searchValue = document.querySelector("#rounded-xl").value;
 
-            this.axios({
-            url : '/sns/search/user',        
-            params : {
-                memberId : searchValue,
-                nickname : searchValue,
-            }
-            }).then(res => {
-            console.log(res);
-            this.data = res.data;
-            console.log(this.data);
+        //
+        // search(){
+        //     //유저 아이디 or 닉네임 조회
+        //     let searchValue = document.querySelector("#rounded-xl").value;
+        //     console.log(searchValue)
+        //     this.axios({
+        //     url : '/sns/search/user',        
+        //     params : {
+        //         memberId : searchValue,
+        //         nickname : searchValue,
+        //     }
+        //     }).then(res => {
+        //     console.log(res);
+        //     this.data = res.data;
+        //     console.log(this.data);
 
-            }).catch(err =>{
-            console.log(err);
-            });
-        },
+        //     }).catch(err =>{
+        //     console.log(err);
+        //     });
+        // },
         enterkey: function (e) {
             if (window.event.keyCode == 13) {
             this.search(e);

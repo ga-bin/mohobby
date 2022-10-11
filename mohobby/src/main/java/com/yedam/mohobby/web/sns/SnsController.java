@@ -1,7 +1,6 @@
 package com.yedam.mohobby.web.sns;
 
 import java.io.File;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -18,14 +17,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
+import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
 import com.yedam.mohobby.service.sns.SnsBookmarkCatgVO;
 import com.yedam.mohobby.service.sns.SnsBookmarkVO;
+import com.yedam.mohobby.service.sns.SnsFeedVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
@@ -161,6 +163,11 @@ public class SnsController {
     public List<SnsPostVO> hotList() {
         return service.hotList();
     }
+   //해시태그 top6
+    @GetMapping("/main/hashtag")
+    public List<HashtagVO> selectHashtagForMain(){
+        return service.selectHashtagForMain();
+    }
    //팔로잉피드조회 - 
     @GetMapping("/main/followingFeeds/{memberId}")
     public List<SnsPostVO> getFollowingFeeds(@PathVariable String memberId) {
@@ -176,9 +183,9 @@ public class SnsController {
     public Model getProfile(@PathVariable("memberId") String memberId, Model model) {
         	return model.addAttribute("feed", service.getProfile(memberId));//컬럼명과 컬럼값이 키와 값으로 매핑이 된다. ㄴ
     }
-   //피드상세조회
-    @GetMapping("/user/feed_detail/{postId}")
-    public SnsPostVO getFeedDetail(@PathVariable int postId) {
+   //피드상세조회 - 테스트완료
+    @GetMapping("/user/feed_detail")
+    public SnsFeedVO getFeedDetail(@RequestParam int postId) {
         	System.out.println("프로필조회 성공");
             return service.getFeedDetail(postId);
     }
@@ -254,29 +261,29 @@ public class SnsController {
         return service.getUsersByNick(nickname);
     }
    //해시태그검색 - 
-    @GetMapping("/search/hashtag/{hashtag}")
-    public List<SnsPostVO> searchHashtag(@PathVariable String hashtag){
+    @GetMapping("/search/hashtag")
+    public List<SnsPostVO> searchHashtag(@RequestParam String hashtag){
         return service.searchHashtag(hashtag);
     }
     
     /*
      * 좋아요
      */
-  //좋아요
+  //좋아요 - 테스트완료
     @PostMapping("/like")
     public int addLike(@RequestBody JjimVO jjimVO) {
     	return service.addLike(jjimVO);
     }
-  //좋아요취소
-    @DeleteMapping("/like/{targetId}/{memberId}")
-    public int deleteLike(@PathVariable int targetId,@PathVariable String memberId) {
+  //좋아요취소 - 테스트완료
+    @DeleteMapping("/like")
+    public int deleteLike(@RequestParam int targetId,@RequestParam String memberId) {
     	return service.deleteLike(targetId, memberId);
     }
    //좋아요누적
     @PutMapping("/like")
-    public String sumLikes(@RequestBody SnsPostVO snsPostVO) {
-        service.sumLikes(snsPostVO);
-        return "success";
+    public int sumLikes(@RequestParam int targetId, @RequestParam int postId) {
+        return service.sumLikes(targetId, postId);
+        
     }
     
     /*

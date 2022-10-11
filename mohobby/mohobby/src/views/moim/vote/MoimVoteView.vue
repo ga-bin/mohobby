@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 투표 메인 화면 -->
     <MoimVote></MoimVote>
   </div>
 </template>

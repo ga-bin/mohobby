@@ -1,19 +1,14 @@
 <template>
-  <div>
+  <div class="container">
     <v-card-actions class="mb-16">
-      <v-spacer />
-      <div class="makeVote">
-      <v-btn @click="voteMake()"><v-icon>mdi-plus-circle-outline</v-icon>투표 생성하기</v-btn>
+      <v-spacer></v-spacer>
+      <div class="margin">
+        <v-btn @click="voteMake()">
+          <v-icon>mdi-plus-circle-outline</v-icon>투표 생성하기
+        </v-btn>
       </div>
     </v-card-actions>
-    <v-card
-      class="mx-auto mb-8"
-      max-width="800"
-      outlined
-      v-for="item in items"
-      :key="item.date"
-      @click="goDetail()"
-    >
+    <v-card class="mx-auto mb-8" max-width="800" outlined v-for="(item,idx) in items" :key="item.date" @click="goDetail()">
       <v-list-item three-line>
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
         <v-list-item-content>
@@ -23,7 +18,8 @@
             {{ item.date }}
           </div>
           <v-list-item-subtitle class="content mt-5">
-            {{ item.contents }}</v-list-item-subtitle>
+            {{ item.contents }}
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <div class="vote">
@@ -122,15 +118,13 @@ export default {
     goDetail: function () {
       this.$router.push({ path: "voteDetail" });
     },
-  props: {},
   }
 }
 </script>
 
 <style scoped>
-
-.makeVote{
-  margin-right: 21%;
+.container {
+  width : 85%;
 }
 
 .voteContent {
@@ -140,5 +134,9 @@ export default {
 
 .vote {
   margin-left: 14%;
+}
+
+.margin {
+  margin-right: 10.5%;
 }
 </style>

@@ -4,11 +4,9 @@
   <v-card-actions>
     <v-spacer></v-spacer>
     <v-card-actions v-if="(moim===0 && moimRight===1) || (moim===1 && moimRight===1)">
-      <v-btn class="mr-3"><v-icon>mdi-account-plus</v-icon></v-btn>
       <v-btn class="mr-3" @click="write()"><v-icon>mdi-lead-pencil</v-icon></v-btn>
     </v-card-actions>
     <v-card-actions v-if="(moim===0 && moimRight===0) || (moim===1 && moimRight===0)">
-      <v-btn disabled class="mr-3"><v-icon>mdi-account-plus</v-icon></v-btn>
       <v-btn disabled class="mr-3"><v-icon>mdi-lead-pencil</v-icon></v-btn>
     </v-card-actions>
   </v-card-actions>
@@ -41,7 +39,7 @@
 <style scoped>
 
 .container {
-  width : 75%;
+  margin-right : 50px;
 }
 
 </style>

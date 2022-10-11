@@ -140,10 +140,11 @@
    </select>
    
    <!-- 피드상세조회 -->
-   <select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-   	  SELECT post_id, member_id, hashtag, content, write_date, thumbnail, likes, cmts
-   	  FROM sns_post 
-   	  WHERE post_id = #{ postId }
+   <select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
+   	  SELECT s.post_id, s.member_id, m.profile_img, s.hashtag, s.content, s.write_date, s.thumbnail, s.likes, s.cmts
+   	  FROM sns_post s, member m
+   	  WHERE s.member_id = m.member_id
+      AND s.post_id = #{ postId }
    </select>
 <!-- +미디어
 	<select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
@@ -263,33 +264,41 @@
 		</where>
 	</select>
 	<!-- 유저단건조회 -->
-	<select id="selectOneUser" resultType="com.yedam.mohobby.service.user.MemberVO">
+<!-- <select id="selectOneUser" resultType="com.yedam.mohobby.service.user.MemberVO">
 		SELECT member_id, profile_img, nickname
 		FROM member
 		WHERE member_id = LOWER(#{ memberId })
-	</select>
+	</select> -->
    <!-- 유저닉네임검색(단어포함 - 프로필사진, 아이디, 닉네임) -->
-   <select id="getUsersByNick" resultType="com.yedam.mohobby.service.user.MemberVO">
+<!-- <select id="getUsersByNick" resultType="com.yedam.mohobby.service.user.MemberVO">
       SELECT profile_img, member_id, nickname
       FROM member
       WHERE nickname LIKE '%' || #{ nickname } || '%'
-   </select>
-      <!-- 해시태그검색 -->
+   </select> -->
+   <!-- 해시태그검색 -->
    <select id="searchHashtag" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
     SELECT * 
-    FROM (  SELECT    post_id, member_id, thumbnail, cmts, likes         
-   <![CDATA[         ,REGEXP_SUBSTR(hashtag, '[^,]+', 1, Level) hashtag]]>
+    FROM (  SELECT  post_id, member_id, thumbnail, cmts, likes         
+   <![CDATA[       ,REGEXP_SUBSTR(hashtag, '[^,]+', 1, Level) hashtag]]>
             FROM sns_post
             WHERE hashtag IS NOT NULL
             AND post_id = post_id   
    <![CDATA[CONNECT BY LEVEL <= REGEXP_COUNT(hashtag, '[^,]+')]]>       
             AND PRIOR post_id  = post_id       
             AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL)
-    WHERE hashtag = #{ hashtag }
+    <where>
+		<if test='hashtag != null and hashtag != ""'>
+			WHERE hashtag = #{ hashtag }
+		</if>
+	</where>
    </select>
 
    <!-- 리스트 해시태그 5개 -->
-   <select id="selectHashtagForMain" resultType="com.yedam.mohobby.service.communal.HashtagVO"></select>
+   <select id="selectHashtagForMain" resultType="com.yedam.mohobby.service.communal.HashtagVO">
+   	SELECT * FROM hashtag
+   	WHERE ROWNUM <![CDATA[ <= ]]> 6
+   	ORDER BY use_count DESC
+   </select>
 
 
    <!-- 
@@ -323,7 +332,7 @@
 	                  SELECT count(*) 
 	                  FROM jjim 
 	                  WHERE target_id = #{ targetId }
-	                  AND target_type = #{ targetType } 
+	                  AND target_type = 2 
                   )
       WHERE post_id = #{ postId }
    </update>

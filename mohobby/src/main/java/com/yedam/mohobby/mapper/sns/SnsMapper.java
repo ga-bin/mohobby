@@ -6,9 +6,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
+import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
 import com.yedam.mohobby.service.sns.SnsBookmarkCatgVO;
 import com.yedam.mohobby.service.sns.SnsBookmarkVO;
+import com.yedam.mohobby.service.sns.SnsFeedVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
@@ -45,9 +47,11 @@ public interface SnsMapper {
     public List<SnsPostVO> getUserFeed(String memberId);
     //프로필조회
     public HashMap<String, Object> getProfile(String memberId);
+    //인기해시태그
+    public List<HashtagVO> selectHashtagForMain();
     
     //피드상세조회
-    public SnsPostVO getFeedDetail(int postId);
+    public SnsFeedVO getFeedDetail(int postId);
     
     /*
      * 해시태그
@@ -70,7 +74,7 @@ public interface SnsMapper {
     //유저전체
     public List<MemberVO> getUsers();
     //유저 아이디, 닉네임 검색
-    public List<MemberVO> searchUser(String memberId, String nickname);
+    public List<MemberVO> searchUser(@Param("")String memberId,@Param("") String nickname);
     //유저닉네임검색
     public List<MemberVO> getUsersByNick(String nickname);
     //해시태그검색
@@ -81,9 +85,9 @@ public interface SnsMapper {
      */
     public int addLike(JjimVO jjimVO);
     //좋아요취소
-	public int deleteLike(int postId, String memberId);
+	public int deleteLike(@Param("targetId") int targetId,@Param("memberId") String memberId);
     //좋아요누적
-    public int sumLikes(SnsPostVO snsPostVO);
+    public int sumLikes(@Param("targetId") int targetId, @Param("postId") int postId);
     
     /*
      * 댓글

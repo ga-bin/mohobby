@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.service.admin.MemberVO;
+import com.yedam.mohobby.service.communal.KeywordVO;
 
 @Service
 public interface MemberService {
@@ -19,6 +20,9 @@ public interface MemberService {
 		
 		// 회원정보 전체 조회
 		public List<MemberVO> getAllMember();
+		
+		// 지역 전체 조회
+		public List<KeywordVO> getRegion();
 		
 		//회원가입 insert
 		public void insertMember(MemberVO memberVO);
