@@ -250,6 +250,7 @@ const routes = [
         name: "makeNbbang",
         component: () => import("./../views/moim/Nbbang/MakeNbbangView"),
         props: true,
+      },
       { //N빵 디테일
         path: "/nBBangDetail",
         name: "nBBangDetail",
