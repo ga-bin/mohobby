@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-  import ClassSidebar from "@/components/lecture/ClassSidebar.vue";
+import ClassSidebar from "@/components/lecture/ClassSidebar.vue";
 
 // highlight.js style
 import "highlight.js/styles/tomorrow.css";
@@ -15,34 +15,28 @@ import "highlight.js/styles/tomorrow.css";
 
 export default {
   components: {
-    ClassSidebar
-},
+    ClassSidebar,
+  },
   data() {
-    
+    return {};
   },
   setup() {},
   created() {},
-  mounted: function () {
-    
-  },
+  mounted: function () {},
   unmounted() {},
-  methods: {
-   
-  },
-  computed: {
-   
-  }
+  methods: {},
+  computed: {},
 };
 </script>
 
 <style scoped>
-  form {
-    display: inline-block;
-  }
-  button {
-    border: 1px solid gray;
-  }
-  input[type=submit] {
-    border: 1px solid gray;
-  }
+form {
+  display: inline-block;
+}
+button {
+  border: 1px solid gray;
+}
+input[type="submit"] {
+  border: 1px solid gray;
+}
 </style>
