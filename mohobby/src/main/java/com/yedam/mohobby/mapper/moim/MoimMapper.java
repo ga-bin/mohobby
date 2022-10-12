@@ -6,13 +6,13 @@ import java.util.List;
 import com.yedam.mohobby.service.moim.MoimVO;
 
 public interface MoimMapper {
-	//전체조회
+	//소모임 전체조회
 	public List<MoimVO> moimAllSelect();
 	
 	//소모임 등록
 	public void moimInsert (MoimVO moimVO);
 
-	//소모임 모집 멤버
+	//소모임 멤버 모집 조회(6개씩)
 	public List<MoimVO> moimrecruitMember();
 	
 	//인기소모임 조회
