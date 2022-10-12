@@ -18,5 +18,16 @@ export default {
     cards: ["Today", "Yesterday"],
     drawer: true,
   }),
+ mounted() {
+  // this.logout();
+ },
+ methods : {
+    //  logout() {
+    //   this.$store.commit("setIsLoginFalse");
+    //   this.$store.commit("logout");
+    //   this.$store.commit("setUserData", null);
+    //   this.$router.push("/");
+    // },
+ }
 };
 </script>

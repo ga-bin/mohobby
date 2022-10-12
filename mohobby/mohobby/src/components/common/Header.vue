@@ -76,7 +76,7 @@
     </v-btn>
 
     <v-btn v-if="this.$store.state.id" icon>
-      <v-icon @click="$router.push('/mypagemain')">mdi-account</v-icon>
+      <v-icon @click="$router.push('/mypageprofile')">mdi-account</v-icon>
     </v-btn>
 
     <v-btn v-if="this.$store.state.id" @click="logout()" icon>

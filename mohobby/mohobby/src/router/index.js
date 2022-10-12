@@ -54,10 +54,40 @@ const routes = [
     component: () => import("./../views/user/RegisterView"),
   },
   {
-    path: "/mypagemain",
-    name: "mypage",
+    path: "/mypageprofile",
+    name: "mypageprofile",
     props: true,
-    component: () => import("./../views/user/MypageMainView"),
+    component: () => import("./../views/user/MypageProfileView"),
+  },
+  {
+    path: "/mypagesns",
+    name: "mypagesns",
+    props: true,
+    component: () => import("./../views/user/MypageSnsView"),
+  },
+  {
+    path: "/mypageclass",
+    name: "mypageclass",
+    props: true,
+    component: () => import("./../views/user/MypageClassView"),
+  },
+  {
+    path: "/mypagemoim",
+    name: "mypagemoim",
+    props: true,
+    component: () => import("./../views/user/MypageMoimView"),
+  },
+  {
+    path: "/mypagechallenge",
+    name: "mypagechallenge",
+    props: true,
+    component: () => import("./../views/user/MypageChallengeView"),
+  },
+  {
+    path: "/edituser",
+    name: "edituser",
+    props: true,
+    component: () => import("./../views/user/EditUserView"),
   },
   // sns
   {
