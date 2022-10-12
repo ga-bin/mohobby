@@ -205,4 +205,4 @@ methods : {
     width : 1000px;
   }
 
-</style>
+</style>  

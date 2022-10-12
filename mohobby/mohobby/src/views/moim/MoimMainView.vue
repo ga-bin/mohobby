@@ -28,11 +28,7 @@ export default {
 
     },
     catg(category) {
-      if(this.catgKey === category) {
-        this.catgKey = ""
-      } else {
       this.catgKey = category
-      }
     }
   },
 };

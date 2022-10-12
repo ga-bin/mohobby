@@ -157,8 +157,8 @@ const routes = [
 
   // moim
   {
-    path: "/moimmain",
-    name: "moimmain",
+    path: "/moimMain",
+    name: "moimMain",
     component: () => import("./../views/moim/MoimMainView"),
   },
   {

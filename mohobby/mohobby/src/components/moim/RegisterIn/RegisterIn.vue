@@ -14,6 +14,7 @@
           <v-text-field
                   label="모임명"
                   required
+                  v-model="moimName"
                 ></v-text-field>
         </v-list-item-title>
     </v-list-item>
@@ -26,7 +27,7 @@
               filled
               auto-grow
               placeholder="함께하고 싶은 소모임 활동을 자세히 소개해주세요. (50자 이상)"
-              value=""
+              v-model="moimInfo"
             ></v-textarea>
           </v-container>
         </v-list-item-subtitle>
@@ -281,7 +282,7 @@
           <v-btn
           depressed
           elevation="2"
-          @click="[check = false, cancel()]"
+          @click="[(check = false), cancel()]"
           >
             취소
           </v-btn>
@@ -334,6 +335,7 @@
                   :items="[30, 50,100]"
                   label="최대 인원을 선택해주세요"
                   required
+                  v-model="maxPeople"
                 ></v-select>
         </v-col>
         </div>
@@ -472,8 +474,7 @@
           maxPeople: '',
           regionList: [],
           selected: '',
-          catg : ''
-        
+          temp:''
       }
     },
     created() {
@@ -497,13 +498,12 @@
     methods: {
       // 소모임 등록
       insertMoim() {
-        console.log(this.moimRegion)
+        console.log(this.moimName)
         if (
         this.moimName === "" ||
         // this.moimImg === "" ||
         this.moimInfo === "" ||
-        this.moimCatg === "" && 
-        this.moimCatg === "주제 선택" ||
+        this.moimCatg === "" && this.moimCatg === "주제 선택" || 
         this.moimRegion === "" ||
         this.maxPeople=== "" 
         ) {
@@ -515,7 +515,7 @@
           method: "post",
           data: {
             moimName: this.moimName,
-            moimImg: "모임 test.jpg",
+            moimImg: "모임1.jpg",
             moimInfo: this.moimInfo,
             moimCatg: this.moimCatg,
             moimRegion: this.moimRegion,
@@ -524,24 +524,23 @@
         })
           .then(function(response){
             console.log("소모임 생성 완료");
-            this.$router.push("/memberInsert");
+            this.$router.push("/memberInsert");   
+            this.$router.put({name:"moimMain"})
           })
           .catch(function (error){
             console.log("소모임 생성 실패")
           })
       },
       showChip(e){
-        this.catg = e;
+        this.moimCatg = e
       },
-      save() {
-        this.selected = this.catg
-        this.moimCatg = this.catg
+      save(){
+        this.moimCatg = this.selected
+        this.temp=this.selected
       },
-      cancel() {
-        this.selected = this.moimCatg
-        this.moimCatg = this.moimCatg
+      cancel(){
+        this.selected =this.temp
       }
-
     },
     watch: {
       selected: "showChip"

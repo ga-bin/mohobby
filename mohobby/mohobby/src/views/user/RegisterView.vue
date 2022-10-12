@@ -136,6 +136,7 @@
                               ></v-radio>
                             </v-radio-group>
                           </v-col>
+                          
                           <!-- 지역 입력 -->
                           <v-col>
                             <v-select
