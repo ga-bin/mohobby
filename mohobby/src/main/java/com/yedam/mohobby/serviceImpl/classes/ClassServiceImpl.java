@@ -1,5 +1,7 @@
 package com.yedam.mohobby.serviceImpl.classes;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +20,10 @@ public class ClassServiceImpl implements ClassService {
 	public void insertClass(ClassesVO classes) {
 		classMapper.insertClass(classes);
 	}
+
+    @Override
+    public List<ClassesVO> listAll() {
+        return classMapper.listAll();
+    }
 
 }
