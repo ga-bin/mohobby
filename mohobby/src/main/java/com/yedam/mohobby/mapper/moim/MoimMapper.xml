@@ -47,7 +47,7 @@ INSERT INTO moim (
       <if test="moimCatg != null and moimCatg != ''">
           and moim_catg = #{moimCatg}
       </if>
-   ORDER BY moim_id DESC
+   and <![CDATA[rownum <= 6]]> ORDER BY moim_id
 </select>
 
 <!-- 소모임명 검색 -->

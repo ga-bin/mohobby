@@ -14,27 +14,41 @@
   
             <h1 class="profile-user-name">{{ infoes.memberId }}</h1>
   
-            <button class="btn profile-edit-btn">Edit Profile</button>
+            
   
             <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
   
           </div>
   
           <div class="profile-stats">
+            <ul>
+              <li><span class="profile-real-name">{{ infoes.nickname }}</span></li>
+            </ul>
   
             <ul>
               <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
               <li><span class="profile-stat-count">{{ infoes.followerCnt }}</span> followers</li>
               <li><span class="profile-stat-count">{{ infoes.followingCnt }}</span> following</li>
             </ul>
-  
+            <ul>
+                <li><p class="profile-bio">{{ infoes.intro }} 📷✈️🏕️</p></li>
+                <li></li>
+            </ul>
+            
           </div>
   
           <div class="profile-bio">
-  
-            <p><span class="profile-real-name">{{ infoes.nickname }}</span> {{ infoes.intro }} 📷✈️🏕️</p>
-  
+            
+            <ul v-if='this.sessionId != "" && this.sessionId == this.postId'>
+                <button class="btn profile-edit-btn">Edit Profile</button>
+            </ul>
+            
+            <ul v-else>
+                <button class="btn profile-edit-btn2">Edit Profile</button>
+                <button class="btn profile-edit-btn2">Edit Profile</button>
+            </ul>
           </div>
+
   
         </div>
         <!-- End of profile section -->
@@ -56,20 +70,31 @@
     data() {
         return{     
             infoes:[],
-            memberId:'user11',//더미아이디}
+            sessionId:"",
+            postId:"",
         }
     },
     setup() { },
     created() {
           this.loadUserProfile();
           console.log("유저 프로필 페이지 이동");
+          console.log(this.$route.query.memId); //라우터에서 넘겨받은 memId
+          this.postId == this.$route.query.memId; //변수 대입
+          if(this$store.state.id != ""){
+            this.sessionId == this.$store.state.id; //세션에 저장된 memId 변수대입
+            console.log(this.$store.state.id +","+ this.sessionId); 
+          }
+
       },
       methods: {
         loadUserProfile() {
-            this.axios('/sns/user/profile/' + this.memberId)
+            let memberId = this.$route.query.memId;
+            if (!memberId) {
+                memberId = 'user11';
+            }
+            this.axios('/sns/user/profile/' + memberId)
             .then(res => {
               this.infoes = res.data;
-              console.log(this.infoes);
             }).catch(err => {
               console.log(err);
             });  
@@ -182,9 +207,18 @@
       display: inline-block;
       font-size: 3.2rem;
       font-weight: 300;
+      margin-left: 20px;
   }
   
   .profile-edit-btn {
+      font-size: 1.4rem;
+      line-height: 1.8;
+      border: 0.1rem solid #dbdbdb;
+      border-radius: 0.3rem;
+      padding: 0 2.4rem;
+      margin-left: 2rem;
+  }
+  .profile-edit-btn2 {
       font-size: 1.4rem;
       line-height: 1.8;
       border: 0.1rem solid #dbdbdb;
@@ -224,7 +258,16 @@
   .profile-real-name,
   .profile-stat-count,
   .profile-edit-btn {
+      text-align:center;
       font-weight: 600;
+      width: 600px;
+      margin: 20px 0;
+  }
+  .profile-edit-btn2 {
+      text-align:center;
+      font-weight: 600;
+      width: 300px;
+      margin: 20px 0 10px;
   }
   
   /* Gallery Section */

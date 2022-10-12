@@ -290,7 +290,7 @@
           color="success"
           depressed
           elevation="2"
-          @click="[(check = false), save()]"
+          @click="[check = false, save()]"
           >
             저장
           </v-btn>
@@ -524,8 +524,7 @@
         })
           .then(function(response){
             console.log("소모임 생성 완료");
-            this.$router.push("/memberInsert");
-            
+            this.$router.push("/memberInsert");   
             this.$router.put({name:"moimMain"})
           })
           .catch(function (error){

@@ -120,7 +120,10 @@ export default {
   beforeMount() {},
   mounted() {
     // login페이지 띄울때 무조건 로그아웃
+    this.$store.commit("setIsLoginFalse");
     this.$store.commit("logout");
+    this.$store.commit("setUserData", null);
+
     this.naverLogin = new window.naver.LoginWithNaverId({
       clientId: "qtK4gDKw7gcdHhTwYZpV",
       callbackUrl: "http://localhost:8080/login",
@@ -245,6 +248,7 @@ export default {
             //this.$store.commit("setId", this.memberId);
             console.log(response.data);
             vm.$store.state.id = vm.memberId;
+            vm.$store.commit("setIsLoginTrue");
             vm.$store.commit("setUserData", response.data);
             // vm.$store.state.user=response.data;
             // 로그인 성공시 메인으로 이동
