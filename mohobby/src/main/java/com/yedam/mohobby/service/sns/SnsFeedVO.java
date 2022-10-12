@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class SnsFeedVO {
+		private int likeStatus; //좋아요상태
         private int postId; //게시글번호
         private String memberId; //유저아이디
         private String hashtag; //해시태그

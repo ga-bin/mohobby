@@ -7,11 +7,11 @@
             aspect-ratio="30"
             :src="require(`@/assets/image/user/${member.profileImg}`)"
           />
-          <v-img v-if='`${!member && !member.profileImg && member.gender == "f"}`'
+          <v-img v-if='`${member != "" && !member.profileImg != null && member.gender == "f"}`'
             aspect-ratio="30"
             :src="require(`@/assets/image/user/female.png`)"
           />
-          <v-img v-if='`${!member && !member.profileImg && member.gender == "m"}`'
+          <v-img v-if='`${member != "" && member.profileImg != null && member.gender == "m"}`'
             aspect-ratio="30"
             :src="require(`@/assets/image/user/male.png`)"
           />
@@ -94,8 +94,8 @@ export default {
             { text: "저장게시글", route: "" },
           ] },
         ]},
-
       ],
+      selectedItem:"",
     };
   },
 };

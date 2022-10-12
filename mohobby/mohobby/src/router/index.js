@@ -35,12 +35,13 @@ const routes = [
     name: "adminsns",
     component: () => import("./../views/admin/AdminSnsView"),
   },
-  // user
+  // main
   {
     path: "/",
     name: "main",
-    component: () => import("./../views/user/MainView"),
+    component: () => import("./../views/main/MainView"),
   },
+  // user
   {
     path: "/login",
     name: "login",
@@ -68,7 +69,7 @@ const routes = [
     path: "/snsFeedDetail",
     name: "snsFeedDetail",
     component: () => import("@/views/sns/SnsFeedDetailView"),
-    props:true,
+    props: true,
   },
   {
     path: "/snsFeedRegister",
@@ -97,7 +98,7 @@ const routes = [
   },
   // lecture
   {
-    path: "/classmain",
+    path: "/class",
     name: "classmain",
     component: () => import("./../views/lecture/ClassMainView"),
     children: [
@@ -140,9 +141,16 @@ const routes = [
         ],
       },
       {
-        path: "list",
-        name: "ClassListAll",
+        path: "list/:catg",
+        name: "ClassList",
         component: () => import("./../views/lecture/list/listAll"),
+        props: true,
+      },
+      {
+        path: ":classId",
+        name: "classDetail",
+        component: () => import("./../views/lecture/detail/classDetail"),
+        props: true,
       },
     ],
   },

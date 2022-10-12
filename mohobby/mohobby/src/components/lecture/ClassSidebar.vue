@@ -36,7 +36,7 @@
             <v-list-item 
               v-for="child in subheader.items"
               :key="child.text"
-              @click="$router.push({ path: child.route })"
+              @click="$router.push({ path: child.route + child.catg }).catch(()=>{$router.go(0)})"
               link
             >
               <v-list-item-icon>
@@ -59,15 +59,26 @@ export default {
       links: [
         { icon: "mdi-format-list-bulleted", text: "클래스 둘러보기", subheaders: [
           { text: "", items: [
-            { text: "전체", route: "/classmain/list" }, 
-            { text: "디지털 드로잉", route: "" }, 
-            { text: "드로잉", route: "" }, 
-            { text: "공예", route: "" }, 
-            { text: "요리·음료", route: "" }, 
-            { text: "베이킹·디저트", route: "" }, 
-            { text: "음악", route: "" }, 
-            { text: "운동", route: "" }, 
-            { text: "사진·영상", route: "" },
+            { text: "전체", route: "/class/list/", catg: 'all' }, 
+            { text: "취미", route: "/class/list/", catg: 1000 }, 
+            { text: "스포츠/레저", route: "/class/list/", catg: 1001 }, 
+            { text: "어학/외국어", route: "/class/list/", catg: 1002 }, 
+            { text: "문화/예술", route: "/class/list/", catg: 1003 }, 
+            { text: "여행/캠핑", route: "/class/list/", catg: 1004 }, 
+            { text: "음악", route: "/class/list/", catg: 1005 }, 
+            { text: "건강/다이어트", route: "/class/list/", catg: 1006 }, 
+            { text: "친목/모임", route: "/class/list/", catg: 1007 },
+            { text: "맛집/요리", route: "/class/list/", catg: 1008 }, 
+            { text: "인문/과학", route: "/class/list/", catg: 1009 }, 
+            { text: "팬클럽", route: "/class/list/", catg: 1010 }, 
+            { text: "게임", route: "/class/list/", catg: 1011 }, 
+            { text: "만화/애니메이션", route: "/class/list/", catg: 1012 }, 
+            { text: "반려동물/동물", route: "/class/list/", catg: 1013 }, 
+            { text: "교육/공부", route: "/class/list/", catg: 1014 },
+            { text: "IT/컴퓨터", route: "/class/list/", catg: 1015 }, 
+            { text: "경제/재테크", route: "/class/list/", catg: 1016 }, 
+            { text: "종교/봉사", route: "/class/list/", catg: 1017 },
+            { text: "자연/귀농", route: "/class/list/", catg: 1018 },
           ]}
         ] },
         { icon: "mdi-account", text: "내 클래스", subheaders: [
@@ -96,12 +107,12 @@ export default {
         ]},
         { icon: "mdi-ab-testing", text: "테스트", subheaders: [
           { text:"", items: [
-            { text: "오픈뱅킹테스트", route: "/classmain/test/OpenBankingTest" }, 
-            { text: "에디터테스트", route: "/classmain/test/QuillEditorTest" }, 
-            { text: "iamport테스트", route: "/classmain/test/iamportTest" }, 
-            { text: "계좌 실명 조회 테스트", route: "/classmain/test/AccountRealNameTest" }, 
-            { text: "QR코드 생성 테스트", route: "/classmain/test/AttdQRTest" }, 
-            { text: "카카오 맵 테스트", route: "/classmain/test/KakaoMapTest" }, 
+            { text: "오픈뱅킹테스트", route: "/class/test/OpenBankingTest", catg: "/" }, 
+            { text: "에디터테스트", route: "/class/test/QuillEditorTest", catg: "/" }, 
+            { text: "iamport테스트", route: "/class/test/iamportTest", catg: "/" }, 
+            { text: "계좌 실명 조회 테스트", route: "/class/test/AccountRealNameTest", catg: "/" }, 
+            { text: "QR코드 생성 테스트", route: "/class/test/AttdQRTest", catg: "/" }, 
+            { text: "카카오 맵 테스트", route: "/class/test/KakaoMapTest", catg: "/" }, 
           ] },
         ]}
       ],
