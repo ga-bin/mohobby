@@ -118,8 +118,10 @@
 
 <script>
 export default {
+  props: ['search'],
   data() {
   return {
+  search : '',
   items: [],
   moimRight : '0',
   noneuser : false,
@@ -131,7 +133,7 @@ created()  {
 
 methods : {
   getList() {
-    this.axios.get("/recruitMember")
+    this.axios.get("/moimRecruitMember")
     .then((resp) => {
       this.items = resp.data;
     })

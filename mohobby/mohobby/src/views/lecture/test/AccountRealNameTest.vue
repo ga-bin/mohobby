@@ -39,10 +39,39 @@
                     <td>1000001815020</td>
                 </tr>
             </tbody>
-           </table>
-           <select v-model="bankSelect" style="width: 100px; background-color: gray;">
-                <!-- <option v-for="select in list" :value="select.code">{{select.name}}</option> -->
-           </select>
+            </table>
+            <v-row style="padding-top: 15px;">
+                <v-select
+                    :items="list"
+                    item-text="name"
+                    item-value="code"
+                    label="은행을 선택하세요"
+                    :menu-props="{ bottom: true, offsetY: true }"
+                    attach
+                    v-model="bankCode"
+                ></v-select>
+                <v-divider vertical class="mx-8" />
+                <v-text-field
+                    label="계좌번호를 입력하세요"
+                    hide-details="auto"
+                    v-model="account"
+                ></v-text-field>
+                <v-divider vertical class="mx-8" />
+                <v-text-field
+                    label="예금주를 입력하세요"
+                    hide-details="auto"
+                    :value="name"
+                    readonly
+                >
+                </v-text-field>
+                <v-divider vertical class="mx-8" />
+                        <v-btn
+                            color="primary"
+                            dark
+                            @click="accountCheck"
+                        >조회하기</v-btn>
+            </v-row>
+            
         </div>
     </div>
 </template>
@@ -52,8 +81,13 @@
 export default {
     data() {
         return {
-           bankSelect : '',
            bankCode : '',
+           account : '',
+           name : '최은경',
+           msg: {
+            color: '',
+            content: 'gg',
+           },
            list : [
             {name: '농협은행', code: '011'},
             {name: '산업은행', code: '002'},
@@ -78,7 +112,21 @@ export default {
         
     },
     methods: {
-        
+        accountCheck: function() {
+            console.log(this.$store.state.user);
+            this.axios.get('/bankRealName', {
+                params: {
+                    Bncd: this.bankCode,
+                    Acno: this.account
+                }
+            }).then( result => {
+                if(result.data.dpnm == this.name) {
+                    alert('조회성공');
+                } else {
+                    alert(result.data.header.rsms);
+                }
+            })
+        },
     },
     components: { }
 }
