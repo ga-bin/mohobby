@@ -82,9 +82,7 @@ public interface SnsMapper {
     /*
      * 좋아요
      */
-    public int addLike(JjimVO jjimVO);
-    //좋아요취소
-	public int deleteLike(@Param("targetId") int targetId, @Param("targetType")int targetType, @Param("memberId") String memberId);
+   
     //좋아요누적
     public int sumLikes(JjimVO jjimVO);
     
