@@ -7,7 +7,7 @@
     >
     <v-spacer />
     <v-btn text class="ml-2" to="/snsmain">sns</v-btn>
-    <v-btn text class="ml-2" to="/classmain/list">강의</v-btn>
+    <v-btn text class="ml-2" to="/class/list/all">강의</v-btn>
     <v-btn text class="ml-2" to="/moimmain">소모임</v-btn>
     <v-btn text class="ml-2" to="/challengemain">챌린지</v-btn>
     <v-spacer />

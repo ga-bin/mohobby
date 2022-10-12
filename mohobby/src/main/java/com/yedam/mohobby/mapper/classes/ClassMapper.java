@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.yedam.mohobby.service.classes.ClassListRequestVO;
 import com.yedam.mohobby.service.classes.ClassesVO;
 
 @Mapper
@@ -12,5 +13,5 @@ public interface ClassMapper {
 	public void insertClass(ClassesVO classes);
 	
 	//전체조회
-	public List<ClassesVO> listAll();
+	public List<ClassesVO> listAll(ClassListRequestVO req);
 }
