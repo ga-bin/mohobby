@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 
-
 @RestController
 @CrossOrigin(origins = "*")
 public class MoimController {
-	
+
 	@Autowired
 	MoimService service;
 	

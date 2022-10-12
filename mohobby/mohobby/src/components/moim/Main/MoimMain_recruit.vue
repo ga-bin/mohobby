@@ -118,8 +118,10 @@
 
 <script>
 export default {
+  props: ['search'],
   data() {
   return {
+  search : '',
   items: [],
   moimRight : '0',
   noneuser : false,

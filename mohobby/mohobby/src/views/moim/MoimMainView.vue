@@ -1,7 +1,7 @@
 <template>
   <div>
-    <MoimMain_Top></MoimMain_Top>
-    <MoimMainrecruit></MoimMainrecruit>
+    <MoimMain_Top @search="childValue"></MoimMain_Top>
+    <MoimMainrecruit :search="search"></MoimMainrecruit>
     <MoimMainrecruit2></MoimMainrecruit2>
   </div>
 </template>
@@ -12,13 +12,22 @@ import MoimMainrecruit2 from "../../components/moim/Main/MoimMain_recruit2.vue";
 
 export default {
   components: { MoimMain_Top, MoimMainrecruit, MoimMainrecruit2 },
-  data: () => ({
-    }),
+  data() {
+    return {
+      search : '',
+    }
+  },
   setup() {},
   created() {},
   mounted() {},
   unmounted() {},
-  methods: {},
+  methods: {
+    childValue(search) {
+      console.log(search)
+      console.log(this.search)
+      this.search = search
+    },
+  },
 };
 </script>
 

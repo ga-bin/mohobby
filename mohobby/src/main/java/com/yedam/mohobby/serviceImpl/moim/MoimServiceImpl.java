@@ -1,6 +1,7 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
 import java.util.HashMap;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.yedam.mohobby.service.moim.MoimVO;
 
 @Service
 public class MoimServiceImpl implements MoimService{
+
 
 	@Autowired
 	MoimMapper mapper;
