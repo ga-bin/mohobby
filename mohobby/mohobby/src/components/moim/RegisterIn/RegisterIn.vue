@@ -313,7 +313,7 @@
           v-if="regionList"
           :items="regionList"
           :item-text="'keywordName'"
-          :item-value="'keywordId'"
+          :item-value="'keywordName'"
           v-model="moimRegion"
           label="지역"
           dense
@@ -498,7 +498,7 @@
     methods: {
       // 소모임 등록
       insertMoim() {
-        console.log(this.moimName)
+        console.log(this.moimInfo)
         if (
         this.moimName === "" ||
         // this.moimImg === "" ||
@@ -511,7 +511,7 @@
         return;
         }
         this.axios({
-          url: "http://localhost:8088/java/memberInsert",
+          url: "http://localhost:8088/java/moimInsert",
           method: "post",
           data: {
             moimName: this.moimName,
@@ -522,14 +522,14 @@
             maxPeople: this.maxPeople
           },
         })
-          .then(function(response){
-            console.log("소모임 생성 완료");
-            this.$router.push("/memberInsert");   
-            this.$router.put({name:"moimMain"})
-          })
-          .catch(function (error){
-            console.log("소모임 생성 실패")
-          })
+        .then(resp => {
+          console.log(resp.data);
+          alert("소모임생성완료")
+          this.$router.push({name : 'moimMain' })
+        })
+        .catch(error => {
+          console.log(error)
+        })
       },
       showChip(e){
         this.moimCatg = e
