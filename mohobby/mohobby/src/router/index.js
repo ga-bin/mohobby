@@ -35,12 +35,13 @@ const routes = [
     name: "adminsns",
     component: () => import("./../views/admin/AdminSnsView"),
   },
-  // user
+  // main
   {
     path: "/",
     name: "main",
-    component: () => import("./../views/user/MainView"),
+    component: () => import("./../views/main/MainView"),
   },
+  // user
   {
     path: "/login",
     name: "login",
@@ -68,7 +69,7 @@ const routes = [
     path: "/snsFeedDetail",
     name: "snsFeedDetail",
     component: () => import("@/views/sns/SnsFeedDetailView"),
-    props:true,
+    props: true,
   },
   {
     path: "/snsFeedRegister",

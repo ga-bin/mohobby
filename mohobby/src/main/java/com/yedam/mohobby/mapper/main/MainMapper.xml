@@ -3,11 +3,37 @@
 <mapper namespace="com.yedam.mohobby.mapper.main.MainMapper">
 
 <!-- sns인기글 조회  -->
-<!-- <select id=""></select>
- 새로 생성된 모임 조회
-<select id=""></select>
-모집중인 강의 조회
-<select id=""></select>
-챌린지 실시간 인증샷 조회
-<select id=""></select> -->
+<select id="SnsHighLikesList"  resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+select post_id, member_id, hashtag, content, write_date, thumbnail, likes, cmts
+from (select post_id, member_id, hashtag, content, write_date, thumbnail, likes, cmts from sns_post order by likes desc)
+where rownum <![CDATA[<=]]> 10
+</select>
+
+<!-- 인기순 모임 조회 -->
+<select id="MoimPopularList" resultType="com.yedam.mohobby.service.moim.MoimVO">
+   SELECT * FROM moim <![CDATA[where rownum <= 10]]> ORDER BY reg_cnt DESC
+</select>
+
+
+<!-- 모집중인 강의 조회 -->
+<select id="collectClassList" resultType="com.yedam.mohobby.service.main.MainClassVO">
+select c.class_id, a.keyword_name, c.class_name, c.start_date, c.class_price
+from class c join keyword a
+on c.keyword_id = a.keyword_id
+where start_date > sysdate
+</select>
+
+<!-- 챌린지 실시간 인증샷 조회 -->
+<select id="challNewCertList" resultType="com.yedam.mohobby.service.main.MainChallVO">
+select *from
+	(select b.chall_id, a.keyword_name, b.chall_name, c.ptp_id, c.member_id, d.cert_img_url, d.cert_info
+	from keyword a join challenge b
+	on a.keyword_id = b.keyword_id
+	join chall_member c
+	on b.chall_id = c.chall_id
+	join chall_cert d
+	on c.ptp_id = d.ptp_id
+	order by d.cert_date)
+where rownum <![CDATA[<=]]> 10
+</select>
 </mapper>
