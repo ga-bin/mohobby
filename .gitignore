@@ -3,6 +3,7 @@
 
 ### Eclipse ###
 .metadata/
+META-INF/*
 bin/
 tmp/
 *.tmp
