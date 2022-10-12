@@ -24,12 +24,6 @@ public class MoimServiceImpl implements MoimService{
 		mapper.moimInsert(moimVO);	
 	}
 
-	//소모임 전체조회
-	@Override
-	public List<MoimVO> moimAllSelect() {
-		return mapper.moimAllSelect();
-	}
-
 	//소모임 멤버 모집 조회(6개씩)
 	@Override
 	public List<MoimVO> moimrecruitMember() {

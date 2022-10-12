@@ -12,9 +12,6 @@ public interface MoimService {
 	//소모임 등록
 	public void moimInsert(MoimVO moimVO);
 	
-	//소모임 전체조회
-	public List<MoimVO> moimAllSelect();
-	
 	//소모임 멤버 모집 조회(6개씩)
 	public List<MoimVO> moimrecruitMember();
 	

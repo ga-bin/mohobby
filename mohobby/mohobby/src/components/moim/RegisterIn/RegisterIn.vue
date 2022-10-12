@@ -33,7 +33,6 @@
         <hr>
   <v-list-item-content>
 
-
         <!--주제선택-->
         <v-col
       cols="12"
@@ -53,40 +52,39 @@
           v-bind="attrs"
           v-on="on"
         >
-          주제 선택
+          {{ selected || '주제 선택'}}
         </v-btn>
       </template>
       <v-sheet
         elevation="10"
         rounded="xl"
       >
-          <v-card-title class="justify-center">
-            <span class="font-weight-bold">지역선택</span>
-          </v-card-title>
-          <hr>
+          
+      <!-- 취미 hobb -->
         <div class="pa-12">
-        <!-- 취미 hobb -->
         <v-chip-group
         active-class="light-green--text"
         column
+        v-model="selected"
           >
           <div>
             <div class="mt-3">
           <span class="font-weight-bold">취미</span>
           </div>
           <div class="pa-1">
-                <v-chip v-for="item in hobb" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in hobb" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
           </div>
+
         <!-- 스포츠/레저 sports -->
         <div>
           <div class="mt-3">
             <span class="font-weight-bold">스포츠/레저</span>
             </div>
               <div class="pa-1">
-                <v-chip v-for="item in sports" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in sports" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -97,7 +95,7 @@
             <span class="font-weight-bold">어학/외국어</span>
             </div>
               <div class="pa-1">
-                <v-chip v-for="item in lang" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in lang" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -108,7 +106,7 @@
             <span class="font-weight-bold">문화/예술</span>
           </div>
               <div class="pa-4">
-                <v-chip v-for="item in arts" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in arts" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -119,7 +117,7 @@
             <span class="font-weight-bold">여행/캠핑</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in trip" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in trip" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -130,7 +128,7 @@
             <span class="font-weight-bold">음악</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in music" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in music" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -141,7 +139,7 @@
             <span class="font-weight-bold">건강/다이어트</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in diet" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in diet" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -152,7 +150,7 @@
             <span class="font-weight-bold">친목/모임</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in amity" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in amity" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -163,7 +161,7 @@
             <span class="font-weight-bold">맛집/요리</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in matzip" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in matzip" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -174,7 +172,7 @@
             <span class="font-weight-bold">인문/과학</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in humenities" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in humenities" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -185,7 +183,7 @@
             <span class="font-weight-bold">팬클럽</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in fan" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in fan" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -196,7 +194,7 @@
             <span class="font-weight-bold">게임</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in game" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in game" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -207,7 +205,7 @@
             <span class="font-weight-bold">만화/애니메이션</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in ani" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in ani" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -218,7 +216,7 @@
             <span class="font-weight-bold">반려동물/동물</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in animal" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in animal" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -229,7 +227,7 @@
             <span class="font-weight-bold">교육/공부</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in edu" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in edu" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -240,7 +238,7 @@
             <span class="font-weight-bold">IT/컴퓨터</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in it" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in it" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -251,7 +249,7 @@
             <span class="font-weight-bold">경제/재테크</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in financial" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in financial" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -262,7 +260,7 @@
             <span class="font-weight-bold">종교/봉사</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in charity" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in charity" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -273,7 +271,7 @@
             <span class="font-weight-bold">자연/귀농</span>
             </div>
               <div class="pa-4">
-                <v-chip v-for="item in nature" :key="item" class="mr-3 mb-3">
+                <v-chip v-for="item in nature" :key="item" :value="item" class="mr-3 mb-3">
                   {{item}}
                 </v-chip>
               </div>
@@ -283,7 +281,7 @@
           <v-btn
           depressed
           elevation="2"
-          @click="check = false"
+          @click="[check = false, cancel()]"
           >
             취소
           </v-btn>
@@ -291,7 +289,7 @@
           color="success"
           depressed
           elevation="2"
-          @click="check = false"
+          @click="[check = false, save()]"
           >
             저장
           </v-btn>
@@ -303,78 +301,24 @@
     </v-list-item-content>
     <hr>
 
-          <!-- 지역선택 -->
-          <v-list-item-content>
-          <v-col
-      cols="12"
-      sm="12">
-    <v-dialog
-      v-model="region"
-      max-width="600px"
-    >
-    <template v-slot:activator="{ on, attrs }">
-      <div class="buttonSelect">
-            <span class="font-weight-bold">소모임 활동 지역</span>
-          </div>
-      <v-btn
-          color="green"
-          dark
-          rounded
-          v-bind="attrs"
-          v-on="on"
+    <!-- 지역 입력 -->
+    <v-col
+    cols="5"
+      sm="5"
+      class="pt-6 pb-3">
+      <span class="font-weight-bold">지역 설정</span>
+        <v-card-actions></v-card-actions>
+        <v-select
+          v-if="regionList"
+          :items="regionList"
+          :item-text="'keywordName'"
+          :item-value="'keywordId'"
+          v-model="moimRegion"
+          label="지역"
+          dense
         >
-          지역 선택
-        </v-btn>
-      </template>
-      <v-sheet
-        class="pa-4"
-        elevation="10"
-        rounded="xl"
-      >
-      <v-card-title class="justify-center">
-          <span class="font-weight-bold">지역선택</span>
-      </v-card-title>
-      <v-card-actions>
-        
-      <v-text-field
-            hide-details
-            outlined
-            label="Search"
-            prepend-icon="mdi-magnify" 
-          >
-        </v-text-field>
-        <div class="searchB">
-        <v-btn
-      color="success"
-      dark
-      large
-      >
-      검색
-      </v-btn>
-      </div>
-    </v-card-actions>
-    <v-card-actions >
-    &nbsp;&nbsp;
-    <v-icon color="green">mdi-crosshairs-gps</v-icon>
-    &nbsp;&nbsp;
-    <div class="font-weight-bold">내 위치</div>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <div>대구시 달서구</div>
-   </v-card-actions>
-   <br>
-   <br>
-   <div class="font-weight-bold">검색 결과</div>
-   <v-card-actions class="justify-center">
-    <v-btn
-    @click="region=false"
-    >
-      닫기
-    </v-btn>
-   </v-card-actions>
-      </v-sheet>
-      </v-dialog>
+        </v-select>
       </v-col>
-      </v-list-item-content>
 
       <hr>
       <!-- 최대인원 -->
@@ -384,17 +328,17 @@
       cols="5"
       sm="5">
       <div>
-      <span>최대 인원 설정</span>
+        <span class="font-weight-bold">최대 인원 설정</span>
       </div>
                 <v-select
-                  :items="['30명', '50명', '100명']"
-                  label="최대 인원"
+                  :items="[30, 50,100]"
+                  label="최대 인원을 선택해주세요"
                   required
                 ></v-select>
         </v-col>
         </div>
     </v-list-item-content>
-    <small class="text-lg-left">양식을 다 채워서 가입해주세요!</small>
+    <small class="text-lg-left">* 양식을 다 채워서 가입해주세요!</small>
 
     <v-card-actions class="lastbutton">
       <v-spacer></v-spacer>
@@ -409,6 +353,7 @@
         outlined
         rounded
         text
+        @click="insertMoim()"
       >
         생성하기
       </v-btn>
@@ -424,102 +369,182 @@
         items : [{
           src : "https://cdn.class101.net/images/84d01f2e-ec28-4e30-8ed1-fc6e55954e42/960xauto.webp"
         }],
-        hobb: [
-          '독서',
-          '글쓰기',
-          'DIY/공예',
-          '가죽/목공',
-          '드론/액션캠/RC',
-          '바둑/장기',
-          '취미',
+          hobb: [
+            '독서',
+            '글쓰기',
+            'DIY/공예',
+            '가죽/목공',
+            '드론/액션캠/RC',
+            '바둑/장기',
+            '취미',
+            ],
+          sports: [
+            '러닝/걷기',
+            '자전거',
+            '테니스',
+            '등산/산악',
+            '야구',
+            '축구/풋살',
+            '당구',
+            '서핑',
+            '자동차',
           ],
-        sports: [
-          '러닝/걷기',
-          '자전거',
-          '테니스',
-          '등산/산악',
-          '야구',
-          '축구/풋살',
-          '당구',
-          '서핑',
-          '자동차',
-        ],
-        lang:[
-          '영어',
-          '일본어',
-          '중국어',
-          '외국어',
-          '스페인어/포르투갈어'
-        ],
-        arts: [
-          '그림/일러스트',
-          '디자인',
-          '캘리그라피/서예',
-          '사진',
-          '댄스/무용',
-          '공연/뮤지컬',
-          '영화',
-          '미술/전시',
-          '문화/예술'
-        ],
-        trip: [
-          '국내여행',
-          '해외여행',
-          '캠핑/백패킹'
-        ],
-        music: [
-          '노래',
-          '악기',
-          '음악'
-        ],
-        diet: [
-          '피트니스',
-          '요가/필라테스'
-        ],
-        amity: [
-          '친목/모임',
-          '육아/맘 모임'
-        ],
-        matzip: [
-          '맛집',
-          '요리/레시피'
-        ],
-        humenities: [
-          '역사',
-          '심리학',
-          '인문/철학'
-        ],
-        fan: [
-          '프로야구',
-          '팬클럽'
-        ],
-        game: [
-          '게임'
-        ],
-        ani: [
-          '만화/애니메이션'
-        ],
-        animal: [
-          '반려동물/동물'
-        ],
-        edu: [
-          '공부'
-        ],
-        it: [
-          'IT'
-        ],
-        financial: [
-          '경제/재테크'
-        ],
-        charity: [
-          '봉사/자선'
-        ],
-        nature: [
-          '꽃/식물'
-        ],
-        check : false,
-        region : false
+          lang:[
+            '영어',
+            '일본어',
+            '중국어',
+            '외국어',
+            '스페인어/포르투갈어'
+          ],
+          arts: [
+            '그림/일러스트',
+            '디자인',
+            '캘리그라피/서예',
+            '사진',
+            '댄스/무용',
+            '공연/뮤지컬',
+            '영화',
+            '미술/전시',
+            '문화/예술'
+          ],
+          trip: [
+            '국내여행',
+            '해외여행',
+            '캠핑/백패킹'
+          ],
+          music: [
+            '노래',
+            '악기',
+            '음악'
+          ],
+          diet: [
+            '피트니스',
+            '요가/필라테스'
+          ],
+          amity: [
+            '친목/모임',
+            '육아/맘 모임'
+          ],
+          matzip: [
+            '맛집',
+            '요리/레시피'
+          ],
+          humenities: [
+            '역사',
+            '심리학',
+            '인문/철학'
+          ],
+          fan: [
+            '프로야구',
+            '팬클럽'
+          ],
+          game: [
+            '게임'
+          ],
+          ani: [
+            '만화/애니메이션'
+          ],
+          animal: [
+            '반려동물/동물'
+          ],
+          edu: [
+            '공부'
+          ],
+          it: [
+            'IT'
+          ],
+          financial: [
+            '경제/재테크'
+          ],
+          charity: [
+            '봉사/자선'
+          ],
+          nature: [
+            '꽃/식물'
+          ],
+          check : false,
+          region : false,
+          moimName: '',
+          moimImg: '',
+          moimInfo: '',
+          moimCatg: '',
+          moimRegion: "",
+          maxPeople: '',
+          regionList: [],
+          selected: '',
+          catg : ''
+        
       }
+    },
+    created() {
+    const vm = this;
+    this.axios({
+      
+      url: "http://localhost:8088/java/regionAll",
+      method: "get",
+    })
+      .then(function (response) {
+        console.log(response);
+        if (response.data != "") {
+          console.log(response.data);
+          vm.regionList = response.data;
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+    methods: {
+      // 소모임 등록
+      insertMoim() {
+        console.log(this.moimRegion)
+        if (
+        this.moimName === "" ||
+        // this.moimImg === "" ||
+        this.moimInfo === "" ||
+        this.moimCatg === "" && 
+        this.moimCatg === "주제 선택" ||
+        this.moimRegion === "" ||
+        this.maxPeople=== "" 
+        ) {
+        alert("필수항목이 입력되지 않았습니다.");
+        return;
+        }
+        this.axios({
+          url: "http://localhost:8088/java/memberInsert",
+          method: "post",
+          data: {
+            moimName: this.moimName,
+            moimImg: "모임 test.jpg",
+            moimInfo: this.moimInfo,
+            moimCatg: this.moimCatg,
+            moimRegion: this.moimRegion,
+            maxPeople: this.maxPeople
+          },
+        })
+          .then(function(response){
+            console.log("소모임 생성 완료");
+            this.$router.push("/memberInsert");
+          })
+          .catch(function (error){
+            console.log("소모임 생성 실패")
+          })
+      },
+      showChip(e){
+        this.catg = e;
+      },
+      save() {
+        this.selected = this.catg
+        this.moimCatg = this.catg
+      },
+      cancel() {
+        this.selected = this.moimCatg
+        this.moimCatg = this.moimCatg
+      }
+
+    },
+    watch: {
+      selected: "showChip"
     }
   }
   </script>

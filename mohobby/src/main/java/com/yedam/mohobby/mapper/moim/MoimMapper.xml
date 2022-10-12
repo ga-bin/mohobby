@@ -41,13 +41,13 @@ INSERT INTO moim (
 <select id="moimAllSearch" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimVO">
    SELECT * FROM moim
    where 1=1
-      <if test ='moimName != null and moimName != " "'>
-          and moim_name = #{moimName}
+      <if test ="moimName != null and moimName != '' ">
+          and moim_name like '%'|| #{moimName} || '%'
       </if>  
-      <if test='moimCatg != null and moimCatg != " "'>
+      <if test="moimCatg != null and moimCatg != ''">
           and moim_catg = #{moimCatg}
       </if>
-   ORDER BY moim_id DESC
+   and <![CDATA[rownum <= 6]]> ORDER BY moim_id
 </select>
 
 <!-- 소모임명 검색 -->

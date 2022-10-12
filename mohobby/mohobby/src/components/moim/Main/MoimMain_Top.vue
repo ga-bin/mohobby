@@ -104,6 +104,8 @@
           <v-chip
             v-for="catg in catg"
             :key="catg"
+            :value="catg"
+            @click="chipclick"
           >
             {{ catg }}
           </v-chip>
@@ -161,6 +163,9 @@
     submit() {
       console.log(this.search)
       this.$emit('search', this.search)
+    },
+    chipclick(e) {
+      this.$emit('category', e.target.innerText)
     }
   }
  }
