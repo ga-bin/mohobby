@@ -65,61 +65,35 @@ const routes = [
     component: () => import("@/views/sns/SnsMainView"),
   },
   {
-    path: "/snsFeed",
-    name: "snsFeed",
-    component: () => import("@/views/sns/SnsFeedView"),
-  },
-  {
     path: "/snsFeedDetail",
     name: "snsFeedDetail",
     component: () => import("@/views/sns/SnsFeedDetailView"),
     props:true,
   },
   {
-    // path: "/SnsFeedInsert/:memberId",
     path: "/snsFeedRegister",
     name: "snsFeedRegister",
     component: () => import("@/views/sns/SnsFeedRegister"),
   },
   {
-    path: "/SnsUserFeed",
-    name: "SnsUserFeed",
+    path: "/snsUserFeed",
+    name: "snsUserFeed",
     component: () => import("@/views/sns/SnsUserFeed"),
   },
   {
-    path: "/snsLecture",
-    name: "snsLecture",
-    component: () => import("@/views/sns/SnsLectureView"),
-  },
-  {
-    path: "/snsMoim",
-    name: "snsMoim",
-    component: () => import("@/views/sns/SnsMoimView"),
-  },
-  {
-    path: "/snsChall",
-    name: "snsChall",
-    component: () => import("@/views/sns/SnsChallView"),
+    path: "/snsManagement",
+    name: "snsManagement",
+    component: () => import("@/views/sns/management/SnsManagementView"),
   },
   {
     path: "/snsBookmark",
     name: "snsBookmark",
-    component: () => import("@/views/sns/SnsBookmarkView"),
+    component: () => import("@/views/sns/bookmark/SnsBookmarkView"),
   },
   {
     path: "/snsBookmarkDetail",
     name: "snsBookmarkDetail",
-    component: () => import("@/views/sns/SnsBookmarkDetailView"),
-  },
-  {
-    path: "/snsFollower",
-    name: "snsFollower",
-    component: () => import("@/views/sns/SnsFollowerView"),
-  },
-  {
-    path: "/snsFollowing",
-    name: "snsFollowing",
-    component: () => import("@/views/sns/SnsFollowingView"),
+    component: () => import("@/views/sns/bookmark/SnsBookmarkDetailView"),
   },
   // lecture
   {

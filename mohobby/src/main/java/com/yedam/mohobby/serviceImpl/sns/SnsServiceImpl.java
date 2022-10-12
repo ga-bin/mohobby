@@ -75,15 +75,16 @@ public class SnsServiceImpl implements SnsService{
     public List<SnsPostVO> getFollowingFeeds(String memberId){
         return mapper.getFollowingFeeds(memberId);
     }
-	//유저피드조회
-	@Override
-	public List<SnsPostVO> getUserFeed(String memberId) {
-		return mapper.getUserFeed(memberId);
-	}
+
 	//프로필조회
     @Override
     public SnsProfileVO getProfile(String memberId) {
         return mapper.getProfile(memberId);
+    }
+    //유저피드조회
+    @Override
+    public List<SnsPostVO> getUserFeed(String memberId) {
+        return mapper.getUserFeed(memberId);
     }
 	//피드상세조회
 	@Override

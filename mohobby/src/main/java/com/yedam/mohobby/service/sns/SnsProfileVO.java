@@ -4,9 +4,10 @@ import lombok.Data;
 
 @Data
 public class SnsProfileVO {
-    private int memberId;
+    private String memberId;
     private String nickname;
     private String profileImg;
+    private String intro;
     private int postCnt;
     private int followerCnt;
     private int followingCnt;

@@ -122,7 +122,7 @@
    <!-- 프로필 조회
 		유저아이디, 유저별명, 전체 게시글 수, 팔로워수, 팔로잉수 --> 
 	<select id="getProfile" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsProfileVO">
-      SELECT m.member_id, m.nickname, m.profile_img, POST_CNT, FOLLOWER_CNT, FOLLOWING_CNT
+      SELECT m.member_id, m.nickname, m.profile_img, m.intro, POST_CNT, FOLLOWER_CNT, FOLLOWING_CNT
       FROM member m,
            (  SELECT member_id, COUNT(post_id) POST_CNT
       		  FROM sns_post
@@ -138,7 +138,12 @@
       AND f_1.following_id = f_2.follower_id
       AND m.member_id = #{ memberId }
    </select>
-   
+   <!-- 유저피드 조회 -->
+   <select id="getUserFeed" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
+      SELECT post_id, member_id, thumbnail, likes, cmts 
+      FROM sns_post
+      WHERE member_id = #{ memberId }
+   </select>
    <!-- 피드상세조회 -->
    <select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
    	  SELECT s.post_id, s.member_id, m.profile_img, s.hashtag, s.content, s.write_date, s.thumbnail, s.likes, s.cmts
