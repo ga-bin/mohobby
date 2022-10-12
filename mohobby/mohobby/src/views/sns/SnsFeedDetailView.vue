@@ -33,8 +33,11 @@
         <v-row>
           <v-col cols="12" id="image_box">
               <v-carousel ref="myCarousel" hide-delimiters :touchless="ture">
-                <v-carousel-item :aspect-ratio="4 / 3" :width="width"
-                  :src="require(`@/assets/image/sns/${items.thumbnail}`)"></v-carousel-item>
+                <v-carousel-item
+                  :aspect-ratio="4 / 3"
+                  :width="width"
+                  :src="require(`@/assets/image/sns/${items.thumbnail}`)"
+                ></v-carousel-item>
               </v-carousel>
           </v-col>
         </v-row>
@@ -104,10 +107,8 @@ export default {
       if (this.$store.state.id != null || this.$store.state.id != "");
     this.showDetail();
   },
-  mounted() {
-
-  },
-  unmounted() { },
+  mounted() {},
+  unmounted() {},
   methods: {
 
     //게시글 상세 로드
@@ -154,7 +155,7 @@ export default {
 
     //채팅방 이동
     send() {
-      this.$router.push({ name: "chat", params: { roomId: this.roomId } })
+      this.$router.push({ name: "chat", params: { roomId: this.roomId } });
     },
 
     //좋아요
@@ -265,7 +266,7 @@ export default {
 }
 
 .box {
-  display: inline-block
+  display: inline-block;
 }
 
 #like_box {

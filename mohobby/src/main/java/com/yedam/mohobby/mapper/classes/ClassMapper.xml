@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.classes.ClassMapper">
 	<insert id="insertClass" parameterType="com.yedam.mohobby.service.classes.ClassesVO">
-		<selectKey keyProperty="classId" resultType="Integer" order="BEFORE">
+		<selectKey keyProperty="classId" resultType="java.lang.Integer" order="BEFORE">
 		select NVL(MAX(class_id), 0) + 1 from classes	
 		</selectKey>
 		insert into classes (
@@ -48,7 +48,39 @@
 					#{accountHolder}
 				)
 	</insert>
-	<select id="listAll" resultType="com.yedam.mohobby.service.classes.ClassesVO">
-	select * from class
+	
+	<!-- 목록조회 -->
+	<select id="listAll" parameterType="com.yedam.mohobby.service.classes.ClassListRequestVO" resultType="com.yedam.mohobby.service.classes.ClassesVO">
+		select * from (
+		select distinct k.*, b.nickname, w.keyword_name
+		from
+		    (select  NVL(u.review, 0) reviewTotal, decode(m.target_id, null, 0, 1) jjim, NVL(x.jjim, 0)jjimTotal, c.* 
+		    from class c,
+		        (
+		        select * 
+		        from jjim 
+		        where target_type = 1 
+		        and member_id = <if test="memberId == null">null</if> <if test="memberId != null">#{memberId}</if>
+		        ) m,
+		        (
+		        select count(*)jjim, target_id 
+		        from jjim 
+		        where target_type = 1 
+		        group by target_id
+		        ) x,
+		        (select count(*)review, class_id from class_board where board_type = 4 group by class_id) u
+		    where c.class_id = m.target_id(+)
+		    and c.class_id = x.target_id(+)
+		    and c.class_id = u.class_id(+)) k, 
+		member b, keyword w
+		where k.member_id = b.member_id
+		and k.keyword_id = w.keyword_id)
+		<if test='catg != "all"'>
+		where keyword_id = #{catg}
+		</if>
+		order by class_id desc
 	</select>
+	
+	
+   
 </mapper>

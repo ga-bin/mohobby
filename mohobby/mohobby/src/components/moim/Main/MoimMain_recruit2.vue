@@ -1,7 +1,11 @@
 <template>
   <div class="container">
-    <h3>인기있는 소모임을 확인하세요!</h3>
-    <br>
+    <div class="box">
+      <h3>인기있는 소모임을 확인하세요!</h3>
+    </div>
+    <div class="box">
+      <h3 style="visibility: hidden">.</h3>
+    </div>
     <div class="box" @click="box(idx)" v-for="(item,idx) in items" :key="item.moimId">
       <v-card class="mx-3" max-width="550" outlined>
         <v-list-item three-line>

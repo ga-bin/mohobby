@@ -16,7 +16,7 @@ import com.yedam.mohobby.service.communal.KeywordVO;
 import com.yedam.mohobby.service.user.MemberService;
 
 /**
- * @create 2002/10/04
+ * @create 2022/10/04
  * @author gabin
  * @title 회원 관리
  */

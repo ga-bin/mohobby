@@ -29,4 +29,9 @@ public class ClassesVO {
 	private int auditStatus; // 승인상태 0:심사대기, 1:심사중, 2:승인, 3:미승인
 	private String auditReturn; // 반려사유
 	private int profileYn; //0: 공개 1:비공개
+	private int jjim;  //0:찜X 1:찜O
+	private String nickname;  //강사 닉네임
+	private String keywordName; //카테고리 이름
+	private int jjimTotal;  //찜 토탈
+	private int reviewTotal;  //후기 토탈
 }

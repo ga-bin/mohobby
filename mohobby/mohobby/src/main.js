@@ -8,6 +8,11 @@ import ImageViewer from "vue2-viewer";
 import store from "./store";
 import vueMoment from "vue-moment";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
+Vue.use(VueSweetalert2);
+
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
