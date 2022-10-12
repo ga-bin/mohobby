@@ -118,19 +118,29 @@
 
 <script>
 export default {
-  props: ['search'],
+  props : {
+    rsearch : String,
+    keyWord : String
+  },
   data() {
   return {
   search : '',
   items: [],
   moimRight : '0',
   noneuser : false,
-  };
+ };
 },
 created()  {
   this.getList()
 },
-
+watch: {
+  rsearch(){
+    this.searchList();
+  },
+  keyWord() {
+    this.searchList();
+  }
+},
 methods : {
   getList() {
     this.axios.get("/moimRecruitMember")
@@ -140,6 +150,23 @@ methods : {
     .catch(function (error) {
       console.log(error);
     })
+  },
+  searchList() {
+    this.axios.get("/moimAllSearch",{
+      params : {
+        Search : this.rsearch,
+        Category : this.keyWord
+      }
+    })
+    .then((resp) => {
+      console.log(resp)
+      console.log(this.items)
+      this.items = resp.data;
+    })
+    .catch(function (error) {
+      console.log(this.items)
+      console.log(error)
+    }) 
   },
   select : function() {
     if (this.moimRight !== '0') {
@@ -177,4 +204,4 @@ methods : {
     width : 1000px;
   }
 
-</style>
+</style>  

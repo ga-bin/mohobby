@@ -27,7 +27,7 @@ INSERT INTO moim (
             #{maxPeople}
             )
 </insert>
-<!-- 소모임 전체 조회 -->
+<!-- 소모임 모집 전체 조회(6개씩) -->
 <select id="moimrecruitMember" resultType="com.yedam.mohobby.service.moim.MoimVO">
    select * from moim <![CDATA[where rownum <= 6]]>
 </select>
@@ -41,10 +41,10 @@ INSERT INTO moim (
 <select id="moimAllSearch" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimVO">
    SELECT * FROM moim
    where 1=1
-      <if test ='moimName != null and moimName != " "'>
+      <if test ="moimName != null and moimName != ''">
           and moim_name = #{moimName}
       </if>  
-      <if test='moimCatg != null and moimCatg != " "'>
+      <if test="moimCatg != null and moimCatg != ''">
           and moim_catg = #{moimCatg}
       </if>
    ORDER BY moim_id DESC
