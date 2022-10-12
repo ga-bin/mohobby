@@ -87,7 +87,19 @@
                             {{ item.className }}
                         </span>
                         <div class="my-2 text-subtitle-1">
-                            <span class="item-catg">{{ item.keywordName }}</span> {{ ' | ' }} <span class="item-name">{{ item.nickname }}</span>
+                            <span 
+                                class="item-catg" 
+                                @click="$router.push({ path: '/class/list/'+item.keywordId, }).catch(()=>{$router.go(0)})"
+                            >
+                                {{ item.keywordName }}
+                            </span>
+                            {{ ' | ' }}
+                            <span
+                                class="item-name"
+                                @click="$router.push({ path: '/snsUserFeed?memId='+item.memberId }).catch(()=>{$router.go(0)})"
+                            >
+                                {{ item.nickname }}
+                            </span>
                         </div>
                     </v-card-text>
                 </div>
@@ -139,7 +151,7 @@ export default {
     },
     created() {
         this.initList();
-       // this.selectSort();
+        
     },
     methods: {
         initList() {
