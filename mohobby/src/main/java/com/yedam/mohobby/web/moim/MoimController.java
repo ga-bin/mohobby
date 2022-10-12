@@ -1,11 +1,14 @@
 package com.yedam.mohobby.web.moim;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.moim.MoimService;
@@ -14,6 +17,7 @@ import com.yedam.mohobby.service.moim.MoimVO;
 @RestController
 @CrossOrigin(origins = "*")
 public class MoimController {
+
 	@Autowired
 	MoimService service;
 	
@@ -54,10 +58,10 @@ public class MoimController {
 		return service.moimCatgSelect();
 	}
 	
-//	//소모임 종합검색
-//	@GetMapping("/moimAllSearch")
-//	public List<MoimVO> getAllSearch(){
-//		return service.moimAllSearch();
-//	}
+	//소모임 종합검색
+	@GetMapping("/moimAllSearch")
+	public List<MoimVO> getAllSearch(@RequestParam("moimName")String moimName, @RequestParam("moimCatg")String moimCatg ){
+		return service.moimAllSearch(moimName, moimCatg);
+	}
 }
 

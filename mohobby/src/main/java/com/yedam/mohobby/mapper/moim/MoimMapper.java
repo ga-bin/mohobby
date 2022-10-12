@@ -1,5 +1,6 @@
 package com.yedam.mohobby.mapper.moim;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.yedam.mohobby.service.moim.MoimVO;
@@ -24,5 +25,5 @@ public interface MoimMapper {
 	public List<MoimVO> moimCatgSelect();
 	
 	//소모임 종합 검색
-//	public List<MoimVO> moimAllSearch();
+	public List<MoimVO> moimAllSearch(HashMap<String, String> map);
 }

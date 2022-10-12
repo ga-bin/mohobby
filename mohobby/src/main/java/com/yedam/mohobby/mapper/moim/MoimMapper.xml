@@ -37,20 +37,17 @@ INSERT INTO moim (
 </select>
 
 <!-- 중첩 검색 -->
-<!-- <SELECT id="moimAllSearch" resultType="com.yedam.mohobby.service.moim.MoimVO">
+<select id="moimAllSearch" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimVO">
    SELECT * FROM moim
-   <WHERE>
-      1=1
-      <if test ="moimName != null and moimName != ' '">
-          moim_name = #{moimName}
+   where 1=1
+      <if test ='moimName != null and moimName != " "'>
+          and moim_name = #{moimName}
+      </if>  
+      <if test='moimCatg != null and moimCatg != " "'>
+          and moim_catg = #{moimCatg}
       </if>
-      
-      <if test="moimCatg != null and moim_name != ' '">
-          moim_catg = #{moimCatg}
-      </if>
-   </WHERE> 
-   ORDER BY moim_id DESC;
-</SELECT> -->
+   ORDER BY moim_id DESC
+</select>
 
 <!-- 소모임명 검색 -->
 <!-- <select id="moimNameSelect" resultType="com.yedam.mohobby.service.moim.MoimVO">

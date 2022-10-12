@@ -1,5 +1,7 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
+import java.util.HashMap;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import com.yedam.mohobby.service.moim.MoimVO;
 @Service
 public class MoimServiceImpl implements MoimService{
 
-	
 
 	@Autowired
 	MoimMapper mapper;
@@ -51,11 +52,14 @@ public class MoimServiceImpl implements MoimService{
 		return mapper.moimCatgSelect();
 	}
 
-//	//소모임 종합 검색
-//	@Override
-//	public List<MoimVO> moimAllSearch() {
-//		return mapper.moimAllSearch();
-//	}	
+	//소모임 종합 검색
+	@Override
+	public List<MoimVO> moimAllSearch(String moimName, String moimCatg) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("moimName", moimName);
+		map.put("moimCatg", moimCatg);
+		return mapper.moimAllSearch(map);
+	}	
 
 	
 	

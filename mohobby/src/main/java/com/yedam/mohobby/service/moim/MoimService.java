@@ -1,6 +1,8 @@
 
 package com.yedam.mohobby.service.moim;
 
+
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -24,6 +26,6 @@ public interface MoimService {
 	public List<MoimVO> moimCatgSelect();
 	
 	//소모임 종합 검색
-//	public List<MoimVO> moimAllSearch();
+	public List<MoimVO> moimAllSearch(String moimName, String moimCatg);
 }
 
