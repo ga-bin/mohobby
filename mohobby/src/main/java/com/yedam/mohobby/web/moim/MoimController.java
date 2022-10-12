@@ -21,26 +21,26 @@ public class MoimController {
 	@Autowired
 	MoimService service;
 	
-	//등록
+	//소모임 등록
 	@PostMapping("/moimInsert")
 	public MoimVO insertMoim(MoimVO moimVO) {
 		service.moimInsert(moimVO);
 		return moimVO;
 	}
 
-	//전체조회
+	//소모임 전체조회
 	@GetMapping("/moimAllSelect")
 	public List<MoimVO> getAllList(){
 		return service.moimAllSelect();
 	}
 	
-	//인기 목록 조회
+	//소모임 인기 목록 조회
 	@GetMapping("/moimPopularSelect")
 	public List<MoimVO> getPopularList(){
 		return service.moimPopularSelect();
 	}
 	
-	//소모임 멤버 모집
+	//소모임 멤버 모집 조회(6개씩)
 	@GetMapping("/moimRecruitMember")
 	public List<MoimVO> getmoimrecruitMember() {
 		return service.moimrecruitMember();
@@ -52,7 +52,7 @@ public class MoimController {
 		return service.moimNameSelect();
 	}
 	
-	//카테고리 조회
+	//소모임 카테고리 조회
 	@GetMapping("/moimCatgSelect")
 	public List<MoimVO> getCatgList(){
 		return service.moimCatgSelect();
