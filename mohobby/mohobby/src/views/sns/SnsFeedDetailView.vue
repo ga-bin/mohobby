@@ -6,15 +6,24 @@
       <v-card class="mx-auto" max-width="1000">
         <v-row>
           <v-col col="12">
-
             <!-- 프로필 -->
             <div>
               <div class="flex">
-                <v-avatar class="ml-10 my-10 mr-4" color="grey darken-1" size="64">
-                  <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${items.profileImg}`)" />
+                <v-avatar
+                  class="ml-10 my-10 mr-4"
+                  color="grey darken-1"
+                  size="64"
+                >
+                  <v-img
+                    aspect-ratio="30"
+                    :src="require(`@/assets/image/user/${items.profileImg}`)"
+                  />
                 </v-avatar>
-                <div class="user text-overline">{{items.memberId}}<br>{{
-                this.$moment(items.writeDate).format('YYYY.MM.DD') }}</div>
+                <div class="user text-overline">
+                  {{ items.memberId }}<br />{{
+                    this.$moment(items.writeDate).format("YYYY.MM.DD")
+                  }}
+                </div>
               </div>
             </div>
             <div id="mdi-dots-vertical">
@@ -38,8 +47,11 @@
               <!-- <v-img v-for="(item, i) in imagelist" :key="i" :src="require(`../../../back/uploads/${item}`)"
        contain height="150px" width="200px" style="border: 2px solid black; margin-left:100px;"/> -->
               <v-carousel ref="myCarousel" hide-delimiters :touchless="ture">
-                <v-carousel-item :aspect-ratio="4 / 3" :width="width"
-                  :src="require(`@/assets/image/sns/${items.thumbnail}`)"></v-carousel-item>
+                <v-carousel-item
+                  :aspect-ratio="4 / 3"
+                  :width="width"
+                  :src="require(`@/assets/image/sns/${items.thumbnail}`)"
+                ></v-carousel-item>
               </v-carousel>
               <!-- </div> -->
             </div>
@@ -90,74 +102,73 @@ export default {
     roomId: 0,
     items: [],
     hashtags: [],
-    feeds : [],
-    show : true,
+    feeds: [],
+    show: true,
   }),
-  setup() { },
+  setup() {},
   created() {
     console.log(this.$route.query.id);
     console.log(this.$store.state.id);
     this.showDetail();
   },
-  mounted() {
-
-  },
-  unmounted() { },
+  mounted() {},
+  unmounted() {},
   methods: {
     //Detail조회
     showDetail() {
       let postId = this.$route.query.id;
-      this.axios('/sns/user/feed_detail', {
+      this.axios("/sns/user/feed_detail", {
         params: {
-          postId: postId
-        }
-      }).then(res => {
-        this.items = res.data;
-        let str = this.items.hashtag;
-        let hashtag = str.split(',');
-        console.log(hashtag);
-        this.hashtags = hashtag;
-        console.log(this.items);
-        console.log(this.items.cmts);
-      }).catch(err => {
-        console.log(err);
-      });
+          postId: postId,
+        },
+      })
+        .then((res) => {
+          this.items = res.data;
+          let str = this.items.hashtag;
+          let hashtag = str.split(",");
+          console.log(hashtag);
+          this.hashtags = hashtag;
+          console.log(this.items);
+          console.log(this.items.cmts);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     //해시태그 클릭시 검색 이벤트 발생
-    search(e){
-            let getHashtag = e.target.innerText;
-            let hashtag = getHashtag.slice(1);
-            console.log(hashtag);
-            this.axios('/sns/search/hashtag', {
-                params : {
-                    hashtag : hashtag
-                }
-            }).then(res => {
-                console.log(res);
-                this.feeds = res.data;
-                this.goSearchPage(this.feeds);
-                console.log("검색성공:"+this.feeds);
-
-            }).catch(err =>{
-                console.log(err);
-            });
-       
+    search(e) {
+      let getHashtag = e.target.innerText;
+      let hashtag = getHashtag.slice(1);
+      console.log(hashtag);
+      this.axios("/sns/search/hashtag", {
+        params: {
+          hashtag: hashtag,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          this.feeds = res.data;
+          this.goSearchPage(this.feeds);
+          console.log("검색성공:" + this.feeds);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    goSearchPage(feeds){
-      console.log("goSearchPage실행"+feeds);
-      
+    goSearchPage(feeds) {
+      console.log("goSearchPage실행" + feeds);
 
-      this.$router.push({ name: "snsmain", params: {  hashtagResult: feeds } })
+      this.$router.push({ name: "snsmain", params: { hashtagResult: feeds } });
     },
     send() {
-      this.$router.push({ name: "chat", params: { roomId: this.roomId } })
+      this.$router.push({ name: "chat", params: { roomId: this.roomId } });
     },
     //좋아요 버튼
     likeBtn() {
       let memberId = this.$store.state.id;
       let postId = this.$route.query.id;
       if (!memberId) {
-        alert('로그인이 필요합니다!');
+        alert("로그인이 필요합니다!");
       } else {
         if (this.likeStatus == 0) {
           this.showFullHeart();
@@ -180,7 +191,7 @@ export default {
               params: {
                 targetId: postId,
                 postId: postId,
-              }
+              },
             })
             .then(function (response) {
               console.log("좋아요수 업댓성공: " + response);
@@ -188,7 +199,8 @@ export default {
             .catch(function (error) {
               console.log("좋아요수 업댓실패: " + error);
             });
-        } else { //좋아요 취소
+        } else {
+          //좋아요 취소
           this.showEmptyHeart();
           console.log(this.showEmptyHeart);
           this.likeStatus = 0;
@@ -198,7 +210,7 @@ export default {
               params: {
                 memberId: memberId,
                 targetId: postId,
-              }
+              },
             })
             .then(function (response) {
               console.log("좋아요삭제: " + response);
@@ -211,7 +223,7 @@ export default {
               params: {
                 targetId: postId,
                 postId: postId,
-              }
+              },
             })
             .then(function (response) {
               console.log("좋아요수 업댓성공: " + response);
@@ -275,7 +287,7 @@ export default {
 }
 
 .box {
-  display: inline-block
+  display: inline-block;
 }
 
 #like_box {

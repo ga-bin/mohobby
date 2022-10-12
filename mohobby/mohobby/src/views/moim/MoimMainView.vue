@@ -13,9 +13,7 @@ import MoimMainrecruit2 from "../../components/moim/Main/MoimMain_recruit2.vue";
 export default {
   components: { MoimMain_Top, MoimMainrecruit, MoimMainrecruit2 },
   data() {
-    return {
-      search : '',
-    }
+    return {};
   },
   setup() {},
   created() {},
@@ -23,9 +21,9 @@ export default {
   unmounted() {},
   methods: {
     childValue(search) {
-      console.log(search)
-      console.log(this.search)
-      this.search = search
+      console.log(search);
+      console.log(this.search);
+      this.search = search;
     },
   },
 };
