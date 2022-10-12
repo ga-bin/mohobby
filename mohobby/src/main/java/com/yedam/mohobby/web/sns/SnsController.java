@@ -68,7 +68,7 @@ public class SnsController {
 			
 			//파일명 고유 랜덤 문자로 생성
 			UUID uuid = UUID.randomUUID();
-			String uuids = uuid.toString().replaceAll("-", "");
+			String uuids = uuid.toString().replaceAll("_", "");
 			
 			//확장자를 추출
 			String extension = fileRealName.substring(fileRealName.indexOf("."), fileRealName.length());
@@ -184,10 +184,11 @@ public class SnsController {
         return service.getUserFeed(memberId);
     }
    //피드상세조회 - 테스트완료
-    @GetMapping("/user/feed_detail")
-    public SnsFeedVO getFeedDetail(@RequestParam int postId) {
+    @GetMapping("/user/feed_detail/{postId}")
+    public SnsFeedVO getFeedDetail(@PathVariable("postId") int postId, @RequestParam String memberId) {
         	System.out.println("프로필조회 성공");
-            return service.getFeedDetail(postId);
+        	System.out.println(postId+", "+memberId);
+            return service.getFeedDetail(postId, memberId);
     }
     
     /*
@@ -270,20 +271,20 @@ public class SnsController {
      * 좋아요
      */
   //좋아요 - 테스트완료
-    @PostMapping("/like")
+    //@PostMapping("/like")
     public int addLike(@RequestBody JjimVO jjimVO) {
+    	jjimVO.setTargetType(2);
     	return service.addLike(jjimVO);
     }
   //좋아요취소 - 테스트완료
     @DeleteMapping("/like")
-    public int deleteLike(@RequestParam int targetId,@RequestParam String memberId) {
-    	return service.deleteLike(targetId, memberId);
+    public int deleteLike(@RequestParam int targetId, @RequestParam int targetType ,@RequestParam String memberId) {
+    	return service.deleteLike(targetId, targetType, memberId);
     }
    //좋아요누적
-    @PutMapping("/like")
-    public int sumLikes(@RequestParam int targetId, @RequestParam int postId) {
-        return service.sumLikes(targetId, postId);
-        
+    @PostMapping(path="/like")
+    public int sumLikes(@RequestBody JjimVO jjimVO) {
+        return service.sumLikes(jjimVO);
     }
     
     /*
