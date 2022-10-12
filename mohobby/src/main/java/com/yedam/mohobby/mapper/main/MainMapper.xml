@@ -3,11 +3,11 @@
 <mapper namespace="com.yedam.mohobby.mapper.main.MainMapper">
 
 <!-- sns인기글 조회  -->
+<!-- <select id=""></select>
+ 새로 생성된 모임 조회
 <select id=""></select>
-<!--  새로 생성된 모임 조회 -->
+모집중인 강의 조회
 <select id=""></select>
-<!-- 모집중인 강의 조회 -->
-<select id=""></select>
-<!-- 챌린지 실시간 인증샷 조회 -->
-<select id=""></select>
+챌린지 실시간 인증샷 조회
+<select id=""></select> -->
 </mapper>
