@@ -324,56 +324,36 @@
    		좋아요
    
     -->
-   <insert id="addLike" parameterType="com.yedam.mohobby.service.communal.JjimVO">
-      INSERT INTO jjim(
-                    member_id
-                    ,target_id
-                    ,target_type
-                  )
-              VALUES(
-                  #{ memberId }
-                  ,#{ targetId }
-                  ,#{ targetType }
-                  )
-   </insert>
 
-   <!-- 좋아요취소 -->
-   <delete id="deleteLike" parameterType="com.yedam.mohobby.service.communal.JjimVO">
-      DELETE FROM jjim 
-      WHERE target_id = #{ targetId } 
-      AND member_id = #{ memberId }
-      AND target_type = #{ targetType }
-   </delete>
    <!-- 좋아요 누적 -->
    <select id="sumLikes" parameterType="com.yedam.mohobby.service.communal.JjimVO" resultType="java.lang.Integer">
-		declare
-		v_targetId NUMBER := #{ targetId };
-		v_memberId member.member_id%TYPE := #{ memberId };
-		temp varchar2(100);
-		begin
+		DECLARE
+		v_target_id NUMBER := 7;
+		v_member_id member.member_id%TYPE := 'user1';
+		v_status NUMBER;
+		BEGIN
 		SELECT
-		        (CASE WHEN NOT EXISTS (
-		        SELECT*
-		        
+		    (CASE WHEN NOT EXISTS (
+		        SELECT *
 		        FROM jjim
 		        WHERE target_id IN (
-		                SELECT target_id FROM jjim
-		                WHERE target_id = v_targetId
-		                AND member_id = v_memberId
-		                AND target_type = 2       
-		                )
-		        ) THEN 0 ELSE 1 END  
+		            SELECT target_id FROM jjim
+		            WHERE target_id = v_target_id
+		            AND member_id = v_member_id
+		            AND target_type = 2       
+		            )
+		     ) THEN 0 ELSE 1 END  
 		) test
-		into temp
+		INTO v_status
 		FROM dual;
-		if temp = 0 then
-		insert into jjim (target_id, target_type, member_id) values(v_targetId, 2, v_memberId);
-		update sns_post set likes = (select likes from sns_post where post_id=v_targetId)+1 where post_id=v_targetId;
-		elsif temp=1 then 
-		delete from jjim where target_id= v_targetId and target_type=2 and member_id=v_memberId;
-		update sns_post set likes = (select likes from sns_post where post_id=v_targetId)-1 where post_id=v_targetId;
-		end if;
-		end;
+		IF v_status = 0 THEN
+		INSERT INTO jjim (target_id, target_type, member_id) VALUES(v_target_id, 2, v_member_id);
+		UPDATE sns_post SET likes = (SELECT likes FROM sns_post WHERE post_id = v_target_id)+1 WHERE post_id = v_target_id;
+		ELSIF v_status = 1 THEN 
+		DELETE FROM jjim WHERE target_id= v_target_id AND target_type=2 AND member_id = v_member_id;
+		UPDATE sns_post SET likes = (SELECT likes FROM sns_post WHERE post_id = v_target_id)-1 WHERE post_id = v_target_id;
+		END IF;
+		END
    </select>
 
 
