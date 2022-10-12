@@ -6,4 +6,5 @@ import lombok.Data;
 public class ClassListRequestVO {
     private String catg;
     private String memberId;
+    private int classId;
 }

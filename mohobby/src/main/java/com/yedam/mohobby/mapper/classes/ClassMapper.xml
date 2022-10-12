@@ -81,6 +81,29 @@
 		order by class_id desc
 	</select>
 	
+	<!-- 단건조회 -->
+	<select id="listOne" parameterType="com.yedam.mohobby.service.classes.ClassListRequestVO" resultType="com.yedam.mohobby.service.classes.ClassesVO">
+		select
+		    nvl2(j.target_id, 1, 0)jjim, nvl(q.qnaTotal, 0) qnaTotal, nvl(r.reviewTotal, 0)reviewTotal, c.*
+		from
+		    (select count(*)qnaTotal, class_id from class_board where board_type = 1 group by class_id)q,
+		    (select count(*)reviewTotal, class_id from class_board where board_type = 4 group by class_id)r,
+		    (select * from jjim where target_type=1 and member_id = <if test="memberId == null">null</if> <if test="memberId != null">#{memberId}</if>)j,
+		    class c
+		where c.class_id = q.class_id(+)
+		and c.class_id = r.class_id(+)
+		and c.class_id = j.target_id(+)
+		and c.class_id = #{classId}
+	</select>
 	
+	<!-- 찜등록 -->
+	<insert id="addJjim" parameterType="com.yedam.mohobby.service.communal.JjimVO">
+		insert into jjim(target_id, target_type, member_id) values(#{targetId}, 1, #{memberId})
+	</insert>
+	
+	<!-- 찜삭제 -->
+	<delete id="deleteJjim" parameterType="com.yedam.mohobby.service.communal.JjimVO">
+		delete from jjim where target_id = #{targetId} and target_type = 1 and member_id = #{memberId}
+	</delete>
    
 </mapper>
