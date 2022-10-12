@@ -276,8 +276,8 @@ public class SnsController {
     }
   //좋아요취소 - 테스트완료
     @DeleteMapping("/like")
-    public int deleteLike(@RequestParam int targetId,@RequestParam String memberId) {
-    	return service.deleteLike(targetId, memberId);
+    public int deleteLike(@RequestParam int targetId, @RequestParam int targetType, @RequestParam String memberId) {
+    	return service.deleteLike(targetId, targetType, memberId);
     }
    //좋아요누적
     @PutMapping("/like")

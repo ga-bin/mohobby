@@ -320,7 +320,7 @@
               VALUES(
                   #{ memberId }
                   ,#{ targetId }
-                  ,2
+                  ,#{ targetType }
                   )
    </insert>
    <!-- 좋아요취소 -->
@@ -328,7 +328,7 @@
       DELETE FROM jjim 
       WHERE target_id = #{ targetId } 
       AND member_id = #{ memberId }
-      AND target_type = 2
+      AND target_type = #{ targetType }
    </delete>
    <!-- 좋아요 누적 -->
    <update id="sumLikes" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">

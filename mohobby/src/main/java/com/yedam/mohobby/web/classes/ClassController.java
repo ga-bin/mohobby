@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,14 +27,20 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
+import com.yedam.mohobby.service.classes.ClassListRequestVO;
 import com.yedam.mohobby.service.classes.ClassService;
 import com.yedam.mohobby.service.classes.ClassesVO;
+import com.yedam.mohobby.service.communal.JjimVO;
+import com.yedam.mohobby.service.sns.SnsService;
 
 @RestController
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 public class ClassController {
 	@Autowired
 	ClassService classService;
+	
+	@Autowired
+	SnsService snsService;
 	
 	//html 파일 생성
 	@PostMapping("/saveClassInfo")
@@ -97,11 +104,25 @@ public class ClassController {
 	 */
 	@GetMapping("/class/{catg}")
 	public @ResponseBody List<ClassesVO> listAll(
-	        @PathVariable String catg
+	        @PathVariable String catg,
+	        @RequestParam String memberId
 	) {
-	    return classService.listAll();
+	    ClassListRequestVO req = new ClassListRequestVO();
+	    req.setCatg(catg);
+	    req.setMemberId(memberId);
+	    return classService.listAll(req);
 	}
 	
 	
-
+	//찜 등록
+	@PostMapping("/class/jjim")
+	public void addJjim(@RequestBody JjimVO jjim) {
+	    snsService.addLike(jjim);
+	}
+	
+	//찜 등록 취소
+	@DeleteMapping("/class/jjim")
+	public void delJjim(@RequestBody JjimVO jjim) {
+	    snsService.deleteLike(jjim.getTargetId(), jjim.getTargetType(), jjim.getMemberId());
+	}
 }

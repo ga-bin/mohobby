@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.classes.ClassMapper;
+import com.yedam.mohobby.service.classes.ClassListRequestVO;
 import com.yedam.mohobby.service.classes.ClassService;
 import com.yedam.mohobby.service.classes.ClassesVO;
 
@@ -22,8 +23,8 @@ public class ClassServiceImpl implements ClassService {
 	}
 
     @Override
-    public List<ClassesVO> listAll() {
-        return classMapper.listAll();
+    public List<ClassesVO> listAll(ClassListRequestVO req) {
+        return classMapper.listAll(req);
     }
 
 }

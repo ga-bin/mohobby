@@ -160,8 +160,8 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//좋아요취소
 	@Override
-	public int deleteLike(int targetId, String memberId) {
-		return mapper.deleteLike(targetId, memberId);
+	public int deleteLike(int targetId, int targetType, String memberId) {
+		return mapper.deleteLike(targetId, targetType, memberId);
 	}
 	//좋아요누적
 	@Override

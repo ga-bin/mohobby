@@ -10,5 +10,5 @@ public interface ClassService {
 	public void insertClass(ClassesVO classes);
 	
 	//전체조회
-	public List<ClassesVO> listAll();
+	public List<ClassesVO> listAll(ClassListRequestVO req);
 }

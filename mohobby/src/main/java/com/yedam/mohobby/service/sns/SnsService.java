@@ -76,7 +76,7 @@ public interface SnsService {
     //좋아요
     public int addLike(JjimVO jjimVO);
     //좋아요취소
-	public int deleteLike(int targetId, String memberId);
+	public int deleteLike(int targetId, int targetType, String memberId);
     //좋아요누적
     public int sumLikes(int targetId, int postId);
     
