@@ -38,9 +38,7 @@ export default {
   },
   methods: {
     getFeedDetail(postId) {
-        this.$router.push({ name: 'snsFeedDetail',
-                            query: {id : postId} 
-                          });
+        this.$router.push({ name: 'snsFeedDetail', query: {id : postId} });
       },
   },
 }

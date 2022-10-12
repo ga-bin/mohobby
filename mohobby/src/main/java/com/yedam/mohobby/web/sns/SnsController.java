@@ -173,15 +173,15 @@ public class SnsController {
     public List<SnsPostVO> getFollowingFeeds(@PathVariable String memberId) {
         return service.getFollowingFeeds(memberId);
     }
-   //유저피드목록
-    @GetMapping("/user/user_feeds/{memberId}")
-    public List<SnsPostVO> getUserFeed(@PathVariable String memberId) {
-        return service.getUserFeed(memberId);
-    }
   //프로필조회
     @GetMapping("/user/profile/{memberId}")
     public SnsProfileVO getProfile(@PathVariable("memberId") String memberId) {
         	return service.getProfile(memberId);//컬럼명과 컬럼값이 키와 값으로 매핑이 된다. ㄴ
+    }
+    //유저피드조회
+    @GetMapping("/user/user_feeds/{memberId}")
+    public List<SnsPostVO> getUserFeed(@PathVariable("memberId") String memberId) {
+        return service.getUserFeed(memberId);
     }
    //피드상세조회 - 테스트완료
     @GetMapping("/user/feed_detail")

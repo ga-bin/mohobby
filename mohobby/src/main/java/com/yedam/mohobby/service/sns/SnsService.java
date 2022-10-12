@@ -34,10 +34,10 @@ public interface SnsService {
     public List<SnsPostVO> hotList();
     //팔로잉피드조회
     public List<SnsPostVO> getFollowingFeeds(String memberId);
-    //유저피드목록
-    public List<SnsPostVO> getUserFeed(String memberId);
     //피드프로필
     public SnsProfileVO getProfile(String memberId);
+    //유저피드조회
+    public List<SnsPostVO> getUserFeed(String memberId);
     //피드상세조회
     public SnsFeedVO getFeedDetail(int postId);
     

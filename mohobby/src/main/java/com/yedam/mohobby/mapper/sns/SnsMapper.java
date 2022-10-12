@@ -43,13 +43,12 @@ public interface SnsMapper {
     public List<SnsPostVO> hotList();
     //팔로잉피드조회
     public List<SnsPostVO> getFollowingFeeds(String memberId);
-    //유저피드조회
-    public List<SnsPostVO> getUserFeed(String memberId);
     //프로필조회
     public SnsProfileVO getProfile(String memberId);
+    //유저피드조회
+    public List<SnsPostVO> getUserFeed(String memberId);
     //인기해시태그
     public List<HashtagVO> selectHashtagForMain();
-    
     //피드상세조회
     public SnsFeedVO getFeedDetail(int postId);
     

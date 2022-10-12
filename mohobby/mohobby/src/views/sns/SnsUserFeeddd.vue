@@ -1,73 +1,83 @@
 <template>
-
+  <div id="wrap_box">
     <div class="container">
 
-    <div class="gallery">
+      <div class="profile">
 
-        <div class="gallery-item" tabindex="0" v-for="(feed,i) in feeds" :key="i">
+        <div class="profile-image">
+          <v-avatar class="ml-10 my-10 mr-4" color="grey darken-1" size="150">
+                <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${infoes.profileImg}`)" alt="profile_img" />
+          </v-avatar>
+        </div>
 
-        <v-img :src="require(`@/assets/image/sns/${feed.thumbnail}`)" class="gallery-image" alt="thumbnail_img" />
+        <div class="profile-user-settings">
 
-        <div class="gallery-item-info">
+          <h1 class="profile-user-name">{{ infoes.memberId }}</h1>
 
-            <ul>
-            <li class="gallery-item-likes"><span class="visually-hidden"><v-icon>mdi-heart-outline</v-icon></span><i class="fas fa-heart" aria-hidden="true"></i>{{ feed.likes }}</li>
-            <li class="gallery-item-comments"><span class="visually-hidden"><v-icon>mdi-chat-outline</v-icon></span><i class="fas fa-comment" aria-hidden="true"></i>{{ feed.cmts }}</li>
-            </ul>
+          <button class="btn profile-edit-btn">Edit Profile</button>
+
+          <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
 
         </div>
 
-        </div>
+        <div class="profile-stats">
 
-        <div class="gallery-item" tabindex="0">
-
-        <img src="https://images.unsplash.com/photo-1423012373122-fff0a5d28cc9?w=500&h=500&fit=crop" class="gallery-image" alt="">
-
-        <div class="gallery-item-type">
-
-            <span class="visually-hidden">Video</span><i class="fas fa-video" aria-hidden="true"></i>
+          <ul>
+            <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
+            <li><span class="profile-stat-count">{{ infoes.followerCnt }}</span> followers</li>
+            <li><span class="profile-stat-count">{{ infoes.followingCnt }}</span> following</li>
+          </ul>
 
         </div>
 
+        <div class="profile-bio">
+
+          <p><span class="profile-real-name">{{ infoes.nickname }}</span> {{ infoes.intro }} 📷✈️🏕️</p>
+
         </div>
 
-    </div>
-    <!-- End of gallery -->
-
-    <div class="loader"></div>
+      </div>
+      <!-- End of profile section -->
 
     </div>
     <!-- End of container -->
+    <!-- 피드 컴포넌트 -->
+    <div>
+      <Feeds></Feeds>
+    </div>
+  </div>
 </template>
 <script>
+import Feeds from "@/components/sns/FeedDetail/Feeds.vue"
+import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
 export default {
-    name: "Feeds",
-    data(){
-        return{
-            feeds:[],
-            memberId:"user1",
-        }
-    },
-    created() {
-        this.loadUserFeedList();
+  name: "UserProfile",
+  components: { SnsSidebar, Feeds },
+  data() {
+      return{     
+          infoes:[],
+          memberId:'user11',//더미아이디}
+      }
+  },
+  setup() { },
+  created() {
+        this.loadUserProfile();
+        console.log("유저 프로필 페이지 이동");
     },
     methods: {
-        loadUserFeedList() {
-            this.axios('sns/user/user_feeds/' + this.memberId)
-            .then(res => {
-              this.feeds = res.data;
-              console.log(this.feeds);
-            }).catch(err => {
-              console.log(err);
-            });  
-          }
-
+      loadUserProfile() {
+          this.axios('/sns/user/profile/' + this.memberId)
+          .then(res => {
+            this.infoes = res.data;
+            console.log(this.infoes);
+          }).catch(err => {
+            console.log(err);
+          });  
+        }
     },
-
-    setup() {
-        
-    },
-}
+  mounted() {},
+  unmounted() { },
+};
 </script>
 <style scoped>
 /*
@@ -92,7 +102,7 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
     box-sizing: border-box;
 }
 
-body {
+#wrap_box {
     font-family: "Open Sans", Arial, sans-serif;
     min-height: 100vh;
     background-color: #fafafa;
@@ -449,4 +459,5 @@ Remove or comment-out the code block below to see how the browser will fall-back
         }
     }
 }
+
 </style>

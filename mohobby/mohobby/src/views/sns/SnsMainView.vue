@@ -1,123 +1,130 @@
 <template>
-    <div id = "container">
-        <div id="searchbar">
-            <div class="regFeed">
-                <!-- 로그인폼: 비회원일때-->
-                <v-card-actions  v-if="!this.member" >
-                    <v-spacer></v-spacer>
-                    <div class="text-center">
-                        <v-dialog
-                                v-model="noneuser"
-                                width="500"
-                        >
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn text>
-                                <v-chip
-                                color="success"
-                                outlined
-                                v-bind="attrs"
-                                v-on="on"
-                                >
-                                <v-icon left>mdi-plus</v-icon>글쓰기
-                                </v-chip>
-                            </v-btn>
-                        </template>
-                            <v-card>
-                                <br><br>
-                                <v-card-text class="font-weight-bold center">
-                                    로그인이 필요합니다 !
-                                </v-card-text>
-                                <v-divider></v-divider>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                    color="success"
-                                    depressed
-                                    @click="login()"
-                                    >로그인하러 가기</v-btn>
-                                    <v-btn
-                                    depressed
-                                    @click="noneuser=false"
-                                    >닫기</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
+    <div>
+        <SnsSidebar></SnsSidebar>
+            <div id = "container">
+                <div id="searchbar">
+                    <div>
+                      <v-btn color="red" @click="goMyFeed(member)">내 피드가기</v-btn>  
                     </div>
-                </v-card-actions>
+                    <div class="regFeed">
+                        <!-- 로그인폼: 비회원일때-->
+                        <v-card-actions  v-if="!this.member" >
+                            <v-spacer></v-spacer>
+                            <div class="text-center">
+                                <v-dialog
+                                        v-model="noneuser"
+                                        width="500"
+                                >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn text>
+                                        <v-chip
+                                        color="success"
+                                        outlined
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        >
+                                        <v-icon left>mdi-plus</v-icon>글쓰기
+                                        </v-chip>
+                                    </v-btn>
+                                </template>
+                                    <v-card>
+                                    <br><br>
+                                    <v-card-text class="font-weight-bold center">
+                                        로그인이 필요합니다 !
+                                    </v-card-text>
+                                    <v-divider></v-divider>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                        color="success"
+                                        depressed
+                                        @click="login()"
+                                        >로그인하러 가기</v-btn>
+                                        <v-btn
+                                        depressed
+                                        @click="noneuser=false"
+                                        >닫기</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </div>
+                    </v-card-actions>
 
-                <!-- 글쓰기폼: 회원일때 -->
-                <v-card-actions v-else>
-                    <v-spacer></v-spacer>
-                    <v-btn text>
-                        <v-chip
-                        color="success"
-                        outlined
-                        @click="select"
-                        >
-                        <v-icon left>mdi-plus</v-icon>
-                        글쓰기
-                        </v-chip>
-                    </v-btn>
-                </v-card-actions>
+                    <!-- 글쓰기폼: 회원일때 -->
+                    <v-card-actions v-else>
+                        <v-spacer></v-spacer>
+                        <v-btn text>
+                            <v-chip
+                            color="success"
+                            outlined
+                            @click="select"
+                            >
+                            <v-icon left>mdi-plus</v-icon>
+                            글쓰기
+                            </v-chip>
+                        </v-btn>
+                    </v-card-actions>
+                </div>
+
+            <!-- 검색창 -->
+            <div>
+            <!-- 키워드 검색(해시태그) -->
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <div id="chip">
+                    <v-row justify="space-around">
+                        <v-col cols="12">
+                            <v-sheet ref="getHashtag" >
+                                <v-chip-group active-class="primary--text">
+                                    <v-chip v-for="(item,i) in items" 
+                                            :key="i"
+                                            @click="searchHashtag(item.hashtag)"
+                                            color="#2ac187"
+                                            class="mx-auto white--text font-weight-bold">
+                                        {{ item.hashtag }}
+                                    </v-chip>
+                                </v-chip-group>
+                            </v-sheet>
+                        </v-col>
+                    </v-row>
+                </div>
+            </v-card-actions>
+        </div>
+    </div>
+
+        <!-- 검색컴포넌트 -->
+        <div id="searchResult">
+            <SearchPage :feeds="feeds" />
+                <div id = "noSearchResult">
+                <h1> 검색 결과가 없습니다 !</h1>
+                </div>
             </div>
 
-        <!-- 검색창 -->
-        <div>
-          <!-- 키워드 검색(해시태그) -->
-          <v-card-actions>
-              <v-spacer></v-spacer>
-              <div id="chip">
-                  <v-row justify="space-around">
-                      <v-col cols="12">
-                          <v-sheet ref="getHashtag" >
-                              <v-chip-group active-class="primary--text">
-                                  <v-chip v-for="(item,i) in items" 
-                                          :key="i"
-                                          @click="searchHashtag(item.hashtag)"
-                                           color="#2ac187"
-                                           class="mx-auto white--text font-weight-bold">
-                                      {{ item.hashtag }}
-                                  </v-chip>
-                              </v-chip-group>
-                          </v-sheet>
-                      </v-col>
-                  </v-row>
-              </div>
-          </v-card-actions>
-      </div>
-  </div>
-
-    <!-- 검색컴포넌트 -->
-    <div id="searchResult">
-        <SearchPage :feeds="feeds" />
-            <div id = "noSearchResult">
-            <h1> 검색 결과가 없습니다 !</h1>
+            <!-- 메인 컴포넌트 -->
+            <div id="hotLecturers">
+            <!-- 인기 피드리스트 -->
+                <h3>추천 만능 재주꾼들 피드</h3>
+                <HotLecturer name="this.items" />
             </div>
-        </div>
 
-        <!-- 메인 컴포넌트 -->
-        <div id="hotLecturers">
-        <!-- 인기 피드리스트 -->
-            <h3>추천 만능 재주꾼들 피드</h3>
-            <HotLecturer name="this.items" />
+            <div id="nonuserFeeds">
+                <h3>재주 견습생들 피드</h3>
+                <!-- 랜덤피드 무한스크롤링 -->
+                <NoneUser />
+            </div>   
         </div>
-
-        <div id="nonuserFeeds">
-            <h3>재주 견습생들 피드</h3>
-            <!-- 랜덤피드 무한스크롤링 -->
-            <NoneUser />
-        </div>   
     </div>
   </template>
   <script>
+    import SnsSearchbar from "@/components/sns/Common/Searchbar.vue"
+    import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
     import SearchPage from "@/views/sns/SnsSearchPage.vue";
-    import SnsSearchbar from "@/components/sns/Common/Searchbar"
-    import HotLecturer from "@/components/sns/Main/HotLecturer";
-    import NoneUser from "@/components/sns/Main/Noneuser";
+    import HotLecturer from "@/components/sns/Main/HotLecturer.vue";
+    import NoneUser from "@/components/sns/Main/Noneuser.vue";
   
     export default {
       name: "snsMain",
-      components: { SnsSearchbar, HotLecturer, NoneUser, SnsSearchbar, SearchPage },
+      components: { SnsSidebar, SnsSearchbar, HotLecturer, NoneUser, SearchPage },
      
       data() {
           return {
@@ -131,9 +138,8 @@
       watch: {},
       created() {
           this.getHotHashtags();//함수실행
-          this.feeds=this.$route.params.sfeeds; //피드디테일에서 받아옴
-          console.log(this.$route.params.sfeeds);
-          console.log(this.$route.params.show);
+          this.feeds=this.$route.params.hashtagResult; //피드디테일에서 받아옴
+          console.log(this.$route.params.hashtagResult);
           console.log(this.$store.state.id);
       },
       methods: {
@@ -184,7 +190,14 @@
           login() {
               this.$router.push({ path: 'login' })
           },
-
+          //내 피드로 이동
+          goMyFeed(member){
+            if (member == undefined) {
+                member = 'user11'
+                this.$router.push({ name: 'snsUserFeed', query: {memId : member} });
+            }
+            this.$router.push({ name: 'snsUserFeed', query: {memId : member} });
+          }
         }
     };
   </script>
