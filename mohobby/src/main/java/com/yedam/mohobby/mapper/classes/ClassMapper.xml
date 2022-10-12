@@ -48,4 +48,7 @@
 					#{accountHolder}
 				)
 	</insert>
+	<select id="listAll" resultType="com.yedam.mohobby.service.classes.ClassesVO">
+	select * from class
+	</select>
 </mapper>

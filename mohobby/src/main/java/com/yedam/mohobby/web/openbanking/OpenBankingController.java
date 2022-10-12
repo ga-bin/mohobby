@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -24,18 +25,14 @@ import com.yedam.mohobby.service.openbanking.BankRealNameResponseVO;
 import com.yedam.mohobby.service.openbanking.RequestHeaderVO;
 import com.yedam.mohobby.service.openbanking.ResponseHeaderVO;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class OpenBankingController {
  
-	@GetMapping("/bankRealName")
-	@ApiOperation(value = "계좌번호 실명 조회", notes="해당 계좌번호와 예금주명이 일치하는지 확인합니다.")
-	public BankRealNameResponseVO accountNumber(
-			@ApiParam(value = "은행 코드", required = true) @RequestParam String Bncd,
-			@ApiParam(value = "계좌 번호", required = true) @RequestParam String Acno) 
+	@GetMapping(value = "/bankRealName")
+	public @ResponseBody BankRealNameResponseVO accountNumber(
+			@RequestParam String Bncd,
+			@RequestParam String Acno) 
 			throws MalformedURLException 
 	{
 		

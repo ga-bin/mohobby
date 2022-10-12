@@ -70,7 +70,7 @@
                             small
                             absolute
                             right
-                            @click = "clickHeart"
+                            @click.stop = "clickHeart"
                         >
                             <v-icon>{{ item.heart ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
                         </v-btn>
@@ -230,7 +230,6 @@ export default {
 
         },
         clickHeart: function() {
-            event.stopPropagation();
 
             let current = event.currentTarget.parentElement.parentElement.parentElement.parentElement;
             let currentList = document.querySelectorAll('.v-badge.v-badge--left.v-badge--overlap.theme--light');
