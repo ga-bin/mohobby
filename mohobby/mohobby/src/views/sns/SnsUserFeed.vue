@@ -14,35 +14,27 @@
   
             <h1 class="profile-user-name">{{ infoes.memberId }}</h1>
   
-            
+            <button class="btn profile-edit-btn">Edit Profile</button>
   
             <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
   
           </div>
   
           <div class="profile-stats">
-            <ul>
-              <li><span class="profile-real-name">{{ infoes.nickname }}</span></li>
-            </ul>
   
             <ul>
               <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
               <li><span class="profile-stat-count">{{ infoes.followerCnt }}</span> followers</li>
               <li><span class="profile-stat-count">{{ infoes.followingCnt }}</span> following</li>
             </ul>
-            <ul>
-                <li><p class="profile-bio"> {{ infoes.intro }} 📷✈️🏕️</p></li>
-                <li></li>
-            </ul>
-            
+  
           </div>
   
           <div class="profile-bio">
-            <ul>
-                <button class="btn profile-edit-btn">Edit Profile</button>
-            </ul>
+  
+            <p><span class="profile-real-name">{{ infoes.nickname }}</span> {{ infoes.intro }} 📷✈️🏕️</p>
+  
           </div>
-
   
         </div>
         <!-- End of profile section -->
@@ -64,22 +56,17 @@
     data() {
         return{     
             infoes:[],
+            memberId:'user11',//더미아이디}
         }
     },
     setup() { },
     created() {
           this.loadUserProfile();
           console.log("유저 프로필 페이지 이동");
-          console.log(this.$route.query.memId);
-
       },
       methods: {
         loadUserProfile() {
-            let memberId = this.$route.query.memId;
-            if (!memberId) {
-                memberId = 'user11';
-            }
-            this.axios('/sns/user/profile/' + memberId)
+            this.axios('/sns/user/profile/' + this.memberId)
             .then(res => {
               this.infoes = res.data;
               console.log(this.infoes);
