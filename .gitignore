@@ -1,9 +1,8 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/windows,java,eclipse
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,java,eclipse
 
 ### Eclipse ###
-.metadata
+.metadata/
 bin/
 tmp/
 *.tmp
@@ -14,6 +13,13 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+Servers/
+*.class
+*.classpath
+target/
+bin/
+.project
+
 
 # External tool builders
 .externalToolBuilders/
@@ -119,13 +125,17 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# Eclipse Core
-.project
+# End of https://www.toptal.com/developers/gitignore/api/windows,java,eclipse
 
-# JDT-specific (Eclopse Java Development Tools)
-.classpath
-
+#node modules
 node_modules/
-META-INF/*
+
+# spring
 .springBeans
-target/
+
+# VisualStudioCode 
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
