@@ -88,8 +88,8 @@ public class SnsServiceImpl implements SnsService{
     }
 	//피드상세조회
 	@Override
-	public SnsFeedVO getFeedDetail(int postId){
-	     return mapper.getFeedDetail(postId);
+	public SnsFeedVO getFeedDetail(int postId, String memberId){
+	     return mapper.getFeedDetail(postId, memberId);
 	}
 	
     /*
@@ -165,8 +165,8 @@ public class SnsServiceImpl implements SnsService{
 	}
 	//좋아요누적
 	@Override
-	public int sumLikes(int targetId, int postId) {
-		return mapper.sumLikes(targetId, postId);
+	public int sumLikes(JjimVO jjimVO) {
+		return mapper.sumLikes(jjimVO);
 	}
 	
     /*

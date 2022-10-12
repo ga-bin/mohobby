@@ -39,7 +39,7 @@ public interface SnsService {
     //유저피드조회
     public List<SnsPostVO> getUserFeed(String memberId);
     //피드상세조회
-    public SnsFeedVO getFeedDetail(int postId);
+    public SnsFeedVO getFeedDetail(int postId, String memberId);
     
     /*
      * 해시태그
@@ -78,7 +78,7 @@ public interface SnsService {
     //좋아요취소
 	public int deleteLike(int targetId, int targetType, String memberId);
     //좋아요누적
-    public int sumLikes(int targetId, int postId);
+    public int sumLikes(JjimVO jjimVO);
     
     /*
      * 댓글

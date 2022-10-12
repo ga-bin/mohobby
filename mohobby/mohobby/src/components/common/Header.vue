@@ -130,7 +130,14 @@ export default {
   created() {},
   mounted() {},
   unmounted() {},
-  methods: {},
+  methods: {
+    logout() {
+      this.$store.commit("setIsLoginFalse");
+      this.$store.commit("logout");
+      this.$store.commit("setUserData", null);
+      this.$router.push("/");
+    },
+  },
 };
 </script>
 <style scoped>
