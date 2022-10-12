@@ -27,12 +27,6 @@ public class MoimController {
 		service.moimInsert(moimVO);
 		return moimVO;
 	}
-
-	//소모임 전체조회
-	@GetMapping("/moimAllSelect")
-	public List<MoimVO> getAllList(){
-		return service.moimAllSelect();
-	}
 	
 	//소모임 인기 목록 조회
 	@GetMapping("/moimPopularSelect")
@@ -60,7 +54,7 @@ public class MoimController {
 	
 	//소모임 종합검색
 	@GetMapping("/moimAllSearch")
-	public List<MoimVO> getAllSearch(@RequestParam("moimName")String moimName, @RequestParam("moimCatg")String moimCatg ){
+	public List<MoimVO> getAllSearch(@RequestParam("Search")String moimName, @RequestParam("Category")String moimCatg ){
 		return service.moimAllSearch(moimName, moimCatg);
 	}
 }

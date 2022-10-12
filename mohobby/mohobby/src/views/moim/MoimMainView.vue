@@ -1,7 +1,7 @@
 <template>
   <div>
-    <MoimMain_Top @search="childValue"></MoimMain_Top>
-    <MoimMainrecruit :search="search"></MoimMainrecruit>
+    <MoimMain_Top @search="childValue" @category="catg"></MoimMain_Top>
+    <MoimMainrecruit :rsearch="psearch" :keyWord="catgKey"></MoimMainrecruit><br>
     <MoimMainrecruit2></MoimMainrecruit2>
   </div>
 </template>
@@ -14,7 +14,8 @@ export default {
   components: { MoimMain_Top, MoimMainrecruit, MoimMainrecruit2 },
   data() {
     return {
-      search : '',
+      psearch : '',
+      catgKey : '',
     }
   },
   setup() {},
@@ -23,10 +24,16 @@ export default {
   unmounted() {},
   methods: {
     childValue(search) {
-      console.log(search)
-      console.log(this.search)
-      this.search = search
+      this.psearch = search
+
     },
+    catg(category) {
+      if(this.catgKey === category) {
+        this.catgKey = ""
+      } else {
+      this.catgKey = category
+      }
+    }
   },
 };
 </script>
