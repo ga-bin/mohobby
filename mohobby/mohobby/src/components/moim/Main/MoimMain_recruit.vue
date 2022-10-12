@@ -13,7 +13,7 @@
         <div class="text-overline mb-4">
           {{item.moimName}}
         </div>
-        <v-list-item-subtitle>{{item.content}}</v-list-item-subtitle>
+        <v-list-item-subtitle>{{item.moimInfo}}</v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-avatar
         tile
