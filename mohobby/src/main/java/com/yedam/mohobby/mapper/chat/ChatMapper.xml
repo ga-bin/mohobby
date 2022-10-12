@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.chat.ChatMapper">
 
+	<!--프로필 이미지 추출 -->
+	<select id="getprofileImg" resultType="com.yedam.mohobby.service.chat.ChatVO">
+		select PROFILE_IMG
+		from member
+		where member_id=#{memberId}
+	</select>
 	<!-- 1:1 채팅방 추출 -->
 	<select id="getChatRoom"
 		resultType="com.yedam.mohobby.service.chat.RoomVO"
@@ -50,7 +56,8 @@
 		FROM
 		chat
 		WHERE
-		msg_time IN (
+		msg_time
+		IN (
 		SELECT
 		MAX(msg_time)
 		FROM
@@ -68,13 +75,15 @@
 		GROUP BY
 		room_no
 		)
-		) d ON ( c.room_no = d.room_no )
+		) d ON (
+		c.room_no = d.room_no )
 	</select>
 	<!-- 소모임 채팅목록 추출 -->
 	<select id="getChatMoimRoom"
 		resultType="com.yedam.mohobby.service.chat.RoomVO"
 		parameterType="String">
-		select a.content as content, a.msg_time,b.moim_name as nickname,room_no , b.moim_img as
+		select a.content as content, a.msg_time,b.moim_name as
+		nickname,room_no , b.moim_img as
 		profile_img from(
 		SELECT
 		content,
@@ -96,7 +105,8 @@
 		room
 		WHERE
 		member_id = #{memberId}
-		and moim_id=1
+		and
+		moim_id=1
 		)
 		GROUP BY
 		room_no
@@ -109,32 +119,31 @@
 		FROM
 		room
 		WHERE
-		member_id = #{memberId}
+		member_id =
+		#{memberId}
 		and moim_id=1)) b on (a.room_no=b.moim_id)
 	</select>
 	<!-- 채팅내역 추출 -->
-
 	<select id="getChat"
 		resultType="com.yedam.mohobby.service.chat.ChatVO"
 		parameterType="String">
 		select
-		content,member_id,room_No,to_char(msg_time,'mi')as
-		minute,to_char(msg_time,'HH24') as hour
-		from chat
+		a.content,a.member_id,a.room_No,to_char(a.msg_time,'mi')as
+		minute,to_char(a.msg_time,'HH24') as hour,b.NICKNAME,b.PROFILE_IMG
+		from chat a join
+		member b on(a.member_id=b.member_id)
 		where
 		room_no=#{roomNo}
 		order by chat_id
 	</select>
-	<!-- 채팅상대 추출 -->
-	<select id="getOtherUser"
-		resultType="com.yedam.mohobby.service.chat.ChatUserVO"
-		parameterType="com.yedam.mohobby.service.chat.ChatUserVO">
+	<!-- 상대방 아이디 검색 -->
+	<select id="getTargetId" parameterType="String"
+		resultType="com.yedam.mohobby.service.chat.ChatVO">
 		select member_id
-		from chat
-		where room_no =#{roomNO}
-		and not
-		member_id =#{memberId}
+		from room
+		where room_no=#{roomId}
 	</select>
+	<!-- 메세지 입력 -->
 	<insert id="insertMessage"
 		parameterType="com.yedam.mohobby.service.chat.MessageVO">
 		insert into chat(
@@ -144,24 +153,27 @@
 		CONTENT,
 		MEMBER_ID)
 		values(
-		#{CHAT_ID},
-		#{ROOM_NO},
-		#{MSG_TIME},
-		#{CONTENT},
-		#{MEMBER_ID}
+		chat_id_seq.nextval,
+		#{roomNo},
+		#{msgTime},
+		#{content},
+		#{memberId}
 		)
 	</insert>
+	<!-- 채팅방 생성 -->
 	<insert id="createRoom"
 		parameterType="com.yedam.mohobby.service.chat.CreateRoomVO">
 		DECLARE
 		v_check VARCHAR2(100);
-		v_room_id room.room_no%TYPE := chat_room_id_seq.nextval;
+		v_room_id room.room_no%TYPE
+		:= chat_room_id_seq.nextval;
 		v_my_id room.member_id%TYPE := #{myId};
 		v_target_id room.member_id%TYPE := #{targetId};
 		BEGIN
 		SELECT
 		CASE
-		WHEN NOT EXISTS (
+		WHEN NOT
+		EXISTS (
 		SELECT
 		room_no
 		FROM
@@ -177,7 +189,8 @@
 		AND moim_id = 0
 		)
 		AND member_id = v_target_id
-		) THEN
+		)
+		THEN
 		0
 		END test
 		INTO v_check
@@ -185,7 +198,8 @@
 		dual;
 
 		IF v_check = 0 THEN
-		FOR i IN 1..2 LOOP
+		FOR i IN 1..2
+		LOOP
 		INSERT INTO room (
 		room_no,
 		member_id,

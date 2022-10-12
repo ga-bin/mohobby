@@ -51,14 +51,38 @@
     <moimlist></moimlist>
     <h4>챌린저스 후기</h4>
     <challReview></challReview>
+    <p>{{this.$store.state.id}}</p>
   </div>
 </template>
 
 <script>
 import moimlist from "../../components/user/Moimlist.vue";
 import challReview from "../../components/user/ChallReview.vue"
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
 export default {
   components: { moimlist, challReview },
+  created(){
+    if(this.$store.state.id !=='')
+    this.connect()
+  },
+  methods:{
+    connect() {
+      console.log('test')
+      const serverURL = " http://192.168.0.85:8088//java/sock"
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+      this.stompClient.connect(
+        {},
+        frame => {
+          console.log('소켓 연결 성공', frame);
+        },
+        error => {
+          console.log('소켓 연결 실패', error);
+        }
+      );
+    },
+  },
   data() {
     return {
       items: [

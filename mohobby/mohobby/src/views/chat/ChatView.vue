@@ -1,6 +1,6 @@
 <template>
   <div id="app">
- 
+
     <v-app>
       <v-container class="fill-height pa-0 ">
         <v-row class="no-gutters elevation-4">
@@ -33,22 +33,24 @@
             </v-responsive>
           </v-col>
           <v-col cols="auto" class="flex-grow-1 flex-shrink-0">
-            <v-card flat class="d-flex flex-column fill-height">
+            <v-card flat class="d-flex flex-column fill-height" style="max-width: 100%">
               <v-card-title>
                 {{this.$store.state.id}}
               </v-card-title>
               <v-card-text class="flex-grow-1 overflow-y-auto">
                 <template v-for="(msg, i) in messages">
-                  <div :class="{ 'd-flex flex-row-reverse': msg.memberId }">
+                  <div :class="{ 'd-flex flex-row-reverse': msg.memberId==memberId }">
                     <v-menu offset-y>
                       <template v-slot:activator="{ on }">
-                        <v-hover v-slot:default="{ hover }">
-                          <v-chip :color="msg.memberId ? 'primary' : ''" dark style="height:auto;white-space: normal;"
-                            class="pa-4 mb-2" v-on="on">
-                            {{ msg.content }}
-                            <sub class="ml-2" style="font-size: 0.5rem;">{{ msg.hour }}</sub>
-                          </v-chip>
-                        </v-hover>
+                        <v-chip :color="msg.memberId==memberId ? 'primary' : ''" dark
+                          style="height:auto;white-space: normal;" class="pa-4 mb-2" v-on="on">
+                          <!-- <v-avatar class="mr-2">
+                            <v-img :src="require('@/assets/image/user/'+msg.profileImg)" height="100px" width="50px"
+                              border-radius:10px></v-img>
+                          </v-avatar> -->
+                          {{ msg.content }}
+                          <sub class="ml-2" style="font-size: 0.5rem;">{{ msg.hour }}</sub>
+                        </v-chip>
                       </template>
                     </v-menu>
                   </div>
@@ -82,19 +84,36 @@ export default {
       roomList: [], //방목록
       stompClient: "", //소켓서버
       hour: "", //메세지시간
-      subscribeRoot: "" //구독정보
+      subscribeRoot: "", //구독정보
+      targetId: [], //대화상대id
+      profileImg:""
     }
   },
   created() {
     this.connect()
     this.getRoom()
     this.sortRoom()
+    this.setProfileImg()
   },
   methods: {
+    //프로필 이미지 설정
+    setProfileImg(){
+      this.axios.post({
+        memberId:this.$store.state.id
+      })
+      .then(function(res){
+        this.profileImg =res.data
+      })
+      .catch(function(err){
+        console.log(err)
+      })
+      .finally(function(res){
+        console.log(this.profileImg)
+      })
+    },
     //채팅내역 정렬
-    sortRoom()
-    {
-      console.log(this.getRoom());
+    sortRoom() {
+
     },
     //날짜변환
     todate() {
@@ -115,15 +134,14 @@ export default {
           roomNo: this.roomId,
           content: this.message,
           memberId: this.memberId,
-          hour: this.createAt
+          hour: this.createAt,
+ 
         }
-        const msg1={
+        this.axios.post('/InsertMessage/', {
           roomNo: this.roomId,
+          msgTime: new Date(),
           content: this.message,
           memberId: this.memberId,
-          msgTime: this.createAt
-        }
-        this.axios.post('/InsertMessage/',  {msg1 
         })
           .then(function (res) {
             console.log(res);
@@ -131,9 +149,12 @@ export default {
           .catch(function (error) {
             console.log(error);
           })
-        this.stompClient.send("/app/chat", JSON.stringify(msg), res => {
+        this.stompClient.send("/app/send", JSON.stringify(msg), res => {
           console.log(res)
         });
+        // this.stompClient.send("/app/chatNotice", JSON.stringify(msg), res => {
+        //   console.log(res)
+        // });
       }
       this.message = ""
     },
@@ -144,17 +165,20 @@ export default {
       vm.stompClient.unsubscribe(vm.subscribeRoot)
       this.roomId = roomNo;
       this.messages = [];
+      vm.targetId=[];
+      //상대방 id 불러오기
+      this.axios.get('/getTargetId/' + this.roomId, {
+      })
+        .then(function (res) { 
+       vm.targetId=res.data
+        })
+        .catch(function (err) { console.log(error) })
+        .finally(function (res) { console.log(vm.targetId) })
       //채팅내역 불러오기
-      this.axios.get('/ChatList/' + this.roomId, {
+      this.axios.get('/getChatList/' + this.roomId, {
       })
         .then(function (res) {
           for (let i = 0; i < res.data.length; i++) {
-            if (vm.memberId == res.data[i].memberId) {
-              res.data[i].memberId = true;
-            }
-            else {
-              res.data[i].memberId = false;
-            }
             if (res.data[i].hour >= 12) {
               res.data[i].hour = res.data[i].hour - 12 + ":" + res.data[i].minute + " pm"
             }
@@ -171,12 +195,6 @@ export default {
       vm.stompClient.subscribe("/topic/room/" + roomNo, function (res) {
         let rev = JSON.parse(res.body)
         vm.subscribeRoot = res.headers.subscription
-        if (rev.memberId == vm.memberId) {
-          rev.memberId = true;
-        }
-        else {
-          rev.memberId = false;
-        }
         if (rev.hour.substr(11, 2) >= 12) {
           rev.hour = rev.hour.substr(11, 2) - 12 + ":" + rev.hour.substr(14, 2) + " pm"
         } else {
@@ -185,13 +203,13 @@ export default {
         vm.messages.push(rev)
       })
       //구독취소헤더값 가져오기
-      this.stompClient.send("/app/chat1", vm.roomId, res => {
+      this.stompClient.send("/app/getSubscribeInfo", vm.roomId, res => {
       });
     },
     //채팅방 리스트출력
     getRoom() {
       var vm = this;
-      //1:1
+      //1:1리스트
       this.axios.get('/ChatRoom/' + this.memberId, {
       })
         .then(function (res) {
@@ -202,27 +220,41 @@ export default {
         .catch(function (error) {
           console.log(error);
         })
-        //소모임
-        this.axios.get('/ChatMoimRoom/' + this.memberId, {
-      })
-        .then(function (res) {
-          for (let i = 0; i < res.data.length; i++) {
-            vm.roomList.push(res.data[i]);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+        .finally(function (res) {
+          //소모임 채팅방 리스트
+          vm.axios.get('/ChatMoimRoom/' + vm.memberId, {
+          })
+            .then(function (res) {
+              for (let i = 0; i < res.data.length; i++) {
+                vm.roomList.push(res.data[i]);
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            })
+            .finally(function (res) {
+              //목록을 최신순으로 정렬
+              vm.roomList.sort(function (a, b) {
+                //return a.msgTime-b.msgTime
+                if (a.msgTime > b.msgTime) return -1;
+                if (a.msgTime < b.msgTime) return 1;
+                return 0;
+              })
+            })
         })
     },
-
-    // 소켓연결
     connect() {
+      let vm = this
       const serverURL = " http://192.168.0.85:8088//java/sock"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect(
         {},
         frame => {
+          vm.stompClient.subscribe("/" + this.$store.state.id, function (res) {
+            let rev = JSON.parse(res.body)
+            console.log(rev)
+          })
           console.log('소켓 연결 성공', frame);
         },
         error => {
@@ -230,6 +262,6 @@ export default {
         }
       );
     },
-  },
+  }
 }
 </script>
