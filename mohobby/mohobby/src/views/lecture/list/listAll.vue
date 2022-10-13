@@ -20,7 +20,7 @@
                         :color="select.color"
                         depressed
                         small
-                        @click="selectType"
+                        @click.stop="selectType"
                         :ripple="false"
                     >
                         {{ select.title }}
@@ -61,7 +61,7 @@
                         height="250"
                         width="365"
                         :src="require(`@/assets/image/class/info/${item.classId}/1.jpg`)"
-                        @click="$router.push({ path: '/class/'+item.classId, }).catch(()=>{$router.go(0)})"
+                        @click.stop="$router.push({ path: '/class/'+item.classId+'/info', }).catch(()=>{$router.go(0)})"
                         style="padding-top: 6px"
                     >
                 
@@ -81,7 +81,7 @@
                         style="font-size: 1.1em; padding: 5px 2px; word-break: keep-all; width: 360px "
                     >
                         <span 
-                            @click="$router.push({ path: '/class/'+item.classId, }).catch(()=>{$router.go(0)})" 
+                            @click.stop="$router.push({ path: '/class/'+item.classId+'/info', }).catch(()=>{$router.go(0)})" 
                             class="item-title"
                         >
                             {{ item.className }}
@@ -89,14 +89,14 @@
                         <div class="my-2 text-subtitle-1">
                             <span 
                                 class="item-catg" 
-                                @click="$router.push({ path: '/class/list/'+item.keywordId, }).catch(()=>{$router.go(0)})"
+                                @click.stop="$router.push({ path: '/class/list/'+item.keywordId, }).catch(()=>{$router.go(0)})"
                             >
                                 {{ item.keywordName }}
                             </span>
                             {{ ' | ' }}
                             <span
                                 class="item-name"
-                                @click="$router.push({ path: '/snsUserFeed?memId='+item.memberId }).catch(()=>{$router.go(0)})"
+                                @click.stop="$router.push({ path: '/snsUserFeed?memId='+item.memberId }).catch(()=>{$router.go(0)})"
                             >
                                 {{ item.nickname }}
                             </span>
