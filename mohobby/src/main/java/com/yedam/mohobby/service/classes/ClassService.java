@@ -22,4 +22,13 @@ public interface ClassService {
 
     //찜삭제
     public void deleteJjim(JjimVO jjim);
+    
+    //html저장
+    public void saveClassInfo(ClassInfoRequestVO req);
+    
+    //html경로 읽기
+    public String readClassInfo(int classId);
+    
+    //qr코드생성
+    public String createCodeImg(String link);
 }

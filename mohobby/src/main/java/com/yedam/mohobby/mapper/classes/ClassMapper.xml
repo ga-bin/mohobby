@@ -84,16 +84,33 @@
 	<!-- 단건조회 -->
 	<select id="listOne" parameterType="com.yedam.mohobby.service.classes.ClassListRequestVO" resultType="com.yedam.mohobby.service.classes.ClassesVO">
 		select
-		    nvl2(j.target_id, 1, 0)jjim, nvl(q.qnaTotal, 0) qnaTotal, nvl(r.reviewTotal, 0)reviewTotal, c.*
+		    nvl(cptt.chap, 0)chapTotal, nvl(crtt.curr, 0)currTotal, nvl2(j.target_id, 1, 0)jjim, nvl(q.qnaTotal, 0) qnaTotal, nvl(r.reviewTotal, 0)reviewTotal, c.*, m.nickname
 		from
 		    (select count(*)qnaTotal, class_id from class_board where board_type = 1 group by class_id)q,
 		    (select count(*)reviewTotal, class_id from class_board where board_type = 4 group by class_id)r,
 		    (select * from jjim where target_type=1 and member_id = <if test="memberId == null">null</if> <if test="memberId != null">#{memberId}</if>)j,
-		    class c
+		    class c,
+		    member m,
+		    (select cl.class_id, cp.chap
+		    from class cl, (select count(chap_id) chap, class_id
+		    from class_chapter
+		    group by class_id) cp
+		    where cl.class_id = cp.class_id(+))cptt,
+		    (select class_id, count(mu.curr_id) curr
+		    from(
+		    select z.class_id, y.chap_id, i.curr_id
+		    from class z, class_chapter y, class_curriculum i
+		    where z.class_id = y.class_id(+)
+		    and y.chap_id = i.chap_id(+))mu
+		    group by class_id)crtt
 		where c.class_id = q.class_id(+)
 		and c.class_id = r.class_id(+)
 		and c.class_id = j.target_id(+)
+		and c.class_id = cptt.class_id(+)
+		and c.class_id = crtt.class_id(+)
+		and c.member_id = m.member_id
 		and c.class_id = #{classId}
+		
 	</select>
 	
 	<!-- 찜등록 -->

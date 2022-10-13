@@ -181,6 +181,38 @@ const routes = [
         name: "classDetail",
         component: () => import("./../views/lecture/detail/classDetail"),
         props: true,
+        children: [
+          {
+            path: "info",
+            name: "classInfo",
+            component: () => import("./../views/lecture/detail/classInfo"),
+            props: true,
+          },
+          {
+            path: "teacher",
+            name: "classTeacher",
+            component: () => import("./../views/lecture/detail/classTeacher"),
+            props: true,
+          },
+          {
+            path: "course",
+            name: "classCourse",
+            component: () => import("./../views/lecture/detail/classCourse"),
+            props: true,
+          },
+          {
+            path: "qna",
+            name: "classQna",
+            component: () => import("./../views/lecture/detail/classQna"),
+            props: true,
+          },
+          {
+            path: "review",
+            name: "classReview",
+            component: () => import("./../views/lecture/detail/classReview"),
+            props: true,
+          },
+        ],
       },
     ],
   },
