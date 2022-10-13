@@ -270,17 +270,7 @@ public class SnsController {
     /*
      * 좋아요
      */
-  //좋아요 - 테스트완료
-    //@PostMapping("/like")
-    public int addLike(@RequestBody JjimVO jjimVO) {
-    	jjimVO.setTargetType(2);
-    	return service.addLike(jjimVO);
-    }
-  //좋아요취소 - 테스트완료
-    @DeleteMapping("/like")
-    public int deleteLike(@RequestParam int targetId, @RequestParam int targetType, @RequestParam String memberId) {
-    	return service.deleteLike(targetId, targetType, memberId);
-    }
+
    //좋아요누적
     @PostMapping(path="/like")
     public int sumLikes(@RequestBody JjimVO jjimVO) {

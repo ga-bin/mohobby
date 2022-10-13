@@ -115,14 +115,14 @@ public class ClassController {
 	
 	
 	//찜 등록
-	@PostMapping("/class/jjim")
-	public void addJjim(@RequestBody JjimVO jjim) {
-	    snsService.addLike(jjim);
-	}
+//	@PostMapping("/class/jjim")
+//	public void addJjim(@RequestBody JjimVO jjim) {
+//	    snsService.addLike(jjim);
+//	}
 	
 	//찜 등록 취소
-	@DeleteMapping("/class/jjim")
-	public void delJjim(@RequestBody JjimVO jjim) {
-	    snsService.deleteLike(jjim.getTargetId(), jjim.getTargetType(), jjim.getMemberId());
-	}
+//	@DeleteMapping("/class/jjim")
+//	public void delJjim(@RequestBody JjimVO jjim) {
+//	    snsService.deleteLike(jjim.getTargetId(), jjim.getTargetType(), jjim.getMemberId());
+//	}
 }

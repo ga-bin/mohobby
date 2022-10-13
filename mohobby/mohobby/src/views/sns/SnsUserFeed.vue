@@ -16,7 +16,7 @@
   
             
   
-            <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
+            <button class="btn profile-settings-btn" aria-label="profile settings"><v-icon>mdi-check-decagram</v-icon><i class="fas fa-cog" aria-hidden="true"></i></button>
   
           </div>
   
@@ -44,8 +44,8 @@
             </ul>
             
             <ul v-else>
-                <button class="btn profile-edit-btn2">Edit Profile</button>
-                <button class="btn profile-edit-btn2">Edit Profile</button>
+                <button class="btn profile-edit-btn2">Follow</button>
+                <button class="btn profile-edit-btn2" @click="send">Message</button>
             </ul>
           </div>
 
@@ -87,10 +87,11 @@
 
       },
       methods: {
+        //프로필 업로드
         loadUserProfile() {
             let memberId = this.$route.query.memId;
             if (!memberId) {
-                memberId = 'user11';
+                memberId = 'user11';// 출력 확인용 아이디
             }
             this.axios('/sns/user/profile/' + memberId)
             .then(res => {
@@ -98,7 +99,11 @@
             }).catch(err => {
               console.log(err);
             });  
-          }
+          },
+        //채팅방 이동
+        send() {
+        this.$router.push({ name: "chat", params: { roomId: this.roomId } });
+    },
       },
     mounted() {},
     unmounted() { },
@@ -155,10 +160,8 @@
       cursor: pointer;
   }
   
-  .btn:focus {
-      outline: 0.5rem auto #4d90fe;
-  }
-  
+
+
   .visually-hidden {
       position: absolute !important;
       height: 1px;
@@ -226,7 +229,17 @@
       padding: 0 2.4rem;
       margin-left: 2rem;
   }
-  
+
+  .profile-edit-btn2:hover {
+    background-color: #2ac187;
+    box-shadow: 0 2px 4px 0 rgba(13, 164, 101, 0.5);
+    color: white;
+}
+
+.profile-edit-btn2:active {
+    outline: 0.5rem auto #2ac187;
+}
+
   .profile-settings-btn {
       font-size: 2rem;
       margin-left: 1rem;
@@ -268,80 +281,7 @@
       font-weight: 600;
       width: 300px;
       margin: 20px 0 10px;
-  }
-  
-  /* Gallery Section */
-  
-  .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      margin: -1rem -1rem;
-      padding-bottom: 3rem;
-  }
-  
-  .gallery-item {
-      position: relative;
-      flex: 1 0 22rem;
-      margin: 1rem;
-      color: #fff;
-      cursor: pointer;
-  }
-  
-  .gallery-item:hover .gallery-item-info,
-  .gallery-item:focus .gallery-item-info {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: absolute;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.3);
-  }
-  
-  .gallery-item-info {
-      display: none;
-  }
-  
-  .gallery-item-info li {
-      display: inline-block;
-      font-size: 1.7rem;
-      font-weight: 600;
-  }
-  
-  .gallery-item-likes {
-      margin-right: 2.2rem;
-  }
-  
-  .gallery-item-type {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      font-size: 2.5rem;
-      text-shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.1);
-  }
-  
-  .fa-clone,
-  .fa-comment {
-      transform: rotateY(180deg);
-  }
-  
-  .gallery-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-  }
-  
-  /* Loader */
-  
-  .loader {
-      width: 5rem;
-      height: 5rem;
-      border: 0.6rem solid #999;
-      border-bottom-color: transparent;
-      border-radius: 50%;
-      margin: 0 auto;
-      animation: loader 500ms linear infinite;
+      padding: 8px;
   }
   
   /* Media Query */

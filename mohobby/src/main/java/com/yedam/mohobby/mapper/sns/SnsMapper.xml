@@ -348,10 +348,10 @@
 		FROM dual;
 		IF v_status = 0 THEN
 		INSERT INTO jjim (target_id, target_type, member_id) VALUES(v_target_id, 2, v_member_id);
-		UPDATE sns_post SET likes = (SELECT likes FROM sns_post WHERE post_id = v_target_id)+1 WHERE post_id = v_target_id;
+		UPDATE sns_post SET likes = likes + 1 WHERE post_id = v_target_id;
 		ELSIF v_status = 1 THEN 
 		DELETE FROM jjim WHERE target_id= v_target_id AND target_type=2 AND member_id = v_member_id;
-		UPDATE sns_post SET likes = (SELECT likes FROM sns_post WHERE post_id = v_target_id)-1 WHERE post_id = v_target_id;
+		UPDATE sns_post SET likes = likes - 1 WHERE post_id = v_target_id;
 		END IF;
 		END
    </select>
