@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.moim.MoimMapper;
+import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 
@@ -55,9 +56,16 @@ public class MoimServiceImpl implements MoimService{
 		map.put("moimName", moimName);
 		map.put("moimCatg", moimCatg);
 		return mapper.moimAllSearch(map);
+	}
+
+	//소모임 게시판 전체 리스트 조회
+	@Override
+	public List<MoimBoardVO> moimAllBoard(int moimId, int boardType) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("moimId", moimId);
+		map.put("boardType", boardType);
+		return mapper.moimAllBoard(map);
 	}	
 
-	
-	
 }
 

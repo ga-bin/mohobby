@@ -11,6 +11,7 @@ import com.yedam.mohobby.service.chat.ChatUserVO;
 import com.yedam.mohobby.service.chat.ChatVO;
 import com.yedam.mohobby.service.chat.CreateRoomVO;
 import com.yedam.mohobby.service.chat.MessageVO;
+import com.yedam.mohobby.service.chat.NonReadChatVO;
 import com.yedam.mohobby.service.chat.RoomVO;
 
 @Service
@@ -26,25 +27,12 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 
 	@Override
 	public List<RoomVO> getChatMoimRoom(String memberId) {
-		// TODO Auto-generated method stub
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-			System.out.println(memberId);
 		return mapper.getChatMoimRoom(memberId);
 	}
 
 	@Override
 	public List<ChatVO> getChat(String roomNo) {
 		return mapper.getChat(roomNo);
-	}
-
-	@Override
-	public ChatUserVO getOtherUser(ChatUserVO chatUserVO) {
-		return mapper.getOtherUser(chatUserVO);
 	}
 
 	@Override
@@ -57,4 +45,15 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 		return mapper.createRoom(cr);
 	}
 
+	@Override
+	public List<String> getTargetId(ChatUserVO chatUser) {
+		// TODO Auto-generated method stub
+		return mapper.getTargetId(chatUser);
+	}
+
+	@Override
+	public List<NonReadChatVO> getNonReadChat(ChatUserVO chatUser) {
+		// TODO Auto-generated method stub
+		return mapper.getNonReadChat(chatUser);
+	}
 }
