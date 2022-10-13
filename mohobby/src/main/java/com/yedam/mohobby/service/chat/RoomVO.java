@@ -9,5 +9,7 @@ public class RoomVO {
 	private String profileImg;
 	private String content;
 	private String msgTime;
+	private String checkIn;
+	private String nonReadChat;
 	
 }

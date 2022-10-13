@@ -20,6 +20,7 @@ import com.yedam.mohobby.service.chat.ChatUserVO;
 import com.yedam.mohobby.service.chat.ChatVO;
 import com.yedam.mohobby.service.chat.CreateRoomVO;
 import com.yedam.mohobby.service.chat.MessageVO;
+import com.yedam.mohobby.service.chat.NonReadChatVO;
 import com.yedam.mohobby.service.chat.RoomVO;
 
 @RestController
@@ -28,6 +29,7 @@ public class ChatController {
 	@Autowired
 	ChatService service;
 
+	
 	@GetMapping("/ChatList/{roomNo}")
 	public List<ChatVO> allRoom(@PathVariable String roomNo) {
 		return service.getChat(roomNo);
@@ -39,22 +41,30 @@ public class ChatController {
 	}
 	@GetMapping("/ChatMoimRoom/{memberId}")
 	public List<RoomVO> getChatMoimRoom(@PathVariable String memberId) {
-		
 		return service.getChatMoimRoom(memberId);
-	}
-
-	@PostMapping("/ChatUser")
-	public ChatUserVO getOtherUser(@RequestBody ChatUserVO chatUserVO) {
-		return service.getOtherUser(chatUserVO);
 	}
 	
 	@PostMapping("/InsertMessage")
-	public void insertMessage(@RequestBody MessageVO message) {
-		System.out.println(11);
+	public int insertMessage(@RequestBody MessageVO message) {
+		System.out.println(message);
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		return service.insertMessage(message);
 	}
 	
 	@PostMapping("/CreateRoom")
 	public int CreateRoom(@RequestBody CreateRoomVO cr) {
 		return service.CreateRoom(cr);
+	}
+	//대화상대아이디 가져오기
+	@PostMapping("/getTargetId")
+	public List<String>getTargetId(@RequestBody ChatUserVO chatUser){
+		return service.getTargetId(chatUser);
+	}
+	//안읽은 메시지 개수 가져오기
+	@PostMapping("/getNonReadChat")
+	public List<NonReadChatVO>getNonReadChat(@RequestBody ChatUserVO chatUser){
+	return service.getNonReadChat(chatUser);	
 	}
 }
