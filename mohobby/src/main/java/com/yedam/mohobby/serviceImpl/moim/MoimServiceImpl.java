@@ -65,7 +65,13 @@ public class MoimServiceImpl implements MoimService{
 		map.put("moimId", moimId);
 		map.put("boardType", boardType);
 		return mapper.moimAllBoard(map);
-	}	
+	}
+
+	@Override
+	public int memberIdCheck(String moimName) {
+		return mapper.moimIdCheck(moimName);
+	}
+	
 
 }
 

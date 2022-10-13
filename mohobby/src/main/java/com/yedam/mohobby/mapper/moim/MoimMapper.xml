@@ -68,5 +68,10 @@ INSERT INTO moim (
 
 </select>
 
+<!-- 모임명 중복체크 -->
+<select id="moimIdCheck" resultType="Integer">
+SELECT COUNT(*) FROM moim WHERE moim_name = #{moimName}
+</select>
+
 
 </mapper>

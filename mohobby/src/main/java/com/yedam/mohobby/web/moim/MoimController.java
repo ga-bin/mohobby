@@ -94,6 +94,18 @@ public class MoimController {
 	public List<MoimBoardVO> getAllBoardList(@RequestParam("moimId")int moimId, @RequestParam("boardType")int boardType){
 		return service.moimAllBoard(moimId, boardType);
 	}
+	
+	@PostMapping("/idCheck")
+	public String moim_idcheck(@RequestBody MoimVO vo) {
+		String result = "";
+		int count = service.memberIdCheck(vo.getMoimName());
+		if(count == 0) {
+			result="YES";
+		} else {
+			result="NO";
+		}
+		return result;
+	}
 
 }
 
