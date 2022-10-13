@@ -52,14 +52,21 @@ INSERT INTO moim (
     and <![CDATA[rownum <= 6]]> ORDER BY moim_id
 </select>
 
-<!-- 소모임명 검색 -->
-<!-- <select id="moimNameSelect" resultType="com.yedam.mohobby.service.moim.MoimVO">
-   select * from moim where moim_name Like '%#{moim_name}%' order by moim_id DESC;
-</select> -->
+<!-- 소모임 게시판 전체 조회 -->
+<select id="moimAllBoard" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+	
+	select b.*, nvl(c.cnt, 0)cnt
+	from moim_board b,
+	(select count(*)cnt, target_id from comments
+	where target_id in (
+	select board_id from moim_board)
+	and target_type=3
+	group by target_id)c
+	where b.board_id = c.target_id(+)
+	and moim_id = #{moimId}
+	and board_type = #{boardType}
 
-<!-- 소모임 카테고리 검색 -->
-<!-- <select id="moimCatgSelect" resultType="com.yedam.mohobby.service.moim.MoimVO">
-   select * from moim where moim_catg like '%#{moim_catg}%' order by moim_id DESC;
-</select> -->
+</select>
+
 
 </mapper>
