@@ -6,7 +6,7 @@
     <MoimSidebar_admin></MoimSidebar_admin>
 
     <!-- 권한에 따라 컴포넌트 다르게 보여주기 -->
-    <router-view :boardId="Id" />
+    <router-view/>
   </div>
 </template>
 <script>
@@ -17,7 +17,7 @@ export default {
   components: { MoimSidebar, MoimSidebar_admin },
   data() {
     return {
-      Id: this.boardId
+     
     }
   },
   setup() { },
@@ -27,7 +27,7 @@ export default {
   unmounted() { },
   methods: {
   },
-  props: ['boardId'],
+  props: [],
 }
 </script>
 

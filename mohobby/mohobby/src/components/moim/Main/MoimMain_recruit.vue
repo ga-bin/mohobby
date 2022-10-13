@@ -178,7 +178,7 @@ methods : {
      this.$router.push({ path: 'login' })
     },
     box(idx) {
-      this.$router.push({ name : 'moimBoard' , params : { boardId : this.items[idx].moimId }})
+      this.$router.push({ name : 'moimBoard' , params : { moimId : this.items[idx].moimId, boardType: 1}})
     }
 }
 
