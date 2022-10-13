@@ -34,7 +34,7 @@ export default {
     }
   },
   created(){
-    console.log("snsserchpage돈다");
+    console.log("검색컴포넌트 입장!");
   },
   methods: {
     getFeedDetail(postId) {

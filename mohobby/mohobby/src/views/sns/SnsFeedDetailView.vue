@@ -64,13 +64,20 @@
         </v-row>
         
         <!-- 해시태그 -->
-        <v-col cols="12" v-for="hashtag in hashtags" :key="hashtag">
-          <div @click="search($event)"><span id="hashtag"># {{ hashtag }}</span></div>
-        </v-col>
-
+        <v-chip-group id="hashtagGroup">
+            <v-chip v-for="hashtag in hashtags" :key="hashtag"
+              :color="`${colors[nonce - 1]} lighten-3`"
+              @click="search($event)"
+              dark
+              label
+              small>
+              #{{ hashtag }}
+            </v-chip>
+        </v-chip-group>
         <br>
         <v-col cols="12">
-        <Comment></Comment>
+          <CmtReg></CmtReg>
+          <CmtList></CmtList>
       </v-col>
       </v-card>
     </v-container>
@@ -78,11 +85,12 @@
 </template>
 <script>
 import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
-import Comment from "@/components/sns/FeedDetail/Comment.vue";
+import CmtReg from "@/components/sns/FeedDetail/CmtReg.vue";
+import CmtList from "@/components/sns/FeedDetail/CmtList.vue";
 
 export default {
   name: "snsFeedDetail",
-  components: { SnsSidebar, Comment },
+  components: { SnsSidebar, CmtReg, CmtList },
   data() {
     return{
       width: 800,
@@ -96,15 +104,15 @@ export default {
       likeReq: {targetId : 7,
                 memberId:'user1',
               targetType:1},
+      show:true,
+      colors: ['teal', 'orange', 'green', 'purple', 'indigo', 'cyan'], //tag color
+      nonce: 1,
     }
   },
   setup() { },
   created() {
     this.postId = this.$route.query.id;
-    console.log("디테일페이지입니다");
-    console.log("this.$store.state.id" + this.$store.state.id);
-      this.memId = this.$store.state.id;
-      if (this.$store.state.id != null || this.$store.state.id != "");
+    this.memId = this.$store.state.id;
     this.showDetail();
   },
   mounted() {},
@@ -113,34 +121,34 @@ export default {
 
     //게시글 상세 로드
     showDetail() {
-      let postId = this.$route.query.id;
-      this.axios('/sns/user/feed_detail/' + postId, {
+      this.axios('/sns/user/feed_detail/' + this.postId, {
         params: {
           memberId: this.memId,
         }
       }).then(res => {
         this.items = res.data;
-        let str = this.items.hashtag;
-        let hashtag = str.split(',');
-        this.hashtags = hashtag;
-        console.log(this.items);
+        let str = this.items.hashtag; //%%,%%,%% 형태
+        let hashtag = str.split(','); //해시태그 자르기
+        this.hashtags = hashtag; //자른 해시태그들 hashtags에 담기
+        console.log("상세페이지 접근 성공!");
       }).catch(err => {
         console.log(err);
       });
     },
 
-    //해시태그 클릭시 검색 이벤트 발생
+    //해시태그 클릭 검색
     search(e){
-            let getHashtag = e.target.innerText;
-            let hashtag = getHashtag.slice(1);
+            let getHashtag = e.target.innerText; //선택한 해시태그
+            let hashtag = getHashtag.slice(1); //# 잘라내기
+            console.log(hashtag);
             this.axios('/sns/search/hashtag', {
                 params : {
                     hashtag : hashtag
                 }
             }).then(res => {
-                this.feeds = res.data;
-                this.goSearchPage(this.feeds);
-                console.log("검색성공:"+this.feeds);
+                this.feeds = res.data; //해시태그 검색결과 담기
+                console.log("axios SUCCESS")
+                this.goSearch(this.feeds, this.show);// 메인 ->컴색컴포넌트
 
             }).catch(err =>{
                 console.log(err);
@@ -148,9 +156,9 @@ export default {
     },
 
     //검색페이지 이동
-    goSearchPage(feeds){
-      console.log("goSearchPage실행"+feeds);
-      this.$router.push({ name: "snsmain", params: {  hashtagResult: feeds } })
+    goSearch(feeds, show){
+      console.log("main->searchPage실행"+feeds);
+      this.$router.push({ name: "snsmain", params: {  hashtagResult: feeds, showing: show } })
     },
 
     //채팅방 이동
@@ -286,5 +294,8 @@ export default {
 div.user.text-overline{
   display:inline-block;
 
+}
+#hashtagGroup {
+  margin-left: 10px;
 }
 </style>

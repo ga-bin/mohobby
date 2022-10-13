@@ -77,7 +77,7 @@
     setup() { },
     created() {
           this.loadUserProfile();
-          console.log("유저 프로필 페이지 이동");
+          console.log("유저 프로필로 이동!");
           console.log(this.$route.query.memId); //라우터에서 넘겨받은 memId
           this.postId == this.$route.query.memId; //변수 대입
           if(this$store.state.id != ""){

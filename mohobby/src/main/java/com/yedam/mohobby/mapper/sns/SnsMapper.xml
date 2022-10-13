@@ -30,7 +30,7 @@
                         #{ memberId },
                         #{ hashtag },
                         #{ content },
-                        #{ writeDate },
+                        SYSDATE,
                         #{ thumbnail },
                         0,
                         0
