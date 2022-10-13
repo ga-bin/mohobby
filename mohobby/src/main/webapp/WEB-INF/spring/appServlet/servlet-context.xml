@@ -36,7 +36,6 @@
         <beans:property name="defaultEncoding" value="utf-8" /> 
         <beans:property name="maxUploadSize" value="1000000000"/>
         <beans:property name="maxInMemorySize" value="1000000000"/>
-         <!-- 인코딩 -->
     </beans:bean>
 	
 	<context:component-scan base-package="com.yedam.mohobby" />

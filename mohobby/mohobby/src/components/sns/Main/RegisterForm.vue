@@ -50,8 +50,10 @@
         auto-grow
         placeholder="내용을 입력해주세요!"
         value=""
+        v-model="this.content"
       ></v-textarea>
     </v-container>
+    {{this.content}}
     <!-- 해시태그 -->
     <v-container fluid>
             <v-combobox
@@ -134,7 +136,7 @@
   </v-card>
 </template>
 <script>
- import Tagify from '@yaireo/tagify'
+//  import Tagify from '@yaireo/tagify'
  export default {
   name:'RegisterForm',
   data: () => ({
@@ -165,14 +167,17 @@
     imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
     fileList : [], //이미지미리보기 담을 파일list
     file : {}, //
-    postId : "1",
-    memberId : "user1",
+    memberId : "",
     formData : {},
     
     snsPostVO: {
+      memberId : this.memberId,
       content: "",
     }
   }),
+  created(){
+    this.memberId = this.$store.state.id;
+  },
   watch: {
     //해시태그
     model (val, prev) {
@@ -259,22 +264,20 @@
 
       
       this.axios({
-          url: "/sns/myfeed/meida/" + this.postId,	// 이미지 저장을 위해 back서버와 통신
+          url: "/sns/myfeed/meida",	// 이미지 저장을 위해 back서버와 통신
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"},	// 이걸 써줘야 formdata 형식 전송가능
-          data: this.snsPostVO,
+          data: this.snsPostVO,ㅔ
         }).then(res => {
-          console.log("이미지 저장 완료!");
-          this.imagecnt = file.length;	// 이미지 개수 저장
-          console.log("이미지 몇개?"+this.imagecnt)
+          console.log("글 등록 완료!");
         }).catch(err => {
           alert(err);
         });
       //이미지 전송 
       const vm = this;
       this.axios({
-          url: "/sns/myfeed/meida/" + this.postId,	// 이미지 저장을 위해 back서버와 통신
+          url: "/sns/myfeed/meida/",	// 이미지 저장을 위해 back서버와 통신
           method: "POST",
           headers: {'Content-Type': 'multipart/form-data' },	// 이걸 써줘야 formdata 형식 전송가능
           data: vm.formData,
