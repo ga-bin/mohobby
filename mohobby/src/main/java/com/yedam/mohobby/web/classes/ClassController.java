@@ -1,3 +1,4 @@
+
 package com.yedam.mohobby.web.classes;
 
 import java.io.ByteArrayOutputStream;
@@ -44,7 +45,7 @@ public class ClassController {
 	public void saveClassInfo(@RequestBody ClassInfoRequestVO req) {
 		System.out.println(req.getContent());
 		System.out.println(req.getFilename());
-		String path = ClassController.class.getResource("/").getPath();
+		String path = this.getClass().getResource("/").getPath();
 		path = path.substring(0, path.lastIndexOf("mohobby"));
 		path = path.substring(0, path.lastIndexOf("mohobby")+"mohobby".length());
 		
