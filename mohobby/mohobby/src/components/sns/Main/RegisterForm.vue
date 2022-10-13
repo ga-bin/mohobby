@@ -7,14 +7,6 @@
     outlined
 >
 <!-- 파일 업로드 -->
-  <!-- <v-container fluid>
-    <input multiple="multiple" 
-            type="file" 
-            id="fileId" 
-            ref="fileInput"
-            @change="inputData()"
-    /> -->
-<!-- 파일 업로드 -->
 <v-container fluid>
   <v-file-input
         class="mx-auto" 
@@ -27,40 +19,41 @@
         dense
         multiple
         @change="onImageChange"
+        accept="image/*"
       />
   </v-container>
     <!-- 이미지 미리보기 -->
     <!-- <v-container fluid> -->
-    <div style="display:inline-flex; margin-left: 10px;">
-      <v-img v-for="(item,i) in uploadimageurl" 
-            :key="i" 
-            :src="item.url"
-            aspect-ratio="4/3"
-            height="150px" 
-            width="200px"
-            lazy-src
-            error 
-            style="margin-right: 10px;"
-      />
-    </div>
-    <v-container fluid>
-      <div v-for="(list,i) in fileList"
-            :key="i">
-        {{list.name}}
+      <div style="display:inline-flex; margin-left: 10px;">
+        <v-img v-for="(item,i) in uploadimageurl" 
+              :key="i" 
+              :src="item.url"
+              aspect-ratio="4/3"
+              height="150px" 
+              width="200px"
+              lazy-src
+              error 
+              style="margin-right: 10px;"
+        />
       </div>
-    </v-container>
-    <v-container fluid>
-    </v-container>
-    <!-- </v-container> -->
-    <!-- content -->
+      <v-container fluid>
+        <div v-for="(list,i) in fileList"
+              :key="i">
+          {{list.name}}
+        </div>
+      </v-container>
+
+    <!-- 내용 -->
     <v-container fluid>
       <v-textarea
         name="content"
         auto-grow
         placeholder="내용을 입력해주세요!"
         value=""
+        v-model="this.content"
       ></v-textarea>
     </v-container>
+    {{this.content}}
     <!-- 해시태그 -->
     <v-container fluid>
             <v-combobox
@@ -69,7 +62,7 @@
               :items="items"
               :search-input.sync="search"
               hide-selected
-              label="Search for an option"
+              label="해시태그를 입력해보세요!"
               multiple
               small-chips
               solo
@@ -143,7 +136,7 @@
   </v-card>
 </template>
 <script>
- 
+//  import Tagify from '@yaireo/tagify'
  export default {
   name:'RegisterForm',
   data: () => ({
@@ -152,40 +145,44 @@
     colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange'],
     editing: null,
     editingIndex: -1,
-    items: [
-      { header: 'Select an option or create one' },
+    items: [ //해시태그 추천란
+      { header: '추천 해시태그를 선택해보세요!' },
       {
-        text: '오운완',
-        color: 'blue',
+        text: '오운완', //해시태그란에 표시되는 텍스트
+        color: 'blue', //해시태그 색상
       },
       {
-        text: '오수완',
+        text: '주짓수',
         color: 'red',
       },
     ],
     nonce: 1,
     menu: false,
-    model: [
-      {
-        text: 'Foo',
-        color: 'blue',
-      },
-    ],
+    model: [],
     x: 0,
     search: null,
     y: 0,
-    uploadimageurl: [], //이미지업로드2
+    //file
+    uploadimageurl: [], //이미지업로드
     imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
-
-    //
-    fileList : [],
-    file : {}
+    fileList : [], //이미지미리보기 담을 파일list
+    file : {}, //
+    memberId : "",
+    formData : {},
+    
+    snsPostVO: {
+      memberId : this.memberId,
+      content: "",
+    }
   }),
+  created(){
+    this.memberId = this.$store.state.id;
+  },
   watch: {
     //해시태그
     model (val, prev) {
       if (val.length === prev.length) return
-
+    
       this.model = val.map(v => {
         if (typeof v === 'string') {
           v = {
@@ -194,6 +191,7 @@
           }
 
           this.items.push(v)
+          console.logt(this.items);
 
           this.nonce++
         }
@@ -212,28 +210,7 @@
         this.editingIndex = -1
       }
     },
-    inputData() {
-      //파일 추가시마다 fileList배열에 파일 푸시
-      this.fileList.push(this.$refs.fileInput.files[0]);
-    },
-    saveData() {
-      //form데이터 객체 생성
-      const formData = new FormData();
-      //fileList에 담긴 파일들의 길이만큼 for문 -> formData 객체에 추가(append)
-      this.fileList.forEach(function(file){
-        formData.append('files', file);
-      });
-      this.axios({
-          url: "/sns/myfeed",	// 이미지 저장을 위해 back서버와 통신
-          method: "POST",
-          headers: {'Content-Type': 'multipart/form-data'},	// 이걸 써줘야 formdata 형식 전송가능
-          data: formData,
-        }).then(res => {
-          console.log(res.data.message);
-        }).catch(err => {
-          console.log(err);
-        });
-    },
+
      //이미지2
      //이미지 조건 처리
      fileChange: function (e) {
@@ -265,27 +242,78 @@
     },
     onImageChange(file) {	// v-file-input 변경시
       if (!file) {
-        console.log(file);
+        console.log("file" + file);
         return;
       }
       const formData = new FormData();	// 파일을 전송할때는 FormData 형식으로 전송
-      console.log(formData)
-      this.uploadimageurl = [];		// uploadimageurl은 미리보기용으로 사용
-      console.log(this.uploadimageurl[0])
       file.forEach((item) => {
-        console.log(item.name)//name:파일명, size:바이트(인듯),type:image/png
-        formData.append('filelist', item)	// formData의 key: 'filelist', value: 이미지
+        console.log("item.name" + item.name);//name:파일명, size:바이트(인듯),type:image/png
+        formData.append('fileList', item);	// formData의 key: 'filelist', value: 이미지
+        this.formData = formData;
         const reader = new FileReader();
-        console.log(reader)//
         reader.onload = (e) => {
-          console.log({url: e.target.result})
+          console.log({url: e.target.result});
           this.uploadimageurl.push({url: e.target.result});
           // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
         };
         reader.readAsDataURL(item);
       });
     },
+    //이미지 업로드
     uploadImage() {
+
+      
+      this.axios({
+          url: "/sns/myfeed/meida",	// 이미지 저장을 위해 back서버와 통신
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"},	// 이걸 써줘야 formdata 형식 전송가능
+          data: this.snsPostVO,ㅔ
+        }).then(res => {
+          console.log("글 등록 완료!");
+        }).catch(err => {
+          alert(err);
+        });
+      //이미지 전송 
+      const vm = this;
+      this.axios({
+          url: "/sns/myfeed/meida/",	// 이미지 저장을 위해 back서버와 통신
+          method: "POST",
+          headers: {'Content-Type': 'multipart/form-data' },	// 이걸 써줘야 formdata 형식 전송가능
+          data: vm.formData,
+        }).then(res => {
+          console.log("res.data.message" + res.data.message);
+          this.imagecnt = file.length;	// 이미지 개수 저장
+          console.log("이미지 몇개?"+this.imagecnt)
+        }).catch(err => {
+          alert(err);
+        });
+      }
+    },
+  }
+
+  /*
+  <!-- 파일 업로드 -->  
+<v-container fluid>
+    <input multiple="multiple" 
+            type="file" 
+            id="fileId" 
+            ref="fileInput"
+            @change="inputData()" >
+
+
+    //이미지처리
+    inputData() {
+      //파일 추가시마다 fileList배열에 파일 푸시
+      this.fileList.push(this.$refs.fileInput.files[0]);
+    },
+    saveData() {
+      //form데이터 객체 생성
+      const formData = new FormData();
+      //fileList에 담긴 파일들의 길이만큼 for문 -> formData 객체에 추가(append)
+      this.fileList.forEach(function(file){
+        formData.append('files', file);
+      });
       this.axios({
           url: "/sns/myfeed",	// 이미지 저장을 위해 back서버와 통신
           method: "POST",
@@ -293,13 +321,14 @@
           data: formData,
         }).then(res => {
           console.log(res.data.message);
-          this.imagecnt = file.length;	// 이미지 개수 저장
         }).catch(err => {
-          alert(err);
+          console.log(err);
         });
     },
-  }
-}
+
+
+          
+  */ 
  </script>
  <style scoped>
   .imagePreviewWrapper2 {

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
- 
+
     <v-app>
       <v-container class="fill-height pa-0 ">
         <v-row class="no-gutters elevation-4">
@@ -18,6 +18,9 @@
                         <v-list-item-content>
                           <v-list-item-title v-text="item.nickName" />
                           <v-list-item-subtitle v-text="item.content" />
+                          <v-list-item-subtitle v-text="item.nonReadChat" />
+
+                          <v-list-item-subtitle v-text="item.checkIn" />
                         </v-list-item-content>
                         <v-list-item-icon>
                           <v-icon :color="item.active ? 'deep-purple accent-4' : 'grey'">
@@ -32,7 +35,7 @@
               </v-list>
             </v-responsive>
           </v-col>
-          <v-col cols="auto" class="flex-grow-1 flex-shrink-0">
+          <v-col cols="auto" class="flex-grow-1 flex-shrink-0 overflow-y-auto">
             <v-card flat class="d-flex flex-column fill-height">
               <v-card-title>
                 {{this.$store.state.id}}
@@ -79,22 +82,30 @@ export default {
       messages: [], //메세지 내역
       message: "",
       roomId: "", //방번호
-      roomList: [], //방목록
+      roomList: [], //방목록정보
       stompClient: "", //소켓서버
       hour: "", //메세지시간
-      subscribeRoot: "" //구독정보
+      subscribeRoot: "", //구독정보
+      targetId: [], //상대방 정보
+      createAt: '', //작성시간
+      data: {memberId: this.targetId,
+          roomNo: this.roomId,
+          content: this.message,
+          msgTime: this.createAt}
     }
   },
   created() {
     this.connect()
     this.getRoom()
     this.sortRoom()
+    this.subscribe()
   },
   methods: {
     //채팅내역 정렬
-    sortRoom()
-    {
-      console.log(this.getRoom());
+    sortRoom() {
+      this.roomList.sort(function (a, b) {
+        return a.msgTime > b.msgTime ? -1 : a.msgTime < b.msgTime ? 1 : 0
+      })
     },
     //날짜변환
     todate() {
@@ -117,13 +128,17 @@ export default {
           memberId: this.memberId,
           hour: this.createAt
         }
-        const msg1={
+        const noticeContent = {
+          memberId: this.targetId,
           roomNo: this.roomId,
           content: this.message,
-          memberId: this.memberId,
           msgTime: this.createAt
         }
-        this.axios.post('/InsertMessage/',  {msg1 
+        this.axios.post('/InsertMessage/', {
+          memberId: this.targetId,
+          roomNo: this.roomId,
+          content: this.message,
+          msgTime: this.createAt
         })
           .then(function (res) {
             console.log(res);
@@ -131,7 +146,11 @@ export default {
           .catch(function (error) {
             console.log(error);
           })
-        this.stompClient.send("/app/chat", JSON.stringify(msg), res => {
+        //현재 대화방에 내역
+        this.stompClient.send("/app/send", JSON.stringify(msg), res => {
+          console.log(res)
+        });
+        this.stompClient.send("/app/sendNotice", JSON.stringify(noticeContent), res => {
           console.log(res)
         });
       }
@@ -139,11 +158,46 @@ export default {
     },
     // 채팅방에 채팅내역 출력
     openRoom(roomNo) {
-      var vm = this;
+
+      var vm = this
+      this.roomId = roomNo
+      this.messages = []
+      this.targetId = []
+      //안읽은 메세지수 추출
+      this.axios.post('/getNonReadChat', {
+        memberId: this.memberId
+      })
+        .then(function (res) {
+          for (let i = 0; i < vm.roomList.length; i++) {
+            if (vm.roomList[i].roomNo == roomNo) {
+              vm.roomList[i].nonReadChat = 0
+              vm.checkIn = 1
+            } else {
+              for (let n = 0; n < res.data.length; n++) {
+                if (vm.roomList[i].roomNo == res.data[n].roomNo) {
+                  vm.roomList[i].nonReadChat = res.data[n].nonReadCount
+                  vm.roomList[i].checkIn = 0
+                }
+              }
+            }
+          }
+        })
+        .catch(function (err) { console.log(err) })
+      //대화상대 추출
+      this.axios.post('/getTargetId', {
+        roomNo: this.roomId,
+        memberId: this.memberId
+      })
+        .then(function (res) {
+          console.log(res)
+          vm.targetId = res.data
+        })
+        .catch(function (err) { })
+        .finally(function (ros) {
+        })
       //같은방 클릭시 재구독 방지
       vm.stompClient.unsubscribe(vm.subscribeRoot)
-      this.roomId = roomNo;
-      this.messages = [];
+
       //채팅내역 불러오기
       this.axios.get('/ChatList/' + this.roomId, {
       })
@@ -185,8 +239,10 @@ export default {
         vm.messages.push(rev)
       })
       //구독취소헤더값 가져오기
-      this.stompClient.send("/app/chat1", vm.roomId, res => {
+      this.stompClient.send("/app/getSubscribeId", vm.roomId, res => {
       });
+      console.log(this.targetId)
+
     },
     //채팅방 리스트출력
     getRoom() {
@@ -202,27 +258,49 @@ export default {
         .catch(function (error) {
           console.log(error);
         })
-        //소모임
-        this.axios.get('/ChatMoimRoom/' + this.memberId, {
-      })
-        .then(function (res) {
-          for (let i = 0; i < res.data.length; i++) {
-            vm.roomList.push(res.data[i]);
-          }
+        .finally(function (ros) {
+          //소모임
+          vm.axios.get('/ChatMoimRoom/' + vm.memberId, {
+          })
+            .then(function (res) {
+              for (let i = 0; i < res.data.length; i++) {
+                vm.roomList.push(res.data[i]);
+              }
+              console.log(res.data)
+            })
+            .catch(function (error) {
+              console.log(error);
+            })
+            .finally(function (ros) {
+              vm.sortRoom()
+            })
         })
-        .catch(function (error) {
-          console.log(error);
-        })
+
     },
 
     // 소켓연결
     connect() {
+      let vm = this
       const serverURL = " http://192.168.0.85:8088//java/sock"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect(
         {},
         frame => {
+          this.stompClient.subscribe("/queue/" + this.$store.state.id, function (res) {
+            let changeContent = JSON.parse(res.body)
+            for (let i = 0; i < vm.roomList.length; i++) {
+              if (vm.roomList[i].roomNo == changeContent.roomNo) {
+                vm.roomList[i].content = changeContent.content
+                vm.roomList[i].msgTime = changeContent.msgTime
+                ++vm.roomList[i].nonReadChat
+                vm.sortRoom()
+              }
+              else
+                console.log('안되나요')
+            }
+            console.log('구독했나요', frame);
+          })
           console.log('소켓 연결 성공', frame);
         },
         error => {

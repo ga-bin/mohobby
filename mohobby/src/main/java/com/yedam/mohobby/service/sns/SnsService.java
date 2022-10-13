@@ -1,10 +1,10 @@
 package com.yedam.mohobby.service.sns;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
@@ -19,7 +19,7 @@ public interface SnsService {
     //게시물 등록
     public int insertFeed(SnsPostVO snsPostVO);
     //미디어 등록
-    public int insertMedia(SnsMediaVO snsMediaVO);
+	public boolean insertMedia(List<MultipartFile> fileList, SnsMediaVO mediavo);
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
     //피드 삭제
@@ -119,6 +119,8 @@ public interface SnsService {
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회
 	public List<SnsBookmarkVO> getAllBookmarks();
+
+	
 	
 //	test
 

@@ -1,3 +1,4 @@
+<!-- 댓글입력창 -->
 <template>
     <div>
         <v-row>
@@ -7,6 +8,7 @@
                 placeholder="댓글을 입력해주세요"
                 solo
                 rounded
+                v-model="inputCmt"
                 ></v-text-field>
             </v-col>
             <v-col cols="2">
@@ -18,11 +20,10 @@
 <script>
 
 export default {
-    name:"Comment",
+    name:"CmtReg",
     data() {
       return{
-        card_list : [],
-        noneUser : 9 //memberId=="" && !memberId
+        inputCmt:"",
       }
     },
     method:{
