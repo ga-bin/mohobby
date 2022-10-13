@@ -10,7 +10,6 @@
 import BoardButton from "@/components/moim/moimDetail/board/BoardButton.vue";
   export default {
   components: { MoimSidebar, MoimPost, BoardButton },
-  props : ['boardId'],
   data: () => ({
     }),
   setup() {},

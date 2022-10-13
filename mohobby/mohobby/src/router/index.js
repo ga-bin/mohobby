@@ -199,7 +199,7 @@ const routes = [
   },
   {
     //게시글
-    path: "/moimDetail",
+    path: "/moimDetail/:moimId/:boardType",
     component: () => import("@/views/moim/MoimDetailView"),
     props: true,
     children: [
