@@ -90,6 +90,7 @@ export default {
       })
         .then(function (response) {
           vm.moimPopularList = response;
+          console.log(vm.moimPopularList);
         })
         .catch(function (error) {
           console.log(error);
