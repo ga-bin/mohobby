@@ -1,10 +1,6 @@
 package com.yedam.mohobby.web.sns;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -42,82 +38,28 @@ import com.yedam.mohobby.service.user.MemberVO;
  */
 @RestController
 @RequestMapping("/sns")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class SnsController {
     
     @Autowired
     SnsService service;
     
-    //게시물 등록 - 파일등록 처리중..
-    @PostMapping(value = "/myfeed", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String insertFeed(@RequestPart MultipartFile file, @RequestPart SnsPostVO postvo) {
-        try {
-			//날짜별로 폴더를 생성해서 파일을 관리
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-			Date date = new Date();
-			String dirName = dateFormat.format(date);
-        	//저장할 폴더 경로
-        	String uploadPath = "C:\\dev\\mohobby\\mohobby\\mohobby\\src\\assets\\image\\sns" + dirName;
-        	
-        	File folder = new File(uploadPath);
-			if(!folder.exists()) {
-				folder.mkdir(); //폴더가 존재하지 않을시 생성
-			}
-			//진짜 파일 이름
-			String fileRealName = file.getOriginalFilename();
-			
-			//파일명 고유 랜덤 문자로 생성
-			UUID uuid = UUID.randomUUID();
-			String uuids = uuid.toString().replaceAll("_", "");
-			
-			//확장자를 추출
-			String extension = fileRealName.substring(fileRealName.indexOf("."), fileRealName.length());
-			
-			System.out.println("저장할 폴더 경로: " + uploadPath);
-			System.out.println("실제 파일명: " + fileRealName);
-			System.out.println("폴더명: " + dirName);
-			System.out.println("확장자: " + extension);
-			System.out.println("고유랜덤문자: " + uuids);
-			
-			//고유번호로 변환된 파일이름
-			String fileName = uuids + extension;
-			System.out.println("변경되어 저장되는 파일명: " + fileName);
-			
-			//업로드한 파일을 서버 컴퓨터의 지정한 경로에 저장
-			File saveFile = new File(uploadPath + "\\" + fileName);
-			file.transferTo(saveFile);
-			
-			//DB insert
-			SnsPostVO postVO = new SnsPostVO();
-			postVO.setPostId(postvo.getPostId());
-			postVO.setMemberId(postvo.getMemberId());
-			postVO.setHashtag(postvo.getHashtag());
-			postVO.setContent(postvo.getContent());
-			postVO.setWriteDate(null);
-			postVO.setThumbnail(fileName);
-			postVO.setLikes(0);
-			postVO.setCmts(0);
-			service.insertFeed(postVO);
-			
-			SnsMediaVO mediaVO = new SnsMediaVO();
-			mediaVO.setMediaId(0);
-			mediaVO.setPostId(postvo.getPostId());
-			mediaVO.setMediaType(0);
-			mediaVO.setImgUrl(uploadPath);
-			mediaVO.setFileName(fileName);
-			mediaVO.setFileRealname(fileRealName);
-			mediaVO.setDirName(dirName);
-			service.insertMedia(mediaVO);
-			
-			
-			System.out.println("글 등록 완료");
-			return "success";
-			
-		} catch (Exception e) {
-			System.out.println("업로드 실패: " + e.getMessage());
-			return "fail";
-		}
+    //미디어 등록 - 파일등록 성공 히히
+    @PostMapping(value = "/myfeed/media/{postId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public String insertFeed(@RequestPart(value="fileList") List<MultipartFile> fileList, @PathVariable int postId) {
+    		SnsMediaVO mediavo = new SnsMediaVO();
+    		mediavo.setPostId(postId);
+
+    		service.insertMedia(fileList, mediavo);
+        return "success";
     }
+    //게시물 등록 - 
+    @PostMapping("/myfeed/post")
+    public String insertFeed(@RequestBody SnsPostVO postvo) {
+    		service.insertFeed(postvo);
+        return "success";
+    }
+    
    //게시물 수정 - 테스트완료
     @PutMapping("/myfeed/{postId}")
     public String updateFeed(@PathVariable int postId, @RequestBody SnsPostVO snsPostVO) {
