@@ -27,5 +27,8 @@ public interface MoimService {
 	
 	//소모임 게시판 전체 리스트 조회
 	public List<MoimBoardVO> moimAllBoard(int moimId, int boardType);
+	
+	//소모임 모임이름 중복체크
+	public int memberIdCheck(String moimName);
 }
 

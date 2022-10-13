@@ -16,6 +16,7 @@
                   required
                   v-model="moimName"
                 ></v-text-field>
+                <v-btn @click="idCheck">중복검사</v-btn>
         </v-list-item-title>
     </v-list-item>
 <v-list-item>
@@ -363,6 +364,7 @@
       </v-list-item-content>
 </v-list-item>
   </v-card>
+  
 </template>
 <script>
   export default {
@@ -540,6 +542,23 @@
       },
       cancel(){
         this.selected =this.temp
+      },
+      idCheck() {
+        this.axios.post("/idCheck", {
+          moimName : this.moimName
+      })
+      .then((resp)=> {
+        console.log(resp)
+        if(resp.data === 'YES') {
+        alert("사용가능한 모임명")}
+        else {
+          alert("불가능한 모임명")
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+        alert("데이터이동실패")
+      })
       }
     },
     watch: {

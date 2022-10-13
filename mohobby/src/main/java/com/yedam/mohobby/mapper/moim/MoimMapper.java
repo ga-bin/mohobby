@@ -28,4 +28,7 @@ public interface MoimMapper {
 	
 	//소모임 게시판 전체 리스트 조회
 	public List<MoimBoardVO> moimAllBoard(HashMap<String, Integer> map);
+	
+	//소모임 모임이름 중복검사
+	public int moimIdCheck(String moimName);
 }
