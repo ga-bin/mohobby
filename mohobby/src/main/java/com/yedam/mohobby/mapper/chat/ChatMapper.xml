@@ -78,7 +78,7 @@
 		) d ON (
 		c.room_no = d.room_no )
 	</select>
-	<!-- 소모임 채팅목록 추출 -->
+	<!-- 소모임 채팅목록 추출s-->
 	<select id="getChatMoimRoom"
 		resultType="com.yedam.mohobby.service.chat.RoomVO"
 		parameterType="String">

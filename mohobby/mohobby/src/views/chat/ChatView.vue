@@ -258,7 +258,7 @@ export default {
           console.log('소켓 연결 성공', frame);
         },
         error => {
-          console.log('소켓 연결 실패', error);
+          console.log('소켓 연결 실패1', error);
         }
       );
     },

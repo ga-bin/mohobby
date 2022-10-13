@@ -51,7 +51,7 @@
     <moimlist></moimlist>
     <h4>챌린저스 후기</h4>
     <challReview></challReview>
-    <p>{{this.$store.state.id}}</p>
+
   </div>
 </template>
 
