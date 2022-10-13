@@ -213,8 +213,7 @@
     </div>
   </div>
 </template>
-
-<style>
+<style scoped>
 .login,
 .image {
   min-height: 100vh;
@@ -275,30 +274,18 @@ export default {
   },
   beforeCreate() {},
   created() {
-    const vm = this;
-    this.axios({
-      url: "http://localhost:8088/java/regionAll",
-      method: "get",
-    })
-      .then(function (response) {
-        console.log(response);
-        if (response.data != "") {
-          console.log(response.data);
-          vm.regionList = response.data;
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  this.getAllRegion();
   },
   beforeMount() {},
   mounted() {
+    // 카카오, 네이버 로그인 클릭 시 넘어오는 이메일 셋팅
     const vm = this;
     this.email = this.$route.params.email;
     console.log(document.getElementById("email"));
-    if (this.email !== null || this.email !== "") {
+    if (this.email !== undefined) {
       document.getElementById("email").setAttribute("readonly", true);
     }
+    // 유효성 검사시 사용할 회원 전체 정보 가져 오기
     this.axios({
       url: "http://localhost:8088/java/memberAll",
       method: "get",
@@ -320,6 +307,23 @@ export default {
   beforeUnmount() {},
   unmounted() {},
   methods: {
+    getAllRegion() {
+        const vm = this;
+    this.axios({
+      url: "http://localhost:8088/java/regionAll",
+      method: "get",
+    })
+      .then(function (response) {
+        console.log(response);
+        if (response.data != "") {
+          console.log(response.data);
+          vm.regionList = response.data;
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
     checkId() {
       for (let i = 0; i < this.allMember.length; i++) {
         console.log(

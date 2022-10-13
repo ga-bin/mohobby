@@ -127,7 +127,7 @@ export default {
               .querySelector("#inputPassword").value;
             if (!inputId || !inputPassword) {
               this.$swal.showValidationMessage(
-                `Please enter login and password`
+                `아이디와 비밀번호를 입력하세요`
               );
             }
             return { inputId: inputId, inputPassword: inputPassword };
@@ -158,10 +158,10 @@ export default {
             })
               .then(function (response) {
                 console.log(response);
-                if (response.data != "") {
+                if (response.data !== "") {
                   vm.$router.push("/edituser");
                 } else {
-                  this.$swal.fire({
+                  vm.$swal.fire({
                     icon: "error",
                     title: "비밀번호가 일치하지 않습니다.",
                   });
