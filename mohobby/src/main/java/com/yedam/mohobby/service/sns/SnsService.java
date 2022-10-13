@@ -119,5 +119,14 @@ public interface SnsService {
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회
 	public List<SnsBookmarkVO> getAllBookmarks();
+	
+//	test
+
+//    // [DBMapper.xml 쿼리에서 선언한 변수 개수 및 타입에 맞게 파라미터 선언]
+//   public int saveImage(Insert_DB_Image_Model userImage); // 리턴값으로 int 사용 [상태값 확인 성공, 실패 여부]
+//
+//
+//    // [DBMapper.xml 쿼리에서 선언한 변수 개수 및 타입에 맞게 파라미터 선언]
+//   public Map<String, Object> selectImage(int idx); // 리턴값으로 map 사용 [출력]
 
 }

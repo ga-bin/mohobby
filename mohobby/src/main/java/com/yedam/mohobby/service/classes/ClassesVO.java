@@ -34,4 +34,5 @@ public class ClassesVO {
 	private String keywordName; //카테고리 이름
 	private int jjimTotal;  //찜 토탈
 	private int reviewTotal;  //후기 토탈
+	private int qnaTotal;  //qna 토탈
 }

@@ -39,9 +39,6 @@ public class ClassController {
 	@Autowired
 	ClassService classService;
 	
-	@Autowired
-	SnsService snsService;
-	
 	//html 파일 생성
 	@PostMapping("/saveClassInfo")
 	public void saveClassInfo(@RequestBody ClassInfoRequestVO req) {
@@ -101,6 +98,9 @@ public class ClassController {
 	//강의 전체 조회
 	/**
 	 * 
+	 * @param catg
+	 * @param memberId
+	 * @return
 	 */
 	@GetMapping("/class/{catg}")
 	public @ResponseBody List<ClassesVO> listAll(
@@ -114,15 +114,30 @@ public class ClassController {
 	}
 	
 	
+	//강의 단건 조회
+	/**
+	 * 
+	 * @param classId
+	 * @return
+	 */
+	@GetMapping("/class/detail/{classId}")
+	public @ResponseBody ClassesVO listOne(@PathVariable int classId,  @RequestParam String memberId) {
+	    ClassListRequestVO req = new ClassListRequestVO();
+	    req.setClassId(classId);
+	    req.setMemberId(memberId);
+	    return classService.listOne(req);
+	}
+	
+	
 	//찜 등록
-//	@PostMapping("/class/jjim")
-//	public void addJjim(@RequestBody JjimVO jjim) {
-//	    snsService.addLike(jjim);
-//	}
+	@PostMapping("/class/jjim")
+	public void addJjim(@RequestBody JjimVO jjim) {
+	    classService.addJjim(jjim);
+	}
 	
 	//찜 등록 취소
-//	@DeleteMapping("/class/jjim")
-//	public void delJjim(@RequestBody JjimVO jjim) {
-//	    snsService.deleteLike(jjim.getTargetId(), jjim.getTargetType(), jjim.getMemberId());
-//	}
+	@DeleteMapping("/class/jjim")
+	public void delJjim(@RequestBody JjimVO jjim) {
+	    classService.deleteJjim(jjim);
+	}
 }

@@ -270,7 +270,6 @@ public class SnsController {
     /*
      * 좋아요
      */
-
    //좋아요누적
     @PostMapping(path="/like")
     public int sumLikes(@RequestBody JjimVO jjimVO) {
