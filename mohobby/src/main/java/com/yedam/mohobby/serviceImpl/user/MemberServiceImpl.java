@@ -47,6 +47,11 @@ public class MemberServiceImpl implements MemberService {
 	public void insertMember(MemberVO memberVO) {
 		mMapper.insertMember(memberVO);
 	}
+	
+	// 회원 프로필 사진 수정
+	public void updateProfile(MemberVO memberVO) {
+		mMapper.updateProfile(memberVO);
+	}
 
 	// 회원탈퇴 날짜 update
 	@Override
