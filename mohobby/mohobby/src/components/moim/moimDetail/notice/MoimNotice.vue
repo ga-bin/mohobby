@@ -10,9 +10,9 @@
       class="mx-auto mb-8"
       max-width="800"
       outlined
-      v-for="item in items"
+      v-for=" (item,idx) in items"
       :key="item.moimId"
-      @click="goPost()"
+      @click="goPost(idx)"
     >
       <v-list-item three-line>
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
@@ -30,7 +30,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <div class="text-overline mb-1 mr-2">댓글 {{item.cnt}}</div>
+        <div class="text-overline mb-1 mr-2">댓글 {{item.cnt}} </div>
       </v-card-actions>
     </v-card>
   </div>
@@ -49,8 +49,8 @@ export default {
     };
   },
   methods: {
-    goPost: function () {
-      this.$router.push({ name: "moimPost" });
+    goPost(idx) {
+      this.$router.push({ name: "moimPost", query : { moimId : this.Id, boardId: this.items[idx].boardId, boardType: 0}});
     },
     getNotice() {
       this.axios.get("/noticeList", {

@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.yedam.mohobby.service.communal.CommentsVO;
+
 @Service
 public interface MoimService {
 	//소모임 등록
@@ -39,5 +41,8 @@ public interface MoimService {
 
 	//소모임 게시글 단건조회
 	public List<MoimBoardVO> moimOneBoard(int moimId, int boardType, int boardId);
+	
+	//소모임 게시글 댓글 등록
+	public void moimCommentInsert(CommentsVO commVO);
 }
 

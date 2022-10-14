@@ -3,6 +3,7 @@ package com.yedam.mohobby.mapper.moim;
 import java.util.HashMap;
 import java.util.List;
 
+import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimDetailVO;
 import com.yedam.mohobby.service.moim.MoimVO;
@@ -41,4 +42,7 @@ public interface MoimMapper {
 	
 	//소모임 게시글 단건 조회
 	public List<MoimBoardVO> moimOneBoard(HashMap<String, Integer> map);
+	
+	//소모임 게시글 댓글 등록
+	public void moimCommentInsert(CommentsVO commVO);
 }

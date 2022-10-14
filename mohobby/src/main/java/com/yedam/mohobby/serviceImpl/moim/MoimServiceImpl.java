@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.moim.MoimMapper;
+import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimDetailVO;
 import com.yedam.mohobby.service.moim.MoimService;
@@ -104,8 +105,12 @@ public class MoimServiceImpl implements MoimService{
 		map.put("boardId", boardId);
 		return mapper.moimOneBoard(map);
 	}
-	
-	
+
+	//소모임 게시글 댓글 등록
+	@Override
+	public void moimCommentInsert(CommentsVO commVO) {
+		mapper.moimCommentInsert(commVO);
+	}
 
 }
 

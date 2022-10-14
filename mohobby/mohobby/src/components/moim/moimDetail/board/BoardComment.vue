@@ -1,9 +1,9 @@
 <template>
   <!-- 프로필 -->
   <div>
-  <div class="profile" v-for="item in items" :key="item.user" >
+  <div class="profile" v-for="item in items" :key="item.commId" >
     <v-avatar class="ml-10 my-5 mr-4" color="grey darken-1" size="30">
-        <v-img aspect-ratio="30" :src="item.src" />
+        <!-- <v-img aspect-ratio="30" :src="item.src" /> -->
     </v-avatar>
     <div class="user text-overline">{{item.commentWriter}}
       <small class="date">{{item.commentDate | yyyyMMdd}}</small>
@@ -15,6 +15,35 @@
       <div class="content"> {{item.content}} </div>
       </v-card-actions>
     </div>
+
+  </div>
+  <!-- 댓글 -->
+  <div>
+    <v-card-actions>
+      <v-col cols="10">
+      <v-text-field
+      class="ml-11"
+      placeholder="댓글을 남겨보세요!"
+      filled
+      rounded
+      dense
+      hide-details
+      v-model="content"
+      @keyup.enter="insertComment()"
+      ></v-text-field>
+    </v-col>
+    <v-spacer></v-spacer>
+    <div style="margin-right: 80px">
+    <v-btn
+    rounded
+    color="orange"
+    text
+    @click="insertComment()"
+    >
+    <v-icon>mdi-send</v-icon>
+    </v-btn>
+    </div>
+  </v-card-actions>
   </div>
 </div>
 </template>
@@ -25,12 +54,16 @@ export default {
       boardId : this.$route.query.boardId,
       moimId : this.$route.query.moimId,
       items : [],
+      memberId : 'user1',
+      targetId : '',
+      content : '',
     }
   },
-  getBoard() {
-      this.axios.get("/detailBoard", {
+  methods: {
+    getBoard() {
+      this.axios.get("/detailComment", {
         params : {
-          moimId : this.Id,
+          moimId : this.moimId,
           boardType : 1,
           boardId : this.boardId
         }
@@ -44,9 +77,26 @@ export default {
         console.log(this.items)
         console.log(err)
       })
+    },
+    insertComment() {
+        let vm = this;
+        this.axios.post("/insertMoimBoardComment", {
+            memberId : this.memberId,
+            targetId : this.boardId,
+            content : this.content
+        }).then((resp) => {
+          console.log(resp.data);
+          this.$swal("댓글등록 완료");
+          this.content = '';
+          vm.getBoard()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      },
   },
-  created(){
-    this.getBoard
+  created() {
+    this.getBoard()
   },
   filters: {
     // filter로 쓸 filter ID 지정

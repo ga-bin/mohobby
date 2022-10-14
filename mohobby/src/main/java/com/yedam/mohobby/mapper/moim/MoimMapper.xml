@@ -7,25 +7,25 @@
 <selectKey keyProperty="moimId" resultType="Integer" order="BEFORE">
    SELECT NVL(MAX(moim_id), 0)+1 FROM moim
 </selectKey>
-INSERT INTO moim (
-            moim_id,
-            moim_img,
-            moim_name,
-            moim_info,
-            moim_catg,
-            moim_region,
-            max_people
-            )
-         VALUES
-            (
-            #{moimId},
-            #{moimImg},
-            #{moimName},
-            #{moimInfo},
-            #{moimCatg},
-            #{moimRegion},
-            #{maxPeople}
-            )
+	INSERT INTO moim (
+	            moim_id,
+	            moim_img,
+	            moim_name,
+	            moim_info,
+	            moim_catg,
+	            moim_region,
+	            max_people
+	            )
+	         VALUES
+	            (
+	            #{moimId},
+	            #{moimImg},
+	            #{moimName},
+	            #{moimInfo},
+	            #{moimCatg},
+	            #{moimRegion},
+	            #{maxPeople}
+	            )
 </insert>
 <!-- 소모임 모집 전체 조회(6개씩) -->
 <select id="moimrecruitMember" resultType="com.yedam.mohobby.service.moim.MoimVO">
@@ -70,7 +70,7 @@ INSERT INTO moim (
 
 <!-- 모임명 중복체크 -->
 <select id="moimIdCheck" resultType="Integer">
-SELECT COUNT(*) FROM moim WHERE moim_name = #{moimName}
+	SELECT COUNT(*) FROM moim WHERE moim_name = #{moimName}
 </select>
 
 <!-- 소모임 공지사항 전체 리스트 조회 -->
@@ -89,20 +89,41 @@ SELECT COUNT(*) FROM moim WHERE moim_name = #{moimName}
 
 <!-- 소모임 게시글내 댓글 전체 조회 -->
 <select id="moimCommentAllList" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimDetailVO"> 
-select distinct m.content as board_content, m.member_id as board_writer, m.write_date, c.content,c.write_date as comment_date, c.member_id as comment_writer
-from moim_board m left outer join comments c
-on m.board_id = c.target_id
-and c.target_type = 3
-and m.moim_id = #{moimId}
-and m.board_type = #{boardType}
-and m.board_id = #{boardId}
+	select c.comm_id, c.member_id as comment_writer, c.parent_comm_id, c.target_id, c.content, 
+	        c.write_date as comment_date , m.board_id, m.board_type, m.moim_id
+	from comments c ,moim_board m
+	where c.target_id = m.board_id
+	and c.target_type = 3
+	and m.moim_id = #{moimId}
+	and m.board_type = #{boardType}
+	and m.board_id = #{boardId}
 </select>
 
 <!-- 소모임 게시글 단건조회 -->
 <select id="moimOneBoard" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
-select * from moim_board
-where board_id = #{boardId}
-and board_type = #{boardType}
-and moim_id = #{moimId}
+	select * from moim_board
+	where board_id = #{boardId}
+	and board_type = #{boardType}
+	and moim_id = #{moimId}
 </select>
+
+<!-- 소모임 게시글 댓글 등록 -->
+<insert id="moimCommentInsert" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
+<selectKey keyProperty="commId" resultType="Integer" order="BEFORE">
+   SELECT NVL(MAX(comm_id), 0)+1 FROM comments
+</selectKey>
+	INSERT INTO comments ( comm_id,
+						   member_id,
+						   target_id,
+						   target_type,
+						   content,
+						   write_date
+						)
+	VALUES(#{commId},
+		   #{memberId}, 
+		   #{targetId}, 
+		   3, 
+		   #{content}, 
+		   sysdate)
+</insert>
 </mapper>
