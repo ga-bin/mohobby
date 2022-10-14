@@ -108,7 +108,7 @@
             </v-card>
         </v-row>
     </div>
-    <div style="padding: 120px 0px">
+    <div style="padding: 120px 0px 20px 0px">
         <v-tabs color="#2ac187" v-model="active_tab">
             <v-tab
                 v-for="tab of tabs"
@@ -126,7 +126,7 @@
             </v-tab>
         </v-tabs>
     </div>
-    <div>
+    <div style="padding-bottom: 60px;">
         <router-view />
     </div>
 </v-container>
@@ -148,7 +148,6 @@ export default {
             tabs: [
                 { index: 0, name: '클래스 소개', route: '/class/'+this.classId+'/info' },
                 { index: 1, name: '커리큘럼', route: '/class/'+this.classId+'/course' },
-                { index: 2, name: '만능재주꾼', route: '/class/'+this.classId+'/teacher' },
                 { index: 3, name: 'QnA', route: '/class/'+this.classId+'/qna' },
                 { index: 4, name: '후기', route: '/class/'+this.classId+'/review' },
             ]

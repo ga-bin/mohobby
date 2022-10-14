@@ -1,9 +1,11 @@
 package com.yedam.mohobby.serviceImpl.classes;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
@@ -96,7 +98,26 @@ public class ClassServiceImpl implements ClassService {
         path += String.valueOf(classId);
         path += ".html";
         
-        return path;
+        File file = new File(path);
+        String res = "";
+        
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            
+            String str;
+            
+            while ((str = br.readLine()) != null) {
+                res += str;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        
+        
+        return res;
     }
 
     // qr코드 생성

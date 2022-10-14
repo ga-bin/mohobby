@@ -34,7 +34,7 @@
             <v-list-item 
               v-for="child in subheader.items"
               :key="child.id"
-              @click="$router.push({ path: child.route }).catch(()=>{$router.go(0)})"
+              @click="$router.push({ path: child.route+child.catg }).catch(()=>{$router.go(0)})"
               link
             >
               <v-list-item-icon>
