@@ -239,10 +239,7 @@
                                   active-class="primary--text"
                                   v-model="newInputKeyword"
                                 >
-                                  <v-chip
-                                    :value="catg.keywordId"
-                                    @click="chipclick(catg.keywordId)"
-                                  >
+                                  <v-chip :value="catg.keywordId">
                                     {{ catg.keywordName }}
                                   </v-chip>
                                 </v-chip-group>
@@ -252,7 +249,7 @@
                         </v-sheet>
                       </v-col>
                     </v-row>
-                    <!-- 회원가입버튼 -->
+                    <!-- 회원정보 수정버튼 -->
                     <v-btn
                       type="submit"
                       color="#2ac187"
@@ -261,9 +258,9 @@
                       block
                       dark
                       class="mb-3"
-                      @click="register()"
+                      @click="editUser()"
                     >
-                      회원가입
+                      회원정보수정
                     </v-btn>
                   </div>
                 </v-card>
@@ -574,19 +571,32 @@ export default {
       })
         .then(function (response) {
           console.log("회원정보 수정 성공");
-          vm.$router.push("/mypageprofile");
         })
         .catch(function (error) {
           console.log("회원정보 수정 실패");
         });
+      this.axios({
+        url: "http://localhost:8088/java/memberupdateprofilename",
+        method: "put",
+        data: {
+          memberId: this.memberId,
+        },
+      })
+        .then(function (response) {
+          console.log("이미지 이름 수정 성공");
+          vm.$router.push("/");
+        })
+        .catch(function (error) {
+          console.log("이미지 이름 수정 실패");
+        });
     },
     // 선택한 키워드와 기존에 멥버가 선택한 키워드 비교 -> insert, delete
     confirmMemKeyword() {
-      let insertMemKeywordList = newInputKeyword.filter(
-        (x) => !oldInputKeyword.includes(x)
+      let insertMemKeywordList = this.newInputKeyword.filter(
+        (x) => !this.oldInputKeyword.includes(x)
       );
-      let deleteMemKeywordList = oldInputKeyword.filter(
-        (x) => !newInputKeyword.includes(x)
+      let deleteMemKeywordList = this.oldInputKeyword.filter(
+        (x) => !this.newInputKeyword.includes(x)
       );
 
       insertMemKeywordList.filter((x) => this.insertMemKeyword(x));
@@ -631,10 +641,10 @@ export default {
         return;
       }
       const formData = new FormData(); // 파일을 전송할때는 FormData 형식으로 전송
-
-      console.log("file.name" + file.name); //name:파일명, size:바이트(인듯),type:image/png
+      //console.log("file.name" + file.name); //name:파일명, size:바이트(인듯),type:image/png
       formData.append("file", file); // formData의 key: 'filelist', value: 이미지
       this.formData = formData;
+      // 미리보기
       const reader = new FileReader();
       reader.onload = (e) => {
         this.uploadimageurl = e.target.result;
@@ -652,7 +662,7 @@ export default {
         data: vm.formData,
       })
         .then((res) => {
-          console.log("res.data.message" + res.data.message);
+          console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
