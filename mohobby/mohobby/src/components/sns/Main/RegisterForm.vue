@@ -12,36 +12,35 @@
         class="mx-auto" 
         label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)"
         type="file"
-        filled
         prepend-icon="mdi-camera"
+        filled
         counter
         show-size
         dense
         multiple
-        @change="onImageChange"
-        accept="image/*"
-      />
+        accept="image/jpeg, image/jpg, image/png"
+        @change="onImageChange"/>
   </v-container>
-    <!-- 이미지 미리보기 -->
-    <!-- <v-container fluid> -->
-      <div style="display:inline-flex; margin-left: 10px;">
-        <v-img v-for="(item,i) in uploadimageurl" 
-              :key="i" 
-              :src="item.url"
-              aspect-ratio="4/3"
-              height="150px" 
-              width="200px"
-              lazy-src
-              error 
-              style="margin-right: 10px;"
-        />
-      </div>
-      <v-container fluid>
-        <div v-for="(list,i) in fileList"
-              :key="i">
-          {{list.name}}
-        </div>
-      </v-container>
+  <!-- 이미지 미리보기 -->
+  <div style="display:inline-flex; margin-left: 10px;">
+    <v-img v-for="(item,i) in uploadimageurl" 
+          :key="i" 
+          :src="item.url"
+          aspect-ratio="4/3"
+          height="150px" 
+          width="200px"
+          lazy-src
+          error 
+          style="margin-right: 10px;"
+    />
+  </div>
+      
+  <v-container fluid>
+    <div v-for="(list,i) in fileList"
+          :key="i">
+      {{list.name}}
+    </div>
+  </v-container>
 
     <!-- 내용 -->
     <v-container fluid>
@@ -167,16 +166,14 @@
     imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
     fileList : [], //이미지미리보기 담을 파일list
     file : {}, //
-    memberId : "",
     formData : {},
-    
+    files : [],
     snsPostVO: {
-      memberId : this.memberId,
+      memberId : this.$store.state.id,
       content: "",
     }
   }),
   created(){
-    this.memberId = this.$store.state.id;
   },
   watch: {
     //해시태그
@@ -210,17 +207,82 @@
         this.editingIndex = -1
       }
     },
+    //이미지 미리보기
+    onImageChange(file) {	// v-file-input @OnChange
+      if (!file) return;
 
-     //이미지2
+      const formData = new FormData();	// 파일을 전송할때는 FormData 형식으로 전송
+      file.forEach((getFile) => { //파일등 정보 forEach문으로 빼오기 
+        console.log("item.name: " + getFile.name);//name:파일명, size:바이트(인듯),type:(image/)png
+        formData.append('fileList', getFile);	// formData에 append해라. key: 'fileList'로, value값은 파일
+
+        const fileReader = new FileReader(); //파일리더기 생성
+        fileReader.onload = (e) => { //파일 성공적으로 읽어오면 이벤트 실행
+          this.uploadimageurl.push({url: e.target.result}); // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
+          console.log({url: e.target.result});
+          
+        };
+        fileReader.readAsDataURL(getFile); //바이너리 파일을 Base64 Encode 문자열로 반환 Ex.) data:image/jpeg; base64, ….
+      });
+    },
+    //이미지 업로드
+    uploadImage() {
+      const formData = new FormData();	// 파일을 전송할때는 FormData 형식으로 전송
+      file.forEach((getFile) => { //파일등 정보 forEach문으로 빼오기 
+      formData.append('fileList', getFile); //이미지 첨부
+      formData.append("snsPostVO", this.snsPostVO); // 컨텐츠 객체 첨부
+      this.files.push.getFile;
+      })
+
+      let validation = true;
+      let message = '';
+
+      if (files.length > 4) {
+          validation= false;
+          message = `파일은 4개 까지만 등록 가능합니다.`
+      }
+
+      if (files[0].size > 1024 * 1024 * 2) {
+          message = `${message}, 파일은 용량은 2MB 이하만 가능합니다.`;
+          validation = false;
+      }
+
+      if (files[0].type.indexOf('image') < 0) {
+          message = `${message}, 이미지 파일만 업로드 가능합니다.`;
+          validation = false;
+      }
+
+      if (validation) {
+          this.files = files
+      }else {
+          this.files = '';
+          alert(message);
+      }
+
+
+
+      console.log(formData)
+      this.axios.post('/sns/myfeed/meida',	formData, {// 이미지 저장을 위해 back서버와 통신
+          headers: {
+            'Content-Type': 'multipart/form-data' 
+          },	// 이걸 써줘야 formdata 형식 전송가능
+        }).then(res => {
+          console.log("res.data.message" + res.data.message);
+          this.imagecnt = file.length;	// 이미지 개수 저장
+          console.log("이미지 몇개?"+this.imagecnt)
+        }).catch(err => {
+          alert(err);
+        });
+      },
      //이미지 조건 처리
      fileChange: function (e) {
       const file = e.target.files;
       let validation = true;
       let message = '';
 
-      if (file.length > 5) {
+      if (file.length > 4) {
           validation= false;
-          message = `파일은 5개 까지만 등록 가능합니다.`
+          message = `파일은 4개 까지만 등록 가능합니다.`
       }
 
       if (file[0].size > 1024 * 1024 * 2) {
@@ -240,55 +302,6 @@
           alert(message);
       }
     },
-    onImageChange(file) {	// v-file-input 변경시
-      if (!file) {
-        console.log("file" + file);
-        return;
-      }
-      const formData = new FormData();	// 파일을 전송할때는 FormData 형식으로 전송
-      file.forEach((item) => {
-        console.log("item.name" + item.name);//name:파일명, size:바이트(인듯),type:image/png
-        formData.append('fileList', item);	// formData의 key: 'filelist', value: 이미지
-        this.formData = formData;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          console.log({url: e.target.result});
-          this.uploadimageurl.push({url: e.target.result});
-          // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
-        };
-        reader.readAsDataURL(item);
-      });
-    },
-    //이미지 업로드
-    uploadImage() {
-
-      
-      this.axios({
-          url: "/sns/myfeed/meida",	// 이미지 저장을 위해 back서버와 통신
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"},	// 이걸 써줘야 formdata 형식 전송가능
-          data: this.snsPostVO,ㅔ
-        }).then(res => {
-          console.log("글 등록 완료!");
-        }).catch(err => {
-          alert(err);
-        });
-      //이미지 전송 
-      const vm = this;
-      this.axios({
-          url: "/sns/myfeed/meida/",	// 이미지 저장을 위해 back서버와 통신
-          method: "POST",
-          headers: {'Content-Type': 'multipart/form-data' },	// 이걸 써줘야 formdata 형식 전송가능
-          data: vm.formData,
-        }).then(res => {
-          console.log("res.data.message" + res.data.message);
-          this.imagecnt = file.length;	// 이미지 개수 저장
-          console.log("이미지 몇개?"+this.imagecnt)
-        }).catch(err => {
-          alert(err);
-        });
-      }
     },
   }
 

@@ -10,7 +10,11 @@ import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
 import com.yedam.mohobby.service.user.MemberVO;
-
+/**
+ * @create 22/10/08
+ * @author sunjin
+ * @title sns service
+ */
 @Service
 public interface SnsService {
 	/*
