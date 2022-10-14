@@ -28,8 +28,10 @@ export default {
 
     },
     catg(category) {
+      console.log(this.catgKey)
       if(this.catgKey === category) {
         this.catgKey = ""
+        this.psearch = ""
       } else {
         this.catgKey = category
       }
