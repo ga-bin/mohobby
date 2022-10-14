@@ -16,6 +16,12 @@ public interface ClassService {
 	
 	//단건조회
     public ClassesVO listOne(ClassListRequestVO req);
+    
+    //후기평가조회
+    public ClassReviewVO getClassReview(int classId);
+    
+    //강의게시글조회
+    public List<ClassBoardVO> getClassBoardList(int classId, int boardType);
 
 	//찜등록
     public void addJjim(JjimVO jjim);

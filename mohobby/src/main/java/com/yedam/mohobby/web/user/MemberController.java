@@ -1,6 +1,7 @@
 package com.yedam.mohobby.web.user;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.yedam.mohobby.service.admin.MemberVO;
 import com.yedam.mohobby.service.communal.KeywordVO;
 import com.yedam.mohobby.service.user.MemberService;
@@ -26,6 +28,10 @@ import com.yedam.mohobby.service.user.MemberService;
 @RestController
 @CrossOrigin(origins = "*")
 public class MemberController {
+	
+	String newFileName;
+	String extension;
+	
 	@Autowired
 	MemberService service;
 	
@@ -119,35 +125,44 @@ public class MemberController {
 	 */
 	  //게시물 등록 - 파일등록 처리중..
     @PostMapping(value = "/memberProfileUpdate", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String insertFeed(@RequestPart(value="file") List<MultipartFile> files) {
+    public String insertProfile(@RequestPart(value="file") List<MultipartFile> files) {
         try {
            MultipartFile file = files.get(0);
            
-           
-           
           String path = this.getClass().getResource("/").getPath();
+          System.out.println( path);
           path = path.substring(0, path.lastIndexOf("mohobby"));
           path = path.substring(0, path.lastIndexOf("mohobby")+"mohobby".length());
-          path += path + "/mohobby/mohobby/assets/image/user";
+          path += "/mohobby/mohobby/src/assets/image/user/";
           
+          	
          //진짜 파일 이름
          String fileRealName = file.getOriginalFilename();
+         String[] fileRealNameList = fileRealName.split("[.]");
+         newFileName = "";
+         for(String name : fileRealNameList) {
+        	 System.out.println(name);
+         }
          
+         for(int i = 0; i < fileRealNameList.length-1; i++) {
+        	 newFileName += fileRealNameList[i];
+         }
          
+         System.out.println("가공한 fileRealName" + fileRealName);
          //확장자를 추출
-         String extension = fileRealName.substring(fileRealName.indexOf("."), fileRealName.length());
+         extension = fileRealName.substring(fileRealName.indexOf("."), fileRealName.length()).toLowerCase();
          
          System.out.println("저장할 폴더 경로: " + path);
-         System.out.println("실제 파일명: " + fileRealName);
+         System.out.println("실제 파일명: " + newFileName + extension);
          System.out.println("확장자: " + extension);
          
        
-         
          //업로드한 파일을 서버 컴퓨터의 지정한 경로에 저장
-         File saveFile = new File(path + "/" + fileRealName);
+         File saveFile = new File(path + newFileName + extension);
          file.transferTo(saveFile);
          
-         return "success";
+         return newFileName + extension;
+         
          
       } catch (Exception e) {
          e.printStackTrace();
@@ -155,8 +170,15 @@ public class MemberController {
          return "fail";
       }
     }
-
-	
+    
+    @PutMapping("/memberupdateprofilename")
+    public void updateProfile(@RequestBody MemberVO memberVO) {
+    	
+    	System.out.println(newFileName+extension);
+    	memberVO.setProfileImg(newFileName+extension);
+    	service.updateProfile(memberVO);
+    	
+    }
 	
 	
 	/**

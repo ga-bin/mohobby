@@ -9,9 +9,9 @@
       class="mx-auto mb-8"
       max-width="800"
       outlined
-      v-for="item in items"
+      v-for=" (item,idx) in items"
       :key="item.writeDate"
-      @click="goPost()"
+      @click="goPost(idx)"
     >
       <v-list-item three-line>
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
@@ -45,12 +45,12 @@ export default {
       moim: 1,
       moimRight: 1,
       Id : this.$route.params.moimId,
-      boardType : this.$route.params.boardType,
+      boardType : 1
     };
   },
   methods: {
-    goPost: function () {
-      this.$router.push({ name: 'moimPost', query : { moimId : this.Id }});
+    goPost(idx) {
+      this.$router.push({ name: 'moimPost', query : { moimId : this.Id, boardId: this.items[idx].boardId, boardType: 1}});
     },
     getBoard() {
       this.axios.get("/moimBoardList", {

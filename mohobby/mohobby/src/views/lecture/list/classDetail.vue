@@ -150,7 +150,8 @@ export default {
                 { index: 1, name: '커리큘럼', route: '/class/'+this.classId+'/course' },
                 { index: 3, name: 'QnA', route: '/class/'+this.classId+'/qna' },
                 { index: 4, name: '후기', route: '/class/'+this.classId+'/review' },
-            ]
+            ],
+            
         }
     },
     created() {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.mohobby.service.communal.KeywordVO;
 import com.yedam.mohobby.service.user.MemPickKeywordService;
 import com.yedam.mohobby.service.user.MemPickKeywordVO;
+import com.yedam.mohobby.service.user.MemberVO;
 
 /**
  * @create 22/10/05
@@ -54,8 +55,8 @@ public class MemPickKeywordController {
 	 */
 	// 회원 관심사 insert
 	@PostMapping("/memPickKeyword")
-	public void insertPickKeyword(@RequestBody String memberId, @RequestBody String keywordId) {
-		service.insertPickKeyword(memberId, keywordId);
+	public void insertPickKeyword(@RequestBody MemPickKeywordVO memPickKeywordVO) {
+		service.insertPickKeyword(memPickKeywordVO);
 	}
 	
 	/**
@@ -63,8 +64,12 @@ public class MemPickKeywordController {
 	 * @param memPickKeywordVO
 	 */
 	// 회원 관심사 delete
-	@DeleteMapping("/memPickKeyword")
-	public void deletePickKeyword(@RequestBody String memberId, @RequestBody String keywordId) {
-		service.deletePickKeyword(memberId, keywordId);
+	@DeleteMapping("/memPickKeyword/{memberId}/{keywordId}")
+	public void deletePickKeyword(@PathVariable String memberId, @PathVariable String keywordId) {
+		
+		MemPickKeywordVO memPickKeywordVO = new MemPickKeywordVO();
+		memPickKeywordVO.setMemberId(memberId);
+		memPickKeywordVO.setKeywordId(keywordId);
+		service.deletePickKeyword(memPickKeywordVO);
 	}
 }

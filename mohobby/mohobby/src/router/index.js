@@ -140,33 +140,32 @@ const routes = [
           {
             path: "OpenBankingTest",
             name: "OpenBankingTest",
-            component: () => import("./../views/lecture/test/OpenBankingTest"),
+            component: () => import("./../components/lecture/test/OpenBankingTest"),
           },
           {
             path: "QuillEditorTest",
             name: "QuillEditorTest",
-            component: () => import("./../views/lecture/test/QuillEditorTest"),
+            component: () => import("./../components/lecture/test/QuillEditorTest"),
           },
           {
             path: "iamportTest",
             name: "iamportTest",
-            component: () => import("./../views/lecture/test/iamportTest"),
+            component: () => import("./../components/lecture/test/iamportTest"),
           },
           {
             path: "AccountRealNameTest",
             name: "AccountRealNameTest",
-            component: () =>
-              import("./../views/lecture/test/AccountRealNameTest"),
+            component: () => import("./../components/lecture/test/AccountRealNameTest"),
           },
           {
             path: "AttdQRTest",
             name: "AttdQRTest",
-            component: () => import("./../views/lecture/test/AttdQRTest"),
+            component: () => import("./../components/lecture/test/AttdQRTest"),
           },
           {
             path: "KakaoMapTest",
             name: "KakaoMapTest",
-            component: () => import("./../views/lecture/test/KakaoMapTest"),
+            component: () => import("./../components/lecture/test/KakaoMapTest"),
           },
         ],
       },
@@ -179,31 +178,31 @@ const routes = [
       {
         path: ":classId",
         name: "classDetail",
-        component: () => import("./../views/lecture/detail/classDetail"),
+        component: () => import("./../views/lecture/list/classDetail"),
         props: true,
         children: [
           {
             path: "info",
             name: "classInfo",
-            component: () => import("./../views/lecture/detail/classInfo"),
+            component: () => import("./../components/lecture/detail/classInfo"),
             props: true,
           },
           {
             path: "course",
             name: "classCourse",
-            component: () => import("./../views/lecture/detail/classCourse"),
+            component: () => import("./../components/lecture/detail/classCourse"),
             props: true,
           },
           {
             path: "qna",
             name: "classQna",
-            component: () => import("./../views/lecture/detail/classQna"),
+            component: () => import("./../components/lecture/detail/classQna"),
             props: true,
           },
           {
             path: "review",
             name: "classReview",
-            component: () => import("./../views/lecture/detail/classReview"),
+            component: () => import("./../components/lecture/detail/classReview"),
             props: true,
           },
         ],

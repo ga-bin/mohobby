@@ -27,6 +27,9 @@ public interface MemberService {
 		//회원가입 insert
 		public void insertMember(MemberVO memberVO);
 		
+		// 회원 프로필 사진 수정
+		public void updateProfile(MemberVO memberVO);
+		
 		// 회원탈퇴 날짜 update
 		public void deleteMember(String memberId);
 		

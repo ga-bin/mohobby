@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.yedam.mohobby.service.moim.MoimBoardVO;
+import com.yedam.mohobby.service.moim.MoimDetailVO;
 import com.yedam.mohobby.service.moim.MoimVO;
 
 public interface MoimMapper {
@@ -31,4 +32,13 @@ public interface MoimMapper {
 	
 	//소모임 모임이름 중복검사
 	public int moimIdCheck(String moimName);
+	
+	//소모임 공지사항 리스트 조회
+	public List<MoimBoardVO> moimNoticeBaord(HashMap<String, Integer> map);
+	
+	//소모임 게시판내 댓글 조회
+	public List<MoimDetailVO> moimCommentAllList(HashMap<String, Integer> map);
+	
+	//소모임 게시글 단건 조회
+	public List<MoimBoardVO> moimOneBoard(HashMap<String, Integer> map);
 }
