@@ -150,17 +150,15 @@
 	</select>
 	<!--대화내역 저장 -->
 	<insert id="insertMessage"
-		parameterType="com.yedam.mohobby.service.chat.MessageVO">
+		parameterType="com.yedam.mohobby.service.chat.ChatVO">
 		insert into chat(
 		CHAT_ID,
 		ROOM_NO,
-		MSG_TIME,
 		CONTENT,
 		MEMBER_ID)
 		values(
 		CHAT_ID_SEQ.nextval,
 		#{roomNo},
-		#{msgTime},
 		#{content},
 		#{memberId}
 		)
@@ -221,5 +219,10 @@
 		END IF;
 		END
 	</insert>
+	<update id ="updateCheckTime" parameterType="com.yedam.mohobby.service.chat.ChatUserVO">
+	update room set check_time = sysdate
+where member_id =#{memberId}
+and room_no=#{roomNo}
+	</update>
 	
 </mapper>

@@ -31,8 +31,7 @@ public class MessageController {
 
 	@MessageMapping("/sendNotice")
 	public void sendNotice(SendNoticeVO sendNotice) {
-		System.out.println(sendNotice);
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
 		RevNoticeVO revNotice = new RevNoticeVO();
 		revNotice.setContent(sendNotice.getContent());
 		revNotice.setRoomNo(sendNotice.getRoomNo());

@@ -174,32 +174,27 @@ export default {
           memberId: this.targetId,
           roomNo: this.roomId,
           content: this.message,
-          msgTime: this.createAt,
-        };
-        this.axios
-          .post("/InsertMessage/", {
-            memberId: this.targetId,
-            roomNo: this.roomId,
-            content: this.message,
-            msgTime: this.createAt,
-          })
+          msgTime: this.createAt
+        }
+        this.axios.post('/InsertMessage/', {
+          memberId: this.memberId,
+          roomNo: this.roomId,
+          content: this.message,
+        })
           .then(function (res) {
             console.log(res);
           })
           .catch(function (error) {
             console.log(error);
-          });
-        //현재 대화방에 내역
-        this.stompClient.send("/app/send", JSON.stringify(msg), (res) => {
-          console.log(res);
-        });
-        this.stompClient.send(
-          "/app/sendNotice",
-          JSON.stringify(noticeContent),
-          (res) => {
-            console.log(res);
-          }
-        );
+            console.log('!!!!!!!!!!!!!!')
+          })
+        // //현재 대화방에 내역
+        // this.stompClient.send("/app/send", JSON.stringify(msg), res => {
+        //   console.log(res)
+        // });
+        // this.stompClient.send("/app/sendNotice", JSON.stringify(noticeContent), res => {
+        //   console.log(res)
+        // });
       }
       this.message = "";
     },
@@ -229,9 +224,13 @@ export default {
             }
           }
         })
-        .catch(function (err) {
-          console.log(err);
-        });
+        .catch(function (err) { console.log(err) })
+        .finally(function (ros){
+          vm.axios.post('/updateCheckTime',{
+          memberId: vm.memberId,
+          roomNo: vm.roomId
+          }).then(function(res){console.log('성공')})
+        })
       //대화상대 추출
       this.axios
         .post("/getTargetId", {
@@ -320,9 +319,9 @@ export default {
               console.log(error);
             })
             .finally(function (ros) {
-              vm.sortRoom();
-            });
-        });
+              vm.sortRoom()
+            })
+        })
     },
 
     // 소켓연결
