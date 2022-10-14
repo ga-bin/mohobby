@@ -6,6 +6,8 @@
 </template>
 
 <script>
+
+
 export default {
     name: 'classInfo',
     data() {
@@ -24,20 +26,20 @@ export default {
     },
     methods: {
         readInfo() {
-            let path = "";
+            let content = "";
 
             this.axios.get('/readClassInfo', {
                 params: {
                     classId: this.classId
                 }
             }).then( res => {
-                path = res.data;
+                document.querySelector("#classInfoInput").innerHTML = res.data;
             }).catch( err => {
                 console.log(err);
             }).finally( () => {
-                console.log(path);
-                document.getElementById("classInfoInput").innerHTML=`<object type="text/html" data="../../../../assets/html/classInfo/${this.classId}.html"></object>`;
+                
             })
+
 
 
         }, 
@@ -48,6 +50,5 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>

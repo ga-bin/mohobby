@@ -189,12 +189,6 @@ const routes = [
             props: true,
           },
           {
-            path: "teacher",
-            name: "classTeacher",
-            component: () => import("./../views/lecture/detail/classTeacher"),
-            props: true,
-          },
-          {
             path: "course",
             name: "classCourse",
             component: () => import("./../views/lecture/detail/classCourse"),
