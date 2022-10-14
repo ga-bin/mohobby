@@ -17,8 +17,8 @@ public interface MemPickKeywordMapper {
 	public List<MemPickKeywordVO> selectPickKeywordList(String memberId);
 	
 	// 회원 관심사 insert
-	public void insertPickKeyword(HashMap<String, String> map);
+	public void insertPickKeyword(MemPickKeywordVO memPickKeywordVO);
 	
 	// 회원 관심사 delete
-	public void deletePickKeyword(HashMap<String, String> map);
+	public void deletePickKeyword(MemPickKeywordVO memPickKeywordVO);
 }

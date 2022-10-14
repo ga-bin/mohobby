@@ -14,12 +14,12 @@ where keyword_id like '1___'
  	</select>
  	
  <!-- 회원 관심사 insert -->
-   <insert id="insertPickKeyword" parameterType="hashMap">
+   <insert id="insertPickKeyword" parameterType="com.yedam.mohobby.service.user.MemPickKeywordVO">
    		insert into member_pick_keyword (member_id, keyword_id) values (#{memberId}, #{keywordId})   
    </insert>
    
    <!-- 회원 관심사 delete -->
-   <delete id="deletePickKeyword" parameterType="hashMap">
+   <delete id="deletePickKeyword" parameterType="com.yedam.mohobby.service.user.MemPickKeywordVO">
    		delete from member_pick_keyword where member_id = #{memberId} and keyword_id = #{keywordId}
    
    </delete>
