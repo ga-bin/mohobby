@@ -30,5 +30,14 @@ public interface MoimService {
 	
 	//소모임 모임이름 중복체크
 	public int memberIdCheck(String moimName);
+	
+	//소모임 공지사항 리스트 조회
+	public List<MoimBoardVO> moimNoticeBoard(int moimId, int boardType);
+	
+	//소모임 게시글내 댓글 조회
+	public List<MoimDetailVO> moimCommentAllList(int moimId, int boardType, int boardId);
+
+	//소모임 게시글 단건조회
+	public List<MoimBoardVO> moimOneBoard(int moimId, int boardType, int boardId);
 }
 

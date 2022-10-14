@@ -1,7 +1,9 @@
 <template>
   <div class="container">
+    <i class="fa-solid fa-thumbs-up fa-5x"></i>
   <h3>소모임 멤버를 모집합니다!</h3>
   <br>
+  <div id="first"></div>
   <div class="box" @click="box(idx)" v-for="(item,idx) in items" :key="item.title">
   <v-card
     class="mx-3"
@@ -116,7 +118,6 @@
 
 </div>
 </template>
-
 <script>
 export default {
   props : {
@@ -127,7 +128,7 @@ export default {
   return {
   search : '',
   items: [],
-  moimRight : '0',
+  moimRight : '2',
   noneuser : false,
  };
 },
@@ -162,7 +163,15 @@ methods : {
     .then((resp) => {
       console.log(resp)
       console.log(this.items)
+      if(resp.data[0] == null) {
+        document.querySelector("#first").style.display  = "block"
+        document.querySelector("#first").innerText = "일치하는 검색결과가 없습니다.";
+        this.items = resp.data;
+      } else {
+        document.querySelector("#first").style.display  = "none"
+      document.querySelector("#first").innerText = "";
       this.items = resp.data;
+      }
     })
     .catch(function (error) {
       console.log(this.items)
@@ -203,6 +212,12 @@ methods : {
   .moreMoim {
     float : right;
     width : 1000px;
+  }
+  #first{
+    text-align: center;
+    display: none;
+    height: 200px;
+    margin-top : 150px;
   }
 
 </style>  

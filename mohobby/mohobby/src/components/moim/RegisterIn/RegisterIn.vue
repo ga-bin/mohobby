@@ -4,6 +4,7 @@
     max-width="1000"
     outlined
   >
+  <div class="box1">
     <v-list-item three-line>
       <v-list-item-avatar
         tile
@@ -11,14 +12,21 @@
         color="grey"
       ></v-list-item-avatar>
       <v-list-item-title class="text-h5 mb-1">
+        <v-row>
+          <v-col cols="12" sm="6" md="8" >
           <v-text-field
                   label="모임명"
                   required
                   v-model="moimName"
                 ></v-text-field>
-                <v-btn @click="idCheck">중복검사</v-btn>
+              </v-col>
+          <v-col cols="12" sm="6" md="4">
+        <v-btn @click="idCheck" >중복검사</v-btn>
+    </v-col>
+      </v-row>
         </v-list-item-title>
     </v-list-item>
+  </div>
 <v-list-item>
   <v-list-item-content>
         <v-list-item-subtitle class="text-h5 mb-1">
@@ -544,22 +552,31 @@
         this.selected =this.temp
       },
       idCheck() {
+        var pattem_spc = /[~!@#$%^&*()_+|<>?:{}]/; // 특수문자
         this.axios.post("/idCheck", {
           moimName : this.moimName
       })
       .then((resp)=> {
         console.log(resp)
-        if(resp.data === 'YES') {
-        alert("사용가능한 모임명")}
+        if (this.moimName === '' || pattem_spc.test(this.moimName) ) {
+        this.$swal('사용할수 없는 모임명입니다.')
+        this.moimName = ""
+        }
+        else if(resp.data === 'YES') {
+        this.$swal('사용가능한 모임명 입니다.')
+        
+        }
         else {
-          alert("불가능한 모임명")
+        this.$swal("이미 사용중인 모임명 입니다.")
+        this.moimName = ""
         }
       })
       .catch((err) => {
         console.log(err)
         alert("데이터이동실패")
       })
-      }
+      },
+
     },
     watch: {
       selected: "showChip"
@@ -576,5 +593,9 @@
 }
 .flexcon {
   display:flex;
+}
+.box1 {
+  margin-left : 3%;
+  margin-top : 1%;
 }
 </style>
