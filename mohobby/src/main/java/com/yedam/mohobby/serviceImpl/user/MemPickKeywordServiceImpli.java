@@ -31,20 +31,14 @@ public class MemPickKeywordServiceImpli implements MemPickKeywordService {
 
 	// 회원 관심사 insert
 	@Override
-	public void insertPickKeyword(String memberId, String keywordId) {
-		HashMap<String, String> map = new HashMap<>();
-		map.put("memberId", memberId);
-		map.put("keywordId", keywordId);
-		mapper.insertPickKeyword(map);
+	public void insertPickKeyword(MemPickKeywordVO memPickKeywordVO) {
+		mapper.insertPickKeyword(memPickKeywordVO);
 	}
 
 	// 회원 관심사 delete
 	@Override
-	public void deletePickKeyword(String memberId, String keywordId) {
-		HashMap<String, String> map = new HashMap<>();
-		map.put("memberId", memberId);
-		map.put("keywordId", keywordId);
-		mapper.insertPickKeyword(map);
+	public void deletePickKeyword(MemPickKeywordVO memPickKeywordVO) {
+		mapper.deletePickKeyword(memPickKeywordVO);
 	}
 
 

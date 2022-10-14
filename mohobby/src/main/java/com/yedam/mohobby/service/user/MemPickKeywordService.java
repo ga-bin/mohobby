@@ -15,8 +15,8 @@ public interface MemPickKeywordService {
 	public List<MemPickKeywordVO> selectPickKeywordList(String memberId);
 		
 	// 회원 관심사 insert
-	public void insertPickKeyword(String memberId, String keywordId);
+	public void insertPickKeyword(MemPickKeywordVO memPickKeywordVO);
 		
 	// 회원 관심사 delete
-	public void deletePickKeyword(String memberId, String keywordId);
+	public void deletePickKeyword(MemPickKeywordVO memPickKeywordVO);
 }

@@ -128,7 +128,8 @@ public class MemberController {
           String path = this.getClass().getResource("/").getPath();
           path = path.substring(0, path.lastIndexOf("mohobby"));
           path = path.substring(0, path.lastIndexOf("mohobby")+"mohobby".length());
-          path += path + "/mohobby/mohobby/assets/image/user";
+          System.out.println(path);
+
           
          //진짜 파일 이름
          String fileRealName = file.getOriginalFilename();
