@@ -1,6 +1,7 @@
 <template>
   <div>
     <UserSidebar></UserSidebar>
+    
     <div id="container" class="center">
       <div>
         <h2>내가 작성한 피드 목록</h2>
