@@ -1,7 +1,9 @@
 <template>
   <div class="container">
+    <i class="fa-solid fa-thumbs-up fa-5x"></i>
   <h3>소모임 멤버를 모집합니다!</h3>
   <br>
+  <div id="first"></div>
   <div class="box" @click="box(idx)" v-for="(item,idx) in items" :key="item.title">
   <v-card
     class="mx-3"
@@ -13,7 +15,7 @@
         <div class="text-overline mb-4">
           {{item.moimName}}
         </div>
-        <v-list-item-subtitle>{{item.content}}</v-list-item-subtitle>
+        <v-list-item-subtitle>{{item.moimInfo}}</v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-avatar
         tile
@@ -113,24 +115,34 @@
 
 </v-card-actions>
 </div>
+
 </div>
 </template>
-
 <script>
 export default {
-  props: ['search'],
+  props : {
+    rsearch : String,
+    keyWord : String
+  },
   data() {
   return {
   search : '',
   items: [],
-  moimRight : '0',
+  moimRight : '2',
   noneuser : false,
-  };
+ };
 },
 created()  {
   this.getList()
 },
-
+watch: {
+  rsearch(){
+    this.searchList();
+  },
+  keyWord() {
+    this.searchList();
+  }
+},
 methods : {
   getList() {
     this.axios.get("/moimRecruitMember")
@@ -141,6 +153,31 @@ methods : {
       console.log(error);
     })
   },
+  searchList() {
+    this.axios.get("/moimAllSearch",{
+      params : {
+        Search : this.rsearch,
+        Category : this.keyWord
+      }
+    })
+    .then((resp) => {
+      console.log(resp)
+      console.log(this.items)
+      if(resp.data[0] == null) {
+        document.querySelector("#first").style.display  = "block"
+        document.querySelector("#first").innerText = "일치하는 검색결과가 없습니다.";
+        this.items = resp.data;
+      } else {
+        document.querySelector("#first").style.display  = "none"
+      document.querySelector("#first").innerText = "";
+      this.items = resp.data;
+      }
+    })
+    .catch(function (error) {
+      console.log(this.items)
+      console.log(error)
+    }) 
+  },
   select : function() {
     if (this.moimRight !== '0') {
       this.$router.push({ path: 'moimRegisterIn' })
@@ -150,7 +187,7 @@ methods : {
      this.$router.push({ path: 'login' })
     },
     box(idx) {
-      this.$router.push({ name : 'moimBoard' , params : { boardId : this.items[idx].moimId }})
+      this.$router.push({ name : 'moimBoard' , params : { moimId : this.items[idx].moimId, boardType: 1}})
     }
 }
 
@@ -176,5 +213,11 @@ methods : {
     float : right;
     width : 1000px;
   }
+  #first{
+    text-align: center;
+    display: none;
+    height: 200px;
+    margin-top : 150px;
+  }
 
-</style>
+</style>  

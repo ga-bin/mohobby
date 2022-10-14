@@ -1,26 +1,31 @@
 <template>
   <div id="app">
-
     <v-app>
-      <v-container class="fill-height pa-0 ">
+      <v-container class="fill-height pa-0" height=100%>
         <v-row class="no-gutters elevation-4">
-          <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid #0000001f;">
-            <v-responsive class="overflow-y-auto fill-height" height="500">
+          <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid #0000001f">
+            <v-responsive class="overflow-y-auto fill-height" height=100%>
               <v-list>
                 <v-list-item-group>
                   <template v-for="(item, index) in roomList">
                     <v-list-item v-on:click="openRoom(item.roomNo)">
                       <v-list-item>
                         <v-avatar>
-                          <v-img :src="require('@/assets/image/user/'+item.profileImg)" height="100px" width="50px"
-                            border-radius:10px></v-img>
+                          <v-img :src="
+                            require(`@/assets/image/user/${item.profileImg}`)
+                          " height="100px" width="50px" border-radius:10px></v-img>
                         </v-avatar>
                         <v-list-item-content>
                           <v-list-item-title v-text="item.nickName" />
                           <v-list-item-subtitle v-text="item.content" />
+                          <v-list-item-subtitle v-text="item.nonReadChat" />
+
+                          <v-list-item-subtitle v-text="item.checkIn" />
                         </v-list-item-content>
                         <v-list-item-icon>
-                          <v-icon :color="item.active ? 'deep-purple accent-4' : 'grey'">
+                          <v-icon :color="
+                            item.active ? 'deep-purple accent-4' : 'grey'
+                          ">
                             chat_bubble
                           </v-icon>
                         </v-list-item-icon>
@@ -32,25 +37,25 @@
               </v-list>
             </v-responsive>
           </v-col>
-          <v-col cols="auto" class="flex-grow-1 flex-shrink-0">
-            <v-card flat class="d-flex flex-column fill-height" style="max-width: 100%">
+          <v-col cols="auto" class="flex-grow-1 flex-shrink-0 overflow-y-auto">
+            <v-card flat class="d-flex flex-column fill-height overflow-y-auto " max-height=100% v-scroll.self="onScroll">
               <v-card-title>
-                {{this.$store.state.id}}
+                {{ this.$store.state.id }}
               </v-card-title>
               <v-card-text class="flex-grow-1 overflow-y-auto">
                 <template v-for="(msg, i) in messages">
                   <div :class="{ 'd-flex flex-row-reverse': msg.memberId==memberId }">
                     <v-menu offset-y>
                       <template v-slot:activator="{ on }">
-                        <v-chip :color="msg.memberId==memberId ? 'primary' : ''" dark
-                          style="height:auto;white-space: normal;" class="pa-4 mb-2" v-on="on">
-                          <!-- <v-avatar class="mr-2">
-                            <v-img :src="require('@/assets/image/user/'+msg.profileImg)" height="100px" width="50px"
-                              border-radius:10px></v-img>
-                          </v-avatar> -->
-                          {{ msg.content }}
-                          <sub class="ml-2" style="font-size: 0.5rem;">{{ msg.hour }}</sub>
-                        </v-chip>
+                        <v-hover v-slot:default="{ hover }">
+                          <v-chip :color="msg.memberId ? 'primary' : ''" dark style="height: auto; white-space: normal"
+                            class="pa-4 mb-2" v-on="on">
+                            {{ msg.content }}
+                            <sub class="ml-2" style="font-size: 0.5rem">{{
+                            msg.hour
+                            }}</sub>
+                          </v-chip>
+                        </v-hover>
                       </template>
                     </v-menu>
                   </div>
@@ -69,149 +74,202 @@
 </template>
 
 <script>
-import Stomp from 'webstomp-client'
-import SockJS from 'sockjs-client'
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
-      subTitle: '',  //수정중
-      memberId: this.$store.state.id,  //세션 로그인값
+      scrollInvoked: 0,
+      subTitle: "", //수정중
+      memberId: this.$store.state.id, //세션 로그인값
       messages: [], //메세지 내역
       message: "",
       roomId: "", //방번호
-      roomList: [], //방목록
+      roomList: [], //방목록정보
       stompClient: "", //소켓서버
       hour: "", //메세지시간
       subscribeRoot: "", //구독정보
-      targetId: [], //대화상대id
-      profileImg:""
-    }
+      targetId: [], //상대방 정보
+      createAt: "", //작성시간
+      data: {
+        memberId: this.targetId,
+        roomNo: this.roomId,
+        content: this.message,
+        msgTime: this.createAt,
+      },
+    };
   },
   created() {
-    this.connect()
-    this.getRoom()
-    this.sortRoom()
-    this.setProfileImg()
+    this.connect();
+    this.getRoom();
+    this.sortRoom();
+
   },
   methods: {
-    //프로필 이미지 설정
-    setProfileImg(){
-      this.axios.post({
-        memberId:this.$store.state.id
-      })
-      .then(function(res){
-        this.profileImg =res.data
-      })
-      .catch(function(err){
-        console.log(err)
-      })
-      .finally(function(res){
-        console.log(this.profileImg)
-      })
-    },
+    onScroll () {
+        this.scrollInvoked++
+      },
     //채팅내역 정렬
     sortRoom() {
-
+      this.roomList.sort(function (a, b) {
+        return a.msgTime > b.msgTime ? -1 : a.msgTime < b.msgTime ? 1 : 0;
+      });
     },
     //날짜변환
     todate() {
       var today = new Date();
       var year = today.getFullYear();
-      var month = ('0' + (today.getMonth() + 1)).slice(-2);
-      var day = ('0' + today.getDate()).slice(-2);
-      var hours = ('0' + today.getHours()).slice(-2);
-      var minutes = ('0' + today.getMinutes()).slice(-2);
-      var seconds = ('0' + today.getSeconds()).slice(-2);
-      this.createAt = year + '/' + month + '/' + day + " " + hours + ':' + minutes + ':' + seconds;
+      var month = ("0" + (today.getMonth() + 1)).slice(-2);
+      var day = ("0" + today.getDate()).slice(-2);
+      var hours = ("0" + today.getHours()).slice(-2);
+      var minutes = ("0" + today.getMinutes()).slice(-2);
+      var seconds = ("0" + today.getSeconds()).slice(-2);
+      this.createAt = year + "/" +  month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
     },
     //소켓서버에 채팅전송
     send() {
-      this.todate()
-      if (this.message !== '') {
+      this.todate();
+      if (this.message !== "") {
         const msg = {
           roomNo: this.roomId,
           content: this.message,
           memberId: this.memberId,
           hour: this.createAt,
- 
-        }
-        this.axios.post('/InsertMessage/', {
+        };
+        const noticeContent = {
+          memberId: this.targetId,
           roomNo: this.roomId,
           msgTime: new Date(),
           content: this.message,
+          msgTime: this.createAt
+        }
+        this.axios.post('/InsertMessage/', {
           memberId: this.memberId,
+          roomNo: this.roomId,
+          content: this.message,
         })
           .then(function (res) {
             console.log(res);
           })
           .catch(function (error) {
             console.log(error);
+            console.log('!!!!!!!!!!!!!!')
           })
+        //현재 대화방에 채팅보내기
         this.stompClient.send("/app/send", JSON.stringify(msg), res => {
+          console.log(res)
+        });
+        //목록에 대화 보내기
+        this.stompClient.send("/app/sendNotice", JSON.stringify(noticeContent), res => {
           console.log(res)
         });
         // this.stompClient.send("/app/chatNotice", JSON.stringify(msg), res => {
         //   console.log(res)
         // });
       }
-      this.message = ""
+      this.message = "";
     },
     // 채팅방에 채팅내역 출력
     openRoom(roomNo) {
       var vm = this;
-      //같은방 클릭시 재구독 방지
-      vm.stompClient.unsubscribe(vm.subscribeRoot)
       this.roomId = roomNo;
       this.messages = [];
-      vm.targetId=[];
-      //상대방 id 불러오기
-      this.axios.get('/getTargetId/' + this.roomId, {
-      })
-        .then(function (res) { 
-       vm.targetId=res.data
+      this.targetId = [];
+      //안읽은 메세지수 추출
+      this.axios
+        .post("/getNonReadChat", {
+          memberId: this.memberId,
         })
-        .catch(function (err) { console.log(error) })
-        .finally(function (res) { console.log(vm.targetId) })
+        .then(function (res) {
+          for (let i = 0; i < vm.roomList.length; i++) {
+            if (vm.roomList[i].roomNo == roomNo) {
+              vm.roomList[i].nonReadChat = 0;
+              vm.checkIn = 1;
+            } else {
+              for (let n = 0; n < res.data.length; n++) {
+                if (vm.roomList[i].roomNo == res.data[n].roomNo) {
+                  vm.roomList[i].nonReadChat = res.data[n].nonReadCount;
+                  vm.roomList[i].checkIn = 0;
+                }
+              }
+            }
+          }
+        })
+        .catch(function (err) { console.log(err) })
+        .finally(function (ros) {
+          vm.axios.post('/updateCheckTime', {
+            memberId: vm.memberId,
+            roomNo: vm.roomId
+          }).then(function (res) { console.log('성공') })
+        })
+      //대화상대 추출
+      this.axios
+        .post("/getTargetId", {
+          roomNo: this.roomId,
+          memberId: this.memberId,
+        })
+        .then(function (res) {
+          console.log(res);
+          vm.targetId = res.data;
+        })
+        .catch(function (err) { })
+        .finally(function (ros) { });
+      //같은방 클릭시 재구독 방지
+      vm.stompClient.unsubscribe(vm.subscribeRoot);
+
       //채팅내역 불러오기
-      this.axios.get('/getChatList/' + this.roomId, {
-      })
+      this.axios
+        .get("/ChatList/" + this.roomId, {})
         .then(function (res) {
           for (let i = 0; i < res.data.length; i++) {
+            if (vm.memberId == res.data[i].memberId) {
+              res.data[i].memberId = true;
+            } else {
+              res.data[i].memberId = false;
+            }
             if (res.data[i].hour >= 12) {
-              res.data[i].hour = res.data[i].hour - 12 + ":" + res.data[i].minute + " pm"
+              res.data[i].hour =
+                res.data[i].hour - 12 + ":" + res.data[i].minute + " pm";
+            } else {
+              res.data[i].hour =
+                res.data[i].hour + ":" + res.data[i].minute + " am";
             }
-            else {
-              res.data[i].hour = res.data[i].hour + ":" + res.data[i].minute + " am"
-            }
-            vm.messages = res.data
+            vm.messages = res.data;
           }
         })
         .catch(function (error) {
           console.log(error);
-        })
+        });
       //클릭한 방 접속시 방번호로 구독
       vm.stompClient.subscribe("/topic/room/" + roomNo, function (res) {
-        let rev = JSON.parse(res.body)
-        vm.subscribeRoot = res.headers.subscription
-        if (rev.hour.substr(11, 2) >= 12) {
-          rev.hour = rev.hour.substr(11, 2) - 12 + ":" + rev.hour.substr(14, 2) + " pm"
+        let rev = JSON.parse(res.body);
+        vm.subscribeRoot = res.headers.subscription;
+        if (rev.memberId == vm.memberId) {
+          rev.memberId = true;
         } else {
-          rev.hour = rev.hour.substr(11, 2) + ":" + rev.hour.substr(14, 2) + " am"
+          rev.memberId = false;
         }
-        vm.messages.push(rev)
-      })
-      //구독취소헤더값 가져오기
-      this.stompClient.send("/app/getSubscribeInfo", vm.roomId, res => {
+        if (rev.hour.substr(11, 2) >= 12) {
+          rev.hour =
+            rev.hour.substr(11, 2) - 12 + ":" + rev.hour.substr(14, 2) + " pm";
+        } else {
+          rev.hour =
+            rev.hour.substr(11, 2) + ":" + rev.hour.substr(14, 2) + " am";
+        }
+        vm.messages.push(rev);
       });
+      //구독취소헤더값 가져오기
+      this.stompClient.send("/app/getSubscribeId", vm.roomId, (res) => { });
+      console.log(this.targetId);
     },
     //채팅방 리스트출력
     getRoom() {
       var vm = this;
-      //1:1리스트
-      this.axios.get('/ChatRoom/' + this.memberId, {
-      })
+      //1:1
+      this.axios
+        .get("/ChatRoom/" + this.memberId, {})
         .then(function (res) {
           for (let i = 0; i < res.data.length; i++) {
             vm.roomList.push(res.data[i]);
@@ -220,48 +278,54 @@ export default {
         .catch(function (error) {
           console.log(error);
         })
-        .finally(function (res) {
-          //소모임 채팅방 리스트
-          vm.axios.get('/ChatMoimRoom/' + vm.memberId, {
-          })
+        .finally(function (ros) {
+          //소모임
+          vm.axios
+            .get("/ChatMoimRoom/" + vm.memberId, {})
             .then(function (res) {
               for (let i = 0; i < res.data.length; i++) {
                 vm.roomList.push(res.data[i]);
               }
+              console.log(res.data);
             })
             .catch(function (error) {
               console.log(error);
             })
-            .finally(function (res) {
-              //목록을 최신순으로 정렬
-              vm.roomList.sort(function (a, b) {
-                //return a.msgTime-b.msgTime
-                if (a.msgTime > b.msgTime) return -1;
-                if (a.msgTime < b.msgTime) return 1;
-                return 0;
-              })
+            .finally(function (ros) {
+              vm.sortRoom()
             })
         })
     },
     connect() {
-      let vm = this
-      const serverURL = " http://192.168.0.85:8088//java/sock"
+      let vm = this;
+      const serverURL = " http://localhost:8088//java/sock";
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect(
         {},
-        frame => {
-          vm.stompClient.subscribe("/" + this.$store.state.id, function (res) {
-            let rev = JSON.parse(res.body)
-            console.log(rev)
-          })
-          console.log('소켓 연결 성공', frame);
+        (frame) => {
+          this.stompClient.subscribe(
+            "/queue/" + this.$store.state.id,
+            function (res) {
+              let changeContent = JSON.parse(res.body);
+              for (let i = 0; i < vm.roomList.length; i++) {
+                if (vm.roomList[i].roomNo == changeContent.roomNo) {
+                  vm.roomList[i].content = changeContent.content;
+                  vm.roomList[i].msgTime = changeContent.msgTime;
+                  ++vm.roomList[i].nonReadChat;
+                  vm.sortRoom();
+                } else console.log("안되나요");
+              }
+              console.log("구독했나요", frame);
+            }
+          );
+          console.log("소켓 연결 성공", frame);
         },
-        error => {
-          console.log('소켓 연결 실패', error);
+        (error) => {
+          console.log("소켓 연결 실패", error);
         }
       );
     },
-  }
-}
+  },
+};
 </script>

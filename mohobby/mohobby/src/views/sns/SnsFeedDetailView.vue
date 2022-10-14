@@ -2,234 +2,233 @@
   <div id="container">
     <SnsSidebar></SnsSidebar>
     <h1>피드디테일</h1>
-    <v-container>
-      <v-card class="mx-auto" max-width="1000">
-        <v-row>
-          <v-col col="12">
-
-            <!-- 프로필 -->
-            <div>
-              <div class="flex">
-                <v-avatar class="ml-10 my-10 mr-4" color="grey darken-1" size="64">
-                  <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${items.profileImg}`)" />
-                </v-avatar>
-                <div class="user text-overline">{{items.memberId}}<br>{{
-                this.$moment(items.writeDate).format('YYYY.MM.DD') }}</div>
-              </div>
-            </div>
-            <div id="mdi-dots-vertical">
+    <v-container fluid>
+      <v-card class="mx-auto" min-width="600">
+        <v-flex>
+          <v-row dense>
+            <v-col cols="3" md="3" sm="2" align-self="center">
+              <!-- 프로필 -->
+              <v-avatar class="ml-10 my-10 mr-4" color="grey darken-1" size="64">
+                <!-- 이미지부분 -->
+                <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${items.profileImg}`)" />
+              </v-avatar>
+            </v-col>
+            <v-col cols="8" align-self="center">
+              <!-- 아이디 -->
+              {{items.memberId}}<br>
+              <!-- 년,월,일 -->
+              {{this.$moment(items.writeDate).format('YYYY.MM.DD') }}
+            </v-col>
+            <!-- 게시글 설정 -->
+            <v-col col="1" md="1" sm="1" id="mdi-dots-vertical" align-self="center">  
+              <v-spacer></v-spacer> 
               <v-btn icon>
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
-            </div>
-          </v-col>
-        </v-row>
+            </v-col> 
+          </v-row>
+        </v-flex>
+
+        <!-- 썸네일 -->
         <v-row>
-          <v-col col="12">
-            <div id="image_box">
-              <!-- <div class="d-flex flex-column justify-space-between align-center">
-            <v-slider
-              v-model="width"
-              class="align-self-stretch"
-              min="300"
-              max="600"
-              step="1"
-            ></v-slider> -->
-              <!-- <v-img v-for="(item, i) in imagelist" :key="i" :src="require(`../../../back/uploads/${item}`)"
-       contain height="150px" width="200px" style="border: 2px solid black; margin-left:100px;"/> -->
+          <v-col cols="12" id="image_box">
               <v-carousel ref="myCarousel" hide-delimiters :touchless="ture">
-                <v-carousel-item :aspect-ratio="4 / 3" :width="width"
-                  :src="require(`@/assets/image/sns/${items.thumbnail}`)"></v-carousel-item>
+                <v-carousel-item
+                  :aspect-ratio="4 / 3"
+                  :width="width"
+                  :src="require(`@/assets/image/sns/${items.thumbnail}`)"
+                ></v-carousel-item>
               </v-carousel>
-              <!-- </div> -->
-            </div>
           </v-col>
         </v-row>
-        <v-col col="12">
-          <div>{{ items.content }}</div>
-        </v-col>
-        <v-col col="12" v-for="hashtag in hashtags" :key="hashtag">
-          <div @click="search($event)">#{{ hashtag }}</div>
-        </v-col>
-        <div style="display=flex;">
-          <div id="like_box">
-            <v-btn icon id="full_heart" text @click="likeBtn">
+
+        <!-- 좋아요, 댓글, 메세지 -->
+        <v-row>
+          <v-col cols="4">
+            <v-btn v-if="items.likeStatus === 1" icon text @click="like()">
               <v-icon color="red lighten-2">mdi-heart</v-icon>
             </v-btn>
-            <v-btn icon id="empty_heart" text @click="likeBtn">
+            <v-btn v-else icon text @click="like()">
               <v-icon>mdi-heart-outline</v-icon>
-            </v-btn>
-            {{ items.likes }}
-          </div>
-          <div>
-            <v-icon>mdi-chat-outline</v-icon>
-            {{ items.cmts }}
-          </div>
-          <div>
+            </v-btn>{{ items.likes }}
+            <v-icon>mdi-chat-outline</v-icon>{{ items.cmts }}
             <v-icon @click="send">mdi-send</v-icon>
-          </div>
-        </div>
-      </v-card>
-      <v-col col="12">
-        <Comment></Comment>
+          </v-col>
+        </v-row>
+
+        <!-- 내용 -->
+        <v-row>
+          <v-col cols="12">
+            <p id="content_box">{{ items.content }}</p>
+          </v-col>
+        </v-row>
+        
+        <!-- 해시태그 -->
+        <v-chip-group id="hashtagGroup">
+            <v-chip v-for="hashtag in hashtags" :key="hashtag"
+              :color="`${colors[nonce - 1]} lighten-3`"
+              @click="search($event)"
+              dark
+              label
+              small>
+              #{{ hashtag }}
+            </v-chip>
+        </v-chip-group>
+        <br>
+        <v-col cols="12">
+          <CmtReg></CmtReg>
+          <CmtList></CmtList>
       </v-col>
+      </v-card>
     </v-container>
   </div>
 </template>
 <script>
 import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
-import Comment from "@/components/sns/FeedDetail/Comment.vue";
+import CmtReg from "@/components/sns/FeedDetail/CmtReg.vue";
+import CmtList from "@/components/sns/FeedDetail/CmtList.vue";
+
 export default {
   name: "snsFeedDetail",
-  components: { SnsSidebar, Comment },
-  data: () => ({
-    profileImg: "대충프로필",
-    regDate: "2022.01.01",
-    likeStatus: 0, //좋아요 없음
-    width: 800,
-    roomId: 0,
-    items: [],
-    hashtags: [],
-    feeds : [],
-    show : true,
-  }),
+  components: { SnsSidebar, CmtReg, CmtList },
+  data() {
+    return{
+      width: 800,
+      roomId: 0,
+      items: [], //게시글 정보 저장
+      hashtags: [], //해시태그 배열 split 후 저장
+      feeds : [], //해시태그 검색 정보 저장
+      targetType: 2,
+      memId : "",
+      postId : "",
+      likeReq: {targetId : 7,
+                memberId:'user1',
+              targetType:1},
+      show:true,
+      colors: ['teal', 'orange', 'green', 'purple', 'indigo', 'cyan'], //tag color
+      nonce: 1,
+    }
+  },
   setup() { },
   created() {
-    console.log(this.$route.query.id);
-    console.log(this.$store.state.id);
+    this.postId = this.$route.query.id;
+    this.memId = this.$store.state.id;
     this.showDetail();
   },
-  mounted() {
-
-  },
-  unmounted() { },
+  mounted() {},
+  unmounted() {},
   methods: {
-    //Detail조회
+
+    //게시글 상세 로드
     showDetail() {
-      let postId = this.$route.query.id;
-      this.axios('/sns/user/feed_detail', {
+      this.axios('/sns/user/feed_detail/' + this.postId, {
         params: {
-          postId: postId
+          memberId: this.memId,
         }
       }).then(res => {
         this.items = res.data;
-        let str = this.items.hashtag;
-        let hashtag = str.split(',');
-        console.log(hashtag);
-        this.hashtags = hashtag;
-        console.log(this.items);
-        console.log(this.items.cmts);
+        let str = this.items.hashtag; //%%,%%,%% 형태
+        let hashtag = str.split(','); //해시태그 자르기
+        this.hashtags = hashtag; //자른 해시태그들 hashtags에 담기
+        console.log("상세페이지 접근 성공!");
       }).catch(err => {
         console.log(err);
       });
     },
-    //해시태그 클릭시 검색 이벤트 발생
+
+    //해시태그 클릭 검색
     search(e){
-            let getHashtag = e.target.innerText;
-            let hashtag = getHashtag.slice(1);
+            let getHashtag = e.target.innerText; //선택한 해시태그
+            let hashtag = getHashtag.slice(1); //# 잘라내기
             console.log(hashtag);
             this.axios('/sns/search/hashtag', {
                 params : {
                     hashtag : hashtag
                 }
             }).then(res => {
-                console.log(res);
-                this.feeds = res.data;
-                this.goSearchPage(this.feeds);
-                console.log("검색성공:"+this.feeds);
+                this.feeds = res.data; //해시태그 검색결과 담기
+                console.log("axios SUCCESS")
+                this.goSearch(this.feeds, this.show);// 메인 ->컴색컴포넌트
 
             }).catch(err =>{
                 console.log(err);
             });
-       
     },
-    goSearchPage(feeds){
-      console.log("goSearchPage실행"+feeds);
-      
 
-      this.$router.push({ name: "snsmain", params: {  hashtagResult: feeds } })
+    //검색페이지 이동
+    goSearch(feeds, show){
+      console.log("main->searchPage실행"+feeds);
+      this.$router.push({ name: "snsmain", params: {  hashtagResult: feeds, showing: show } })
     },
+
+    //채팅방 이동
     send() {
-      this.$router.push({ name: "chat", params: { roomId: this.roomId } })
+      this.$router.push({ name: "chat", params: { roomId: this.roomId } });
     },
-    //좋아요 버튼
-    likeBtn() {
-      let memberId = this.$store.state.id;
-      let postId = this.$route.query.id;
-      if (!memberId) {
+
+    //좋아요
+//     like() {
+//       this.postId = this.$route.query.id;
+//       const vm = this;
+//       console.log(this.items.likeStatus)
+//       if (this.memId === null || this.memId === "") {
+//         alert('로그인이 필요합니다!');
+//         return;
+//       } else {
+//           this.items.likes++;
+//           //DB Jjim insert
+//           this.axios('/sns/like', {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json; charset=utf-8",
+//         },
+//         body: JSON.stringify({
+//           "memberId": this.memId,
+//           "targetId": vm.postId,
+//           "targetType": this.targetType,
+//         })
+//       })
+// ``````.then(function (response) {
+//               console.log("좋아요성공" + response);
+//             })
+//             .catch(function (error) {
+//               console.log("좋아요실패 " + error);
+//             })
+//             .finally(function() {              
+//             this.axios
+//               .put("/sns/like", {
+//               params: {
+//                 postId: vm.postId,
+//               }
+//             })
+//             .then(function (response) {
+//               console.log("좋아요업댓" + response);
+//             })
+//             .catch(function (error) {
+//               console.log("업댓실패" + error);
+//             });
+//           })
+//         }
+//     },
+
+    //좋아요
+    like() {
+      if (this.memId === null || this.memId === "") {
         alert('로그인이 필요합니다!');
+        return;
       } else {
-        if (this.likeStatus == 0) {
-          this.showFullHeart();
-          console.log(this.showFullHeart);
-          this.likeStatus = 1; // DB로 업데이트
-
-          this.axios
-            .post("/sns/like", {
-              memberId: memberId,
-              targetId: postId,
-            })
-            .then(function (response) {
-              console.log("좋아요: " + response);
-            })
-            .catch(function (error) {
-              console.log("좋아요실패: " + error);
+          //DB Jjim insert
+          this.axios.post('/sns/like', {
+                targetId : this.postId,
+                memberId : this.memId
+            }).then(res => {
+              console.log(res);
+              // window.location.assign('/used/detail?pNo='+this.$route.query.pNo);
+            }).catch(err => {
+              console.log(err)
             });
-          this.axios
-            .put("/sns/like", {
-              params: {
-                targetId: postId,
-                postId: postId,
-              }
-            })
-            .then(function (response) {
-              console.log("좋아요수 업댓성공: " + response);
-            })
-            .catch(function (error) {
-              console.log("좋아요수 업댓실패: " + error);
-            });
-        } else { //좋아요 취소
-          this.showEmptyHeart();
-          console.log(this.showEmptyHeart);
-          this.likeStatus = 0;
-
-          this.axios
-            .delete("/sns/like", {
-              params: {
-                memberId: memberId,
-                targetId: postId,
-              }
-            })
-            .then(function (response) {
-              console.log("좋아요삭제: " + response);
-            })
-            .catch(function (error) {
-              console.log("좋아요삭제 실패: " + error);
-            });
-          this.axios
-            .put("/sns/like", {
-              params: {
-                targetId: postId,
-                postId: postId,
-              }
-            })
-            .then(function (response) {
-              console.log("좋아요수 업댓성공: " + response);
-            })
-            .catch(function (error) {
-              console.log("좋아요수 업댓실패: " + error);
-            });
+          }
         }
-      }
-    },
-    //좋아요 속성 변경
-    showEmptyHeart() {
-      document.getElementById("empty_heart").style.display = "inline-block";
-      document.getElementById("full_heart").style.display = "none";
-    },
-    showFullHeart() {
-      document.getElementById("empty_heart").style.display = "none";
-      document.getElementById("full_heart").style.display = "inline-block";
     },
 
     //사진 넘기기
@@ -255,14 +254,14 @@ export default {
         this.touch = false;
       }
     },
-  },
-};
+  }
+
 </script>
 
 <style scoped>
 #container {
   margin: 0 auto;
-  width: 550px;
+  width: 30%
 }
 
 #mdi-dots-vertical {
@@ -275,7 +274,7 @@ export default {
 }
 
 .box {
-  display: inline-block
+  display: inline-block;
 }
 
 #like_box {
@@ -283,7 +282,20 @@ export default {
   margin: 0 auto;
 }
 
-#full_heart {
-  display: none;
+
+#content_box {
+  padding : 0 20px;
+}
+
+#hashtag{
+  color:navy;
+  cursor: pointer;
+}
+div.user.text-overline{
+  display:inline-block;
+
+}
+#hashtagGroup {
+  margin-left: 10px;
 }
 </style>

@@ -7,7 +7,7 @@
     >
     <v-spacer />
     <v-btn text class="ml-2" to="/snsmain">sns</v-btn>
-    <v-btn text class="ml-2" to="/classmain/list">강의</v-btn>
+    <v-btn text class="ml-2" to="/class/list/all">강의</v-btn>
     <v-btn text class="ml-2" to="/moimmain">소모임</v-btn>
     <v-btn text class="ml-2" to="/challengemain">챌린지</v-btn>
     <v-spacer />
@@ -72,11 +72,13 @@
     >
 
     <v-btn v-if="this.$store.state.id" icon>
-      <v-icon>mdi-chat-processing-outline</v-icon>
+      <v-badge offset-x="10" offset-y="10" color="red" :content="messages" :value="messages">
+        <v-icon>mdi-chat-processing-outline</v-icon>
+          </v-badge>
     </v-btn>
 
     <v-btn v-if="this.$store.state.id" icon>
-      <v-icon @click="$router.push('/mypagemain')">mdi-account</v-icon>
+      <v-icon @click="$router.push('/mypageprofile')">mdi-account</v-icon>
     </v-btn>
 
     <v-btn v-if="this.$store.state.id" @click="logout()" icon>
@@ -85,10 +87,13 @@
   </v-app-bar>
 </template>
 <script>
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 export default {
   components: {},
   data() {
     return {
+      messages:0,
       items: [
         { header: "Today" },
         {
@@ -127,10 +132,40 @@ export default {
     };
   },
   setup() {},
-  created() {},
+  created() {this.connect()},
   mounted() {},
   unmounted() {},
-  methods: {},
+  methods: {
+    logout() {
+      this.$store.commit("setIsLoginFalse");
+      this.$store.commit("logout");
+      this.$store.commit("setUserData", null);
+      this.$router.push("/");
+    },
+    connect() {
+      let vm = this;
+      const serverURL = " http://localhost:8088//java/sock";
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+      this.stompClient.connect(
+        {},
+        (frame) => {
+          this.stompClient.subscribe(
+            "/queue/" + this.$store.state.id,
+            function (res) {
+             
+             ++vm.messages
+              console.log("구독했나요", frame);
+            }
+          );
+          console.log("소켓 연결 성공", frame);
+        },
+        (error) => {
+          console.log("소켓 연결 실패", error);
+        }
+      );
+    },
+  },
 };
 </script>
 <style scoped>

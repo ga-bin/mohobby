@@ -50,7 +50,7 @@ public interface SnsMapper {
     //인기해시태그
     public List<HashtagVO> selectHashtagForMain();
     //피드상세조회
-    public SnsFeedVO getFeedDetail(int postId);
+    public SnsFeedVO getFeedDetail(@Param("postId") int postId, @Param("memberId") String memberId);
     
     /*
      * 해시태그
@@ -73,7 +73,7 @@ public interface SnsMapper {
     //유저전체
     public List<MemberVO> getUsers();
     //유저 아이디, 닉네임 검색
-    public List<MemberVO> searchUser(@Param("")String memberId,@Param("") String nickname);
+    public List<MemberVO> searchUser(@Param("memberId")String memberId, @Param("nickname")String nickname);
     //유저닉네임검색
     public List<MemberVO> getUsersByNick(String nickname);
     //해시태그검색
@@ -82,11 +82,9 @@ public interface SnsMapper {
     /*
      * 좋아요
      */
-    public int addLike(JjimVO jjimVO);
-    //좋아요취소
-	public int deleteLike(@Param("targetId") int targetId,@Param("memberId") String memberId);
+   
     //좋아요누적
-    public int sumLikes(@Param("targetId") int targetId, @Param("postId") int postId);
+    public int sumLikes(JjimVO jjimVO);
     
     /*
      * 댓글

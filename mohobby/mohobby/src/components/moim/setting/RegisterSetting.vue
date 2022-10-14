@@ -119,7 +119,7 @@ export default {
     }),
     methods: {
       selectAge: function () {
-        for(let i=1; i<=120; i++){
+        for(let i=2022; i>=1923; i--){
             this.items.push(i);
         }
       },

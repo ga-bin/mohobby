@@ -1,8 +1,6 @@
 
 package com.yedam.mohobby.service.moim;
 
-
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -11,9 +9,6 @@ import org.springframework.stereotype.Service;
 public interface MoimService {
 	//소모임 등록
 	public void moimInsert(MoimVO moimVO);
-	
-	//소모임 전체조회
-	public List<MoimVO> moimAllSelect();
 	
 	//소모임 멤버 모집 조회(6개씩)
 	public List<MoimVO> moimrecruitMember();
@@ -29,5 +24,20 @@ public interface MoimService {
 	
 	//소모임 종합 검색
 	public List<MoimVO> moimAllSearch(String moimName, String moimCatg);
+	
+	//소모임 게시판 전체 리스트 조회
+	public List<MoimBoardVO> moimAllBoard(int moimId, int boardType);
+	
+	//소모임 모임이름 중복체크
+	public int memberIdCheck(String moimName);
+	
+	//소모임 공지사항 리스트 조회
+	public List<MoimBoardVO> moimNoticeBoard(int moimId, int boardType);
+	
+	//소모임 게시글내 댓글 조회
+	public List<MoimDetailVO> moimCommentAllList(int moimId, int boardType, int boardId);
+
+	//소모임 게시글 단건조회
+	public List<MoimBoardVO> moimOneBoard(int moimId, int boardType, int boardId);
 }
 

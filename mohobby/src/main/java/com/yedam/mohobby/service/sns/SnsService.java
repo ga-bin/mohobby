@@ -1,10 +1,10 @@
 package com.yedam.mohobby.service.sns;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
@@ -19,7 +19,7 @@ public interface SnsService {
     //게시물 등록
     public int insertFeed(SnsPostVO snsPostVO);
     //미디어 등록
-    public int insertMedia(SnsMediaVO snsMediaVO);
+	public boolean insertMedia(List<MultipartFile> fileList, SnsMediaVO mediavo);
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
     //피드 삭제
@@ -39,7 +39,7 @@ public interface SnsService {
     //유저피드조회
     public List<SnsPostVO> getUserFeed(String memberId);
     //피드상세조회
-    public SnsFeedVO getFeedDetail(int postId);
+    public SnsFeedVO getFeedDetail(int postId, String memberId);
     
     /*
      * 해시태그
@@ -73,12 +73,9 @@ public interface SnsService {
     /*
      * 좋아요
      */
-    //좋아요
-    public int addLike(JjimVO jjimVO);
-    //좋아요취소
-	public int deleteLike(int targetId, String memberId);
+
     //좋아요누적
-    public int sumLikes(int targetId, int postId);
+    public int sumLikes(JjimVO jjimVO);
     
     /*
      * 댓글
@@ -122,5 +119,16 @@ public interface SnsService {
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회
 	public List<SnsBookmarkVO> getAllBookmarks();
+
+	
+	
+//	test
+
+//    // [DBMapper.xml 쿼리에서 선언한 변수 개수 및 타입에 맞게 파라미터 선언]
+//   public int saveImage(Insert_DB_Image_Model userImage); // 리턴값으로 int 사용 [상태값 확인 성공, 실패 여부]
+//
+//
+//    // [DBMapper.xml 쿼리에서 선언한 변수 개수 및 타입에 맞게 파라미터 선언]
+//   public Map<String, Object> selectImage(int idx); // 리턴값으로 map 사용 [출력]
 
 }

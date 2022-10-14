@@ -1,18 +1,25 @@
 package com.yedam.mohobby.web.moim;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.mohobby.service.moim.MoimBoardVO;
+import com.yedam.mohobby.service.moim.MoimDetailVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
+
+/**
+ * @create 2022/10/10
+ * @author 이휘동, 최현정
+ * @title 소모임
+ */
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -21,47 +28,115 @@ public class MoimController {
 	@Autowired
 	MoimService service;
 	
+	/**
+	 * @param moimVO
+	 * @title 소모임 등록
+	 */
 	//소모임 등록
 	@PostMapping("/moimInsert")
-	public MoimVO insertMoim(MoimVO moimVO) {
+	public void insertMoim(@RequestBody MoimVO moimVO) {
 		service.moimInsert(moimVO);
-		return moimVO;
 	}
 
-	//소모임 전체조회
-	@GetMapping("/moimAllSelect")
-	public List<MoimVO> getAllList(){
-		return service.moimAllSelect();
-	}
-	
-	//소모임 인기 목록 조회
+	/**
+	 * @return List<MoimVO>
+	 * @title 소모임 인기 목록 조회
+	 */
 	@GetMapping("/moimPopularSelect")
 	public List<MoimVO> getPopularList(){
 		return service.moimPopularSelect();
 	}
 	
-	//소모임 멤버 모집 조회(6개씩)
+	/**
+	 * @return List<MoimVO>
+	 * @title 소모임 멤버 모집 조회(6개씩)
+	 */
 	@GetMapping("/moimRecruitMember")
 	public List<MoimVO> getmoimrecruitMember() {
 		return service.moimrecruitMember();
 	}
 	
-	//소모임명 조회
+	/**
+	 * @return List<MoimVO>
+	 * @title 소모임명 조회
+	 */
 	@GetMapping("/moimNameSelect")
 	public List<MoimVO> getNameList(){
 		return service.moimNameSelect();
 	}
 	
-	//소모임 카테고리 조회
+	/**
+	 * @return List<MoimVO>
+	 * @title 소모임 카테고리 조회
+	 */
 	@GetMapping("/moimCatgSelect")
 	public List<MoimVO> getCatgList(){
 		return service.moimCatgSelect();
 	}
 	
-	//소모임 종합검색
+	/**
+	 * @param moimName
+	 * @param moimCatg
+	 * @return List<MoimVO>
+	 * @title 소모임 종합검색
+	 */
 	@GetMapping("/moimAllSearch")
-	public List<MoimVO> getAllSearch(@RequestParam("moimName")String moimName, @RequestParam("moimCatg")String moimCatg ){
+	public List<MoimVO> getAllSearch(@RequestParam("Search")String moimName, @RequestParam("Category")String moimCatg ){
 		return service.moimAllSearch(moimName, moimCatg);
+	}
+	
+	/**
+	 * @return List<MoimBoardVO>
+	 * @title 소모임 게시판 전체 조회
+	 */
+	@GetMapping("/moimBoardList")
+	public List<MoimBoardVO> getAllBoardList(@RequestParam("moimId")int moimId, @RequestParam("boardType")int boardType){
+		return service.moimAllBoard(moimId, boardType);
+	}
+	
+	/**
+	 * @param vo
+	 * @return result
+	 * @title 소모임명 중복 체크
+	 */
+	@PostMapping("/idCheck")
+	public String moim_idcheck(@RequestBody MoimVO vo) {
+		String result = "";
+		int count = service.memberIdCheck(vo.getMoimName());
+		if(count == 0) {
+			result="YES";
+		} else {
+			result="NO";
+		}
+		return result;
+	}
+	
+	/**
+	 * @param moimId
+	 * @param boardType
+	 * @return List<MoimBoardVO>
+	 * @title 소모임 공지사항 전체조회
+	 */
+	@GetMapping("/noticeList")
+	public List<MoimBoardVO> getNoticeBoardList(@RequestParam("moimId")int moimId, @RequestParam("boardType") int boardType){
+		return service.moimNoticeBoard(moimId, boardType);
+	}
+
+	/**
+	 * @param moimId
+	 * @param boardType
+	 * @param boardId
+	 * @return List<MoimDetailVO>
+	 * @title 소모임 게시글내 댓글 전체 조회
+	 */
+	@GetMapping("/detailComment")
+	public List<MoimDetailVO> getCommentList(@RequestParam("moimId")int moimId, @RequestParam("boardType") int boardType, @RequestParam("boardId")int boardId){
+		return service.moimCommentAllList(moimId, boardType, boardId);
+	}
+	
+	@GetMapping("/oneBoard")
+	public List<MoimBoardVO> getOneBoard(@RequestParam("moimId")int moimId, @RequestParam("boardType") int boardType, @RequestParam("boardId")int boardId){
+		return service.moimOneBoard(moimId, boardType, boardId);
 	}
 }
 

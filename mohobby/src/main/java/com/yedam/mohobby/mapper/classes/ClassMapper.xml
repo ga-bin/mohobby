@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.classes.ClassMapper">
 	<insert id="insertClass" parameterType="com.yedam.mohobby.service.classes.ClassesVO">
-		<selectKey keyProperty="classId" resultType="Integer" order="BEFORE">
+		<selectKey keyProperty="classId" resultType="java.lang.Integer" order="BEFORE">
 		select NVL(MAX(class_id), 0) + 1 from classes	
 		</selectKey>
 		insert into classes (
@@ -48,7 +48,115 @@
 					#{accountHolder}
 				)
 	</insert>
-	<select id="listAll" resultType="com.yedam.mohobby.service.classes.ClassesVO">
-	select * from class
+	
+	<!-- 목록조회 -->
+	<select id="listAll" parameterType="com.yedam.mohobby.service.classes.ClassListRequestVO" resultType="com.yedam.mohobby.service.classes.ClassesVO">
+		select * from (
+		select distinct k.*, b.nickname, w.keyword_name
+		from
+		    (select  NVL(u.review, 0) reviewTotal, decode(m.target_id, null, 0, 1) jjim, NVL(x.jjim, 0)jjimTotal, c.* 
+		    from class c,
+		        (
+		        select * 
+		        from jjim 
+		        where target_type = 1 
+		        and member_id = <if test="memberId == null">null</if> <if test="memberId != null">#{memberId}</if>
+		        ) m,
+		        (
+		        select count(*)jjim, target_id 
+		        from jjim 
+		        where target_type = 1 
+		        group by target_id
+		        ) x,
+		        (select count(*)review, class_id from class_board where board_type = 4 group by class_id) u
+		    where c.class_id = m.target_id(+)
+		    and c.class_id = x.target_id(+)
+		    and c.class_id = u.class_id(+)) k, 
+		member b, keyword w
+		where k.member_id = b.member_id
+		and k.keyword_id = w.keyword_id)
+		<if test='catg != "all"'>
+		where keyword_id = #{catg}
+		</if>
+		order by class_id desc
 	</select>
+	
+	<!-- 단건조회 -->
+	<select id="listOne" parameterType="com.yedam.mohobby.service.classes.ClassListRequestVO" resultType="com.yedam.mohobby.service.classes.ClassesVO">
+		select
+		    nvl(cptt.chap, 0)chapTotal, nvl(crtt.curr, 0)currTotal, nvl2(j.target_id, 1, 0)jjim, nvl(q.qnaTotal, 0) qnaTotal, nvl(r.reviewTotal, 0)reviewTotal, c.*, m.nickname
+		from
+		    (select count(*)qnaTotal, class_id from class_board where board_type = 1 group by class_id)q,
+		    (select count(*)reviewTotal, class_id from class_board where board_type = 4 group by class_id)r,
+		    (select * from jjim where target_type=1 and member_id = <if test="memberId == null">null</if> <if test="memberId != null">#{memberId}</if>)j,
+		    class c,
+		    member m,
+		    (select cl.class_id, cp.chap
+		    from class cl, (select count(chap_id) chap, class_id
+		    from class_chapter
+		    group by class_id) cp
+		    where cl.class_id = cp.class_id(+))cptt,
+		    (select class_id, count(mu.curr_id) curr
+		    from(
+		    select z.class_id, y.chap_id, i.curr_id
+		    from class z, class_chapter y, class_curriculum i
+		    where z.class_id = y.class_id(+)
+		    and y.chap_id = i.chap_id(+))mu
+		    group by class_id)crtt
+		where c.class_id = q.class_id(+)
+		and c.class_id = r.class_id(+)
+		and c.class_id = j.target_id(+)
+		and c.class_id = cptt.class_id(+)
+		and c.class_id = crtt.class_id(+)
+		and c.member_id = m.member_id
+		and c.class_id = #{classId}
+	</select>
+	
+	<!-- 후기평가조회 -->
+	<select id="getClassReview" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassReviewVO">
+		select	c.class_id, 
+				nvl(rate.avg,0)avg, 
+				nvl(rate.five,0)five, 
+				nvl(rate.four,0)four, 
+				nvl(rate.three,0)three, 
+				nvl(rate.two,0)two, 
+				nvl(rate.one,0)one, 
+				nvl(rate.zero,0)zero
+		from	class c,
+				(
+				select class_id, 
+				avg(rate)avg, 
+				count(decode(rate, 5, 1))five, 
+				count(decode(rate, 4, 1))four, 
+				count(decode(rate, 3, 1))three,  
+				count(decode(rate, 2, 1))two,
+				count(decode(rate, 1, 1))one,
+				count(decode(rate, 0, 1))zero
+				from class_board where board_type=4 group by class_id
+				)rate
+		where	c.class_id = rate.class_id(+)
+		and		c.class_id = #{classId}
+	</select>
+	
+	<!-- 강의게시글조회 -->
+	<select id="getClassBoardList" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassBoardVO" >
+		select b.*, m.profile_img, m.nickname
+		from class_board b,
+		member m
+		where b.member_id = m.member_id(+)
+		and board_type=#{boardType}
+		and class_id=#{classId}
+		order by write_date desc
+	</select>
+	
+	<!-- 찜등록 -->
+	<insert id="addJjim" parameterType="com.yedam.mohobby.service.communal.JjimVO">
+		insert into jjim(target_id, target_type, member_id) values(#{targetId}, 1, #{memberId})
+	</insert>
+	
+	<!-- 찜삭제 -->
+	<delete id="deleteJjim" parameterType="com.yedam.mohobby.service.communal.JjimVO">
+		delete from jjim where target_id = #{targetId} and target_type = 1 and member_id = #{memberId}
+	</delete>
+   
 </mapper>

@@ -1,9 +1,15 @@
 package com.yedam.mohobby.serviceImpl.sns;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.mapper.sns.SnsMapper;
 import com.yedam.mohobby.service.communal.CommentsVO;
@@ -31,15 +37,81 @@ public class SnsServiceImpl implements SnsService{
 	/*
      * 게시물
      */
+    //미디어 등록
+    @Override
+    public boolean insertMedia(List<MultipartFile> fileList, SnsMediaVO mediavo) {
+    	System.out.println("filesize : " + fileList.size());
+    	try {
+    		//경로찾기
+    		String path = this.getClass().getResource("/").getPath();
+    		path = path.substring(0, path.lastIndexOf("mohobby"));
+    		path = path.substring(0, path.lastIndexOf("mohobby")+"mohobby".length());
+    		
+    		
+    		//찾은 경로에 날짜별로 폴더를 생성 및 파일 관리
+    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    		Date date = new Date();
+    		String dirName = dateFormat.format(date);
+    		
+    		//저장할 폴더 경로
+    		path += "/mohobby/mohobby/src/assets/image/sns/" + dirName;
+    		
+    		File folder = new File(path);
+    		if(!folder.exists()) {
+    			folder.mkdir(); //폴더가 존재하지 않을시 생성
+    		}
+    		
+    		for(int i = 0; i < fileList.size(); i++) {
+    			
+    			MultipartFile file = fileList.get(i);
+    			
+    			//진짜 파일 이름
+    			String fileRealName = file.getOriginalFilename();
+    			
+    			//파일명 고유 랜덤 문자로 생성
+    			UUID uuid = UUID.randomUUID();
+    			String uuids = uuid.toString().replaceAll("-", "");
+    			
+    			//확장자를 추출
+    			String extension = fileRealName.substring(fileRealName.indexOf("."), fileRealName.length());
+    			
+    			System.out.println("저장할 폴더 경로: " + path);
+    			System.out.println("실제 파일명: " + fileRealName);
+    			System.out.println("폴더명: " + dirName);
+    			System.out.println("확장자: " + extension);
+    			System.out.println("고유랜덤문자: " + uuids);
+    			
+    			//고유번호로 변환된 파일이름
+    			String fileName = uuids + extension;
+    			System.out.println("변경되어 저장되는 파일명: " + fileName);
+    			
+    			//업로드한 파일을 서버 컴퓨터의 지정한 경로에 저장
+    			File saveFile = new File(path + "/" + fileName);
+    			
+    			file.transferTo(saveFile);
+    			
+    			SnsMediaVO mediaVO = new SnsMediaVO();
+    			mediaVO.setPostId(mediavo.getPostId());
+    			mediaVO.setMediaType(extension);
+    			mediaVO.setImgUrl(path);
+    			mediaVO.setFileName(fileName);
+    			mediaVO.setFileRealname(fileRealName);
+    			mediaVO.setDirName(dirName);
+    			
+    			mapper.insertMedia(mediaVO);
+    		}
+    	} catch (IllegalStateException e) {
+    		e.printStackTrace();
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    	return false;
+    	
+    }
     //게시물 등록
 	@Override
 	public int insertFeed(SnsPostVO snsPostVO) {
 		return mapper.insertFeed(snsPostVO);
-	}
-	//미디어 등록
-	@Override
-	public int insertMedia(SnsMediaVO snsMediaVO) {
-		return mapper.insertMedia(snsMediaVO);
 	}
 	//게시물 수정
 	@Override
@@ -88,8 +160,8 @@ public class SnsServiceImpl implements SnsService{
     }
 	//피드상세조회
 	@Override
-	public SnsFeedVO getFeedDetail(int postId){
-	     return mapper.getFeedDetail(postId);
+	public SnsFeedVO getFeedDetail(int postId, String memberId){
+	     return mapper.getFeedDetail(postId, memberId);
 	}
 	
     /*
@@ -153,20 +225,11 @@ public class SnsServiceImpl implements SnsService{
     /*
      * 좋아요
      */
-	//좋아요
-	@Override
-	public int addLike(JjimVO jjimVO) {
-		return mapper.addLike(jjimVO);
-	}
-	//좋아요취소
-	@Override
-	public int deleteLike(int targetId, String memberId) {
-		return mapper.deleteLike(targetId, memberId);
-	}
+
 	//좋아요누적
 	@Override
-	public int sumLikes(int targetId, int postId) {
-		return mapper.sumLikes(targetId, postId);
+	public int sumLikes(JjimVO jjimVO) {
+		return mapper.sumLikes(jjimVO);
 	}
 	
     /*

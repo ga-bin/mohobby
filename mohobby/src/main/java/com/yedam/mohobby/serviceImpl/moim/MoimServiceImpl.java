@@ -1,13 +1,14 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
 import java.util.HashMap;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.moim.MoimMapper;
+import com.yedam.mohobby.service.moim.MoimBoardVO;
+import com.yedam.mohobby.service.moim.MoimDetailVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 
@@ -22,12 +23,6 @@ public class MoimServiceImpl implements MoimService{
 	@Override
 	public void moimInsert(MoimVO moimVO) {
 		mapper.moimInsert(moimVO);	
-	}
-
-	//소모임 전체조회
-	@Override
-	public List<MoimVO> moimAllSelect() {
-		return mapper.moimAllSelect();
 	}
 
 	//소모임 멤버 모집 조회(6개씩)
@@ -61,9 +56,56 @@ public class MoimServiceImpl implements MoimService{
 		map.put("moimName", moimName);
 		map.put("moimCatg", moimCatg);
 		return mapper.moimAllSearch(map);
-	}	
+	}
 
+	//소모임 게시판 전체 리스트 조회
+	@Override
+	public List<MoimBoardVO> moimAllBoard(int moimId, int boardType) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("moimId", moimId);
+		map.put("boardType", boardType);
+		return mapper.moimAllBoard(map);
+	}
+	
+	//소모임명 중복 체크
+	@Override
+	public int memberIdCheck(String moimName) {
+		return mapper.moimIdCheck(moimName);
+	}
+
+	//소모임 공지사항 리스트 출력
+	@Override
+	public List<MoimBoardVO> moimNoticeBoard(int moimId, int boardType) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("moimId", moimId);
+		map.put("boardType", boardType);
+		return mapper.moimNoticeBaord(map);
+	}
+
+	//소모임 게시글내 댓글 단건조회
+	@Override
+	public List<MoimDetailVO> moimCommentAllList(int moimId, int boardType, int boardId) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("moimId", moimId);
+		map.put("boardType", boardType);
+		map.put("boardId", boardId);
+		System.out.println(moimId);
+		System.out.println(boardType);
+		System.out.println(boardId);
+		return mapper.moimCommentAllList(map);
+	}
+
+	//소모임 게시글 단건 조회
+	@Override
+	public List<MoimBoardVO> moimOneBoard(int moimId, int boardType, int boardId) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("moimId", moimId);
+		map.put("boardType", boardType);
+		map.put("boardId", boardId);
+		return mapper.moimOneBoard(map);
+	}
 	
 	
+
 }
 

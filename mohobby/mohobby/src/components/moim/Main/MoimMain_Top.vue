@@ -104,6 +104,8 @@
           <v-chip
             v-for="catg in catg"
             :key="catg"
+            :value="catg"
+            @click="chipclick"
           >
             {{ catg }}
           </v-chip>
@@ -144,9 +146,9 @@
           '종교/봉사',
           '자연/귀농'
         ],
+        search : '',
         moimRight : '2',
         noneuser : false,
-        search : '',
       }
     },
     methods : {
@@ -161,6 +163,14 @@
     submit() {
       console.log(this.search)
       this.$emit('search', this.search)
+    },
+    chipclick(e) {
+      console.log(e.target.innerText)
+      if(e.target.innerText === '전체') {
+        this.$emit('category', '')
+      } else {
+      this.$emit('category', e.target.innerText)
+      }
     }
   }
  }

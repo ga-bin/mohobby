@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.chat.ChatMapper">
-
-	<!--프로필 이미지 추출 -->
-	<select id="getprofileImg" resultType="com.yedam.mohobby.service.chat.ChatVO">
-		select PROFILE_IMG
-		from member
-		where member_id=#{memberId}
+<!-- 안읽은 메시지수ㅡ 추출 -->
+<select id="getNonReadChat"
+		resultType="com.yedam.mohobby.service.chat.NonReadChatVO"
+		parameterType="com.yedam.mohobby.service.chat.ChatVO">
+		select a.room_no,count(*) as non_read_count
+		from chat a join room b
+		on (a.room_no=b.room_no)
+		where b.member_id =#{memberId}
+		and a.msg_time>b.check_time
+		group by a.room_no
 	</select>
 	<!-- 1:1 채팅방 추출 -->
 	<select id="getChatRoom"
@@ -17,7 +21,7 @@
 		c.room_no,
 		c.profile_img,
 		d.content,
-		d.msg_time
+		d.msg_time,nvl(null,0)check_in ,nvl(null,0)non_read_chat
 		FROM
 		(
 		SELECT
@@ -84,7 +88,7 @@
 		parameterType="String">
 		select a.content as content, a.msg_time,b.moim_name as
 		nickname,room_no , b.moim_img as
-		profile_img from(
+		profile_img,nvl(null,0)check_in ,nvl(null,0)non_read_chat from(
 		SELECT
 		content,
 		room_no,
@@ -136,26 +140,25 @@
 		room_no=#{roomNo}
 		order by chat_id
 	</select>
-	<!-- 상대방 아이디 검색 -->
-	<select id="getTargetId" parameterType="String"
-		resultType="com.yedam.mohobby.service.chat.ChatVO">
+	<!-- 채팅상대 추출 -->
+	<select id="getTargetId" resultType="String"
+		parameterType="com.yedam.mohobby.service.chat.ChatUserVO">
 		select member_id
 		from room
-		where room_no=#{roomId}
+		where room_no =#{roomNo}
+
 	</select>
-	<!-- 메세지 입력 -->
+	<!--대화내역 저장 -->
 	<insert id="insertMessage"
-		parameterType="com.yedam.mohobby.service.chat.MessageVO">
+		parameterType="com.yedam.mohobby.service.chat.ChatVO2">
 		insert into chat(
 		CHAT_ID,
 		ROOM_NO,
-		MSG_TIME,
 		CONTENT,
 		MEMBER_ID)
 		values(
-		chat_id_seq.nextval,
+		CHAT_ID_SEQ.nextval,
 		#{roomNo},
-		#{msgTime},
 		#{content},
 		#{memberId}
 		)
@@ -217,4 +220,10 @@
 		END IF;
 		END
 	</insert>
+	<update id ="updateCheckTime" parameterType="com.yedam.mohobby.service.chat.ChatUserVO">
+	update room set check_time = sysdate
+where member_id =#{memberId}
+and room_no=#{roomNo}
+	</update>
+	
 </mapper>

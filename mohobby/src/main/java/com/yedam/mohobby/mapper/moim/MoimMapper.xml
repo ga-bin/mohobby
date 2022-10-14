@@ -27,7 +27,7 @@ INSERT INTO moim (
             #{maxPeople}
             )
 </insert>
-<!-- 소모임 전체 조회 -->
+<!-- 소모임 모집 전체 조회(6개씩) -->
 <select id="moimrecruitMember" resultType="com.yedam.mohobby.service.moim.MoimVO">
    select * from moim <![CDATA[where rownum <= 6]]>
 </select>
@@ -39,25 +39,70 @@ INSERT INTO moim (
 
 <!-- 소모임 중첩 검색 -->
 <select id="moimAllSearch" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimVO">
-   SELECT * FROM moim
-   where 1=1
-      <if test ='moimName != null and moimName != " "'>
-          and moim_name = #{moimName}
-      </if>  
-      <if test='moimCatg != null and moimCatg != " "'>
-          and moim_catg = #{moimCatg}
-      </if>
-   ORDER BY moim_id DESC
+	select * from moim
+	where 1=1
+	<if test ="moimName != null and moimName != ''">
+          and moim_name like '%'||#{moimName}||'%'
+    </if>
+    <if test="moimCatg != null and moimCatg != ''">
+          and moim_catg in(select SUB_KEYWORD_NAME
+		  from sub_keyword 
+		  where keyword_id = (select keyword_id from keyword where keyword_name like #{moimCatg}))
+    </if>
+    and <![CDATA[rownum <= 6]]> ORDER BY moim_id
 </select>
 
-<!-- 소모임명 검색 -->
-<!-- <select id="moimNameSelect" resultType="com.yedam.mohobby.service.moim.MoimVO">
-   select * from moim where moim_name Like '%#{moim_name}%' order by moim_id DESC;
-</select> -->
+<!-- 소모임 게시판 전체 조회 -->
+<select id="moimAllBoard" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+	
+	select b.*, nvl(c.cnt, 0)cnt
+	from moim_board b,
+	(select count(*)cnt, target_id from comments
+	where target_id in (
+	select board_id from moim_board)
+	and target_type=3
+	group by target_id)c
+	where b.board_id = c.target_id(+)
+	and moim_id = #{moimId}
+	and board_type = #{boardType}
 
-<!-- 소모임 카테고리 검색 -->
-<!-- <select id="moimCatgSelect" resultType="com.yedam.mohobby.service.moim.MoimVO">
-   select * from moim where moim_catg like '%#{moim_catg}%' order by moim_id DESC;
-</select> -->
+</select>
 
+<!-- 모임명 중복체크 -->
+<select id="moimIdCheck" resultType="Integer">
+SELECT COUNT(*) FROM moim WHERE moim_name = #{moimName}
+</select>
+
+<!-- 소모임 공지사항 전체 리스트 조회 -->
+<select id="moimNoticeBaord" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+	select b.*, nvl(c.cnt, 0)cnt
+	from moim_board b,
+	(select count(*)cnt, target_id from comments
+	where target_id in (
+	select board_id from moim_board)
+	and target_type=3
+	group by target_id)c
+	where b.board_id = c.target_id(+)
+	and moim_id = #{moimId}
+	and board_type = #{boardType}
+</select>
+
+<!-- 소모임 게시글내 댓글 전체 조회 -->
+<select id="moimCommentAllList" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimDetailVO"> 
+select distinct m.content as board_content, m.member_id as board_writer, m.write_date, c.content,c.write_date as comment_date, c.member_id as comment_writer
+from moim_board m left outer join comments c
+on m.board_id = c.target_id
+and c.target_type = 3
+and m.moim_id = #{moimId}
+and m.board_type = #{boardType}
+and m.board_id = #{boardId}
+</select>
+
+<!-- 소모임 게시글 단건조회 -->
+<select id="moimOneBoard" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+select * from moim_board
+where board_id = #{boardId}
+and board_type = #{boardType}
+and moim_id = #{moimId}
+</select>
 </mapper>

@@ -30,7 +30,7 @@
                         #{ memberId },
                         #{ hashtag },
                         #{ content },
-                        #{ writeDate },
+                        SYSDATE,
                         #{ thumbnail },
                         0,
                         0
@@ -146,10 +146,23 @@
    </select>
    <!-- 피드상세조회 -->
    <select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
-   	  SELECT s.post_id, s.member_id, m.profile_img, s.hashtag, s.content, s.write_date, s.thumbnail, s.likes, s.cmts
-   	  FROM sns_post s, member m
-   	  WHERE s.member_id = m.member_id
-      AND s.post_id = #{ postId }
+		SELECT mem.profile_img, k.*
+		FROM member mem,
+		    (SELECT nvl2(m.target_id, 1, 0) like_status, c.*
+		    FROM sns_post c,
+		        (SELECT * FROM jjim 
+		        WHERE target_type = 2 
+		        AND member_id = 
+		        <if test="memberId == null"> null</if>
+		        <if test="memberId != null">
+		        #{ memberId }
+		        </if>) m,
+		        (SELECT COUNT(*)JJIM, target_id FROM jjim WHERE target_type = 2 GROUP BY target_id) x
+		    WHERE c.post_id = m.target_id(+)
+		    AND c.post_id = x.target_id(+)) k
+		WHERE mem.member_id = k.member_id
+		AND post_id = #{ postId }
+		ORDER BY post_id
    </select>
 <!-- +미디어
 	<select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
@@ -311,36 +324,37 @@
    		좋아요
    
     -->
-   <insert id="addLike" parameterType="com.yedam.mohobby.service.communal.JjimVO">
-      INSERT INTO jjim(
-                    member_id
-                    ,target_id
-                    ,target_type
-                  )
-              VALUES(
-                  #{ memberId }
-                  ,#{ targetId }
-                  ,2
-                  )
-   </insert>
-   <!-- 좋아요취소 -->
-   <delete id="deleteLike" parameterType="com.yedam.mohobby.service.communal.JjimVO">
-      DELETE FROM jjim 
-      WHERE target_id = #{ targetId } 
-      AND member_id = #{ memberId }
-      AND target_type = 2
-   </delete>
+
    <!-- 좋아요 누적 -->
-   <update id="sumLikes" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
-      UPDATE sns_post 
-      SET likes = (
-	                  SELECT count(*) 
-	                  FROM jjim 
-	                  WHERE target_id = #{ targetId }
-	                  AND target_type = 2 
-                  )
-      WHERE post_id = #{ postId }
-   </update>
+   <select id="sumLikes" parameterType="com.yedam.mohobby.service.communal.JjimVO" resultType="java.lang.Integer">
+		DECLARE
+		v_target_id NUMBER := 7;
+		v_member_id member.member_id%TYPE := 'user1';
+		v_status NUMBER;
+		BEGIN
+		SELECT
+		    (CASE WHEN NOT EXISTS (
+		        SELECT *
+		        FROM jjim
+		        WHERE target_id IN (
+		            SELECT target_id FROM jjim
+		            WHERE target_id = v_target_id
+		            AND member_id = v_member_id
+		            AND target_type = 2       
+		            )
+		     ) THEN 0 ELSE 1 END  
+		) test
+		INTO v_status
+		FROM dual;
+		IF v_status = 0 THEN
+		INSERT INTO jjim (target_id, target_type, member_id) VALUES(v_target_id, 2, v_member_id);
+		UPDATE sns_post SET likes = likes + 1 WHERE post_id = v_target_id;
+		ELSIF v_status = 1 THEN 
+		DELETE FROM jjim WHERE target_id= v_target_id AND target_type=2 AND member_id = v_member_id;
+		UPDATE sns_post SET likes = likes - 1 WHERE post_id = v_target_id;
+		END IF;
+		END
+   </select>
 
 
 	<!--
@@ -493,4 +507,21 @@
 		FROM sns_bookmark_catg c, sns_bookmark b
 		WHERE c.catg_id = b.catg_id
 	</select>
+	<!--===========================================  -->
+<!-- 	   insert 데이터 삽입 실시 : 이미지 저장
+    <insert id="saveImage">
+        <![CDATA[
+        insert into TEST_BLOB (T_IDX, T_BLOB)
+        values (#{idx}, #{img})
+        ]]>
+    </insert>
+    
+    select 조건 절 조회 : 이미지 조회
+    <select id="selectImage" resultType="map">
+        <![CDATA[
+        select t_blob
+            from test_blob
+        where t_idx = #{idx}
+        ]]>
+    </select> -->
 </mapper>

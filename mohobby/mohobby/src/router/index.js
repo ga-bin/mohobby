@@ -35,12 +35,13 @@ const routes = [
     name: "adminsns",
     component: () => import("./../views/admin/AdminSnsView"),
   },
-  // user
+  // main
   {
     path: "/",
     name: "main",
-    component: () => import("./../views/user/MainView"),
+    component: () => import("./../views/main/MainView"),
   },
+  // user
   {
     path: "/login",
     name: "login",
@@ -53,10 +54,40 @@ const routes = [
     component: () => import("./../views/user/RegisterView"),
   },
   {
-    path: "/mypagemain",
-    name: "mypage",
+    path: "/mypageprofile",
+    name: "mypageprofile",
     props: true,
-    component: () => import("./../views/user/MypageMainView"),
+    component: () => import("./../views/user/MypageProfileView"),
+  },
+  {
+    path: "/mypagesns",
+    name: "mypagesns",
+    props: true,
+    component: () => import("./../views/user/MypageSnsView"),
+  },
+  {
+    path: "/mypageclass",
+    name: "mypageclass",
+    props: true,
+    component: () => import("./../views/user/MypageClassView"),
+  },
+  {
+    path: "/mypagemoim",
+    name: "mypagemoim",
+    props: true,
+    component: () => import("./../views/user/MypageMoimView"),
+  },
+  {
+    path: "/mypagechallenge",
+    name: "mypagechallenge",
+    props: true,
+    component: () => import("./../views/user/MypageChallengeView"),
+  },
+  {
+    path: "/edituser",
+    name: "edituser",
+    props: true,
+    component: () => import("./../views/user/EditUserView"),
   },
   // sns
   {
@@ -68,7 +99,7 @@ const routes = [
     path: "/snsFeedDetail",
     name: "snsFeedDetail",
     component: () => import("@/views/sns/SnsFeedDetailView"),
-    props:true,
+    props: true,
   },
   {
     path: "/snsFeedRegister",
@@ -97,7 +128,7 @@ const routes = [
   },
   // lecture
   {
-    path: "/classmain",
+    path: "/class",
     name: "classmain",
     component: () => import("./../views/lecture/ClassMainView"),
     children: [
@@ -109,48 +140,80 @@ const routes = [
           {
             path: "OpenBankingTest",
             name: "OpenBankingTest",
-            component: () => import("./../views/lecture/test/OpenBankingTest"),
+            component: () => import("./../components/lecture/test/OpenBankingTest"),
           },
           {
             path: "QuillEditorTest",
             name: "QuillEditorTest",
-            component: () => import("./../views/lecture/test/QuillEditorTest"),
+            component: () => import("./../components/lecture/test/QuillEditorTest"),
           },
           {
             path: "iamportTest",
             name: "iamportTest",
-            component: () => import("./../views/lecture/test/iamportTest"),
+            component: () => import("./../components/lecture/test/iamportTest"),
           },
           {
             path: "AccountRealNameTest",
             name: "AccountRealNameTest",
-            component: () =>
-              import("./../views/lecture/test/AccountRealNameTest"),
+            component: () => import("./../components/lecture/test/AccountRealNameTest"),
           },
           {
             path: "AttdQRTest",
             name: "AttdQRTest",
-            component: () => import("./../views/lecture/test/AttdQRTest"),
+            component: () => import("./../components/lecture/test/AttdQRTest"),
           },
           {
             path: "KakaoMapTest",
             name: "KakaoMapTest",
-            component: () => import("./../views/lecture/test/KakaoMapTest"),
+            component: () => import("./../components/lecture/test/KakaoMapTest"),
           },
         ],
       },
       {
-        path: "list",
-        name: "ClassListAll",
+        path: "list/:catg",
+        name: "ClassList",
         component: () => import("./../views/lecture/list/listAll"),
+        props: true,
+      },
+      {
+        path: ":classId",
+        name: "classDetail",
+        component: () => import("./../views/lecture/list/classDetail"),
+        props: true,
+        children: [
+          {
+            path: "info",
+            name: "classInfo",
+            component: () => import("./../components/lecture/detail/classInfo"),
+            props: true,
+          },
+          {
+            path: "course",
+            name: "classCourse",
+            component: () => import("./../components/lecture/detail/classCourse"),
+            props: true,
+          },
+          {
+            path: "qna",
+            name: "classQna",
+            component: () => import("./../components/lecture/detail/classQna"),
+            props: true,
+          },
+          {
+            path: "review",
+            name: "classReview",
+            component: () => import("./../components/lecture/detail/classReview"),
+            props: true,
+          },
+        ],
       },
     ],
   },
 
   // moim
   {
-    path: "/moimmain",
-    name: "moimmain",
+    path: "/moimMain",
+    name: "moimMain",
     component: () => import("./../views/moim/MoimMainView"),
   },
   {
@@ -161,7 +224,7 @@ const routes = [
   },
   {
     //게시글
-    path: "/moimDetail",
+    path: "/moimDetail/:moimId/:boardType",
     component: () => import("@/views/moim/MoimDetailView"),
     props: true,
     children: [

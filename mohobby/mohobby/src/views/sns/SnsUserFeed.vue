@@ -14,27 +14,41 @@
   
             <h1 class="profile-user-name">{{ infoes.memberId }}</h1>
   
-            <button class="btn profile-edit-btn">Edit Profile</button>
+            
   
-            <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
+            <button class="btn profile-settings-btn" aria-label="profile settings"><v-icon>mdi-check-decagram</v-icon><i class="fas fa-cog" aria-hidden="true"></i></button>
   
           </div>
   
           <div class="profile-stats">
+            <ul>
+              <li><span class="profile-real-name">{{ infoes.nickname }}</span></li>
+            </ul>
   
             <ul>
               <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
               <li><span class="profile-stat-count">{{ infoes.followerCnt }}</span> followers</li>
               <li><span class="profile-stat-count">{{ infoes.followingCnt }}</span> following</li>
             </ul>
-  
+            <ul>
+                <li><p class="profile-bio">{{ infoes.intro }} 📷✈️🏕️</p></li>
+                <li></li>
+            </ul>
+            
           </div>
   
           <div class="profile-bio">
-  
-            <p><span class="profile-real-name">{{ infoes.nickname }}</span> {{ infoes.intro }} 📷✈️🏕️</p>
-  
+            
+            <ul v-if='this.sessionId != "" && this.sessionId == this.postId'>
+                <button class="btn profile-edit-btn">Edit Profile</button>
+            </ul>
+            
+            <ul v-else>
+                <button class="btn profile-edit-btn2">Follow</button>
+                <button class="btn profile-edit-btn2" @click="send">Message</button>
+            </ul>
           </div>
+
   
         </div>
         <!-- End of profile section -->
@@ -56,24 +70,40 @@
     data() {
         return{     
             infoes:[],
-            memberId:'user11',//더미아이디}
+            sessionId:"",
+            postId:"",
         }
     },
     setup() { },
     created() {
           this.loadUserProfile();
-          console.log("유저 프로필 페이지 이동");
+          console.log("유저 프로필로 이동!");
+          console.log(this.$route.query.memId); //라우터에서 넘겨받은 memId
+          this.postId == this.$route.query.memId; //변수 대입
+          if(this$store.state.id != ""){
+            this.sessionId == this.$store.state.id; //세션에 저장된 memId 변수대입
+            console.log(this.$store.state.id +","+ this.sessionId); 
+          }
+
       },
       methods: {
+        //프로필 업로드
         loadUserProfile() {
-            this.axios('/sns/user/profile/' + this.memberId)
+            let memberId = this.$route.query.memId;
+            if (!memberId) {
+                memberId = 'user11';// 출력 확인용 아이디
+            }
+            this.axios('/sns/user/profile/' + memberId)
             .then(res => {
               this.infoes = res.data;
-              console.log(this.infoes);
             }).catch(err => {
               console.log(err);
             });  
-          }
+          },
+        //채팅방 이동
+        send() {
+        this.$router.push({ name: "chat", params: { roomId: this.roomId } });
+    },
       },
     mounted() {},
     unmounted() { },
@@ -130,10 +160,8 @@
       cursor: pointer;
   }
   
-  .btn:focus {
-      outline: 0.5rem auto #4d90fe;
-  }
-  
+
+
   .visually-hidden {
       position: absolute !important;
       height: 1px;
@@ -182,6 +210,7 @@
       display: inline-block;
       font-size: 3.2rem;
       font-weight: 300;
+      margin-left: 20px;
   }
   
   .profile-edit-btn {
@@ -192,7 +221,25 @@
       padding: 0 2.4rem;
       margin-left: 2rem;
   }
-  
+  .profile-edit-btn2 {
+      font-size: 1.4rem;
+      line-height: 1.8;
+      border: 0.1rem solid #dbdbdb;
+      border-radius: 0.3rem;
+      padding: 0 2.4rem;
+      margin-left: 2rem;
+  }
+
+  .profile-edit-btn2:hover {
+    background-color: #2ac187;
+    box-shadow: 0 2px 4px 0 rgba(13, 164, 101, 0.5);
+    color: white;
+}
+
+.profile-edit-btn2:active {
+    outline: 0.5rem auto #2ac187;
+}
+
   .profile-settings-btn {
       font-size: 2rem;
       margin-left: 1rem;
@@ -224,81 +271,17 @@
   .profile-real-name,
   .profile-stat-count,
   .profile-edit-btn {
+      text-align:center;
       font-weight: 600;
+      width: 600px;
+      margin: 20px 0;
   }
-  
-  /* Gallery Section */
-  
-  .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      margin: -1rem -1rem;
-      padding-bottom: 3rem;
-  }
-  
-  .gallery-item {
-      position: relative;
-      flex: 1 0 22rem;
-      margin: 1rem;
-      color: #fff;
-      cursor: pointer;
-  }
-  
-  .gallery-item:hover .gallery-item-info,
-  .gallery-item:focus .gallery-item-info {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: absolute;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.3);
-  }
-  
-  .gallery-item-info {
-      display: none;
-  }
-  
-  .gallery-item-info li {
-      display: inline-block;
-      font-size: 1.7rem;
+  .profile-edit-btn2 {
+      text-align:center;
       font-weight: 600;
-  }
-  
-  .gallery-item-likes {
-      margin-right: 2.2rem;
-  }
-  
-  .gallery-item-type {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      font-size: 2.5rem;
-      text-shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.1);
-  }
-  
-  .fa-clone,
-  .fa-comment {
-      transform: rotateY(180deg);
-  }
-  
-  .gallery-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-  }
-  
-  /* Loader */
-  
-  .loader {
-      width: 5rem;
-      height: 5rem;
-      border: 0.6rem solid #999;
-      border-bottom-color: transparent;
-      border-radius: 50%;
-      margin: 0 auto;
-      animation: loader 500ms linear infinite;
+      width: 300px;
+      margin: 20px 0 10px;
+      padding: 8px;
   }
   
   /* Media Query */
