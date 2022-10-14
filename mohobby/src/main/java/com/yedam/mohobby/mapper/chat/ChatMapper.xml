@@ -150,7 +150,7 @@
 	</select>
 	<!--대화내역 저장 -->
 	<insert id="insertMessage"
-		parameterType="com.yedam.mohobby.service.chat.ChatVO">
+		parameterType="com.yedam.mohobby.service.chat.ChatVO2">
 		insert into chat(
 		CHAT_ID,
 		ROOM_NO,

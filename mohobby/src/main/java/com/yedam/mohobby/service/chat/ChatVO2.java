@@ -2,7 +2,7 @@ package com.yedam.mohobby.service.chat;
 
 import com.yedam.mohobby.service.communal.AES256Util;
 
-public class ChatVO {
+public class ChatVO2 {
 	AES256Util aes = new AES256Util();
 	public String roomNo;
 	private String content;
@@ -16,7 +16,7 @@ public class ChatVO {
 		this.roomNo = roomNo;
 	}
 	public String getContent() throws Exception {
-		return aes.decrypt(content);
+		return content;
 	}
 	public void setContent(String content) throws Exception {
 		this.content = content;

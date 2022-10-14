@@ -13,6 +13,6 @@ public List<ChatVO>getChat(String roomNo);
 public List<String> getTargetId(ChatUserVO chatUser);
 public int CreateRoom(CreateRoomVO cr);
 public List<NonReadChatVO>getNonReadChat(ChatUserVO chatUser);
-public int insertMessage(ChatVO chat);
+public int insertMessage(ChatVO2 chat);
 public int updateCheckTime(ChatUserVO chatUser);
 }

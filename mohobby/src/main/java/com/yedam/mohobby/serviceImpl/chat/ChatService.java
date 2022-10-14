@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.yedam.mohobby.mapper.chat.ChatMapper;
 import com.yedam.mohobby.service.chat.ChatUserVO;
 import com.yedam.mohobby.service.chat.ChatVO;
+import com.yedam.mohobby.service.chat.ChatVO2;
 import com.yedam.mohobby.service.chat.CreateRoomVO;
 import com.yedam.mohobby.service.chat.NonReadChatVO;
 import com.yedam.mohobby.service.chat.RoomVO;
@@ -50,7 +51,7 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 		return mapper.getNonReadChat(chatUser);
 	}
 	@Override
-	public int insertMessage(ChatVO chat) {
+	public int insertMessage(ChatVO2 chat) {
 		return mapper.insertMessage(chat);
 	}
 

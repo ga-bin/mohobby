@@ -20,6 +20,20 @@ public class MessageController {
 
 	@MessageMapping("/send")
 	public void send(ContentVO content) {
+		System.out.println(content);
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
 		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
 
 	}
