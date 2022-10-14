@@ -77,7 +77,7 @@
         </v-chip-group>
         <br>
         <v-col cols="12">
-          <CmtReg></CmtReg>
+          <CmtReg :postId = "postId"></CmtReg>
           <CmtList></CmtList>
       </v-col>
       </v-card>
@@ -142,10 +142,10 @@ export default {
       }).then(res => {
         this.items = res.data;
         if(this.items.hashtag != null){
-          let str = this.items.hashtag; //%%,%%,%% 형태
-          let hashtag = str.split(','); //해시태그 자르기
-          this.hashtags = hashtag; //자른 해시태그들 hashtags에 담기
-        }
+            let str = this.items.hashtag; //%%,%%,%% 형태
+            let hashtag = str.split(','); //해시태그 자르기
+            this.hashtags = hashtag; //자른 해시태그들 hashtags에 담기
+          }
         console.log("상세페이지 접근 성공!");
       }).catch(err => {
         console.log(err);
@@ -163,7 +163,7 @@ export default {
                 }
             }).then(res => {
                 this.feeds = res.data; //해시태그 검색결과 담기
-                console.log("axios SUCCESS")
+                console.log("AXIOS SUCCESS")
                 this.goSearch(this.feeds, this.show);// 메인 ->컴색컴포넌트
 
             }).catch(err =>{
