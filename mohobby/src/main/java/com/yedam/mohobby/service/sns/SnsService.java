@@ -16,10 +16,11 @@ public interface SnsService {
 	/*
      * 게시물
      */
-    //게시물 등록
-    public int insertFeed(SnsPostVO snsPostVO);
-    //미디어 등록
-	public boolean insertMedia(List<MultipartFile> fileList, SnsMediaVO mediavo);
+    
+	//게시물 등록 전 포스트아이디 가져오기
+	public int getPostId();
+	//게시물 등록
+	public boolean regFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList);
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
     //피드 삭제
@@ -40,6 +41,8 @@ public interface SnsService {
     public List<SnsPostVO> getUserFeed(String memberId);
     //피드상세조회
     public SnsFeedVO getFeedDetail(int postId, String memberId);
+    //피드이미지조회
+    public List<SnsMediaVO> getFeedImg(int postId);
     
     /*
      * 해시태그
@@ -119,6 +122,7 @@ public interface SnsService {
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회
 	public List<SnsBookmarkVO> getAllBookmarks();
+	
 
 	
 	

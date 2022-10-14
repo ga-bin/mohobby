@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,19 +43,16 @@ public class SnsController {
     @Autowired
     SnsService service;
     
-    //미디어 등록 - 파일등록 성공 히히
-    @PostMapping(value = "/myfeed/media/{postId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String insertFeed(@RequestPart(value="fileList") List<MultipartFile> fileList, @PathVariable int postId) {
-    		SnsMediaVO mediavo = new SnsMediaVO();
-    		mediavo.setPostId(postId);
-
-    		service.insertMedia(fileList, mediavo);
-        return "success";
-    }
-    //게시물 등록 - 
-    @PostMapping("/myfeed/post")
-    public String insertFeed(@RequestBody SnsPostVO postvo) {
-    		service.insertFeed(postvo);
+    //게시물 등록 - 파일등록 성공 히히
+    @PostMapping(value = "/myfeed", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public String insertFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
+    	
+    	snspostVO.setPostId(service.getPostId());
+    	
+    	System.out.println("snspostVO: " + snspostVO);
+    	System.out.println("snsmediaVO: " + snsmediaVO);
+    	System.out.println(fileList);
+    		service.regFeed(snspostVO, snsmediaVO, fileList);
         return "success";
     }
     
@@ -132,6 +128,13 @@ public class SnsController {
         	System.out.println(postId+", "+memberId);
             return service.getFeedDetail(postId, memberId);
     }
+   //피드이미지조회
+    @GetMapping("/user/feed_detail_img/{postId}")
+    public List<SnsMediaVO> getFeedImg(@PathVariable("postId") int postId) {
+    	System.out.println("상세이미지 로딩 성공");
+    	System.out.println(postId);
+        return service.getFeedImg(postId);
+}
     
     /*
      * 해시태그
