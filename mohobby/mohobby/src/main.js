@@ -34,6 +34,33 @@ Vue.filter("comma", (val) => {
 Vue.filter("won", (val) => {
   return `${val} 원`;
 });
+Vue.filter("idx", (val) => {
+  if(val < 10) {
+    return "0"+val;
+  }
+  return val;
+});
+Vue.filter("runtime", (val) => {
+  if(val < 10) {
+    return "00:0"+val;
+  }else if(val <= 60) {
+    return "00:"+val;
+  }
+
+  let m = (parseInt(val / 60)).toString();
+  let s = (val % 60).toString();
+
+  let mm = m;
+  let ss = s;
+  if(m<10){
+    mm = "0"+m;
+  }
+  if(s<10){
+    ss = "0"+s;
+  }
+
+  return mm+":"+ss;
+})
 
 new Vue({
   vuetify,

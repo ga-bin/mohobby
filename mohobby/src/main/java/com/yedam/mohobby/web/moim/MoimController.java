@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 
@@ -83,6 +84,27 @@ public class MoimController {
 	@GetMapping("/moimAllSearch")
 	public List<MoimVO> getAllSearch(@RequestParam("Search")String moimName, @RequestParam("Category")String moimCatg ){
 		return service.moimAllSearch(moimName, moimCatg);
+	}
+	
+	/**
+	 * @return List<MoimBoardVO>
+	 * @title 소모임 게시판 전체 조회
+	 */
+	@GetMapping("/moimBoardList")
+	public List<MoimBoardVO> getAllBoardList(@RequestParam("moimId")int moimId, @RequestParam("boardType")int boardType){
+		return service.moimAllBoard(moimId, boardType);
+	}
+	
+	@PostMapping("/idCheck")
+	public String moim_idcheck(@RequestBody MoimVO vo) {
+		String result = "";
+		int count = service.memberIdCheck(vo.getMoimName());
+		if(count == 0) {
+			result="YES";
+		} else {
+			result="NO";
+		}
+		return result;
 	}
 
 }

@@ -18,7 +18,7 @@ import BoardButton from "@/components/moim/moimDetail/board/BoardButton.vue";
     fclick: true,
     // 비공개 : 0, 공개 : 1
     moim: 1,
-    moimRight : 1
+    moimRight : 1, 
     }),
   }
 </script>

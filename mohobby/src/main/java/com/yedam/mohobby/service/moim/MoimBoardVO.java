@@ -12,4 +12,6 @@ public class MoimBoardVO {
 	private String content; //내용
 	private int boardType; //게시글 분류
 	private Date writeDate; //등록일자
+	private int moimId; //소모임 아이디
+	private int cnt; //댓글 갯수
 }

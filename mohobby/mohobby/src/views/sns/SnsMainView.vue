@@ -74,7 +74,7 @@
                 <div id="chip">
                     <v-row justify="space-around">
                         <v-col cols="12">
-                            <v-sheet ref="getHashtag" >
+                            <v-sheet ref="getHashtag">
                                 <v-chip-group active-class="primary--text">
                                     <v-chip v-for="(item,i) in items" 
                                             :key="i"
@@ -95,9 +95,6 @@
         <!-- 검색컴포넌트 -->
         <div id="searchResult" v-if="show">
             <SearchPage :feeds="feeds" />
-                <div id = "noSearchResult" v-if="noResult">
-                <h1> 검색 결과가 없습니다 !</h1>
-                </div>
             </div>
             <div v-else>
                 <!-- 메인 컴포넌트 -->
@@ -137,6 +134,7 @@
               show: false, //1:검색 결과 페이지
               noResult: false, //1:검색결과 없음
               main: true,
+              showHashtag : "",
           }
       },
       watch: {},
@@ -172,21 +170,13 @@
               }).then(res => {
                   this.feeds = res.data;
                   console.log("피드받기 성공!");
+                  this.showHashtag = getHashtag;
                   this.show = true;
                   this.main = false;
                   if (this.feeds.length === 0){
                     this.noResult = true;
                     this.main = false;
                   }
-                //       document.getElementById('searchResult').style.display = "block";
-                //       document.getElementById('noSearchResult').style.display = "block";
-                //       document.getElementById('hotLecturers').style.display = "none";
-                //       document.getElementById('hotLecturers').style.display = "none";
-                //   } else {
-                //       document.getElementById('searchResult').style.display = "block"; 
-                //       document.getElementById('hotLecturers').style.display = "none";
-                //       document.getElementById('nonuserFeeds').style.display = "none";
-                //   }
                   
               }).catch(err =>{
                   console.log(err);
@@ -234,14 +224,5 @@
       label {
           margin-right: 3px;
       }
-  
-      /* #searchResult{
-          display : none;
-      }
-  
-      #noSearchResult{
-          display : none;
-      } */
-  
-  
+
   </style>

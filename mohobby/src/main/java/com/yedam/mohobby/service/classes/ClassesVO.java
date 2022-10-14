@@ -35,4 +35,7 @@ public class ClassesVO {
 	private int jjimTotal;  //찜 토탈
 	private int reviewTotal;  //후기 토탈
 	private int qnaTotal;  //qna 토탈
+	private String jobName;  //직업
+	private int chapTotal;  //챕터 토탈
+	private int currTotal; //커리큘럼 토탈
 }

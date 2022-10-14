@@ -181,6 +181,32 @@ const routes = [
         name: "classDetail",
         component: () => import("./../views/lecture/detail/classDetail"),
         props: true,
+        children: [
+          {
+            path: "info",
+            name: "classInfo",
+            component: () => import("./../views/lecture/detail/classInfo"),
+            props: true,
+          },
+          {
+            path: "course",
+            name: "classCourse",
+            component: () => import("./../views/lecture/detail/classCourse"),
+            props: true,
+          },
+          {
+            path: "qna",
+            name: "classQna",
+            component: () => import("./../views/lecture/detail/classQna"),
+            props: true,
+          },
+          {
+            path: "review",
+            name: "classReview",
+            component: () => import("./../views/lecture/detail/classReview"),
+            props: true,
+          },
+        ],
       },
     ],
   },
@@ -199,7 +225,7 @@ const routes = [
   },
   {
     //게시글
-    path: "/moimDetail",
+    path: "/moimDetail/:moimId/:boardType",
     component: () => import("@/views/moim/MoimDetailView"),
     props: true,
     children: [

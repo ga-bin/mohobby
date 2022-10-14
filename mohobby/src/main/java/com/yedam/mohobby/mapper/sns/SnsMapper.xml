@@ -13,49 +13,55 @@
    		피드
    		 
    	-->
-   <!-- 게시글 입력 -->
-   <insert id="insertFeed" parameterType="int">
-      INSERT INTO sns_post (
-                        post_id,
-                        member_id,
-                        hashtag,
-                        content,
-                        write_date,
-                        thumbnail,
-                        likes,
-                        cmts
-                       )
-                  VALUES(
-                         post_id_seq.nextval,
-                        #{ memberId },
-                        #{ hashtag },
-                        #{ content },
-                        SYSDATE,
-                        #{ thumbnail },
-                        0,
-                        0
-                        )
-   </insert>
-   <!-- 게시물 이미지 -->
+   	   <!-- 새로운 postId 생성 -->
+       <select id="getPostId" resultType="Integer">
+		SELECT MAX(post_id)+1 FROM sns_post
+	   </select>
+	   <!-- 피드등록 -->
+	   <insert id="insertFeed" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+	      INSERT INTO sns_post (
+	                        post_id,
+	                        member_id,
+	                        <if test="hashtag != null">
+	                        hashtag,
+	                        </if>
+	                        content,
+	                        write_date,
+	                        thumbnail,
+	                        likes,
+	                        cmts
+	                       )
+	                  VALUES(
+	                        #{ postId },
+	                        #{ memberId },
+	                        <if test="hashtag != null">
+	                        #{ hashtag },
+	                        </if>
+	                        #{ content },
+	                        SYSDATE,
+	                        #{ thumbnail },
+	                        0,
+	                        0
+	                        )
+    </insert>
+    <!-- 미디어등록 -->
 	<insert id="insertMedia" parameterType="com.yedam.mohobby.service.sns.SnsMediaVO">
       INSERT INTO sns_media (
 						      media_id,
 						      post_id,
-						      media_type,
-						      img_url,
-						      video_url,
+						      extension,
+						      path,
 						      file_name,
-						      file_realname,
+						      file_real_name,
 						      dir_name
 						     )
 				      VALUES(
 						      media_id_seq.nextval,
 						      #{ postId },
-						      #{ mediaType },
-						      #{ imgUrl },
-						      #{ videoUrl },
+						      #{ extension },
+						      #{ path },
 						      #{ fileName },
-						      #{ fileRealname },
+						      #{ fileRealName },
 						      #{ dirName }
 						     )
 						      
@@ -164,6 +170,14 @@
 		AND post_id = #{ postId }
 		ORDER BY post_id
    </select>
+   <!-- 상세 이미지 -->
+   <select id="getFeedImg" resultType="com.yedam.mohobby.service.sns.SnsMediaVO">
+        SELECT post_id, file_name
+        FROM sns_media
+        WHERE post_id = #{ postId }
+        ORDER BY file_name
+   </select>
+   
 <!-- +미디어
 	<select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
    	  SELECT s.post_id, s.member_id, s.hashtag, s.content, s.write_date, s.thumbnail, s.likes, s.cmts, m.file_name
@@ -326,11 +340,11 @@
     -->
 
    <!-- 좋아요 누적 -->
-   <select id="sumLikes" parameterType="com.yedam.mohobby.service.communal.JjimVO" resultType="java.lang.Integer">
-		DECLARE
-		v_target_id NUMBER := 7;
-		v_member_id member.member_id%TYPE := 'user1';
-		v_status NUMBER;
+   <update id="sumLikes" parameterType="com.yedam.mohobby.service.communal.JjimVO">
+        DECLARE
+            v_target_id NUMBER := #{ targetId };
+            v_member_id member.member_id%TYPE := #{ memberId };
+            v_status NUMBER;
 		BEGIN
 		SELECT
 		    (CASE WHEN NOT EXISTS (
@@ -353,8 +367,8 @@
 		DELETE FROM jjim WHERE target_id= v_target_id AND target_type=2 AND member_id = v_member_id;
 		UPDATE sns_post SET likes = likes - 1 WHERE post_id = v_target_id;
 		END IF;
-		END
-   </select>
+		END;
+   </update>
 
 
 	<!--
@@ -376,7 +390,7 @@
 	    						 comm_seq.nextval
 	    						,#{ memberId }
 	    						,#{ targetId }
-	    						,#{ targetType }
+	    						,2
 	    						,#{ content }
 	    						,SYSDATE
 	    					)

@@ -34,9 +34,10 @@
           <v-col cols="12" id="image_box">
               <v-carousel ref="myCarousel" hide-delimiters :touchless="ture">
                 <v-carousel-item
+                v-for="(img,i) in imgs" :key="i"
                   :aspect-ratio="4 / 3"
                   :width="width"
-                  :src="require(`@/assets/image/sns/${items.thumbnail}`)"
+                  :src="require(`@/assets/image/sns/${img.postId}/${img.fileName}`)"
                 ></v-carousel-item>
               </v-carousel>
           </v-col>
@@ -96,6 +97,7 @@ export default {
       width: 800,
       roomId: 0,
       items: [], //게시글 정보 저장
+      imgs: [], //이미지 저장
       hashtags: [], //해시태그 배열 split 후 저장
       feeds : [], //해시태그 검색 정보 저장
       targetType: 2,
@@ -114,11 +116,23 @@ export default {
     this.postId = this.$route.query.id;
     this.memId = this.$store.state.id;
     this.showDetail();
+    this.detailImg();
   },
   mounted() {},
   unmounted() {},
   methods: {
-
+    detailImg() {
+      this.axios('/sns/user/feed_detail_img/' + this.postId, {
+        params: {
+          memberId: this.memId,
+        }
+      }).then(res => {
+        this.imgs = res.data;
+        console.log("이미지 로딩 성공!");
+      }).catch(err => {
+        console.log(err);
+      });
+    },
     //게시글 상세 로드
     showDetail() {
       this.axios('/sns/user/feed_detail/' + this.postId, {
@@ -127,9 +141,11 @@ export default {
         }
       }).then(res => {
         this.items = res.data;
-        let str = this.items.hashtag; //%%,%%,%% 형태
-        let hashtag = str.split(','); //해시태그 자르기
-        this.hashtags = hashtag; //자른 해시태그들 hashtags에 담기
+        if(this.items.hashtag != null){
+          let str = this.items.hashtag; //%%,%%,%% 형태
+          let hashtag = str.split(','); //해시태그 자르기
+          this.hashtags = hashtag; //자른 해시태그들 hashtags에 담기
+        }
         console.log("상세페이지 접근 성공!");
       }).catch(err => {
         console.log(err);
@@ -167,51 +183,6 @@ export default {
     },
 
     //좋아요
-//     like() {
-//       this.postId = this.$route.query.id;
-//       const vm = this;
-//       console.log(this.items.likeStatus)
-//       if (this.memId === null || this.memId === "") {
-//         alert('로그인이 필요합니다!');
-//         return;
-//       } else {
-//           this.items.likes++;
-//           //DB Jjim insert
-//           this.axios('/sns/like', {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json; charset=utf-8",
-//         },
-//         body: JSON.stringify({
-//           "memberId": this.memId,
-//           "targetId": vm.postId,
-//           "targetType": this.targetType,
-//         })
-//       })
-// ``````.then(function (response) {
-//               console.log("좋아요성공" + response);
-//             })
-//             .catch(function (error) {
-//               console.log("좋아요실패 " + error);
-//             })
-//             .finally(function() {              
-//             this.axios
-//               .put("/sns/like", {
-//               params: {
-//                 postId: vm.postId,
-//               }
-//             })
-//             .then(function (response) {
-//               console.log("좋아요업댓" + response);
-//             })
-//             .catch(function (error) {
-//               console.log("업댓실패" + error);
-//             });
-//           })
-//         }
-//     },
-
-    //좋아요
     like() {
       if (this.memId === null || this.memId === "") {
         alert('로그인이 필요합니다!');
@@ -223,7 +194,13 @@ export default {
                 memberId : this.memId
             }).then(res => {
               console.log(res);
-              // window.location.assign('/used/detail?pNo='+this.$route.query.pNo);
+              if(this.items.likeStatus == 0){
+                this.items.likes++;
+                this.items.likeStatus=1;
+              }else{
+                this.items.likes--;
+                this.items.likeStatus=0;
+              }
             }).catch(err => {
               console.log(err)
             });
