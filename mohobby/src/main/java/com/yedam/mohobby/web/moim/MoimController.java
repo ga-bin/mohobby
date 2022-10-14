@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimDetailVO;
 import com.yedam.mohobby.service.moim.MoimService;
@@ -134,9 +135,26 @@ public class MoimController {
 		return service.moimCommentAllList(moimId, boardType, boardId);
 	}
 	
+	
+	/**
+	 * @param moimId
+	 * @param boardType
+	 * @param boardId
+	 * @return List<MoimBoardVO>
+	 * @title 소모임 게시글 단건조회
+	 */
 	@GetMapping("/oneBoard")
 	public List<MoimBoardVO> getOneBoard(@RequestParam("moimId")int moimId, @RequestParam("boardType") int boardType, @RequestParam("boardId")int boardId){
 		return service.moimOneBoard(moimId, boardType, boardId);
+	}
+	
+	/**
+	 * @param commVO
+	 * @title 소모임 게시글 댓글 등록
+	 */
+	@PostMapping("/insertMoimBoardComment")
+	public void insertMoimBoardComment(@RequestBody CommentsVO commVO) {
+		service.moimCommentInsert(commVO);
 	}
 }
 

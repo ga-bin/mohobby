@@ -41,32 +41,7 @@
     </v-card-text>
     </div>
 
-    <!-- 댓글 -->
     <BoardComment></BoardComment>
-    <div>
-      <v-card-actions>
-        <v-col cols="10">
-        <v-text-field
-        class="ml-11"
-        placeholder="댓글을 남겨보세요!"
-        filled
-        rounded
-        dense
-        hide-details
-        ></v-text-field>
-      </v-col>
-      <v-spacer></v-spacer>
-      <div style="margin-right: 80px">
-      <v-btn
-      rounded
-      color="orange"
-      text
-      >
-      <v-icon>mdi-send</v-icon>
-      </v-btn>
-      </div>
-</v-card-actions>
-  </div>
 </v-card>
 </div>
 </template>
@@ -78,9 +53,9 @@ export default {
         return {
           moimId : this.$route.query.moimId,
           boardId : this.$route.query.boardId,
+          boardType : this.$route.query.boardType,
             items: [],
             writer : 0,
-
         };
     },
     components: { BoardComment },
@@ -96,7 +71,7 @@ export default {
         params : {
           moimId : this.moimId,
           boardId : this.boardId,
-          boardType : 1
+          boardType : this.boardType
         }
       })
       .then((resp)=> {
@@ -108,7 +83,7 @@ export default {
         console.log(this.items)
         console.log(err)
       })
-      }
+      },
     },
     filters: {
     // filter로 쓸 filter ID 지정
@@ -131,9 +106,6 @@ export default {
       // 최종 포맷 (ex - '2021/10/08')
       return year + "/" + month + "/" + day;
     },
-    },
-    created() {
-    this.getBoard()
     },
 };
 </script>

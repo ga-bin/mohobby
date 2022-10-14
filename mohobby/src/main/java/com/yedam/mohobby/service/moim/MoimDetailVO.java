@@ -10,15 +10,17 @@ import lombok.Data;
 //댓글 단건조회 VO
 public class MoimDetailVO {
 	
+	private int commId;
 	private String boardContent;
 	private String boardWriter;
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date writeDate;
+	private int parentCommId;
 	private String content; //댓글 내용
 	private String commentWriter;
 	private int moimId;
 	private int boardType;
-	private int boardId;
+	private int boardId; // (== target_id) moim_board에서 가져옴
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private Date commentDate;
 	
