@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
+import com.yedam.mohobby.service.classes.ClassReviewVO;
 import com.yedam.mohobby.service.classes.ClassService;
 import com.yedam.mohobby.service.classes.ClassesVO;
 import com.yedam.mohobby.service.communal.JjimVO;
@@ -90,6 +92,24 @@ public class ClassController {
 	    return classService.listOne(req);
 	}
 	
+	
+	//후기평가조회
+	@GetMapping("/class/review")
+	public @ResponseBody ClassReviewVO getClassReview(@RequestParam int classId) {
+		return classService.getClassReview(classId);
+	}
+	
+	//강의후기리스트
+	@GetMapping("/class/reviews")
+	public @ResponseBody List<ClassBoardVO> getClassReviewList(@RequestParam int classId, @RequestParam int boardType) {
+		return classService.getClassBoardList(classId, boardType);
+	}
+	
+	//강의qna리스트
+	@GetMapping("/class/qna/{classId}")
+	public @ResponseBody List<ClassBoardVO> getClassQnaList(@PathVariable int classId) {
+		return classService.getClassBoardList(classId, 1);
+	}
 	
 	//찜 등록
 	@PostMapping("/class/jjim")

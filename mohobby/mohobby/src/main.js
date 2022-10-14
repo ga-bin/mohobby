@@ -25,8 +25,19 @@ Vue.prototype.$ = $;
 axios.defaults.baseURL = "http://localhost:8088/java";
 window.Kakao.init("157b38874395f658a48c02cc8473066b"); // 카카오 로그인 앱 키
 
+
 Vue.filter("toFixed", (val, num) => {
-  return parseFloat(val), toFixed(num);
+  let result;
+  if(val==0 || val==0.0 || val==null || isNaN(val)) {
+    return 0;
+  } else if (val % 1 == 0) {
+    result = val;
+  } else if ( val % 1 * 10 % 1 == 0 ) {
+    result = val;
+  } else {
+    result = parseFloat(val), toFixed(num);
+  }
+  return result;
 });
 Vue.filter("comma", (val) => {
   return String(Math.round(val)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -60,7 +71,12 @@ Vue.filter("runtime", (val) => {
   }
 
   return mm+":"+ss;
+});
+Vue.filter("starRatio", (val, total) => {
+  return (val / total) * 100;
 })
+
+
 
 new Vue({
   vuetify,

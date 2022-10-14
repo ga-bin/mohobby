@@ -110,7 +110,43 @@
 		and c.class_id = crtt.class_id(+)
 		and c.member_id = m.member_id
 		and c.class_id = #{classId}
-		
+	</select>
+	
+	<!-- 후기평가조회 -->
+	<select id="getClassReview" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassReviewVO">
+		select	c.class_id, 
+				nvl(rate.avg,0)avg, 
+				nvl(rate.five,0)five, 
+				nvl(rate.four,0)four, 
+				nvl(rate.three,0)three, 
+				nvl(rate.two,0)two, 
+				nvl(rate.one,0)one, 
+				nvl(rate.zero,0)zero
+		from	class c,
+				(
+				select class_id, 
+				avg(rate)avg, 
+				count(decode(rate, 5, 1))five, 
+				count(decode(rate, 4, 1))four, 
+				count(decode(rate, 3, 1))three,  
+				count(decode(rate, 2, 1))two,
+				count(decode(rate, 1, 1))one,
+				count(decode(rate, 0, 1))zero
+				from class_board where board_type=4 group by class_id
+				)rate
+		where	c.class_id = rate.class_id(+)
+		and		c.class_id = #{classId}
+	</select>
+	
+	<!-- 강의게시글조회 -->
+	<select id="getClassBoardList" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassBoardVO" >
+		select b.*, m.profile_img, m.nickname
+		from class_board b,
+		member m
+		where b.member_id = m.member_id(+)
+		and board_type=#{boardType}
+		and class_id=#{classId}
+		order by write_date desc
 	</select>
 	
 	<!-- 찜등록 -->
