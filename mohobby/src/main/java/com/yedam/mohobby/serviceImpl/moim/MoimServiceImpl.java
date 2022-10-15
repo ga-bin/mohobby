@@ -16,7 +16,6 @@ import com.yedam.mohobby.service.moim.MoimVO;
 @Service
 public class MoimServiceImpl implements MoimService{
 
-
 	@Autowired
 	MoimMapper mapper;
 
@@ -111,6 +110,12 @@ public class MoimServiceImpl implements MoimService{
 	public void moimCommentInsert(CommentsVO commVO) {
 		mapper.moimCommentInsert(commVO);
 	}
+	
+	@Override
+	public List<MoimVO> joinMoim(String memberId) {
+		return mapper.joinMoim(memberId);
+	}
+
 
 	//소모임 댓글 수정
 	@Override

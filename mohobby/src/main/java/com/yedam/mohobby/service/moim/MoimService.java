@@ -47,5 +47,8 @@ public interface MoimService {
 	
 	//소모임 댓글 수정
 	public int moimCommentUpdate(CommentsVO commVO);
+
+	//내가 참여한 소모임 목록
+	public List<MoimVO> joinMoim(String memberId);
 }
 

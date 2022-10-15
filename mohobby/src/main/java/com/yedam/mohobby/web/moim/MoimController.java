@@ -158,6 +158,7 @@ public class MoimController {
 		service.moimCommentInsert(commVO);
 	}
 	
+
 	
 	@PutMapping("/")
 	public String updateMoimBoardComment(@RequestBody CommentsVO commVO) {
@@ -169,6 +170,11 @@ public class MoimController {
 	        System.out.println("댓글 수정 실패 : " + e.getMessage());
 	        return "fail";
 	    }
+
+	@GetMapping("/joinMoim")
+	public List<MoimVO> getJoinMoim(@RequestParam("memberId")String memberId) {
+		return service.joinMoim(memberId);
+
 	}
 }
 

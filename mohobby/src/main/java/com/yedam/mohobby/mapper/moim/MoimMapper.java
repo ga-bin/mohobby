@@ -48,4 +48,7 @@ public interface MoimMapper {
 	
 	//소모임 댓글 수정
 	public int moimCommentUpdate(CommentsVO commVO);
+  
+	//내가 참여중인 소모임
+	public List<MoimVO> joinMoim(String memberId);
 }

@@ -136,4 +136,13 @@ write_date =#{commentDate}
 where
 comm_id = #{commId}
 </update> -->
+
+
+<!-- 참여중인 소모임 리스트 조회 -->
+<select id="joinMoim" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select a.moim_id, a.moim_img, a.moim_name
+from moim a, moim_member b 
+where a.moim_id = b.moim_id
+and member_id = #{memberId}
+</select>
 </mapper>
