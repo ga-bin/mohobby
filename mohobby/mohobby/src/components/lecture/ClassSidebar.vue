@@ -53,6 +53,8 @@
 export default {
   data() {
     return {
+      profileImg: '',
+      memberId: '',
       active_list: 0,
       links: [
         { icon: "mdi-format-list-bulleted", text: "클래스 둘러보기", subheaders: [

@@ -1,7 +1,6 @@
 package com.yedam.mohobby.serviceImpl.classes;
 
 import java.io.BufferedReader;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,6 +51,18 @@ public class ClassServiceImpl implements ClassService {
     public ClassesVO listOne(ClassListRequestVO req) {
         return classMapper.listOne(req);
     }
+    
+    // 후기평가조회
+    @Override
+    public ClassReviewVO getClassReview(int classId) {
+    	return classMapper.getClassReview(classId);
+    }
+    
+    // 강의게시글조회
+    @Override
+    public List<ClassBoardVO> getClassBoardList(int classId, int boardType) {
+    	return classMapper.getClassBoardList(classId, boardType);
+    }
 
     // 찜등록
     @Override
@@ -90,7 +101,8 @@ public class ClassServiceImpl implements ClassService {
             e.printStackTrace();
         }
     }
-
+    
+    // html 읽기
     @Override
     public String readClassInfo(int classId) {
         String path = ClassController.class.getResource("/").getPath();
@@ -100,15 +112,15 @@ public class ClassServiceImpl implements ClassService {
         path += "/mohobby/mohobby/src/assets/html/classInfo/";
         path += String.valueOf(classId);
         path += ".html";
-
+        
         File file = new File(path);
         String res = "";
-
+        
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
-
+            
             String str;
-
+            
             while ((str = br.readLine()) != null) {
                 res += str;
             }
@@ -117,7 +129,9 @@ public class ClassServiceImpl implements ClassService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
+        
+        
         return res;
     }
 
@@ -142,18 +156,6 @@ public class ClassServiceImpl implements ClassService {
             e.printStackTrace();
         }
         return "data:image/png;base64," + base64;
-    }
-
-    @Override
-    public ClassReviewVO getClassReview(int classId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<ClassBoardVO> getClassBoardList(int classId, int boardType) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }
