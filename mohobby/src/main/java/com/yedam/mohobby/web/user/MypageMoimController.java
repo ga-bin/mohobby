@@ -3,6 +3,7 @@ package com.yedam.mohobby.web.user;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import com.yedam.mohobby.service.user.MypageMoimVO;
  * @title 회원 마이페이지 모임
  */
 @RestController
+@CrossOrigin(origins = "*")
 public class MypageMoimController {
 
 @Autowired
