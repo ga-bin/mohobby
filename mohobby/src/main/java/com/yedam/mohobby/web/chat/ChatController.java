@@ -43,7 +43,6 @@ public class ChatController {
 
 	@PostMapping("/InsertMessage")
 	public int insertMessage(@RequestBody ChatVO2 chat) throws Exception {
-
 		chat.setContent(aes.encrypt(chat.getContent()));
 		return service.insertMessage(chat);
 	}
