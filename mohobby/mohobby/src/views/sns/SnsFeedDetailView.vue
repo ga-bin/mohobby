@@ -17,7 +17,7 @@
                   :src="require(`@/assets/image/user/${items.profileImg}`)" 
                   @click="goMyFeed(items.memberId)" />
               </v-avatar>
-            <div class="user text-overline">{{items.memberId}}<br>{{this.$moment(items.writeDate).format('YYYY.MM.DD') }}</div>
+            <div class="user text-overline">{{items.memberId}}<br>{{this.$moment(items.writeDate).format('YYYY.MM.DD')}}</div>
           </div>
         </div>
 
@@ -195,13 +195,13 @@ export default {
                 memberId : this.memId
             }).then(res => {
               console.log(res);
-              if(this.items.likeStatus == 0){
-                this.items.likes++;
+              if(this.items.likeStatus == 0){ //좋아요 상태가 0이면 개수++,상태를 1로
+                ++this.items.likes;
                 this.items.likeStatus=1;
-              }else{
-                this.items.likes--;
+              }else if(this.items.likes > 0){ //좋상이 1이고 좋개가 0이 아니면 개수--,상태를 0으로
+                --this.items.likes;
                 this.items.likeStatus=0;
-              }
+              } 
             }).catch(err => {
               console.log(err)
             });
