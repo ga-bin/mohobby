@@ -36,8 +36,9 @@
             </ul>
             
           </div>
-  
-          <div class="profile-bio">
+          
+          <ProfileBtn :postid="postId" />
+          <!-- <div class="profile-bio">
             
             <ul v-if='this.sessionId != "" && this.sessionId == this.postId'>
                 <button class="btn profile-edit-btn">Edit Profile</button>
@@ -47,7 +48,7 @@
                 <button class="btn profile-edit-btn2">Follow</button>
                 <button class="btn profile-edit-btn2" @click="send">Message</button>
             </ul>
-          </div>
+          </div> -->
 
   
         </div>
@@ -62,11 +63,12 @@
     </div>
   </template>
   <script>
-  import Feeds from "@/components/sns/FeedDetail/Feeds.vue"
+  import Feeds from "@/components/sns/FeedDetail/Feeds.vue";
   import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
+  import ProfileBtn from "@/components/sns/FeedDetail/ProfileBtn.vue";
   export default {
     name: "UserProfile",
-    components: { SnsSidebar, Feeds },
+    components: { SnsSidebar, Feeds, ProfileBtn },
     data() {
         return{     
             infoes:[],
@@ -89,11 +91,7 @@
       methods: {
         //프로필 업로드
         loadUserProfile() {
-            let memberId = this.$route.query.memId;
-            if (!memberId) {
-                memberId = 'user11';// 출력 확인용 아이디
-            }
-            this.axios('/sns/user/profile/' + memberId)
+            this.axios('/sns/user/profile/' + this.postid)
             .then(res => {
               this.infoes = res.data;
             }).catch(err => {

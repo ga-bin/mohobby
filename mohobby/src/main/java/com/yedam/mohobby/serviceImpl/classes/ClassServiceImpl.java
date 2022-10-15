@@ -90,7 +90,7 @@ public class ClassServiceImpl implements ClassService {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public String readClassInfo(int classId) {
         String path = ClassController.class.getResource("/").getPath();
@@ -100,15 +100,15 @@ public class ClassServiceImpl implements ClassService {
         path += "/mohobby/mohobby/src/assets/html/classInfo/";
         path += String.valueOf(classId);
         path += ".html";
-        
+
         File file = new File(path);
         String res = "";
-        
+
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
-            
+
             String str;
-            
+
             while ((str = br.readLine()) != null) {
                 res += str;
             }
@@ -117,9 +117,7 @@ public class ClassServiceImpl implements ClassService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        
-        
+
         return res;
     }
 
@@ -146,16 +144,16 @@ public class ClassServiceImpl implements ClassService {
         return "data:image/png;base64," + base64;
     }
 
-	@Override
-	public ClassReviewVO getClassReview(int classId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ClassReviewVO getClassReview(int classId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public List<ClassBoardVO> getClassBoardList(int classId, int boardType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public List<ClassBoardVO> getClassBoardList(int classId, int boardType) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

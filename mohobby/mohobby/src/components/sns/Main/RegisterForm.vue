@@ -122,8 +122,7 @@
           <v-list-item-action @click.stop>
             <v-btn
               icon
-              @click.stop.prevent="edit(index, item)"
-            >
+              @click.stop.prevent="edit(index, item)">
               <v-icon>{{ editing !== item ? 'mdi-pencil' : 'mdi-check' }}</v-icon>
             </v-btn>
           </v-list-item-action>
@@ -215,7 +214,7 @@ methods: {
     //이미지 미리보기
     onImageChange(file) {	// v-file-input @OnChange
       if (!file) return;
-
+      
       const formData = new FormData();	// 파일을 전송할때는 FormData 형식으로 전송
       file.forEach((getFile) => { //파일등 정보 forEach문으로 빼오기 
         console.log("item.name: " + getFile.name);//name:파일명, size:바이트(인듯),type:(image/)png

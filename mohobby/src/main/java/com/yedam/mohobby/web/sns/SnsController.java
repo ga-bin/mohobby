@@ -46,13 +46,13 @@ public class SnsController {
     //게시물 등록 - 파일등록 성공 히히
     @PostMapping(value = "/myfeed", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public String insertFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
-    	
-    	snspostVO.setPostId(service.getPostId());
-    	
-    	System.out.println("snspostVO: " + snspostVO);
-    	System.out.println("snsmediaVO: " + snsmediaVO);
-    	System.out.println(fileList);
-    		service.regFeed(snspostVO, snsmediaVO, fileList);
+       
+       snspostVO.setPostId(service.getPostId());
+       
+       System.out.println("snspostVO: " + snspostVO);
+       System.out.println("snsmediaVO: " + snsmediaVO);
+       System.out.println(fileList);
+          service.regFeed(snspostVO, snsmediaVO, fileList);
         return "success";
     }
     
@@ -114,7 +114,7 @@ public class SnsController {
   //프로필조회
     @GetMapping("/user/profile/{memberId}")
     public SnsProfileVO getProfile(@PathVariable("memberId") String memberId) {
-        	return service.getProfile(memberId);//컬럼명과 컬럼값이 키와 값으로 매핑이 된다. ㄴ
+           return service.getProfile(memberId);//컬럼명과 컬럼값이 키와 값으로 매핑이 된다. ㄴ
     }
     //유저피드조회
     @GetMapping("/user/user_feeds/{memberId}")
@@ -124,15 +124,15 @@ public class SnsController {
    //피드상세조회 - 테스트완료
     @GetMapping("/user/feed_detail/{postId}")
     public SnsFeedVO getFeedDetail(@PathVariable("postId") int postId, @RequestParam String memberId) {
-        	System.out.println("프로필조회 성공");
-        	System.out.println(postId+", "+memberId);
+           System.out.println("프로필조회 성공");
+           System.out.println(postId+", "+memberId);
             return service.getFeedDetail(postId, memberId);
     }
    //피드상세이미지로드
     @GetMapping("/user/feed_detail_img/{postId}")
     public List<SnsMediaVO> getFeedImg(@PathVariable("postId") int postId) {
-    	System.out.println("상세이미지 로딩 성공");
-    	System.out.println(postId);
+       System.out.println("상세이미지 로딩 성공");
+       System.out.println(postId);
         return service.getFeedImg(postId);
 }
     
@@ -235,7 +235,7 @@ public class SnsController {
     @PutMapping("/cmt/{commId}")
     public String updateCmt(@PathVariable int commId, @RequestBody CommentsVO commentsVO) {
         try {
-        	commentsVO.setCommId(commId);
+           commentsVO.setCommId(commId);
             service.updateCmt(commentsVO);
             System.out.println("댓글수정 완료");
             return "success";
@@ -308,13 +308,13 @@ public class SnsController {
     @PostMapping("/bookmark/collection") 
     public String createBookmarkCtg(@RequestBody SnsBookmarkCatgVO bmCtgVO) {
         try {
-        	service.createBookmarkCtg(bmCtgVO);
-        	System.out.println("컬렉션추가 완료");
-        	return "success";
-		} catch (Exception e) {
-			System.out.println("컬렉션추가 실패: " + e.getMessage() );
-			return "fail";
-		}
+           service.createBookmarkCtg(bmCtgVO);
+           System.out.println("컬렉션추가 완료");
+           return "success";
+      } catch (Exception e) {
+         System.out.println("컬렉션추가 실패: " + e.getMessage() );
+         return "fail";
+      }
     }
     //컬렉션이름수정
     @PutMapping("/collection/{catgId}")
@@ -344,32 +344,31 @@ public class SnsController {
     //북마크 등록
     @PostMapping("/collection/bookmark")
     public String addBookmark(@RequestBody SnsBookmarkVO bmVO) {
-    	try {
-			service.addBookmark(bmVO);
-			System.out.println("북마크완료");
-			return "success";
-		} catch (Exception e) {
-			System.out.println("북마크실패: " + e.getMessage());
-			return "fail";
-		}
+       try {
+         service.addBookmark(bmVO);
+         System.out.println("북마크완료");
+         return "success";
+      } catch (Exception e) {
+         System.out.println("북마크실패: " + e.getMessage());
+         return "fail";
+      }
     }
     //북마크 삭제
     @DeleteMapping("/collection/bookmark/{postId}")
     public String deleteBookmark(@PathVariable int postId) {
-    	try {
-			service.deleteBookmark(postId);
-			System.out.println("북마크삭제 완료");
-			return "success";
-		} catch (Exception e) {
-			System.out.println("북마크삭제 실패: " + e.getMessage());
-			return "fail";
-		}
+       try {
+         service.deleteBookmark(postId);
+         System.out.println("북마크삭제 완료");
+         return "success";
+      } catch (Exception e) {
+         System.out.println("북마크삭제 실패: " + e.getMessage());
+         return "fail";
+      }
     }
     //컬렉션별 북마크 조회
     @GetMapping("/collection/bookmark/{catgId}")
     public List<SnsBookmarkVO> getBookmarks(@PathVariable int catgId){
-			System.out.println("북마크조회 완료");
-			return service.getBookmarks(catgId);
+         System.out.println("북마크조회 완료");
+         return service.getBookmarks(catgId);
     }
 }
-
