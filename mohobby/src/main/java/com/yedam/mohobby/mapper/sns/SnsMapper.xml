@@ -408,7 +408,7 @@
 		WHERE m.member_id = c.member_id
 		    START WITH parent_comm_id IS NULL
 		CONNECT BY PRIOR comm_id = parent_comm_id
-		ORDER SIBLINGS BY comm_id
+		ORDER SIBLINGS BY comm_id DESC
 	</select>
 	
 	<!--

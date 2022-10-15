@@ -247,6 +247,7 @@ public class SnsController {
    //댓글삭제
     @DeleteMapping("/cmt/{commId}")
     public String deleteCmt(@PathVariable("cmtId") int commId){
+        System.out.println("commId: "+commId);
         try {
             service.deleteFeed(commId);
             System.out.println("댓글삭제 완료");
