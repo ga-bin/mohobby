@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 //댓글 단건조회 VO
-public class MoimDetailVO {
+public class MoimCommentVO {
 	
 	private int commId;
 	private String boardContent;
