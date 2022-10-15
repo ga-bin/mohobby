@@ -20,8 +20,10 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.yedam.mohobby.mapper.classes.ClassMapper;
+import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
+import com.yedam.mohobby.service.classes.ClassReviewVO;
 import com.yedam.mohobby.service.classes.ClassService;
 import com.yedam.mohobby.service.classes.ClassesVO;
 import com.yedam.mohobby.service.communal.JjimVO;
@@ -142,6 +144,18 @@ public class ClassServiceImpl implements ClassService {
             e.printStackTrace();
         }
         return "data:image/png;base64," + base64;
+    }
+
+    @Override
+    public ClassReviewVO getClassReview(int classId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<ClassBoardVO> getClassBoardList(int classId, int boardType) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

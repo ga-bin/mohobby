@@ -4,30 +4,22 @@
     <h1>피드디테일</h1>
     <v-container fluid>
       <v-card class="mx-auto" min-width="600">
-        <v-flex>
-          <v-row dense>
-            <v-col cols="3" md="3" sm="2" align-self="center">
-              <!-- 프로필 -->
-              <v-avatar class="ml-10 my-10 mr-4" color="grey darken-1" size="64">
-                <!-- 이미지부분 -->
-                <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${items.profileImg}`)" />
+        <!-- 프로필 -->
+        <div>
+          <div class="flex">
+            <v-avatar 
+              class="ml-10 my-10 mr-4" 
+              color="grey darken-1" 
+              size="64"
+              >
+                <v-img
+                  aspect-ratio="30"
+                  :src="require(`@/assets/image/user/${items.profileImg}`)" 
+                  @click="goMyFeed(items.memberId)" />
               </v-avatar>
-            </v-col>
-            <v-col cols="8" align-self="center">
-              <!-- 아이디 -->
-              {{items.memberId}}<br>
-              <!-- 년,월,일 -->
-              {{this.$moment(items.writeDate).format('YYYY.MM.DD') }}
-            </v-col>
-            <!-- 게시글 설정 -->
-            <v-col col="1" md="1" sm="1" id="mdi-dots-vertical" align-self="center">  
-              <v-spacer></v-spacer> 
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </v-col> 
-          </v-row>
-        </v-flex>
+            <div class="user text-overline">{{items.memberId}}<br>{{this.$moment(items.writeDate).format('YYYY.MM.DD') }}</div>
+          </div>
+        </div>
 
         <!-- 썸네일 -->
         <v-row>
@@ -58,11 +50,15 @@
         </v-row>
 
         <!-- 내용 -->
-        <v-row>
-          <v-col cols="12">
+      <div class="contents">
+        <v-card-text class="text--primary">
+        <!-- <v-row>
+          <v-col cols="12"> -->
             <p id="content_box">{{ items.content }}</p>
-          </v-col>
-        </v-row>
+          <!-- </v-col>
+        </v-row> -->
+        </v-card-text>
+      </div>
         
         <!-- 해시태그 -->
         <v-chip-group id="hashtagGroup">
@@ -77,8 +73,9 @@
         </v-chip-group>
         <br>
         <v-col cols="12">
-          <CmtReg :postId = "postId"></CmtReg>
-          <CmtList></CmtList>
+
+          <CmtReg :postid = "postId"></CmtReg>
+          <CmtList :postid = "postId"></CmtList>
       </v-col>
       </v-card>
     </v-container>
@@ -90,22 +87,24 @@ import CmtReg from "@/components/sns/FeedDetail/CmtReg.vue";
 import CmtList from "@/components/sns/FeedDetail/CmtList.vue";
 
 export default {
-  name: "snsFeedDetail",
+  name: "FeedDetail",
   components: { SnsSidebar, CmtReg, CmtList },
   data() {
     return{
+      //carousel
+      move: [],
+      drag: false,
+      touch:false,
+      imgs: [], //이미지 저장
       width: 800,
       roomId: 0,
+      //게시글관련
       items: [], //게시글 정보 저장
-      imgs: [], //이미지 저장
       hashtags: [], //해시태그 배열 split 후 저장
       feeds : [], //해시태그 검색 정보 저장
       targetType: 2,
       memId : "",
-      postId : "",
-      likeReq: {targetId : 7,
-                memberId:'user1',
-              targetType:1},
+      postId : Number,
       show:true,
       colors: ['teal', 'orange', 'green', 'purple', 'indigo', 'cyan'], //tag color
       nonce: 1,
@@ -118,7 +117,9 @@ export default {
     this.showDetail();
     this.detailImg();
   },
-  mounted() {},
+  mounted() {
+
+  },
   unmounted() {},
   methods: {
     detailImg() {
@@ -205,9 +206,7 @@ export default {
               console.log(err)
             });
           }
-        }
-    },
-
+        },
     //사진 넘기기
     logic(e) {
       let currentMove = this.touch ? e.touches[0].clientX : e.clientX;
@@ -231,8 +230,12 @@ export default {
         this.touch = false;
       }
     },
+    //내 피드로 이동
+    goMyFeed(member){
+        this.$router.push({ name: 'snsUserFeed', query: {memId : member} });
+    }
   }
-
+};
 </script>
 
 <style scoped>
@@ -275,4 +278,20 @@ div.user.text-overline{
 #hashtagGroup {
   margin-left: 10px;
 }
+.container{
+  width : 85%;
+  margin-top: 30px;
+}
+
+.user {
+  display: inline-block;
+  margin-left: 5px;
+  margin-top: 40px;
+}
+
+ .flex {
+  display : flex;
+  height: 150px;
+ }
+
 </style>

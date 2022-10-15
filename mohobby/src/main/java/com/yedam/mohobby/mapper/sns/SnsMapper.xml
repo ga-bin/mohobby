@@ -178,17 +178,6 @@
         ORDER BY file_name
    </select>
    
-<!-- +미디어
-	<select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-   	  SELECT s.post_id, s.member_id, s.hashtag, s.content, s.write_date, s.thumbnail, s.likes, s.cmts, m.file_name
-   	  FROM sns_post s, (SELECT file_name 
-   	  					FROM sns_media 
-   	  					WHERE post_id = #{ postId }) m)
-   	  WHERE s.post_id = m.post_id
-   	  AND post_id = #{ postId }
-   </select>
--->
-   
    <!-- 취미 조회 -->
    <select id="getUserHobbies" parameterType="String" resultType="com.yedam.mohobby.service.user.MemberVO">
       SELECT REGEXP_SUBSTR(hobbies, '[^,]+', 1, Level) hobbies
@@ -378,22 +367,25 @@
 	 -->
 	 <!-- 댓글입력 -->
 	 <insert id="inserCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
-	 	INSERT INTO comments (
-	 							comm_id,
-	 							member_id,
-	 							target_id,
-	 							target_type,
-	 							content,
-	 							write_date
-	    					  )
-	    			 VALUES (
-	    						 comm_seq.nextval
-	    						,#{ memberId }
-	    						,#{ targetId }
-	    						,2
-	    						,#{ content }
-	    						,SYSDATE
-	    					)
+		 <selectKey keyProperty="commId" resultType="Integer" order="BEFORE">
+	        SELECT NVL(MAX(comm_id), 0)+1 FROM comments
+	     </selectKey>
+		 	INSERT INTO comments (
+		 							comm_id,
+		 							member_id,
+		 							target_id,
+		 							target_type,
+		 							content,
+		 							write_date
+		    					  )
+		    			 VALUES (
+		    						 #{ commId }
+		    						,#{ memberId }
+		    						,#{ targetId }
+		    						,2
+		    						,#{ content }
+		    						,SYSDATE
+		    					)
 	 </insert>
 	<!-- 댓글수정 -->
 	<update id="updateCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
@@ -408,14 +400,15 @@
 	</delete>
 	<!-- 댓글조회 -->
 	<select id="getCmtLists" resultType="com.yedam.mohobby.service.communal.CommentsVO">
-		SELECT target_type, target_id, parent_comm_id, comm_id, member_id, content, write_date
-		FROM (  SELECT * FROM comments
-		        WHERE target_id = #{ targetId }
-		        AND target_type = #{ targetType }
-		      )
+		SELECT m.profile_img, c.target_type, c.target_id, c.parent_comm_id, c.comm_id, c.member_id, c.content, c.write_date
+		FROM member m, (  SELECT * FROM comments
+				          WHERE target_id = #{ targetId }
+				          AND target_type = 2
+				        ) c
+		WHERE m.member_id = c.member_id
 		    START WITH parent_comm_id IS NULL
 		CONNECT BY PRIOR comm_id = parent_comm_id
-		ORDER SIBLINGS BY comm_id;
+		ORDER SIBLINGS BY comm_id
 	</select>
 	
 	<!--

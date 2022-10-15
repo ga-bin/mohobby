@@ -1,47 +1,51 @@
 <!-- 댓글입력창 -->
 <template>
-    <div>
-        <v-row>
-            <v-list two-line>
-               <v-subheader>댓글</v-subheader>
-                <v-col cols="10" v-for="(item, i) in items" :key="i">
-                  <v-list-item-avatar>
-                    <img :src="require(`@/assets/image/user/${item.profileImg}`)">
-                  </v-list-item-avatar>
-                    <v-list-item-content>
-                        <v-list-item>{{item.memberId}}</v-list-item>
-                        <v-list-item-subtitle>{{item.writeDate}}</v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-divider></v-divider>
-                </v-col>
-                <v-col cols="2">
-                    <!-- <v-btn class="ma-2 white--text" color="blue-grey" rounded>등록</v-btn> -->
-                </v-col>
-            </v-list>
-        </v-row>
+  <!-- 프로필 -->
+  <div>
+    <div class="profile" v-for="cmt in comments" :key="cmt.commId" >
+      <v-avatar class="ml-10 my-5 mr-4" color="grey darken-1" size="30">
+          <v-img aspect-ratio="30" :src="cmt.profileImg" />
+      </v-avatar>
+      <div class="user text-overline">{{cmt.memberId}}
+        <small class="date">{{this.$moment(cmt.writeDate).fromNow()}}</small>
+        <div class="btn">
+          <v-btn x-small outlined color="success" class="mr-3">수정</v-btn>
+          <v-btn x-small outlined color="error">삭제</v-btn>
+        </div>
+        <v-card-actions class="mt-10">
+        <div class="content"> {{cmt.content}} </div>
+        </v-card-actions>
+      </div>
     </div>
+  </div>
 </template>
 <script>
 
 export default {
     name:"CmtList",
+    props: {
+    postid: String,
+  },
     data() {
       return{
-        items: [
-                { 
-                  memberId: 'Hi', 
-                  writeDate: '2022/01/01 00:00',
-                  profileImg: 'female.png'
-                },
-               ],
+        comments: [],
       }
     },
-    method:{
-        // this.axios{(then)
-
-        // }
-
-    }
+    created() {
+    this.memId = this.$store.state.id;
+    this.getCmtList();
+  },
+    methods:{
+    //댓글리스트
+    getCmtList() {
+      this.axios('/sns/cmt/' + this.postid, {
+      }).then(res => {
+        this.comments = res.data;
+        console.log("댓글리스트 가져오기 성공!");
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+  }
 }
-
 </script>

@@ -1,67 +1,75 @@
-<!-- 댓글입력창 -->
+ <!-- 댓글입력창 -->
 <template>
     <div>
-        <v-row>
-            <v-col cols="10">
-                <v-text-field
-                label=""
-                placeholder="댓글을 입력해주세요"
-                solo
-                rounded
-                v-model="inputCmt"
-                name="content"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-                <v-btn class="ma-2 white--text" color="blue-grey" rounded 
+      <v-card-actions>
+        <v-col cols="10">
+          <v-text-field
+          class="m1-11"
+          placeholder="댓글을 입력해주세요!"
+          filled
+          rounded
+          solo
+          dense
+          hide-details
+          v-model="inputCmt"
+          name="content"
+          />
+      </v-col>
+      <v-spacer></v-spacer>
+      <div style="margin-right: 80px">
+        <v-btn class="ma-2 white--text" color="#2ac187" rounded 
                 @click="regCmt()"
-                @keyup="enterkey($event)"
+                @keyup="enter()"
                 >등록</v-btn>
-           </v-col>
-        </v-row>
-    </div>
+      </div>
+    </v-card-actions>
+  </div>
 </template>
 <script>
 
 export default {
-    name:"RegCmt",
-    props: {
-    postId: Number,
+  name:"RegCmt",
+  props: {
+    postid: String,
   },
-    data() {
-      return{
-        inputCmt:"",
-        memberId : this.$store.state.id,
-      }
-    },
-    created() {
-      console.log(this.$store.state.id);
-    },
-    methods:{
+  data() {
+    return{
+      inputCmt:"",
+      memberId : this.$store.state.id,
+    }
+  },
+  created() {
+    console.log(this.$store.state.id);
+  },
+  methods:{
     //댓글등록
     regCmt() {
-      
-      if (this.memberId === null || this.memberId === "") {
-        alert('로그인이 필요합니다!');
+      console.log(this.inputCmt);
+      if (this.memberId == "" || this.memberId == undefined) {
+        this.$swal('로그인 후 이용하세요!')
         return;
-      } else {
-          this.axios.post('/sns/cmt', {
-                memberId : this.memberId,
-                targetId : this.postId,
-                content : this.inputCmt,
-            }).then(res => {
-              console.log("댓글등록 성공! "+res);
-            }).catch(err => {
-              console.log(err)
-            });
-          }
-      },
-      enterkey: function (e) {
-        if (window.event.keyCode == 13) {
-          this.search(e);
-        }
       }
+      if (this.inputCmt == "" || this.inputCmt == undefined){
+        this.$swal('내용을 입력하세요!')
+        return;
+      }
+        this.axios.post('/sns/cmt', {
+              memberId : this.memberId,
+              targetId : this.postid,
+              content : this.inputCmt,
+          }).then(res => {
+            console.log("댓글등록 성공! "+res);
+          }).catch(err => {
+            console.log(err)
+          });
+    },
+    enter(){
+      // document.getElementsByName('content').addEventListener('keyup', (e)=>{      });
+        if (window.event.keyCode == 13) {
+          this.regCmt();
+        }
     }
+  },  
 }
 
 </script>
