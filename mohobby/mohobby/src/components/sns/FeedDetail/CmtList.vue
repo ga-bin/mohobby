@@ -20,11 +20,12 @@
   </div>
 </template>
 <script>
-
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 export default {
     name:"CmtList",
     props: {
-    postid: String,
+      drawer: String,
   },
     data() {
       return{

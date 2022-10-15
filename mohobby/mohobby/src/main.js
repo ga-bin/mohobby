@@ -11,6 +11,13 @@ import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
+
+const serverURL = "http://localhost:8088//java/sock";
+let socket = new SockJS(serverURL);
+let stompClient=Stomp.over(socket);
+Vue.prototype.stompClient=stompClient;
 Vue.use(VueSweetalert2);
 
 Vue.use(BootstrapVue);
@@ -19,7 +26,6 @@ Vue.use(BootstrapVueIcons);
 Vue.use(vueMoment);
 Vue.use(ImageViewer);
 Vue.config.productionTip = false;
-
 Vue.prototype.axios = axios;
 Vue.prototype.$ = $;
 axios.defaults.baseURL = "http://localhost:8088/java";
