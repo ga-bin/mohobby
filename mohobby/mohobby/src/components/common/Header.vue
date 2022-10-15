@@ -1,10 +1,6 @@
 <template>
   <v-app-bar app color="white" elevate-on-scroll elevation="4">
-    <v-toolbar-title
-      @click="$router.push('/').catch(() => {})"
-      style="cursor: pointer"
-      >Mohobby</v-toolbar-title
-    >
+    <v-toolbar-title @click="$router.push('/').catch(() => {})" style="cursor: pointer">Mohobby</v-toolbar-title>
     <v-spacer />
     <v-btn text class="ml-2" to="/snsmain">sns</v-btn>
     <v-btn text class="ml-2" to="/class/list/all">강의</v-btn>
@@ -13,13 +9,7 @@
     <v-spacer />
     <v-col lg="4" cols="12">
       <v-form class="mt-5">
-        <v-text-field
-          rounded
-          outlined
-          dense
-          placeholder="Search Here"
-          append-icon="mdi-magnify"
-        />
+        <v-text-field rounded outlined dense placeholder="Search Here" append-icon="mdi-magnify" />
       </v-form>
     </v-col>
     <v-spacer />
@@ -34,17 +24,9 @@
       </template>
       <v-list three-line width="400">
         <template v-for="(item, index) in items">
-          <v-subheader
-            v-if="item.header"
-            :key="item.header"
-            v-text="item.header"
-          ></v-subheader>
+          <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
 
-          <v-divider
-            v-else-if="item.divider"
-            :key="index"
-            :inset="item.inset"
-          ></v-divider>
+          <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
 
           <v-list-item v-else :key="item.title">
             <v-list-item-avatar>
@@ -53,28 +35,22 @@
 
             <v-list-item-content>
               <v-list-item-title v-html="item.title"></v-list-item-title>
-              <v-list-item-subtitle
-                v-html="item.subtitle"
-              ></v-list-item-subtitle>
+              <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </template>
       </v-list>
     </v-menu>
     <v-btn icon>
-      <v-icon v-if="!this.$store.state.id" @click="$router.push('/login')"
-        >mdi-arrow-left-box</v-icon
-      >
+      <v-icon v-if="!this.$store.state.id" @click="$router.push('/login')">mdi-arrow-left-box</v-icon>
     </v-btn>
 
-    <v-icon v-if="!this.$store.state.id" @click="$router.push('/register')"
-      >mdi-account-multiple-plus</v-icon
-    >
+    <v-icon v-if="!this.$store.state.id" @click="$router.push('/register')">mdi-account-multiple-plus</v-icon>
 
     <v-btn v-if="this.$store.state.id" icon>
-      <v-badge offset-x="10" offset-y="10" color="red" :content="messages" :value="messages">
+      <v-badge offset-x="10" offset-y="10" color="red" :content="messages1" :value="messages">
         <v-icon>mdi-chat-processing-outline</v-icon>
-          </v-badge>
+      </v-badge>
     </v-btn>
 
     <v-btn v-if="this.$store.state.id" icon>
@@ -87,13 +63,12 @@
   </v-app-bar>
 </template>
 <script>
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client";
+
 export default {
   components: {},
   data() {
     return {
-      messages:0,
+      messages1: 3,
       items: [
         { header: "Today" },
         {
@@ -131,10 +106,10 @@ export default {
       ],
     };
   },
-  setup() {},
-  created() {this.connect()},
-  mounted() {},
-  unmounted() {},
+  setup() { },
+  created() { this.noticeRev() },
+  mounted() { },
+  unmounted() { },
   methods: {
     logout() {
       this.$store.commit("setIsLoginFalse");
@@ -142,29 +117,25 @@ export default {
       this.$store.commit("setUserData", null);
       this.$router.push("/");
     },
-    connect() {
-      let vm = this;
-      const serverURL = " http://localhost:8088//java/sock";
-      let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
+    noticeRev() {
+      let vm = this
+   
       this.stompClient.connect(
         {},
         (frame) => {
-          this.stompClient.subscribe(
-            "/queue/" + this.$store.state.id,
-            function (res) {
-             
-             ++vm.messages
-              console.log("구독했나요", frame);
-            }
-          );
+          this.stompClient.subscribe("/queue/" + this.$store.state.id, function (res) {
+console.log(res)
+            console.log(vm.messages1)
+            ++vm.messages1
+          })
           console.log("소켓 연결 성공", frame);
         },
         (error) => {
           console.log("소켓 연결 실패", error);
         }
       );
-    },
+    }
+
   },
 };
 </script>

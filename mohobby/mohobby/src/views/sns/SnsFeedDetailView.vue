@@ -185,8 +185,15 @@ export default {
 
     //좋아요
     like() {
+      const noticeContent = {
+          memberId: this.items.memberId,
+        }
+      this.stompClient.send("/app/test234",this.items.memberId, res => {
+          console.log(res)
+        });
+     
       if (this.memId === null || this.memId === "") {
-        alert('로그인이 필요합니다!');
+        alert('로그인이 필요합니다!')
         return;
       } else {
           //DB Jjim insert

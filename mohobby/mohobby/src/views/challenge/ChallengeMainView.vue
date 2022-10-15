@@ -128,12 +128,16 @@
         </v-combobox>
       </v-container>
         <v-btn @click="uploadImage">uploadImage</v-btn>
+        <p>{{menu5}}</p>
   </v-card>
 </template>
 
 <script>
 
 export default {
+  props : {
+    menu5 : String
+  } ,
   data() {
     return {
     //해시태그
