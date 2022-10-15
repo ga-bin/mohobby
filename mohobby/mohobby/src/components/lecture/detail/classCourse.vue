@@ -11,7 +11,7 @@
         :key="i"
       >
         <v-expansion-panel-header>
-          <v-row justify="left" align="center">
+          <v-row justify="start" align="center">
             <v-chip label color="#2b2b2b" dark>{{ i+1 }}</v-chip>
             <div style="padding-left: 10px"><h3>{{ item.header }}</h3></div>
           </v-row>

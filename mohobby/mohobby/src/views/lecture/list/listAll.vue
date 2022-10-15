@@ -151,7 +151,6 @@ export default {
     },
     created() {
         this.initList();
-        
     },
     methods: {
         initList() {
@@ -195,7 +194,6 @@ export default {
                 }
             }
 
-            console.log(result);
 
             if(result==0) {
                 this.itemList = this.collection;
