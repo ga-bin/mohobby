@@ -128,14 +128,14 @@
 		and moim_id=1)) b on (a.room_no=b.moim_id)
 	</select>
 	<!-- 채팅내역 추출 -->
-
 	<select id="getChat"
 		resultType="com.yedam.mohobby.service.chat.ChatVO"
 		parameterType="String">
 		select
-		content,member_id,room_No,to_char(msg_time,'mi')as
-		minute,to_char(msg_time,'HH24') as hour
-		from chat
+		a.content,a.member_id,a.room_No,to_char(a.msg_time,'mi')as
+		minute,to_char(a.msg_time,'HH24') as hour,b.NICKNAME,b.PROFILE_IMG
+		from chat a join
+		member b on(a.member_id=b.member_id)
 		where
 		room_no=#{roomNo}
 		order by chat_id
@@ -150,7 +150,7 @@
 	</select>
 	<!--대화내역 저장 -->
 	<insert id="insertMessage"
-		parameterType="com.yedam.mohobby.service.chat.ChatVO">
+		parameterType="com.yedam.mohobby.service.chat.ChatVO2">
 		insert into chat(
 		CHAT_ID,
 		ROOM_NO,
@@ -163,6 +163,7 @@
 		#{memberId}
 		)
 	</insert>
+	<!-- 채팅방 생성 -->
 	<insert id="createRoom"
 		parameterType="com.yedam.mohobby.service.chat.CreateRoomVO">
 		DECLARE

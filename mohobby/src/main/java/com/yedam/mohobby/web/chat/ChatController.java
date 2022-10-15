@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.mohobby.service.chat.ChatService;
 import com.yedam.mohobby.service.chat.ChatUserVO;
 import com.yedam.mohobby.service.chat.ChatVO;
+import com.yedam.mohobby.service.chat.ChatVO2;
 import com.yedam.mohobby.service.chat.CreateRoomVO;
 import com.yedam.mohobby.service.chat.NonReadChatVO;
 import com.yedam.mohobby.service.chat.RoomVO;
@@ -25,8 +26,12 @@ public class ChatController {
 	ChatService service;
 	AES256Util aes = new AES256Util();
 
-	@GetMapping("/ChatList/{roomNo}")
-	public List<ChatVO> allRoom(@PathVariable String roomNo) {
+	@GetMapping("/getTargetId/{roomNo}")
+	public List<ChatVO> getTargetId(@PathVariable String roomNo){
+		return service.getTargetId(roomNo);
+	}
+	@GetMapping("/getChatList/{roomNo}")
+	public List<ChatVO> getChat(@PathVariable String roomNo) {
 		return service.getChat(roomNo);
 	}
 
@@ -41,8 +46,8 @@ public class ChatController {
 	}
 
 	@PostMapping("/InsertMessage")
-	public int insertMessage(@RequestBody ChatVO chat) throws Exception {
-System.out.println(chat.getContent());
+	public int insertMessage(@RequestBody ChatVO2 chat) throws Exception {
+
 		chat.setContent(aes.encrypt(chat.getContent()));
 		return service.insertMessage(chat);
 	}

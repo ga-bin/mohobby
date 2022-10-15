@@ -1,29 +1,19 @@
 <template>
   <div id="app">
     <v-app>
-      <v-container class="fill-height pa-0">
+      <v-container class="fill-height pa-0" height=100%>
         <v-row class="no-gutters elevation-4">
-          <v-col
-            cols="12"
-            sm="3"
-            class="flex-grow-1 flex-shrink-0"
-            style="border-right: 1px solid #0000001f"
-          >
-            <v-responsive class="overflow-y-auto fill-height" height="500">
+          <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid #0000001f">
+            <v-responsive class="overflow-y-auto fill-height" height=100%>
               <v-list>
                 <v-list-item-group>
                   <template v-for="(item, index) in roomList">
                     <v-list-item v-on:click="openRoom(item.roomNo)">
                       <v-list-item>
                         <v-avatar>
-                          <v-img
-                            :src="
-                              require(`@/assets/image/user/${item.profileImg}`)
-                            "
-                            height="100px"
-                            width="50px"
-                            border-radius:10px
-                          ></v-img>
+                          <v-img :src="
+                            require(`@/assets/image/user/${item.profileImg}`)
+                          " height="100px" width="50px" border-radius:10px></v-img>
                         </v-avatar>
                         <v-list-item-content>
                           <v-list-item-title v-text="item.nickName" />
@@ -33,11 +23,9 @@
                           <v-list-item-subtitle v-text="item.checkIn" />
                         </v-list-item-content>
                         <v-list-item-icon>
-                          <v-icon
-                            :color="
-                              item.active ? 'deep-purple accent-4' : 'grey'
-                            "
-                          >
+                          <v-icon :color="
+                            item.active ? 'deep-purple accent-4' : 'grey'
+                          ">
                             chat_bubble
                           </v-icon>
                         </v-list-item-icon>
@@ -50,26 +38,21 @@
             </v-responsive>
           </v-col>
           <v-col cols="auto" class="flex-grow-1 flex-shrink-0 overflow-y-auto">
-            <v-card flat class="d-flex flex-column fill-height">
+            <v-card flat class="d-flex flex-column fill-height overflow-y-auto " max-height=100% v-scroll.self="onScroll">
               <v-card-title>
                 {{ this.$store.state.id }}
               </v-card-title>
               <v-card-text class="flex-grow-1 overflow-y-auto">
                 <template v-for="(msg, i) in messages">
-                  <div :class="{ 'd-flex flex-row-reverse': msg.memberId }">
+                  <div :class="{ 'd-flex flex-row-reverse': msg.memberId==memberId }">
                     <v-menu offset-y>
                       <template v-slot:activator="{ on }">
                         <v-hover v-slot:default="{ hover }">
-                          <v-chip
-                            :color="msg.memberId ? 'primary' : ''"
-                            dark
-                            style="height: auto; white-space: normal"
-                            class="pa-4 mb-2"
-                            v-on="on"
-                          >
+                          <v-chip :color="msg.memberId ? 'primary' : ''" dark style="height: auto; white-space: normal"
+                            class="pa-4 mb-2" v-on="on">
                             {{ msg.content }}
                             <sub class="ml-2" style="font-size: 0.5rem">{{
-                              msg.hour
+                            msg.hour
                             }}</sub>
                           </v-chip>
                         </v-hover>
@@ -79,16 +62,8 @@
                 </template>
               </v-card-text>
               <v-card-text class="flex-shrink-1">
-                <v-text-field
-                  v-model="message"
-                  label="type_a_message"
-                  type="text"
-                  no-details
-                  outlined
-                  append-outer-icon="send"
-                  @keyup.enter="send()"
-                  hide-details
-                />
+                <v-text-field v-model="message" label="type_a_message" type="text" no-details outlined
+                  append-outer-icon="send" @keyup.enter="send()" hide-details />
               </v-card-text>
             </v-card>
           </v-col>
@@ -106,6 +81,7 @@ export default {
   name: "App",
   data() {
     return {
+      scrollInvoked: 0,
       subTitle: "", //수정중
       memberId: this.$store.state.id, //세션 로그인값
       messages: [], //메세지 내역
@@ -129,9 +105,12 @@ export default {
     this.connect();
     this.getRoom();
     this.sortRoom();
-    this.subscribe();
+
   },
   methods: {
+    onScroll () {
+        this.scrollInvoked++
+      },
     //채팅내역 정렬
     sortRoom() {
       this.roomList.sort(function (a, b) {
@@ -147,18 +126,7 @@ export default {
       var hours = ("0" + today.getHours()).slice(-2);
       var minutes = ("0" + today.getMinutes()).slice(-2);
       var seconds = ("0" + today.getSeconds()).slice(-2);
-      this.createAt =
-        year +
-        "/" +
-        month +
-        "/" +
-        day +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        ":" +
-        seconds;
+      this.createAt = year + "/" +  month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
     },
     //소켓서버에 채팅전송
     send() {
@@ -173,6 +141,7 @@ export default {
         const noticeContent = {
           memberId: this.targetId,
           roomNo: this.roomId,
+          msgTime: new Date(),
           content: this.message,
           msgTime: this.createAt
         }
@@ -188,11 +157,15 @@ export default {
             console.log(error);
             console.log('!!!!!!!!!!!!!!')
           })
-        // //현재 대화방에 내역
-        // this.stompClient.send("/app/send", JSON.stringify(msg), res => {
-        //   console.log(res)
-        // });
-        // this.stompClient.send("/app/sendNotice", JSON.stringify(noticeContent), res => {
+        //현재 대화방에 채팅보내기
+        this.stompClient.send("/app/send", JSON.stringify(msg), res => {
+          console.log(res)
+        });
+        //목록에 대화 보내기
+        this.stompClient.send("/app/sendNotice", JSON.stringify(noticeContent), res => {
+          console.log(res)
+        });
+        // this.stompClient.send("/app/chatNotice", JSON.stringify(msg), res => {
         //   console.log(res)
         // });
       }
@@ -225,11 +198,11 @@ export default {
           }
         })
         .catch(function (err) { console.log(err) })
-        .finally(function (ros){
-          vm.axios.post('/updateCheckTime',{
-          memberId: vm.memberId,
-          roomNo: vm.roomId
-          }).then(function(res){console.log('성공')})
+        .finally(function (ros) {
+          vm.axios.post('/updateCheckTime', {
+            memberId: vm.memberId,
+            roomNo: vm.roomId
+          }).then(function (res) { console.log('성공') })
         })
       //대화상대 추출
       this.axios
@@ -241,8 +214,8 @@ export default {
           console.log(res);
           vm.targetId = res.data;
         })
-        .catch(function (err) {})
-        .finally(function (ros) {});
+        .catch(function (err) { })
+        .finally(function (ros) { });
       //같은방 클릭시 재구독 방지
       vm.stompClient.unsubscribe(vm.subscribeRoot);
 
@@ -288,7 +261,7 @@ export default {
         vm.messages.push(rev);
       });
       //구독취소헤더값 가져오기
-      this.stompClient.send("/app/getSubscribeId", vm.roomId, (res) => {});
+      this.stompClient.send("/app/getSubscribeId", vm.roomId, (res) => { });
       console.log(this.targetId);
     },
     //채팅방 리스트출력
@@ -323,11 +296,9 @@ export default {
             })
         })
     },
-
-    // 소켓연결
     connect() {
       let vm = this;
-      const serverURL = " http://192.168.0.85:8088//java/sock";
+      const serverURL = " http://localhost:8088//java/sock";
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect(
