@@ -18,46 +18,28 @@ public class MessageController {
 
 	@Autowired
 	SimpMessageSendingOperations sendTemplate;
-	@MessageMapping("/send")
-	public void send(ContentVO content) {
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-	sendTemplate.convertAndSend("/topic/room/"+content.getRoomNo(),content);
-	}
+
 	@MessageMapping("/getSubscribeInfo")
 	public void getSubscribeInfo(String RoomNo) {
 		sendTemplate.convertAndSend("/topic/room/"+RoomNo,RoomNo);
-
+	}
 	@MessageMapping("/send")
 	public void send(ContentVO content) {
 		System.out.println(content);
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
 		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
-
 	}
 
 	@MessageMapping("/getSubscribeId")
 	public void rev(String RoomNo) {
 		sendTemplate.convertAndSend("/topic/room/" + RoomNo, RoomNo);
 	}
-
+	@MessageMapping("/test234")
+	public void test(String memberId)
+	{
+		for(int i=0;i<100;i++) {
+		System.out.println(memberId);}
+	sendTemplate.convertAndSend("/queue/"+memberId,memberId);	
+	}
 	@MessageMapping("/sendNotice")
 	public void sendNotice(SendNoticeVO sendNotice) {
 

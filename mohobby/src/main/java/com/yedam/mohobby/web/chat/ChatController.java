@@ -26,10 +26,6 @@ public class ChatController {
 	ChatService service;
 	AES256Util aes = new AES256Util();
 
-	@GetMapping("/getTargetId/{roomNo}")
-	public List<ChatVO> getTargetId(@PathVariable String roomNo){
-		return service.getTargetId(roomNo);
-	}
 	@GetMapping("/getChatList/{roomNo}")
 	public List<ChatVO> getChat(@PathVariable String roomNo) {
 		return service.getChat(roomNo);
@@ -47,7 +43,6 @@ public class ChatController {
 
 	@PostMapping("/InsertMessage")
 	public int insertMessage(@RequestBody ChatVO2 chat) throws Exception {
-
 		chat.setContent(aes.encrypt(chat.getContent()));
 		return service.insertMessage(chat);
 	}
