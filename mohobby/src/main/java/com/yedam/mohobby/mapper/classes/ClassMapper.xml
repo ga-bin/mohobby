@@ -149,6 +149,37 @@
 		order by write_date desc
 	</select>
 	
+	<!-- 강의게시글등록 -->
+	<insert id="addClassBoard" parameterType="com.yedam.mohobby.service.classes.ClassBoardVO">
+		<selectKey keyColumn="boardId,writeDate" keyProperty="boardId,writeDate" resultType="com.yedam.mohobby.service.classes.ClassBoardVO" order="AFTER">
+		select board_id, write_date from class_board where board_id in (select NVL(MAX(board_id), 0) from class_board)
+		</selectKey>
+		insert into class_board(
+								board_id,
+								member_id,
+								class_id,
+								board_type,
+								title,
+								content,
+								rate,
+								reply_check,
+								write_date,
+								secret
+								)
+				values(
+						(select NVL(MAX(board_id), 0) + 1 from class_board),
+						#{memberId, jdbcType=VARCHAR},
+						#{classId, jdbcType=INTEGER},
+						#{boardType, jdbcType=INTEGER},
+						#{title, jdbcType=VARCHAR},
+						#{content, jdbcType=VARCHAR},
+						#{rate, jdbcType=INTEGER},
+						#{replyCheck, jdbcType=INTEGER},
+						sysdate,
+						#{secret, jdbcType=INTEGER}
+						)
+	</insert>
+	
 	<!-- 찜등록 -->
 	<insert id="addJjim" parameterType="com.yedam.mohobby.service.communal.JjimVO">
 		insert into jjim(target_id, target_type, member_id) values(#{targetId}, 1, #{memberId})

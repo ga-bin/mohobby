@@ -27,6 +27,9 @@ public interface ClassMapper {
 	
 	//강의게시글조회
 	public List<ClassBoardVO> getClassBoardList(@Param("classId") int classId, @Param("boardType") int boardType);
+	
+	//강의게시글등록
+	public void addClassBoard(ClassBoardVO board);
 
 	//찜등록
     public void addJjim(JjimVO jjim);
