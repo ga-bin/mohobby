@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
-import com.yedam.mohobby.service.moim.MoimDetailVO;
+import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 
@@ -127,11 +127,11 @@ public class MoimController {
 	 * @param moimId
 	 * @param boardType
 	 * @param boardId
-	 * @return List<MoimDetailVO>
+	 * @return List<MoimCommentVO>
 	 * @title 소모임 게시글내 댓글 전체 조회
 	 */
 	@GetMapping("/detailComment")
-	public List<MoimDetailVO> getCommentList(@RequestParam("moimId")int moimId, @RequestParam("boardType") int boardType, @RequestParam("boardId")int boardId){
+	public List<MoimCommentVO> getCommentList(@RequestParam("moimId")int moimId, @RequestParam("boardType") int boardType, @RequestParam("boardId")int boardId){
 		return service.moimCommentAllList(moimId, boardType, boardId);
 	}
 	
@@ -155,6 +155,11 @@ public class MoimController {
 	@PostMapping("/insertMoimBoardComment")
 	public void insertMoimBoardComment(@RequestBody CommentsVO commVO) {
 		service.moimCommentInsert(commVO);
+	}
+	
+	@GetMapping("/joinMoim")
+	public List<MoimVO> getJoinMoim(@RequestParam("memberId")String memberId) {
+		return service.joinMoim(memberId);
 	}
 }
 

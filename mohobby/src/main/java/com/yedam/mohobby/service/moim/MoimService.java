@@ -37,12 +37,15 @@ public interface MoimService {
 	public List<MoimBoardVO> moimNoticeBoard(int moimId, int boardType);
 	
 	//소모임 게시글내 댓글 조회
-	public List<MoimDetailVO> moimCommentAllList(int moimId, int boardType, int boardId);
+	public List<MoimCommentVO> moimCommentAllList(int moimId, int boardType, int boardId);
 
 	//소모임 게시글 단건조회
 	public List<MoimBoardVO> moimOneBoard(int moimId, int boardType, int boardId);
 	
 	//소모임 게시글 댓글 등록
 	public void moimCommentInsert(CommentsVO commVO);
+	
+	//내가 참여한 소모임 목록
+	public List<MoimVO> joinMoim(String memberId);
 }
 
