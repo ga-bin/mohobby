@@ -2,13 +2,11 @@ package com.yedam.mohobby.web.chat;
 
 import java.util.HashMap;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
-
-import com.yedam.mohobby.service.chat.ChatNoticeVO;
-import com.yedam.mohobby.service.chat.ChatVO;
 import com.yedam.mohobby.service.chat.ContentVO;
 import com.yedam.mohobby.service.chat.SendNoticeVO;
 import com.yedam.mohobby.service.chat.RevNoticeVO;
