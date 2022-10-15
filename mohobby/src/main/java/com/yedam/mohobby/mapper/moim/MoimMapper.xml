@@ -143,6 +143,26 @@ comm_id = #{commId}
 select a.moim_id, a.moim_img, a.moim_name
 from moim a, moim_member b 
 where a.moim_id = b.moim_id
+and member_role = 0
 and member_id = #{memberId}
 </select>
+
+<!-- 내가 운영중인 소모임 리스트 조회 -->
+<select id="operateMoim" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select a.moim_id, a.moim_img, a.moim_name
+from moim a, moim_member b 
+where a.moim_id = b.moim_id
+and memeber_role = 3
+and member_id = #{memberId}
+</select>
+
+<!-- 내가 찬여중인 소모임 없음 -->
+<select id="noneMoim" resultType="Integer">
+	select count(moim_name)
+	from moim a, moim_member b 
+	where a.moim_id = b.moim_id
+	and member_role = 0
+	and member_id = #{memberId}
+</select>
+
 </mapper>

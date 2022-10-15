@@ -170,11 +170,26 @@ public class MoimController {
 	        System.out.println("댓글 수정 실패 : " + e.getMessage());
 	        return "fail";
 	    }
+	}
 
+	/**
+	 * @param memberId
+	 * @return List<MoimVO>
+	 * @title 참여중인 소모임 리스트
+	 */
 	@GetMapping("/joinMoim")
 	public List<MoimVO> getJoinMoim(@RequestParam("memberId")String memberId) {
 		return service.joinMoim(memberId);
-
+	}
+	
+	/**
+	 * @param memberId
+	 * @return List<MoimVO>
+	 * @title 운영중인 소모임 리스트
+	 */
+	@GetMapping("/operateMoim")
+	public List<MoimVO> getOperateMoim(@RequestParam("memberId")String memberId) {
+		return service.operateMoim(memberId);
 	}
 }
 
