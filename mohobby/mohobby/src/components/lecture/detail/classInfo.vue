@@ -11,13 +11,13 @@
 export default {
     name: 'classInfo',
     data() {
-        return{
+        return {
             path: '',
         }
     },
     props: {
         classId: {
-            type: Number,
+            type: String,
             default: 1,
         },
     },
@@ -32,23 +32,24 @@ export default {
                 params: {
                     classId: this.classId
                 }
-            }).then( res => {
+            }).then(res => {
                 document.querySelector("#classInfoInput").innerHTML = res.data;
-            }).catch( err => {
+            }).catch(err => {
                 console.log(err);
-            }).finally( () => {
-                
+            }).finally(() => {
+
             })
 
 
 
-        }, 
+        },
         readPath() {
-            
+
         },
     },
 }
 </script>
 
 <style scoped>
+
 </style>

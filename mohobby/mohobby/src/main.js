@@ -7,16 +7,20 @@ import $ from "jquery";
 import ImageViewer from "vue2-viewer";
 import store from "./store";
 import vueMoment from "vue-moment";
+import moment from "moment";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+
+moment.locale("ko");
 
 Vue.use(VueSweetalert2);
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
-Vue.use(vueMoment);
+Vue.use(vueMoment, { moment });
+
 Vue.use(ImageViewer);
 Vue.config.productionTip = false;
 
@@ -24,11 +28,12 @@ Vue.prototype.axios = axios;
 Vue.prototype.$ = $;
 axios.defaults.baseURL = "http://localhost:8088/java";
 window.Kakao.init("157b38874395f658a48c02cc8473066b"); // 카카오 로그인 앱 키
+moment.locale('ko');
 
 
 Vue.filter("toFixed", (val, num) => {
   let result;
-  if(val==0 || val==0.0 || val==null || isNaN(val)) {
+  if(isNaN(val)) {
     return 0;
   } else if (val % 1 == 0) {
     result = val;
