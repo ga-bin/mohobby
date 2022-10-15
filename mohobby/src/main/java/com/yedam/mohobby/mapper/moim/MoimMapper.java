@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
-import com.yedam.mohobby.service.moim.MoimDetailVO;
+import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimVO;
 
 public interface MoimMapper {
@@ -38,11 +38,17 @@ public interface MoimMapper {
 	public List<MoimBoardVO> moimNoticeBaord(HashMap<String, Integer> map);
 	
 	//소모임 게시판내 댓글 조회
-	public List<MoimDetailVO> moimCommentAllList(HashMap<String, Integer> map);
+	public List<MoimCommentVO> moimCommentAllList(HashMap<String, Integer> map);
 	
 	//소모임 게시글 단건 조회
 	public List<MoimBoardVO> moimOneBoard(HashMap<String, Integer> map);
 	
 	//소모임 게시글 댓글 등록
 	public void moimCommentInsert(CommentsVO commVO);
+	
+	//소모임 댓글 수정
+	public int moimCommentUpdate(CommentsVO commVO);
+  
+	//내가 참여중인 소모임
+	public List<MoimVO> joinMoim(String memberId);
 }

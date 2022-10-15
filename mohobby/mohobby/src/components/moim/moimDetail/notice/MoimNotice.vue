@@ -11,7 +11,7 @@
       max-width="800"
       outlined
       v-for=" (item,idx) in items"
-      :key="item.moimId"
+      :key="item.boardId"
       @click="goPost(idx)"
     >
       <v-list-item three-line>
@@ -27,7 +27,6 @@
           >
         </v-list-item-content>
       </v-list-item>
-
       <v-card-actions>
         <v-spacer></v-spacer>
         <div class="text-overline mb-1 mr-2">댓글 {{item.cnt}} </div>
@@ -44,8 +43,7 @@ export default {
       //moimRight : 비회원 0 회원 1
       moim: 1,
       moimRight: 1,
-      // Id : this.$route.params.moimId,
-      // boardType : this.$route.params.boardType,
+      Id : this.$route.params.moimId,
     };
   },
   methods: {

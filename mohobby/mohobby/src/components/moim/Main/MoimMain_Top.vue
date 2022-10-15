@@ -147,7 +147,7 @@
           '자연/귀농'
         ],
         search : '',
-        moimRight : '2',
+        moimRight : '1',
         noneuser : false,
       }
     },

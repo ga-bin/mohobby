@@ -100,7 +100,7 @@ public class ClassController {
 	}
 	
 	//강의후기리스트
-	@GetMapping("/class/reviews")
+	@GetMapping("/class/board")
 	public @ResponseBody List<ClassBoardVO> getClassReviewList(@RequestParam int classId, @RequestParam int boardType) {
 		return classService.getClassBoardList(classId, boardType);
 	}

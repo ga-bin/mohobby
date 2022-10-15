@@ -8,11 +8,19 @@
     <div class="user text-overline">{{item.commentWriter}}
       <small class="date">{{item.commentDate | yyyyMMdd}}</small>
       <div class="btn">
-        <v-btn x-small outlined color="success" class="mr-3">수정</v-btn>
-        <v-btn x-small outlined color="error">삭제</v-btn>
+        <v-btn x-small outlined color="success" class="mr-3" @click="updateComment()">수정</v-btn>
+        <v-btn x-small outlined color="error" @click="deleteComment()">삭제</v-btn>
       </div>
       <v-card-actions class="mt-10">
-      <div class="content"> {{item.content}} </div>
+        <div id="comment" class="content"> {{item.content}} </div>
+        <div id="text-field">
+          <v-text-field>
+          </v-text-field>
+          <v-spacer />
+          <div id="commBtn">
+          <v-btn @click="updateComplete()">수정 완료</v-btn>
+          </div>
+        </div>
       </v-card-actions>
     </div>
 
@@ -53,6 +61,7 @@ export default {
     return {
       boardId : this.$route.query.boardId,
       moimId : this.$route.query.moimId,
+      boardType : this.$route.query.boardType,
       items : [],
       memberId : 'user1',
       targetId : '',
@@ -64,7 +73,7 @@ export default {
       this.axios.get("/detailComment", {
         params : {
           moimId : this.moimId,
-          boardType : 1,
+          boardType : this.boardType,
           boardId : this.boardId
         }
       })
@@ -94,6 +103,19 @@ export default {
           console.log(error)
         })
       },
+      updateComment() {
+        document.getElementById('comment').style.display = "none";
+        document.getElementById('text-field').style.display = "block";
+        document.getElementById('commBtn').style.display = "block";
+      },
+      updateComplete(){
+        document.getElementById('text-field').style.display = "none";
+        document.getElementById('commBtn').style.display = "none";
+
+        this.axios.put("/",{
+          
+        })
+      }
   },
   created() {
     this.getBoard()
@@ -144,6 +166,14 @@ export default {
  .date {
   position: absolute;
   right: 0;
+ }
+
+ #text-field{
+  display: none;
+ }
+
+ #commBtn{
+  display: none;
  }
 
  .btn{

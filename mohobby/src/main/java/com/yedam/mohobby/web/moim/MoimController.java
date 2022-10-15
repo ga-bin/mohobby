@@ -6,13 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
-import com.yedam.mohobby.service.moim.MoimDetailVO;
+import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 
@@ -127,11 +128,11 @@ public class MoimController {
 	 * @param moimId
 	 * @param boardType
 	 * @param boardId
-	 * @return List<MoimDetailVO>
+	 * @return List<MoimCommentVO>
 	 * @title 소모임 게시글내 댓글 전체 조회
 	 */
 	@GetMapping("/detailComment")
-	public List<MoimDetailVO> getCommentList(@RequestParam("moimId")int moimId, @RequestParam("boardType") int boardType, @RequestParam("boardId")int boardId){
+	public List<MoimCommentVO> getCommentList(@RequestParam("moimId")int moimId, @RequestParam("boardType") int boardType, @RequestParam("boardId")int boardId){
 		return service.moimCommentAllList(moimId, boardType, boardId);
 	}
 	
@@ -155,6 +156,25 @@ public class MoimController {
 	@PostMapping("/insertMoimBoardComment")
 	public void insertMoimBoardComment(@RequestBody CommentsVO commVO) {
 		service.moimCommentInsert(commVO);
+	}
+	
+
+	
+	@PutMapping("/")
+	public String updateMoimBoardComment(@RequestBody CommentsVO commVO) {
+		try {
+	        service.moimCommentUpdate(commVO);
+	        System.out.println("댓글 수정 완료");
+	        return "success";
+	    } catch (Exception e) {
+	        System.out.println("댓글 수정 실패 : " + e.getMessage());
+	        return "fail";
+	    }
+
+	@GetMapping("/joinMoim")
+	public List<MoimVO> getJoinMoim(@RequestParam("memberId")String memberId) {
+		return service.joinMoim(memberId);
+
 	}
 }
 
