@@ -9,13 +9,12 @@ import org.springframework.stereotype.Service;
 import com.yedam.mohobby.mapper.moim.MoimMapper;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
-import com.yedam.mohobby.service.moim.MoimDetailVO;
+import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 
 @Service
 public class MoimServiceImpl implements MoimService{
-
 
 	@Autowired
 	MoimMapper mapper;
@@ -85,7 +84,7 @@ public class MoimServiceImpl implements MoimService{
 
 	//소모임 게시글내 댓글 단건조회
 	@Override
-	public List<MoimDetailVO> moimCommentAllList(int moimId, int boardType, int boardId) {
+	public List<MoimCommentVO> moimCommentAllList(int moimId, int boardType, int boardId) {
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put("moimId", moimId);
 		map.put("boardType", boardType);
@@ -111,6 +110,12 @@ public class MoimServiceImpl implements MoimService{
 	public void moimCommentInsert(CommentsVO commVO) {
 		mapper.moimCommentInsert(commVO);
 	}
+	
+	@Override
+	public List<MoimVO> joinMoim(String memberId) {
+		return mapper.joinMoim(memberId);
+	}
+
 
 }
 
