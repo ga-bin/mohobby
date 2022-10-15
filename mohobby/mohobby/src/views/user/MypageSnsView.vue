@@ -8,9 +8,14 @@
         <br />
         <br />
         <v-row>
-          <v-col v-for="n in 9" :key="n" class="d-flex child-flex" cols="4">
+            <!-- <v-slide-group class="pa-2">
+        <v-slide-item
+          v-for="post in postList"
+          :key="post.postId"
+        > -->
+          <v-col v-for="post in postList" :key="post.postId" class="d-flex child-flex" cols="4">
             <v-img
-              :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
+              :src="require(`@/assets/image/sns/${post.thumbnail}`)"
               aspect-ratio="1"
               class="grey lighten-2"
             >
@@ -24,6 +29,10 @@
               </template>
             </v-img>
           </v-col>
+          <!-- </v-slide-item>
+    </v-slide-group> -->
+
+
         </v-row>
       </div>
       <br />
@@ -33,10 +42,9 @@
         <br />
         <br />
         <v-row>
-          <v-col v-for="n in 9" :key="n" class="d-flex child-flex" cols="4">
+          <v-col v-for="jjimPost in jjimList" :key="jjimPost.postId" class="d-flex child-flex" cols="4">
             <v-img
-              :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
-              :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
+              :src="require(`@/assets/image/sns/${jjimPost.thumbnail}`)"
               aspect-ratio="1"
               class="grey lighten-2"
             >
@@ -64,6 +72,8 @@ export default {
   data() {
     return {
       memberId: "",
+      postList : [],
+      jjimList : [],
     };
   },
   setup() {},
@@ -82,7 +92,8 @@ export default {
         method: "get",
       })
         .then(function (response) {
-          console.log(response);
+          vm.postList = response.data;
+          console.log(vm.postList);
         })
         .catch(function (error) {
           console.log(error);
@@ -96,7 +107,8 @@ export default {
         method: "get",
       })
         .then(function (response) {
-          console.log(response);
+          vm.jjimList = response.data;
+          console.log(vm.jjimList);
         })
         .catch(function (error) {
           console.log(error);

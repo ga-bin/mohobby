@@ -64,8 +64,15 @@
           },
       ]
       }
-    }
+    },
+    methods : {
+      joimMoim() {
+        this.axios.get("/")
+      }
+    },
+    created : {
 
+    }
   }
 
 </script>
