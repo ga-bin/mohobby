@@ -117,5 +117,13 @@ public class MoimServiceImpl implements MoimService{
 	}
 
 
+	//소모임 댓글 수정
+	@Override
+	public int moimCommentUpdate(CommentsVO commVO) {
+		return mapper.moimCommentUpdate(commVO);
+	}
+	
+	
+
 }
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -157,9 +158,23 @@ public class MoimController {
 		service.moimCommentInsert(commVO);
 	}
 	
+
+	
+	@PutMapping("/")
+	public String updateMoimBoardComment(@RequestBody CommentsVO commVO) {
+		try {
+	        service.moimCommentUpdate(commVO);
+	        System.out.println("댓글 수정 완료");
+	        return "success";
+	    } catch (Exception e) {
+	        System.out.println("댓글 수정 실패 : " + e.getMessage());
+	        return "fail";
+	    }
+
 	@GetMapping("/joinMoim")
 	public List<MoimVO> getJoinMoim(@RequestParam("memberId")String memberId) {
 		return service.joinMoim(memberId);
+
 	}
 }
 
