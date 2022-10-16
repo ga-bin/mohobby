@@ -175,7 +175,7 @@
 						#{content, jdbcType=VARCHAR},
 						#{rate, jdbcType=INTEGER},
 						#{replyCheck, jdbcType=INTEGER},
-						sysdate,
+						current_date,
 						#{secret, jdbcType=INTEGER}
 						)
 	</insert>

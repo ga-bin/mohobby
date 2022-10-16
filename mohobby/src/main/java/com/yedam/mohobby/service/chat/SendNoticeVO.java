@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class SnsNoticeVO {
-    private String targetId;
-    private String myId;
-	private String profileImge;
-	private String nickname;
-	private int contentType; //0 : 댓글 1:좋아요
-}
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
+//public class SnsNoticeVO {
+//    private String targetId;
+//    private String myId;
+//	private String profileImge;
+//	private String nickname;
+//	private int contentType; //0 : 댓글 1:좋아요
+//}

@@ -167,6 +167,11 @@ const routes = [
             name: "KakaoMapTest",
             component: () => import("./../components/lecture/test/KakaoMapTest"),
           },
+          {
+            path: "VideoTest",
+            name: "VideoTest",
+            component: () => import("./../components/lecture/test/VideoPlayer"),
+          },
         ],
       },
       {

@@ -91,7 +91,7 @@
                 <div v-if="rv.secret == 1 && rv.memberId != $store.state.id" style="font-size: 1.2em; padding-top: 14px; color: #8f8f8f;"><v-icon>mdi-lock</v-icon> {{ ' 비밀글입니다.'}}</div>
                 <div v-if="rv.secret == 0 || rv.memberId == $store.state.id" style="font-size: 1.3em; padding-top: 14px">{{ rv.title }}</div>
               </v-col>
-               <!-- 수정 / 삭제 -->
+              <!-- 수정 / 삭제 -->
               <div style="padding: 12px 17px 0px 0px;">
                 <v-row>
                   <div v-if="rv.replyCheck == 0 && rv.memberId == $store.state.id" class="modBtn" @click="clickUpdate(i)">수정</div>
@@ -246,11 +246,7 @@ export default {
         confirmButtonText: '네, 삭제할게요!'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.$swal(
-            '삭제 완료!',
-            '작성한 QnA를 삭제하였습니다.',
-            'success'
-          )
+          this.deleteContent(idx);
         }
       })
     },
@@ -303,7 +299,7 @@ export default {
       }
     },
     updateContent(idx) {
-      if(this.newContent == this.qnaList[idx].title) {
+      if(this.newContent == this.qnaList[idx].title && this.newLock.value == this.qnaList[idx].secret) {
         this.$swal('변경된 내용이 없습니다!', '', 'info');
       } else {
         this.axios.put('/class/board', {
@@ -320,7 +316,23 @@ export default {
       }
     },
     deleteContent(idx) {
-
+      console.log(this.qnaList[idx].boardId);
+      this.axios.delete('/class/board', {
+        params: {
+          boardId: this.qnaList[idx].boardId,
+        },
+      }).then( res => {
+        if(res.status == 200) {
+          this.$swal(
+            '삭제 완료!',
+            '작성한 QnA를 삭제하였습니다.',
+            'success'
+          );
+          this.sheet = false;
+          this.qnaList.splice(idx, 1);
+        }
+      })
+      
     }
   },
   watch: {
