@@ -141,7 +141,6 @@ export default {
         const noticeContent = {
           memberId: this.targetId,
           roomNo: this.roomId,
-          msgTime: new Date(),
           content: this.message,
           msgTime: this.createAt
         }
@@ -155,7 +154,6 @@ export default {
           })
           .catch(function (error) {
             console.log(error);
-            console.log('!!!!!!!!!!!!!!')
           })
         //현재 대화방에 채팅보내기
         this.stompClient.send("/app/send", JSON.stringify(msg), res => {

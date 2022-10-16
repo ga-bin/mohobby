@@ -197,15 +197,15 @@ public class MoimController {
 	 * @return
 	 * @title 소모임 게시글 댓글 삭제
 	 */
-	@DeleteMapping("/boardDeleteComm")
-	public String deleteMoimBaordComment(@RequestParam ("commId") int commId) {
-		try {
-			service.moimCommentDelete(commId);
-			return "success";
-		} catch (Exception e) {
-			System.out.println("댓글 삭제 실패 : " + e.getMessage());
-			return "fail";
-		}
-	}
+//	@DeleteMapping("/boardDeleteComm")
+//	public String deleteMoimBaordComment(@RequestParam ("commId") int commId) {
+//		try {
+//			service.moimCommentDelete(commId);
+//			return "success";
+//		} catch (Exception e) {
+//			System.out.println("댓글 삭제 실패 : " + e.getMessage());
+//			return "fail";
+//		}
+//	}
 }
 
