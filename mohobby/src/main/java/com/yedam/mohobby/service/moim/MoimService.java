@@ -54,9 +54,7 @@ public interface MoimService {
 	//내가 운영중인 소모임 목록
 	public List<MoimVO> operateMoim(String memberId);
 	
-	
-	//이히동 내일 불참석..................
-	//나는 큰일났다............
-	//어쪼지....................................................
+	//소모임 게시글 댓글 삭제
+	public int moimCommentDelete(int commId);
 }
 
