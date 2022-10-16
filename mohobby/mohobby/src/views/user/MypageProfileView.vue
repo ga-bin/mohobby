@@ -38,12 +38,13 @@
                 <span class="profile-stat-count">{{ infoes.postCnt }}</span>
                 posts
               </li>
-              <li>
-                <span class="profile-stat-count">{{ infoes.followerCnt }}</span>
+              
+              <li @click="getFollower()">
+                <span class="profile-stat-count" >{{ infoes.followerCnt }}</span>
                 followers
               </li>
-              <li>
-                <span class="profile-stat-count">{{
+              <li @click="getFollowing()">
+                <span class="profile-stat-count" >{{
                   infoes.followingCnt
                 }}</span>
                 following
@@ -84,9 +85,11 @@ export default {
   data() {
     return {
       infoes: [],
-      memberId: "",
+      memberId: this.$store.state.id,
       inputId: "",
       inputPassword: "",
+      follower : [],
+      following : [],
     };
   },
   setup() {},
@@ -95,10 +98,6 @@ export default {
     // 유저 프로필 업로드
     loadUserProfile() {
       const vm = this;
-      this.memberId = this.$store.state.id;
-      if (!this.memberId) {
-        this.memberId = "user11";
-      }
       this.axios("/sns/user/profile/" + vm.memberId)
         .then((res) => {
           this.infoes = res.data;
@@ -108,9 +107,9 @@ export default {
           console.log(err);
         });
     },
+    // 멤버확인
     checkMember() {
       const vm = this;
-      this.memberId = this.$store.state.id;
       this.$swal
         .fire({
           title: "아이디, 비밀번호 확인",
@@ -171,6 +170,36 @@ export default {
           }
         });
     },
+    // 팔로잉 목록 불러오기
+    getFollowing() {
+      const vm = this;
+      this.axios({
+              url: "http://localhost:8088/java/mypagefollowing/" + this.memberId,
+              method: "get",
+            })
+              .then(function (response) {
+                console.log(response.data);
+                vm.following = response.data;
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+    },
+    // 팔로워 목록 불러오기
+    getFollower() {
+       const vm = this;
+      this.axios({
+              url: "http://localhost:8088/java/mypagefollower/" + this.memberId,
+              method: "get",
+            })
+              .then(function (response) {
+                console.log(response.data);
+                vm.follower = response.data;
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+    }
   },
   mounted() {
     this.loadUserProfile();

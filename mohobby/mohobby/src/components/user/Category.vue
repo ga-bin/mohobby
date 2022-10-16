@@ -11,9 +11,10 @@
                               <div class="displayflex">
                                 <v-chip-group
                                   active-class="primary--text"
-                                  v-model="selectedCatg"
                                 >
-                                  <v-chip :value="catg.keywordId">
+                                  <v-chip :value="catg.keywordId"
+                                  @click="sendSelectCatg(catg.keywordName)"
+                                  >
                                     {{ catg.keywordName }}
                                   </v-chip>
                                 </v-chip-group>
@@ -63,9 +64,9 @@ export default {
           console.log(error);
         });
     },
-
-    sendSelectCatg() {
-        this.$emit("selectedCatg", this.selectedCatg);
+    sendSelectCatg(data) {
+        console.log("자식 component" + data);
+        this.$emit("sendSelectedCatg", data);
     }
     }
 }
