@@ -244,20 +244,20 @@ public class SnsController {
             return "fail";
         }
     }
-   //댓글삭제
-    @DeleteMapping("/cmt/{commId}")
-    public String deleteCmt(@PathVariable("cmtId") int commId){
-        System.out.println("commId: "+commId);
+   //댓글삭제 - 테스트완료
+    @DeleteMapping("/cmt/{commId}/{targetId}")
+    public String deleteCmt(@PathVariable("commId") int commId, @PathVariable("targetId") int targetId){
+        System.out.println(commId+", "+targetId);
         try {
-            service.deleteFeed(commId);
+            service.deleteCmt(commId, targetId);
             System.out.println("댓글삭제 완료");
             return "success";
         } catch (Exception e) {
-            System.out.println("대댓글삭제 실패");
+            System.out.println("댓글삭제 실패");
             return "fail";
         }
     }
-   //댓글조회
+   //댓글조회 - 테스트완료
     @GetMapping("/cmt/{postId}")
     public List<CommentsVO> getCmtLists(@PathVariable int postId) {
         return service.getCmtLists(postId);
@@ -271,6 +271,7 @@ public class SnsController {
     public String insertReCmt(@RequestBody CommentsVO commentsVO) {
         try {
             service.insertReCmt(commentsVO);
+            System.out.println(commentsVO);
             return "success";
         } catch (Exception e) {
             System.out.println("댓글입력 실패: " + e.getMessage());
@@ -289,19 +290,6 @@ public class SnsController {
             return "fail";
         }
     }
-    //대댓삭제
-    @DeleteMapping("/recmt/{commId}")
-    public String deleteReCmt(@PathVariable int commId) {
-         try {
-             service.deleteReCmt(commId);
-             System.out.println("대댓글삭제 완료");
-             return "success";
-        } catch (Exception e) {
-            System.out.println("대댓글삭제 실패" + e.getMessage());
-            return "fail";
-        }
-    }
-    
     /*
      * 북마크
      */

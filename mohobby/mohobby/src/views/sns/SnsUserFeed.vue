@@ -78,20 +78,20 @@
     },
     setup() { },
     created() {
-          this.loadUserProfile();
-          console.log("유저 프로필로 이동!");
-          console.log(this.$route.query.memId); //라우터에서 넘겨받은 memId
-          this.postId == this.$route.query.memId; //변수 대입
-          if(this$store.state.id != ""){
-            this.sessionId == this.$store.state.id; //세션에 저장된 memId 변수대입
-            console.log(this.$store.state.id +","+ this.sessionId); 
-          }
+        console.log("유저 프로필로 이동!");
+        console.log(this.$route.query.memId); //라우터에서 넘겨받은 memId
+        this.postId == this.$route.query.memId; //변수 대입
+          this.loadUserProfile(this.postId);
+        //   if(this$store.state.id != ""){
+        //     this.sessionId == this.$store.state.id; //세션에 저장된 memId 변수대입
+        //     console.log(this.$store.state.id +","+ this.sessionId); 
+        //   }
 
       },
       methods: {
         //프로필 업로드
-        loadUserProfile() {
-            this.axios('/sns/user/profile/' + this.postid)
+        loadUserProfile(postId) {
+            this.axios('/sns/user/profile/' + postId)
             .then(res => {
               this.infoes = res.data;
             }).catch(err => {

@@ -92,7 +92,7 @@ public interface SnsService {
     //댓글수정
     public int updateCmt(CommentsVO commentsVO);
     //댓글삭제
-    public int deleteCmt(int commId);
+    public int deleteCmt(int commId, int targetId);
     //댓글조회
     public List<CommentsVO> getCmtLists(int postId);
     
@@ -103,9 +103,6 @@ public interface SnsService {
     public int insertReCmt(CommentsVO commentsVO);
     //대댓수정
     public int updateReCmt(CommentsVO commentsVO);
-    //대댓삭제
-    public int deleteReCmt(int commId);
-    
     /*
      * 북마크
      */
