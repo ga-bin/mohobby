@@ -25,14 +25,11 @@
       <v-list three-line width="400">
         <template v-for="(item, index) in items">
           <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
-
           <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
-
           <v-list-item v-else :key="item.title">
             <v-list-item-avatar>
               <v-img :src="item.avatar"></v-img>
             </v-list-item-avatar>
-
             <v-list-item-content>
               <v-list-item-title v-html="item.title"></v-list-item-title>
               <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
@@ -70,39 +67,14 @@ export default {
     return {
       messages1: 3,
       items: [
-        { header: "Today" },
+        { header: this.$moment().format('YYYY-MM-DD') },
         {
           avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
           title: "Brunch this weekend?",
           subtitle: `<span class="text--primary">Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
         },
         { divider: true, inset: true },
-        {
-          avatar: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: `<span class="text--primary">to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.`,
-        },
-        { divider: true, inset: true },
-        {
-          avatar: "https://cdn.vuetifyjs.com/images/lists/3.jpg",
-          title: "Oui oui",
-          subtitle:
-            '<span class="text--primary">Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?',
-        },
-        { divider: true, inset: true },
-        {
-          avatar: "https://cdn.vuetifyjs.com/images/lists/4.jpg",
-          title: "Birthday gift",
-          subtitle:
-            '<span class="text--primary">Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?',
-        },
-        { divider: true, inset: true },
-        {
-          avatar: "https://cdn.vuetifyjs.com/images/lists/5.jpg",
-          title: "Recipe to try",
-          subtitle:
-            '<span class="text--primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
-        },
+
       ],
     };
   },
@@ -117,16 +89,33 @@ export default {
       this.$store.commit("setUserData", null);
       this.$router.push("/");
     },
+    //알림 처리
     noticeRev() {
       let vm = this
-   
       this.stompClient.connect(
         {},
         (frame) => {
-          this.stompClient.subscribe("/queue/" + this.$store.state.id, function (res) {
-console.log(res)
-            console.log(vm.messages1)
-            ++vm.messages1
+          this.stompClient.subscribe("/queue/" + this.$store.state.id+"/snsLike", function (res) {
+            let revNotice = JSON.parse(res.body)
+            if (revNotice.memberId != this.$store.state.id) {
+              vm.items.push({
+                avatar: require(`@/assets/image/user/${revNotice.profileImge}`),
+                title: revNotice.nickname,
+                subtitle: "좋아요를 누른거 수정좀해야겠다"
+              })
+              vm.items.push({ divider: true, inset: true })
+            }
+          })
+          this.stompClient.subscribe("/queue/" + this.$store.state.id+"/snsComent", function (res) {
+            let revNotice = JSON.parse(res.body)
+            if (revNotice.memberId != this.$store.state.id) {
+              vm.items.push({
+                avatar: require(`@/assets/image/user/${revNotice.profileImge}`),
+                title: revNotice.nickname,
+                subtitle: "댓글남겼습니다."
+              })
+              vm.items.push({ divider: true, inset: true })
+            }
           })
           console.log("소켓 연결 성공", frame);
         },
@@ -135,7 +124,6 @@ console.log(res)
         }
       );
     }
-
   },
 };
 </script>

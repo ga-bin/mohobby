@@ -110,20 +110,30 @@ public class MoimServiceImpl implements MoimService{
 	public void moimCommentInsert(CommentsVO commVO) {
 		mapper.moimCommentInsert(commVO);
 	}
-	
+
+	//내가 참여중인 소모임 리스트
 	@Override
 	public List<MoimVO> joinMoim(String memberId) {
 		return mapper.joinMoim(memberId);
 	}
-
-
+	
 	//소모임 댓글 수정
 	@Override
 	public int moimCommentUpdate(CommentsVO commVO) {
 		return mapper.moimCommentUpdate(commVO);
 	}
-	
-	
 
+	//내가 운영중인 소모임 리스트
+	@Override
+	public List<MoimVO> operateMoim(String memberId) {
+		return mapper.operateMoim(memberId);
+	}
+	
+	//소모임 게시글 댓글 삭제
+	@Override
+	public int moimCommentDelete(int commId) {
+		System.out.println("serviceimpl" + commId);
+		return mapper.moimCommentDelete(commId);
+	}
 }
 

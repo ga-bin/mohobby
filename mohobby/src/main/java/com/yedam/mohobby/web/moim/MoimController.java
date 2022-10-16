@@ -170,12 +170,46 @@ public class MoimController {
 	        System.out.println("댓글 수정 실패 : " + e.getMessage());
 	        return "fail";
 	    }
+<<<<<<< HEAD
 	    }
+=======
+	}
+>>>>>>> branch 'master' of https://github.com/ga-bin/mohobby.git
 
+	/**
+	 * @param memberId
+	 * @return List<MoimVO>
+	 * @title 참여중인 소모임 리스트
+	 */
 	@GetMapping("/joinMoim")
 	public List<MoimVO> getJoinMoim(@RequestParam("memberId")String memberId) {
 		return service.joinMoim(memberId);
-
+	}
+	
+	/**
+	 * @param memberId
+	 * @return List<MoimVO>
+	 * @title 운영중인 소모임 리스트
+	 */
+	@GetMapping("/operateMoim")
+	public List<MoimVO> getOperateMoim(@RequestParam("memberId")String memberId) {
+		return service.operateMoim(memberId);
+	}
+	
+	/**
+	 * @param commId
+	 * @return
+	 * @title 소모임 게시글 댓글 삭제
+	 */
+	@DeleteMapping("/boardDeleteComm")
+	public String deleteMoimBaordComment(@RequestParam ("commId") int commId) {
+		try {
+			service.moimCommentDelete(commId);
+			return "success";
+		} catch (Exception e) {
+			System.out.println("댓글 삭제 실패 : " + e.getMessage());
+			return "fail";
+		}
 	}
 }
 

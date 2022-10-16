@@ -22,6 +22,15 @@ public interface ClassService {
     
     //강의게시글조회
     public List<ClassBoardVO> getClassBoardList(int classId, int boardType);
+    
+    //강의게시글등록
+    public ClassBoardVO addClassBoard(ClassBoardVO board);
+    
+    //강의게시글수정
+    public void updateClassBoard(ClassBoardVO board);
+    
+    //강의게시글삭제
+    public void deleteClassBoard(int boardId);
 
 	//찜등록
     public void addJjim(JjimVO jjim);
@@ -37,4 +46,5 @@ public interface ClassService {
     
     //qr코드생성
     public String createCodeImg(String link);
+
 }

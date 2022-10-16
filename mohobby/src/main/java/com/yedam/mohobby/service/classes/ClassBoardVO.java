@@ -15,4 +15,5 @@ public class ClassBoardVO {
     private String writeDate; //작성시간
     private String profileImg;  //프로필이미지
     private String nickname;  //닉네임
+    private int secret; //0:공개, 1:비공개
 }

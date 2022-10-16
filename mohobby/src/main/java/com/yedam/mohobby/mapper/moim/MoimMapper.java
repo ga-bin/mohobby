@@ -51,4 +51,10 @@ public interface MoimMapper {
   
 	//내가 참여중인 소모임
 	public List<MoimVO> joinMoim(String memberId);
+
+	//내가 운영중인 소모임
+	public List<MoimVO> operateMoim(String memberId);
+	
+	//소모임 게시글 댓글 삭제
+	public int moimCommentDelete(@Param("commId")int commId);
 }

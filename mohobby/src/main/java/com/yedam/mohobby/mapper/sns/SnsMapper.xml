@@ -128,7 +128,7 @@
    <!-- 프로필 조회
 		유저아이디, 유저별명, 전체 게시글 수, 팔로워수, 팔로잉수 --> 
 	<select id="getProfile" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsProfileVO">
-      SELECT m.member_id, m.nickname, m.profile_img, m.intro, POST_CNT, FOLLOWER_CNT, FOLLOWING_CNT
+      SELECT m.member_id,m.role, m.nickname, m.profile_img, m.intro, POST_CNT, FOLLOWER_CNT, FOLLOWING_CNT
       FROM member m,
            (  SELECT member_id, COUNT(post_id) POST_CNT
       		  FROM sns_post
@@ -152,7 +152,7 @@
    </select>
    <!-- 피드상세조회 -->
    <select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
-		SELECT mem.profile_img, k.*
+		SELECT mem.profile_img, mem.role, k.*
 		FROM member mem,
 		    (SELECT nvl2(m.target_id, 1, 0) like_status, c.*
 		    FROM sns_post c,
@@ -239,7 +239,7 @@
 					      #{ followId },
 					      #{ followingId },
 					      #{ followerId }
-   						   )
+   						)
    </insert>
    <!-- 언팔로우 -->
    <delete id="unfollow" parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
@@ -370,22 +370,31 @@
 		 <selectKey keyProperty="commId" resultType="Integer" order="BEFORE">
 	        SELECT NVL(MAX(comm_id), 0)+1 FROM comments
 	     </selectKey>
-		 	INSERT INTO comments (
-		 							comm_id,
-		 							member_id,
-		 							target_id,
-		 							target_type,
-		 							content,
-		 							write_date
-		    					  )
-		    			 VALUES (
-		    						 #{ commId }
-		    						,#{ memberId }
-		    						,#{ targetId }
-		    						,2
-		    						,#{ content }
-		    						,SYSDATE
-		    					)
+	     	DECLARE
+	            v_commId comments.comm_id%TYPE := #{ commId };
+	            v_member_id comments.member_id%TYPE := #{ memberId };
+	            v_target_id comments.target_id%TYPE := #{ targetId };
+	            v_content comments.content%TYPE := #{ content };
+			BEGIN
+	            INSERT INTO comments (
+	                        comm_id,
+	                        member_id,
+	                        target_id,
+	                        target_type,
+	                        content,
+	                        write_date
+	                        )
+	                VALUES (
+	                         v_commId
+	                        ,v_member_id
+	                        ,v_target_id
+	                        ,2
+	                        ,v_content
+	                        ,SYSDATE
+	                        );
+	            UPDATE sns_post SET cmts = cmts+1
+	            WHERE post_id = v_target_id;
+			END;	 	
 	 </insert>
 	<!-- 댓글수정 -->
 	<update id="updateCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
@@ -395,12 +404,19 @@
 	</update>
 	<!-- 댓글삭제 -->
 	<delete id="deleteCmt" parameterType="int">
-		DELETE FROM comments
-		WHERE comm_id = #{ commId } 
+        DECLARE
+            v_commId comments.comm_id%TYPE := #{ commId };
+            v_target_id comments.target_id%TYPE := #{ targetId };
+		BEGIN
+            DELETE FROM comments
+            WHERE comm_id = v_commId;
+            UPDATE sns_post SET cmts = cmts-1
+            WHERE post_id = v_target_id;
+        END;
 	</delete>
 	<!-- 댓글조회 -->
 	<select id="getCmtLists" resultType="com.yedam.mohobby.service.communal.CommentsVO">
-		SELECT m.profile_img, c.target_type, c.target_id, c.parent_comm_id, c.comm_id, c.member_id, c.content, c.write_date
+		SELECT m.profile_img, c.target_type, c.target_id, c.parent_comm_id, c.comm_id, c.member_id, c.content, c.write_date, c.parent_member_id
 		FROM member m, (  SELECT * FROM comments
 				          WHERE target_id = #{ targetId }
 				          AND target_type = 2
@@ -408,7 +424,7 @@
 		WHERE m.member_id = c.member_id
 		    START WITH parent_comm_id IS NULL
 		CONNECT BY PRIOR comm_id = parent_comm_id
-		ORDER SIBLINGS BY comm_id DESC
+		ORDER SIBLINGS BY comm_id
 	</select>
 	
 	<!--
@@ -418,36 +434,42 @@
 	 -->
 	<!-- 대댓입력 -->
 	<insert id="insertReCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
+		<selectKey keyProperty="commId" resultType="Integer" order="BEFORE">
+	        SELECT NVL(MAX(comm_id), 0)+1 FROM comments
+	    </selectKey>
+		    DECLARE
+	            v_commId comments.comm_id%TYPE := #{ commId };
+	            v_member_id comments.member_id%TYPE := #{ memberId };
+	            v_parent_comm_id comments.parent_comm_id%TYPE :=#{ parentCommId };
+	            v_target_id comments.target_id%TYPE := #{ targetId };
+	            v_content comments.content%TYPE := #{ content };
+	            v_parent_member_id comments.parent_member_id%TYPE := #{ parentMemberId };
+			BEGIN
 			 	INSERT INTO comments (
-		 							comm_id,
-		 							member_id,
-		 							parent_comm_id,
-		 							target_id,
-		 							target_type,
-		 							content,
-		 							write_date
-	    					  	)
-		    			 VALUES (
-		    						 comm_seq.nextval
-		    						,#{ memberId }
-		    						,#{ parentCommId }
-		    						,#{ targetId }
-		    						,#{ targetType }
-		    						,#{ content }
-		    						,SYSDATE
-		    					)
+							comm_id,
+							member_id,
+							parent_comm_id,
+							target_id,
+							target_type,
+							content,
+							write_date,
+							parent_member_id
+	 					  	)
+				 VALUES 	(
+							 v_commId
+							,v_member_id
+							,v_parent_comm_id
+							,v_target_id
+							,2
+							,v_content
+							,SYSDATE
+							,v_parent_member_id
+							);
+	    		UPDATE sns_post SET cmts = cmts+1
+	            WHERE post_id = v_target_id;
+			END;
 	</insert>
-	<!-- 대댓수정 -->
-	<update id="updateReCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
-		UPDATE comments SET content = # { content },
-							write_date = SYSDATE
-		WHERE comm_id = #{ commId }
-	</update>
-	<!-- 대댓삭제 -->
-	<delete id="deleteReCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
-		DELETE FROM comments
-		WHERE comm_id = #{ commId }
-	</delete>
+
 	<!--
 	
 			북마크컬렉션

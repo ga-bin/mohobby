@@ -1,7 +1,5 @@
 package com.yedam.mohobby.service.chat;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendNoticeVO {
-private List<String>memberId;
-private String content;
-private int roomNo;
-private String msgTime;
+public class SnsNoticeVO {
+    private String targetId;
+    private String myId;
+	private String profileImge;
+	private String nickname;
+	private int contentType; //0 : 댓글 1:좋아요
 }

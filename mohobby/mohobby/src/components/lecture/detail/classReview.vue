@@ -61,8 +61,8 @@
                   <span style="font-size: 1em;">{{ replaceDate(rv.writeDate) }}</span>
                 </div>
                 <span class="reviewNickname"
-                  @click="$router.push({ path: '/snsUserFeed?memId='+rv.memberId}).catch(()=>{$router.go(0)})">{{
-                  rv.nickname }}</span>
+                  @click="$router.push({ path: '/snsUserFeed?memId='+rv.memberId}).catch(()=>{$router.go(0)})">
+                  {{ rv.nickname }}</span>
                 <div style="font-size: 1.2em; padding-top: 20px">{{ rv.content }}</div>
               </v-col>
               <v-rating empty-icon="mdi-star-outline" full-icon="mdi-star" half-icon="mdi-star-half-full"
