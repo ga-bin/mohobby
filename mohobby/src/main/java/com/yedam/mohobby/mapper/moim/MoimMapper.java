@@ -51,4 +51,7 @@ public interface MoimMapper {
   
 	//내가 참여중인 소모임
 	public List<MoimVO> joinMoim(String memberId);
+
+	//내가 운영중인 소모임
+	public List<MoimVO> operateMoim(String memberId);
 }

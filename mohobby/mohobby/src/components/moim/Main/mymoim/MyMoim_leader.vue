@@ -1,26 +1,8 @@
 <template>
   <div class="container">
+    <v-row>
+    <v-col cols="12" sm="6" md="6">
     <div>
-    <h3>내가 참여중인 소모임</h3>
-      <v-sheet max-width="500">
-    <v-slide-group class="pa-2">
-      <v-slide-item
-        v-for="item in items"
-        :key="item.src"
-        >
-        <div class="box">
-        <v-list-item-avatar
-        tile
-        size="155">
-        <img :src="item.src" />
-        </v-list-item-avatar>
-      </div>
-      </v-slide-item>
-    </v-slide-group>
-  </v-sheet>
-  </div>
-  <!--두번째 슬라이드 -->
-  <div>
     <h3>내가 운영중인 소모임</h3>
       <v-sheet max-width="500">
     <v-slide-group class="pa-2">
@@ -39,47 +21,74 @@
     </v-slide-group>
   </v-sheet>
   </div>
-    </div>
+  </v-col>
+  <!--두번째 슬라이드 -->
+    <v-col cols="12" sm="6" md="6">
+  <div>
+    <h3>내가 참여중인 소모임</h3>
+      <v-sheet max-width="500">
+    <v-slide-group class="pa-2">
+      <v-slide-item
+        v-for="item in chamyeo"
+        :key="item.src"
+        >
+        <div class="box">
+        <v-list-item-avatar
+        tile
+        size="155">
+        <img :src="item.src" />
+        </v-list-item-avatar>
+      </div>
+      </v-slide-item>
+    </v-slide-group>
+  </v-sheet>
+  </div>
+</v-col>
+</v-row>
+</div>
 </template>
 <script>
   export default {
     data() {
       return {
-        items : [{
-          src : "https://cdn.class101.net/images/84d01f2e-ec28-4e30-8ed1-fc6e55954e42/960xauto.webp"   
-          },
-          {
-          src : "https://pbs.twimg.com/media/D9y_RPpU4AI6xzC.png"
-          },
-          {
-          src : "https://i.pinimg.com/originals/69/9d/14/699d14b23afc5c0bf3b714767b291684.jpg"
-          },
-          {
-          src : "https://image.idus.com/image/files/d6fabae15e924a6bbcd7595a62715a30_720.jpg"
-          },
-          {
-          src : "https://images.mypetlife.co.kr/content/uploads/2019/12/09151959/%EC%8B%AC%EC%8B%AC%ED%95%9C_%EA%B3%A0%EC%96%91%EC%9D%B42-390x220.png"
-          },
-          {
-          src : "http://picturebook-illust.com/upload_board/new_Gallery/ThumbNail/g/thumb_20202612533.jpg"
-          },
-          {
-          src : "http://thumbnail.10x10.co.kr/webimage/image/mask/424/B004248124.jpg?cmd=thumb&w=400&h=400&fit=true&ws=false"
-          },
-          {
-          src : "https://img.lovepik.com/illus_pic/18/08/24/43b3565904ea8ce55f734c44da92eefd.jpg_wh860.jpg"
-          },
-          {
-          src : "https://d2v80xjmx68n4w.cloudfront.net/members/portfolios/djsUH1641848055.jpg"
-          },
-          {
-          src : "https://pbs.twimg.com/media/E2nPtJzVkAYVRvr.png:small"
-          },
-          {
-          src : "https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/811/4ad01fcc01e90c9b519c28dcaf03c5fb_res.jpeg"
-          },
-      ]
+        memberId : 'user1',
+        items : [],
+        chamyeo : []
       }
+    },
+    methods : {
+      operateMoim() {
+        this.axios.get("/operateMoim", {
+          params : {
+            memberId : this.memberId
+          }
+        })
+        .then ((resp) => {
+          console.log(resp)
+          this.items = resp.data;
+        })
+        .catch ((err) => {
+          console.log(err)
+        })
+      },
+      joimMoim() {
+        this.axios.get("/joinMoim", {
+          params : {
+            memberId : this.memberId
+          }
+        })
+        .then ((resp) => {
+          console.log(resp)
+          this.chamyeo = resp.data;
+        })
+        .catch ((err) => {
+          console.log(err)
+        })
+      }
+    },
+    created() {
+      this.joimMoim(),
+      this.operateMoim()
     }
 
   }
