@@ -1,24 +1,46 @@
 <template>
   <!-- 프로필 -->
   <div>
-  <div class="profile" v-for="item in items" :key="item.commId" >
+  <div class="profile" v-for="(item,idx) in items" :key="item.commId" >
+    <div>{{item.commId}}</div>
     <v-avatar class="ml-10 my-5 mr-4" color="grey darken-1" size="30">
-        <!-- <v-img aspect-ratio="30" :src="item.src" /> -->
+      <!-- <v-img aspect-ratio="30" :src="item.src" /> -->
     </v-avatar>
     <div class="user text-overline">{{item.commentWriter}}
       <small class="date">{{item.commentDate | yyyyMMdd}}</small>
       <div class="btn">
-        <v-btn x-small outlined color="success" class="mr-3" @click="updateComment()">수정</v-btn>
-        <v-btn x-small outlined color="error" @click="deleteComment()">삭제</v-btn>
+        <v-btn x-small outlined color="success" class="mr-3" @click="updateComment($event)">수정</v-btn>
+        <v-dialog v-model="dialog" max-width="500">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn x-small outlined color="error" @click="dialog=true">삭제</v-btn>
+          </template>
+          <v-card>
+            <v-card-text class="pa-5">
+              댓글을 삭제하시겠습니까?
+            </v-card-text>
+            
+            <v-divider></v-divider>
+            
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click="dialog = false">
+                취소
+              </v-btn>
+                  <v-btn color="error" @click="[dialog = false, deleteComment(idx)]">
+                    삭제
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
       </div>
       <v-card-actions class="mt-10">
         <div id="comment" class="content"> {{item.content}} </div>
         <div id="text-field">
-          <v-text-field>
+          <v-text-field v-model="contents" @keydown.enter="updateComplete(idx)">
           </v-text-field>
           <v-spacer />
           <div id="commBtn">
-          <v-btn @click="updateComplete()">수정 완료</v-btn>
+          <v-btn @click="updateComplete(idx,$event)">수정 완료</v-btn>
           </div>
         </div>
       </v-card-actions>
@@ -59,6 +81,7 @@
 export default {
   data() {
     return {
+      dialog: false,
       boardId : this.$route.query.boardId,
       moimId : this.$route.query.moimId,
       boardType : this.$route.query.boardType,
@@ -66,6 +89,7 @@ export default {
       memberId : 'user1',
       targetId : '',
       content : '',
+      contents: '',
     }
   },
   methods: {
@@ -103,19 +127,53 @@ export default {
           console.log(error)
         })
       },
-      updateComment() {
+      updateComment(e) {
+        // console.log(e.target.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[2])
+        // e.target.parentNode.parentNode.parentNode.childNodes[3].childNodes[0].style.display = "none";
+        // e.target.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].style.display = "block";
+        // e.target.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[2].style.display = "block";
         document.getElementById('comment').style.display = "none";
         document.getElementById('text-field').style.display = "block";
         document.getElementById('commBtn').style.display = "block";
       },
-      updateComplete(){
+      updateComplete(idx, e){  
+        let vm = this
+        // console.log(e.target.parentNode.parentNode.parentNode)
+        // e.target.parentNode.parentNode.parentNode.style.display = "none";
+        // e.target.parentNode.parentNode.parentNode.childNodes[2].style.display = "none";
+        
         document.getElementById('text-field').style.display = "none";
         document.getElementById('commBtn').style.display = "none";
 
-        this.axios.put("/",{
-          
+        this.axios.put("/updateComment",{
+          content : this.contents,
+          commId : this.items[idx].commId,
+      })
+        .then((resp)=> {
+          console.log("댓글 수정 결과" + resp);
+          this.$swal("댓글 수정 완료");
+          vm.getBoard()
+          document.getElementById('comment').style.display = "block";
         })
-      }
+        .catch((err) => {
+          console.log(this.items)
+          console.log(err)
+        })
+     },
+     deleteComment(idx){
+      let vm = this;
+      this.axios.delete("/boardDeleteComm",{
+        params:{
+          commId : this.items[idx].commId,
+        }
+      }).then((resp) => {
+        console.log("댓글 삭제 결과" + resp);
+        this.$swal("댓글 삭제 완료") 
+        vm.getBoard()
+      }).catch((err)=> {
+        console.log(err)
+      })
+     }
   },
   created() {
     this.getBoard()
