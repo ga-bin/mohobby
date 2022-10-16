@@ -70,7 +70,18 @@ public class ClassServiceImpl implements ClassService {
         classMapper.addClassBoard(board);
         return board;
     }
+    
+    // 강의게시글수정
+    @Override
+    public void updateClassBoard(ClassBoardVO board) {
+        classMapper.updateClassBoard(board);
+    }
 
+    // 강의게시글삭제
+    public void deleteClassBoard(int boardId) {
+        classMapper.deleteClassBoard(boardId);
+    }
+    
     // 찜등록
     @Override
     public void addJjim(JjimVO jjim) {

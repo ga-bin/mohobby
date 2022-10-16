@@ -30,9 +30,9 @@
                     class="mt-6"
                     text
                     color="success"
-                    @click="addContent"
+                    @click="clickSubmit"
                   >
-                    완료
+                    {{ newLock.btn }}
                   </v-btn>
                   <v-btn
                     class="mt-6"
@@ -94,8 +94,8 @@
                <!-- 수정 / 삭제 -->
               <div style="padding: 12px 17px 0px 0px;">
                 <v-row>
-                  <div v-if="rv.replyCheck == 0 && rv.memberId == $store.state.id" class="modBtn" @click="updateContent(i)">수정</div>
-                  <div v-if="rv.memberId == $store.state.id" class="delBtn">삭제</div>
+                  <div v-if="rv.replyCheck == 0 && rv.memberId == $store.state.id" class="modBtn" @click="clickUpdate(i)">수정</div>
+                  <div v-if="rv.memberId == $store.state.id" class="delBtn" @click="clickDelete(i)">삭제</div>
                   <div v-if="rv.replyCheck == 0" style="color: gray;">미답변</div>
                   <div v-if="rv.replyCheck == 1" style="color: #2ac187;">답변완료</div>
                 </v-row>
@@ -149,9 +149,13 @@ export default {
   data() {
     return {
       newLock: {
-        value: 0,
+        value: 0,   //0: 공개, 1: 비공개
         icon: 'mdi-lock-open-variant',
         text: '공개',
+        type: 0,    //0: 등록, 1: 수정
+        boardId: '',
+        btn: '등록',
+        idx: '',
       },
       newContent: '',
       sheet: '',
@@ -211,32 +215,44 @@ export default {
       }
       this.sheet = !this.sheet;
     },
-    addContent() {
-      console.log(event.currenttarget);
-      if (this.newContent == '') {
-        this.$swal('내용을 입력하세요!', '', 'info');
-      } else {
-        // this.axios('/class/board', {
-        //   method: "POST",
-        //   headers: {
-        //       "Content-Type": "application/json; charset=utf-8",
-        //   },
-        //   data: JSON.stringify({
-        //       memberId: this.$store.state.id,
-        //       classId: this.classId,
-        //       boardType: 1,
-        //       title: this.newContent,
-        //       secret: this.newLock.value,
-        //       nickname: this.$store.state.user.nickName,
-        //   })
-        // }).then( res => {
-        //   if(res.status == 200) {
-        //     this.sheet = false;
-        //     this.qnaList.unshift(res.data);
-        //   }
-        // }).catch( err => console.log(err) )
-        console.log(event.currenttarget);
+    clickSubmit() {
+      if(this.newLock.type == 0) {
+        this.addContent();
+      } else if (this.newLock.type == 1) {
+        this.updateContent(this.newLock.idx);
       }
+
+    },
+    clickUpdate(idx) {
+      this.newLock.type = 1;
+      this.newLock.boardId = this.qnaList[idx].boardId;
+      this.newLock.btn = '수정',
+      this.newLock.value = this.qnaList[idx].secret;
+      this.newLock.icon = this.qnaList[idx].secret == 0 ? 'mdi-lock-open-variant' : 'mdi-lock';
+      this.newLock.text = this.qnaList[idx].secret == 0 ? '공개' : '비공개';
+      this.newLock.idx = idx;
+      this.newContent = this.qnaList[idx].title;
+      this.sheet = true;
+    },
+    clickDelete(idx) {
+      this.$swal({
+        title: '정말 삭제할까요?',
+        text: "삭제를 원하지 않으면 취소버튼을 눌러주세요!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ac187',
+        cancelButtonColor: '#d33',
+        cancelButtonText: '취소',
+        confirmButtonText: '네, 삭제할게요!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$swal(
+            '삭제 완료!',
+            '작성한 QnA를 삭제하였습니다.',
+            'success'
+          )
+        }
+      })
     },
     initContent() {
       this.newContent = '';
@@ -245,6 +261,10 @@ export default {
       this.newLock.text = '공개';
       this.newLock.icon = 'mdi-lock-open-variant';
       this.newLock.value = 0;
+      this.newLock.type = 0;
+      this.newLock.boardId = '';
+      this.newLock.btn = '등록';
+      this.newLock.idx = '';
     },
     changeLock() {
       if(this.newLock.text == '공개') {
@@ -257,12 +277,50 @@ export default {
         this.newLock.value = 0;
       }
     },
+    addContent() {
+      if (this.newContent == '') {
+        this.$swal('내용을 입력하세요!', '', 'info');
+      } else {
+        this.axios('/class/board', {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json; charset=utf-8",
+          },
+          data: JSON.stringify({
+              memberId: this.$store.state.id,
+              classId: this.classId,
+              boardType: 1,
+              title: this.newContent,
+              secret: this.newLock.value,
+              nickname: this.$store.state.user.nickName,
+          })
+        }).then( res => {
+          if(res.status == 200) {
+            this.sheet = false;
+            this.qnaList.unshift(res.data);
+          }
+        }).catch( err => console.log(err) )
+      }
+    },
     updateContent(idx) {
-      this.newLock.value = this.qnaList[idx].secret;
-      this.newLock.icon = this.qnaList[idx].secret == 0 ? 'mdi-lock-open-variant' : 'mdi-lock';
-      this.newLock.text = this.qnaList[idx].secret == 0 ? '공개' : '비공개';
-      this.newContent = this.qnaList[idx].title;
-      this.sheet = !this.sheet;
+      if(this.newContent == this.qnaList[idx].title) {
+        this.$swal('변경된 내용이 없습니다!', '', 'info');
+      } else {
+        this.axios.put('/class/board', {
+            boardId: this.newLock.boardId,
+            title: this.newContent,
+            secret: this.newLock.value,
+        }).then( res => {
+          if(res.status == 200) {
+            this.qnaList[idx].title = this.newContent;
+            this.qnaList[idx].secret = this.newLock.value;
+            this.sheet = false;
+          }
+        }).catch( err => console.log(err) )
+      }
+    },
+    deleteContent(idx) {
+
     }
   },
   watch: {

@@ -30,6 +30,12 @@ public interface ClassMapper {
 	
 	//강의게시글등록
 	public void addClassBoard(ClassBoardVO board);
+	
+	//강의게시글수정
+	public void updateClassBoard(ClassBoardVO board);
+	
+	//강의게시글삭제
+	public void deleteClassBoard(int boardId);
 
 	//찜등록
     public void addJjim(JjimVO jjim);
