@@ -2,47 +2,29 @@
   <!-- 프로필 -->
   <div>
   <div class="profile" v-for="(item,idx) in items" :key="item.commId" >
-    <div>{{item.commId}}</div>
     <v-avatar class="ml-10 my-5 mr-4" color="grey darken-1" size="30">
       <!-- <v-img aspect-ratio="30" :src="item.src" /> -->
     </v-avatar>
-    <div class="user text-overline">{{item.commentWriter}}
+    <div class="user text-overline" style="width:600px">{{item.commentWriter}}
       <small class="date">{{item.commentDate | yyyyMMdd}}</small>
-      <div class="btn">
-        <v-btn x-small outlined color="success" class="mr-3" @click="updateComment($event)">수정</v-btn>
-        <v-dialog v-model="dialog" max-width="500">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn x-small outlined color="error" @click="dialog=true">삭제</v-btn>
-          </template>
-          <v-card>
-            <v-card-text class="pa-5">
-              댓글을 삭제하시겠습니까?
-            </v-card-text>
-            
-            <v-divider></v-divider>
-            
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn @click="dialog = false">
-                취소
-              </v-btn>
-                  <v-btn color="error" @click="[dialog = false, deleteComment(idx)]">
-                    삭제
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+      <div class="btn" v-if="item.commId != editForm">
+        <v-btn x-small outlined color="success" class="mr-3" @click="updateComment(item.commId)">수정</v-btn>
+        <v-btn x-small outlined color="error" @click="alert(idx)">삭제</v-btn>
       </div>
-      <v-card-actions class="mt-10">
-        <div id="comment" class="content"> {{item.content}} </div>
-        <div id="text-field">
-          <v-text-field v-model="contents" @keydown.enter="updateComplete(idx)">
+      <div class="btn" v-if="item.commId == editForm">
+        <v-btn x-small outlined color="success" class="mr-3" @click="updateComplete(idx)">수정완료</v-btn>
+        <v-btn x-small outlined color="error" @click="editForm = -1">취소</v-btn>
+      </div>
+
+      <v-card-actions class="mt-2">
+        <v-col>
+        <div id="comment" class="content" v-if="item.commId != editForm"> {{item.content}} </div>
+        <div id="text-field" v-if="item.commId == editForm">
+          <v-text-field hide-details v-model="contents" @keydown.enter="updateComplete(idx)">
           </v-text-field>
           <v-spacer />
-          <div id="commBtn">
-          <v-btn @click="updateComplete(idx,$event)">수정 완료</v-btn>
-          </div>
         </div>
+        </v-col>
       </v-card-actions>
     </div>
 
@@ -90,9 +72,41 @@ export default {
       targetId : '',
       content : '',
       contents: '',
+      editForm : "",
     }
   },
   methods: {
+    alert(idx) {
+      this.$swal({
+        title: '정말 삭제할까요?',
+        text: "삭제를 원하지 않으면 취소버튼을 눌러주세요!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ac187',
+        cancelButtonColor: '#d33',
+        cancelButtonText: '취소',
+        confirmButtonText: '네, 삭제할게요!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let vm = this;
+      this.axios.delete("/boardDeleteComm",{
+        params:{
+          commId : this.items[idx].commId,
+        }
+      }).then((resp) => {
+        console.log("댓글 삭제 결과" + resp);
+        this.$swal(
+            '삭제 완료!',
+            '작성한 댓글을 삭제하였습니다.',
+            'success'
+          )
+        vm.getBoard()
+      }).catch((err)=> {
+        console.log(err)
+      })
+        }
+      })
+    },
     getBoard() {
       this.axios.get("/detailComment", {
         params : {
@@ -127,23 +141,16 @@ export default {
           console.log(error)
         })
       },
-      updateComment(e) {
-        // console.log(e.target.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[2])
-        // e.target.parentNode.parentNode.parentNode.childNodes[3].childNodes[0].style.display = "none";
-        // e.target.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].style.display = "block";
-        // e.target.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[2].style.display = "block";
-        document.getElementById('comment').style.display = "none";
-        document.getElementById('text-field').style.display = "block";
-        document.getElementById('commBtn').style.display = "block";
+      updateComment(commId, contents) {
+        if(commId == this.editForm){ //수정창닫기
+          this.editForm = -1;
+        } else{ //댓글창열기
+          this.editForm = commId;
+          this.contents = contents
+        }
       },
-      updateComplete(idx, e){  
+      updateComplete(idx){  
         let vm = this
-        // console.log(e.target.parentNode.parentNode.parentNode)
-        // e.target.parentNode.parentNode.parentNode.style.display = "none";
-        // e.target.parentNode.parentNode.parentNode.childNodes[2].style.display = "none";
-        
-        document.getElementById('text-field').style.display = "none";
-        document.getElementById('commBtn').style.display = "none";
 
         this.axios.put("/updateComment",{
           content : this.contents,
@@ -152,8 +159,8 @@ export default {
         .then((resp)=> {
           console.log("댓글 수정 결과" + resp);
           this.$swal("댓글 수정 완료");
+          this.editForm = -1;
           vm.getBoard()
-          document.getElementById('comment').style.display = "block";
         })
         .catch((err) => {
           console.log(this.items)
@@ -224,14 +231,6 @@ export default {
  .date {
   position: absolute;
   right: 0;
- }
-
- #text-field{
-  display: none;
- }
-
- #commBtn{
-  display: none;
  }
 
  .btn{

@@ -12,6 +12,9 @@ import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
+import com.yedam.mohobby.service.moim.MoimVoteListVO;
+import com.yedam.mohobby.service.moim.MoimVoteVO;
+import com.yedam.mohobby.service.user.MemberVO;
 
 @Service
 public class MoimServiceImpl implements MoimService{
@@ -135,5 +138,23 @@ public class MoimServiceImpl implements MoimService{
 		System.out.println("serviceimpl" + commId);
 		return mapper.moimCommentDelete(commId);
 	}
+
+	//소모임 권한별 메인화면
+	@Override
+	public int moimMainTop(String memberId) {
+		return mapper.moimMainTop(memberId);
+	}
+
+	 //소모임 등록 권한 업데이트
+	 @Override
+	 public int moimUserUpdate(MemberVO vo) {
+	    return mapper.moimUserUpdate(vo);
+	 }
+	 
+	 //소모임 투표 디테일 리스트
+	 @Override
+	 public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId) {
+		 return mapper.moimVoteAllList(moimId, voteId);
+	 }
 }
 

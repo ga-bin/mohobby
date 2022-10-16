@@ -357,13 +357,14 @@
         outlined
         rounded
         text
+        @click="$router.go(-1);"
       >
         취소하기
       </v-btn>
       <v-btn
         outlined
         rounded
-        text
+        color="success"
         @click="insertMoim()"
       >
         생성하기
@@ -508,7 +509,7 @@
     methods: {
       // 소모임 등록
       insertMoim() {
-        console.log(this.moimInfo)
+        let vm = this;
         if (
         this.moimName === "" ||
         // this.moimImg === "" ||
@@ -524,6 +525,7 @@
           url: "http://localhost:8088/java/moimInsert",
           method: "post",
           data: {
+            memberId : this.$store.state.id,
             moimName: this.moimName,
             moimImg: "모임1.jpg",
             moimInfo: this.moimInfo,
@@ -535,7 +537,9 @@
         .then(resp => {
           console.log(resp.data);
           alert("소모임생성완료")
+          vm.updaterole()
           this.$router.push({name : 'moimMain' })
+          
         })
         .catch(error => {
           console.log(error)
@@ -576,6 +580,17 @@
         alert("데이터이동실패")
       })
       },
+      updaterole() {
+        this.axios.put("/updaterole", {
+          memberId : this.$store.state.id,
+        })
+        .then((resp)=> {
+          console.log(resp)
+        })
+        .catch((err)=> {
+          console.log(err)
+        })
+      }
 
     },
     watch: {
