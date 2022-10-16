@@ -63,6 +63,13 @@ public class ClassServiceImpl implements ClassService {
     public List<ClassBoardVO> getClassBoardList(int classId, int boardType) {
     	return classMapper.getClassBoardList(classId, boardType);
     }
+    
+    // 강의게시글등록
+    @Override
+    public ClassBoardVO addClassBoard(ClassBoardVO board) {
+        classMapper.addClassBoard(board);
+        return board;
+    }
 
     // 찜등록
     @Override
@@ -157,5 +164,7 @@ public class ClassServiceImpl implements ClassService {
         }
         return "data:image/png;base64," + base64;
     }
+
+   
 
 }
