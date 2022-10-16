@@ -116,8 +116,7 @@ public class MoimServiceImpl implements MoimService{
 	public List<MoimVO> joinMoim(String memberId) {
 		return mapper.joinMoim(memberId);
 	}
-
-
+	
 	//소모임 댓글 수정
 	@Override
 	public int moimCommentUpdate(CommentsVO commVO) {
@@ -128,6 +127,13 @@ public class MoimServiceImpl implements MoimService{
 	@Override
 	public List<MoimVO> operateMoim(String memberId) {
 		return mapper.operateMoim(memberId);
+	}
+	
+	//소모임 게시글 댓글 삭제
+	@Override
+	public int moimCommentDelete(int commId) {
+		System.out.println("serviceimpl" + commId);
+		return mapper.moimCommentDelete(commId);
 	}
 }
 
