@@ -265,8 +265,8 @@ public class SnsServiceImpl implements SnsService{
    }
    //댓글삭제
    @Override
-   public int deleteCmt(int commId) {
-      return mapper.deleteCmt(commId);
+   public int deleteCmt(int commId, int targetId) {
+      return mapper.deleteCmt(commId, targetId);
    }
    //댓글조회
    @Override
@@ -287,12 +287,7 @@ public class SnsServiceImpl implements SnsService{
    public int updateReCmt(CommentsVO commentsVO) {
       return mapper.updateReCmt(commentsVO);
    }
-   //대댓삭제
-   @Override
-   public int deleteReCmt(int commId) {
-      return mapper.deleteReCmt(commId);
-   }
-   
+
     /*
      * 북마크
      */

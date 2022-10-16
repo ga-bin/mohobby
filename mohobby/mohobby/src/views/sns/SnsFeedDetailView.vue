@@ -24,7 +24,7 @@
         <!-- 썸네일 -->
         <v-row>
           <v-col cols="12" id="image_box">
-              <v-carousel ref="myCarousel" hide-delimiters :touchless="ture">
+              <v-carousel ref="myCarousel" hide-delimiters :touchless="true">
                 <v-carousel-item
                 v-for="(img,i) in imgs" :key="i"
                   :aspect-ratio="4 / 3"
@@ -75,7 +75,6 @@
         <v-col cols="12">
 
           <CmtReg :postid = "postId"></CmtReg>
-          <CmtList :postid = "postId"></CmtList>
       </v-col>
       </v-card>
     </v-container>
@@ -84,11 +83,10 @@
 <script>
 import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
 import CmtReg from "@/components/sns/FeedDetail/CmtReg.vue";
-import CmtList from "@/components/sns/FeedDetail/CmtList.vue";
 
 export default {
   name: "FeedDetail",
-  components: { SnsSidebar, CmtReg, CmtList },
+  components: { SnsSidebar, CmtReg },
   data() {
     return{
       //carousel
