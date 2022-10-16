@@ -1,9 +1,14 @@
 <template>
   <v-navigation-drawer app>
-    <v-card class="text-xs-center">
-      <v-btn class="ma-2" outlined color="indigo">메인 페이지로 가기</v-btn>
-    </v-card>
-    <v-spacer></v-spacer>
+    <div class="text-center mt-4 pa-10">
+      <v-avatar class="mb-4" color="grey darken-1" size="64">
+        <v-img
+          aspect-ratio="30"
+          :src="require(`@/assets/image/user/${profileImg}`)"
+        ></v-img>
+      </v-avatar>
+      <h4 class="white--text">{{ memberId }}</h4>
+    </div>
     <v-divider></v-divider>
 
     <v-list>
@@ -30,8 +35,24 @@ export default {
         { icon: "mdi-clipboard-list", text: "챌린지 관리", route: "/adminchallenge" },
         { icon: "mdi-alert-octagon", text: "유저 관리", route: "/adminuser" },
       ],
+      memberId : this.$store.state.id,
+      profileImg : this.$store.state.user.profileImg,
     };
   },
+   created() {
+    this.setMemberInfo();
+  },
+   methods: {
+    setMemberInfo() {
+      if (this.memberId == "") {
+        this.memberId = "비회원";
+        this.profileImg = "comfuck.jpg";
+        return;
+      } else if (this.memberId == "admin") {
+        this.profileImg = "female.png";
+      }
+    },
+   }
 };
 </script>
 <style scoped>

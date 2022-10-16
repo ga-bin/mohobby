@@ -32,23 +32,26 @@
                 <span class="profile-real-name">{{ infoes.nickname }}</span>
               </li>
             </ul>
-
+            <br>
             <ul>
               <li>
                 <span class="profile-stat-count">{{ infoes.postCnt }}</span>
                 posts
+                
               </li>
               
-              <li @click="getFollower()">
-                <span class="profile-stat-count" >{{ infoes.followerCnt }}</span>
-                followers
+              <li>
+                <FollowModal :text="followertext" :dataList="follower"></FollowModal>
               </li>
-              <li @click="getFollowing()">
+              <li>
+                <FollowModal :text="followingtext" :dataList="following"></FollowModal>
+              </li>
+              <!-- <li @click="getFollowing()">
                 <span class="profile-stat-count" >{{
                   infoes.followingCnt
                 }}</span>
                 following
-              </li>
+              </li> -->
             </ul>
             <ul>
               <li>
@@ -59,15 +62,10 @@
           </div>
 
           <div class="profile-bio">
-            <ul v-if="this.sessionId != '' && this.sessionId == this.postId">
+            <ul>
               <button class="btn profile-edit-btn" @click="checkMember">
                 내정보 수정하기
               </button>
-            </ul>
-
-            <ul v-else>
-              <button class="btn profile-edit-btn2">Edit Profile</button>
-              <button class="btn profile-edit-btn2">Edit Profile</button>
             </ul>
           </div>
         </div>
@@ -78,10 +76,11 @@
 </template>
 <script>
 import UserSidebar from "../../components/user/UserSidebar.vue";
+import FollowModal from "../../components/user/FollowModal.vue";
 
 export default {
   name: "",
-  components: { UserSidebar },
+  components: { UserSidebar, FollowModal },
   data() {
     return {
       infoes: [],
@@ -90,10 +89,15 @@ export default {
       inputPassword: "",
       follower : [],
       following : [],
+      followertext : "follower",
+      followingtext : "following",
     };
   },
   setup() {},
-  created() {},
+  created() {
+    this.getFollowing();
+    this.getFollower();
+  },
   methods: {
     // 유저 프로필 업로드
     loadUserProfile() {
@@ -179,7 +183,11 @@ export default {
             })
               .then(function (response) {
                 console.log(response.data);
-                vm.following = response.data;
+                for (let i = 0 ; i < response.data.length; i++) {
+                  vm.following.push(response.data[i]);
+                  vm.following.push({ divider: true, inset: true });
+                }
+                 console.log("vm.following" + vm.following);
               })
               .catch(function (error) {
                 console.log(error);
@@ -192,9 +200,13 @@ export default {
               url: "http://localhost:8088/java/mypagefollower/" + this.memberId,
               method: "get",
             })
-              .then(function (response) {
+             .then(function (response) {
                 console.log(response.data);
-                vm.follower = response.data;
+                for (let i = 0 ; i < response.data.length; i++) {
+                  vm.follower.push(response.data[i]);
+                  vm.follower.push({ divider: true, inset: true });
+                }
+                console.log("vm.follower" + vm.follower);
               })
               .catch(function (error) {
                 console.log(error);

@@ -53,8 +53,8 @@
 export default {
   data() {
     return {
-      profileImg: '',
-      memberId: '',
+      memberId : this.$store.state.id,
+      profileImg : this.$store.state.user.profileImg,
       active_list: 0,
       links: [
         { icon: "mdi-format-list-bulleted", text: "클래스 둘러보기", subheaders: [
@@ -128,28 +128,13 @@ export default {
       this.active_list = idx;
     },
     setMemberInfo() {
-      const vm = this;
-      this.memberId = this.$store.state.id;
       if (this.memberId == "") {
         this.memberId = "비회원";
         this.profileImg = "comfuck.jpg";
         return;
+      } else if (this.memberId == "admin") {
+        this.profileImg = "female.png";
       }
-      this.axios({
-        url: "http://localhost:8088/java/member/" + this.memberId,
-        method: "get",
-      })
-        .then(function (response) {
-          if (response.data != "") {
-            console.log(response.data);
-            vm.memberId = response.data.memberId;
-            vm.profileImg = response.data.profileImg;
-            console.log(vm.profileImg);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
     },
   },
 };

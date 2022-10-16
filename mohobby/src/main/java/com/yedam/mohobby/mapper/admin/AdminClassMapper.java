@@ -9,7 +9,7 @@ import com.yedam.mohobby.service.admin.AdminClassVO;
 @Mapper
 public interface AdminClassMapper {
 
-		// 승인 신청한 강의 목록
+		// 승인 여부에 따른 강의 목록
 		public List<AdminClassVO> getAuditClassList();
 		
 		// 승인 신청한 강의 정보(vue에서 상세 설명 경로 가지고오기)

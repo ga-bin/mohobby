@@ -8,5 +8,5 @@ public class HashtagVO {
     private String hashtag; //해시태그
     private int targetId; //타겟아이디
     private int targetType; //타겟유형
-    private int cnt; //사용횟수
+    private int useCount; //사용횟수
 }
