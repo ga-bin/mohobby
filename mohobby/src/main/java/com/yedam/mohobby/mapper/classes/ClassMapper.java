@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.yedam.mohobby.service.classes.ClassBoardVO;
+import com.yedam.mohobby.service.classes.ClassChapterVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
 import com.yedam.mohobby.service.classes.ClassReviewVO;
 import com.yedam.mohobby.service.classes.ClassesVO;
@@ -42,4 +43,7 @@ public interface ClassMapper {
 
     //찜등록
     public void deleteJjim(JjimVO jjim);
+
+    //강의 챕터 조회
+    public List<ClassChapterVO> getChapterList(int classId);
 }

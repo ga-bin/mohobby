@@ -214,6 +214,13 @@ const routes = [
       },
     ],
   },
+  // 강의 영상
+  {
+    path: "/learn/:currId",
+    name: "learnVideo",
+    component: () => import("./../views/lecture/video/learnMainView"),
+    props: true,
+  },
 
   // moim
   {
