@@ -125,13 +125,13 @@
       margin:0 auto;
       width: 80%;
     }
-    .v-card--reveal {
+  .v-card--reveal {
     align-items: center;
     bottom: 0;
     justify-content: center;
     opacity: .5;
     position: absolute;
     width: 100%;
-    }
+  }
   </style>
   

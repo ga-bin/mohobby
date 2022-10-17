@@ -15,7 +15,7 @@
    	-->
    	   <!-- 새로운 postId 생성 -->
        <select id="getPostId" resultType="Integer">
-		SELECT MAX(post_id)+1 FROM sns_post
+		SELECT NVL(MAX(post_id),0)+1 FROM sns_post
 	   </select>
 	   <!-- 피드등록 -->
 	   <insert id="insertFeed" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
@@ -38,7 +38,7 @@
 	                        #{ hashtag },
 	                        </if>
 	                        #{ content },
-	                        SYSDATE,
+	                        CURRENT_DATE,
 	                        #{ thumbnail },
 	                        0,
 	                        0
@@ -73,7 +73,7 @@
       WHERE post_id = #{ postId }
    </update>
    <!-- 피드삭제 -->
-   <delete id="deleteFeed" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+   <delete id="deleteFeed" parameterType="Integer">
       DELETE FROM sns_post
       WHERE post_id = #{ postId }
    </delete>
@@ -390,7 +390,7 @@
 	                        ,v_target_id
 	                        ,2
 	                        ,v_content
-	                        ,SYSDATE
+	                        ,CURRENT_DATE
 	                        );
 	            UPDATE sns_post SET cmts = cmts+1
 	            WHERE post_id = v_target_id;
@@ -399,11 +399,11 @@
 	<!-- 댓글수정 -->
 	<update id="updateCmt" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
 		UPDATE comments SET content = #{ content },
-							write_date = SYSDATE
+							write_date = CURRENT_DATE
 		WHERE comm_id = #{ commId }
 	</update>
 	<!-- 댓글삭제 -->
-	<delete id="deleteCmt" parameterType="int">
+	<delete id="deleteCmt" parameterType="Integer">
         DECLARE
             v_commId comments.comm_id%TYPE := #{ commId };
             v_target_id comments.target_id%TYPE := #{ targetId };
@@ -462,7 +462,7 @@
 							,v_target_id
 							,2
 							,v_content
-							,SYSDATE
+							,CURRENT_DATE
 							,v_parent_member_id
 							);
 	    		UPDATE sns_post SET cmts = cmts+1
@@ -476,12 +476,15 @@
 			
 	-->
 	<!-- 컬렉션생성 -->
-	<insert id="createBookmarkCtg">
-		INSERT INTO sns_bookmark_catg (
+	<insert id="createBookmarkCtg" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
+		<selectKey keyProperty="catg_id" resultType="Integer" order="BEFORE">
+	        SELECT NVL(MAX(CATG_ID), 0)+1 FROM sns_bookmark_catg
+	    </selectKey>
+			INSERT INTO sns_bookmark_catg (
 			 							CATG_ID,
 			 							MEMBER_ID,
 			 							CATG_NAME
-	    					  		  )
+	    					  		   )
 	    					   VALUES (
 	    					  			#{ catgId },
 	    					  			#{ memberId },
@@ -489,28 +492,28 @@
 	    					  		   )
 	</insert>
 	<!-- 컬렉션수정(이름) -->
-	<update id="updateBookmarkCtgName" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkCatgVO">
-		UPDATE sns_bookmark_catg SET CATG_NAME = # { catgName }
+	<update id="updateBookmarkCtgName" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
+		UPDATE sns_bookmark_catg SET CATG_NAME = #{ catgName }
 		WHERE CATG_ID = #{ catgId }
 	</update>
 	<!-- 컬렉션삭제 -->
-	<delete id="deleteBookmarkCtg" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkCatgVO">
+	<delete id="deleteBookmarkCtg" parameterType="Integer">
 		DELETE FROM sns_bookmark_catg
 		WHERE CATG_ID = #{ catgId }
 	</delete>
 	<!-- 컬렉션리스트 -->
-	<select id="getBookmarkCtgs" resultType="com.yedam.mohobby.service.sns.SnsBookmarkCatgVO">
+	<select id="getBookmarkCtgs" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
 		SELECT * FROM sns_bookmark_catg
 		WHERE MEMBER_ID = #{ memberId }
 	</select>
-	
+
 	<!-- 
 	
 		북마크 
 		
 	-->
 	<!-- 북마크추가 -->
-	<insert id="addBookmark">
+	<insert id="addBookmark" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
 		INSERT INTO sns_bookmark (
 		 							CATG_ID,
 									POST_ID
@@ -523,7 +526,7 @@
 	<!-- 북마크삭제 -->
 	<delete id="deleteBookmark" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
 		DELETE FROM sns_bookmark
-		WHERE post_id = #{ postId }
+		WHERE POST_ID = #{ postId }
 	</delete>
 	<!-- 북마크조회 -->
 	<select id="getBookmarks" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
@@ -531,26 +534,23 @@
 		WHERE CATG_ID = #{ catgId }
 	</select>
 	<!-- 전체 북마크 -->
-	<select id="getAllBookmarks" resultType="hashmap">
+	<select id="getAllBookmarks" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
 		SELECT c.catg_id, c.member_id, b.post_id  
 		FROM sns_bookmark_catg c, sns_bookmark b
 		WHERE c.catg_id = b.catg_id
 	</select>
-	<!--===========================================  -->
-<!-- 	   insert 데이터 삽입 실시 : 이미지 저장
-    <insert id="saveImage">
-        <![CDATA[
-        insert into TEST_BLOB (T_IDX, T_BLOB)
-        values (#{idx}, #{img})
-        ]]>
-    </insert>
-    
-    select 조건 절 조회 : 이미지 조회
-    <select id="selectImage" resultType="map">
-        <![CDATA[
-        select t_blob
-            from test_blob
-        where t_idx = #{idx}
-        ]]>
-    </select> -->
+	
+	<!-- 
+	
+		검색기록
+		
+	-->
+	<!-- 검색기록추가 -->
+	
+	<!-- 검색기록 리스트 -->
+	
+	<!-- 검색기록 삭제 -->
+	
+	
+
 </mapper>

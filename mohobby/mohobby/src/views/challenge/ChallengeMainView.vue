@@ -161,7 +161,7 @@ export default {
     menu: false,
     model: [
       {
-        text: 'Foo',
+        text: '취미',
         color: 'blue',
       },
     ],
@@ -179,6 +179,7 @@ export default {
     //sns글등록Data
     memberId : this.$store.state.id,
     content: "",
+    hashtag:[],//내가 추가한 해시태그
     };
   },
   created() {
@@ -205,6 +206,17 @@ export default {
     },
   },
   methods: {
+    //해시태그
+    edit (index, item) {
+      if (!this.editing) {
+        this.editing = item
+        this.editingIndex = index
+      } else {
+        this.editing = null
+        this.editingIndex = -1
+      }
+    },
+    //게시글 미리보기
     onImageChange(file) {	// v-file-input 변경시
       if (!file) {
         console.log("file" + file);
@@ -226,10 +238,20 @@ export default {
     },
     //게시글 등록
     uploadImage() {
+    //hashtag가져오기
+      this.model.forEach((hashtag) => {
+      console.log(hashtag.text);
+      this.hashtag.push(hashtag.text);
+    });
+    //hashtag배열 스트링화
+    const hashtags = this.hashtag.join(', ');
+    console.log(hashtags);
+    
       const vm = this;
       this.axios.post('/sns/myfeed/post', { // 게시글 저장
           memberId: this.memberId,
           content: this.content,
+          hashtag: hashtags,
         })
         .then(function (res) {
             console.log("게시글저장 성공!"+res);
@@ -253,16 +275,7 @@ export default {
           console.log("게시글등록 완료!"+ros)
         })
     },
-    //해시태그
-    edit (index, item) {
-      if (!this.editing) {
-        this.editing = item
-        this.editingIndex = index
-      } else {
-        this.editing = null
-        this.editingIndex = -1
-      }
-    },
+
   },
 };
 </script>

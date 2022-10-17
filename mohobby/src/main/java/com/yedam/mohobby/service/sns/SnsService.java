@@ -1,6 +1,5 @@
 package com.yedam.mohobby.service.sns;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -103,17 +102,18 @@ public interface SnsService {
     public int insertReCmt(CommentsVO commentsVO);
     //대댓수정
     public int updateReCmt(CommentsVO commentsVO);
+    
     /*
      * 북마크
      */
     //컬렉션 등록
-    public int createBookmarkCtg(SnsBookmarkCatgVO bmkCtgVO);
+    public int createBookmarkCtg(SnsBookmarkVO bmkCtgVO);
     //컬렉션 이름수정
-    public int updateBookmarkCtgName(SnsBookmarkCatgVO bmkCtgVO);
+    public int updateBookmarkCtgName(SnsBookmarkVO bmkCtgVO);
     //컬렉션 삭제(안의 게시물도 전부 삭제되도록)
     public int deleteBookmarkCtg(int catgId);
     //컬렉션 목록
-    public List<SnsBookmarkCatgVO> getBookmarkCtgs(int catgId);
+    public List<SnsBookmarkVO> getBookmarkCtgs(int catgId);
     
     //북마크 등록
     public int addBookmark(SnsBookmarkVO bmkVO);
@@ -124,8 +124,15 @@ public interface SnsService {
     //북마크 전체조회
 	public List<SnsBookmarkVO> getAllBookmarks();
 	
-
-	
+	/*
+	 * 검색기록
+	 */
+	//검색기록 등록
+	public int addHistory(SnsSearchHistoryVO historyVO);
+	//검색기록 리스트
+	public List<SnsSearchHistoryVO> getHistoryList(String memberId);
+	//검색기록 삭제
+	public int deleteHistory(int searchId);
 	
 //	test
 

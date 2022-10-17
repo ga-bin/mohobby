@@ -91,7 +91,7 @@
       methods: {
         //프로필 업로드
         loadUserProfile(postId) {
-            this.axios('/sns/user/profile/' + postId)
+            this.axios('/sns/user/profile/' + 'user1')
             .then(res => {
               this.infoes = res.data;
             }).catch(err => {

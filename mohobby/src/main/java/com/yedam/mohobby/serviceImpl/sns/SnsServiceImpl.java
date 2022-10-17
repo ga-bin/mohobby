@@ -13,13 +13,13 @@ import com.yedam.mohobby.mapper.sns.SnsMapper;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
-import com.yedam.mohobby.service.sns.SnsBookmarkCatgVO;
 import com.yedam.mohobby.service.sns.SnsBookmarkVO;
 import com.yedam.mohobby.service.sns.SnsFeedVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.sns.SnsProfileVO;
+import com.yedam.mohobby.service.sns.SnsSearchHistoryVO;
 import com.yedam.mohobby.service.sns.SnsService;
 import com.yedam.mohobby.service.user.MemberVO;
 /**
@@ -266,6 +266,7 @@ public class SnsServiceImpl implements SnsService{
    //댓글삭제
    @Override
    public int deleteCmt(int commId, int targetId) {
+       System.out.println(commId);
       return mapper.deleteCmt(commId, targetId);
    }
    //댓글조회
@@ -293,12 +294,13 @@ public class SnsServiceImpl implements SnsService{
      */
     //컬렉션 등록
     @Override
-    public int createBookmarkCtg(SnsBookmarkCatgVO bmkCtgVO) {
+    public int createBookmarkCtg(SnsBookmarkVO bmkCtgVO) {
         return mapper.createBookmarkCtg(bmkCtgVO);
     }
+
     //컬렉션 이름수정
     @Override
-    public int updateBookmarkCtgName(SnsBookmarkCatgVO bmkCtgVO) {
+    public int updateBookmarkCtgName(SnsBookmarkVO bmkCtgVO) {
         return mapper.updateBookmarkCtgName(bmkCtgVO);
     }
     //컬렉션 삭제(안의 게시물도 전부 삭제되도록)
@@ -308,9 +310,10 @@ public class SnsServiceImpl implements SnsService{
     }
     //컬렉션 목록
     @Override
-    public List<SnsBookmarkCatgVO> getBookmarkCtgs(int catgId) {
+    public List<SnsBookmarkVO> getBookmarkCtgs(int catgId) {
         return mapper.getBookmarkCtgs(catgId);
     }
+    
     //북마크 등록
     @Override
     public int addBookmark(SnsBookmarkVO bmkVO) {
@@ -330,6 +333,23 @@ public class SnsServiceImpl implements SnsService{
     public List<SnsBookmarkVO> getAllBookmarks(){
        return mapper.getAllBookmarks();
     }
-
-
+    
+    /*
+     * 검색기록
+     */
+    //검색기록 등록
+    @Override
+    public int addHistory(SnsSearchHistoryVO historyVO) {
+        return mapper.addHistory(historyVO);
+    }
+    //검색기록 리스트
+    @Override
+    public List<SnsSearchHistoryVO> getHistoryList(String memberId) {
+        return mapper.getHistoryList();
+    }
+    //검색기록 삭제
+    @Override
+    public int deleteHistory(int searchId) {
+        return mapper.deleteHistory(searchId);
+    }
 }

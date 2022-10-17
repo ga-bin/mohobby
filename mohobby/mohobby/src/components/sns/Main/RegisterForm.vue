@@ -6,7 +6,8 @@
   >
   <form id = "feedInsert" name="feedInsert">
     <v-container fluid>
-      <input type="hidden" :memberId="memberId" v-model="memberId" name="memberId">
+      <input type="hidden" v-model="memberId" name="memberId"> 
+      <input type="hidden" v-model="hashtag" name="hashtag">
       <!-- 파일등록부 -->
       <v-file-input
             class="mx-auto" 
@@ -20,6 +21,7 @@
             multiple
             @change="onImageChange"
             name="fileList"
+            
           />
       <!-- 파일이름, 개수 -->
       <div v-for="(list,i) in fileList"
@@ -52,6 +54,7 @@
     </v-container>
 
     <!-- 해시태그 -->
+    <!-- <input type="hidden" v-model="getHashtag" :hashtag="getHashtag"  name="hashtag"> -->
     <v-container fluid>
           <v-combobox
             v-model="model"
@@ -159,7 +162,7 @@ data() {
   menu: false,
   model: [
     {
-      text: 'Foo',
+      text: '취미',
       color: 'blue',
     },
   ],
@@ -176,6 +179,8 @@ data() {
   //sns글등록Data
   memberId : this.$store.state.id,
   content: "",
+  getHashtag:[],//내가 추가한 해시태그
+  hashtag:"",//스트링화 해시태그
   };
 },
 created() {
@@ -215,10 +220,8 @@ methods: {
     onImageChange(file) {	// v-file-input @OnChange
       if (!file) return;
       
-      const formData = new FormData();	// 파일을 전송할때는 FormData 형식으로 전송
       file.forEach((getFile) => { //파일등 정보 forEach문으로 빼오기 
         console.log("item.name: " + getFile.name);//name:파일명, size:바이트(인듯),type:(image/)png
-        formData.append('fileList', getFile);	// formData에 append해라. key: 'fileList'로, value값은 파일
         const fileReader = new FileReader(); //파일리더기 생성
         fileReader.onload = (e) => { //파일 성공적으로 읽어오면 이벤트 실행
           this.uploadimageurl.push({url: e.target.result}); // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
@@ -231,11 +234,20 @@ methods: {
     //미리보기에서 사진 삭제돼야함 ->
     //첫번째 사진을 썸네일로
     uploadImage() {
+      this.model.forEach((hashtag) => {
+        console.log("hashtag.text" + hashtag.text);
+        this.getHashtag.push(hashtag.text);
+      });
+      //hashtag배열 스트링화
+      const hashtags = this.getHashtag.join();
+      console.log("hashtags" + hashtags);
+      feedInsert.hashtag.value = hashtags;
+
       let self = this;
       const formData = new FormData(feedInsert);	// 파일을 전송할때는 FormData 형식으로 전송
-      formData.append('fileList',feedInsert);
       console.log(feedInsert);
       console.log(document.getElementsByName("memberId")); //아이디 확인 완.
+
       this.axios.post('/sns/myfeed', formData, { // 게시글 저장
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -249,32 +261,23 @@ methods: {
           console.log(error);
         })
     },
-    //해시태그
-    edit (index, item) {
-      if (!this.editing) {
-        this.editing = item
-        this.editingIndex = index
-      } else {
-        this.editing = null
-        this.editingIndex = -1
-      }
-    },
+
   }
 };
 </script>
 <style scoped>
-#att_zone {
-  width: 660px;
-  min-height: 150px;
-  padding: 10px;
-  border: 1px dotted #00f;
-}
+  #att_zone {
+    width: 660px;
+    min-height: 150px;
+    padding: 10px;
+    border: 1px dotted #00f;
+  }
 
-#att_zone:empty:before {
-  content: attr(data-placeholder);
-  color: #999;
-  font-size: .9em;
-}
+  #att_zone:empty:before {
+    content: attr(data-placeholder);
+    color: #999;
+    font-size: .9em;
+  }
   .imagePreviewWrapper2 {
     width: 250px;
     height: 250px;

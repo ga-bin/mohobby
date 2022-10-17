@@ -1,96 +1,64 @@
 <template>
-    <div>
-        <SnsSidebar></SnsSidebar>
-            <div id = "container">
-                <div id="searchbar">
-                    <div>
-                      <v-btn color="red" @click="goMyFeed(member)">내 피드가기</v-btn>  
-                    </div>
-                    <div class="regFeed">
-                        <!-- 로그인폼: 비회원일때-->
-                        <v-card-actions  v-if="!this.member" >
-                            <v-spacer></v-spacer>
-                            <div class="text-center">
-                                <v-dialog
-                                        v-model="noneuser"
-                                        width="500"
-                                >
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn text>
-                                        <v-chip
-                                        color="success"
-                                        outlined
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        >
-                                        <v-icon left>mdi-plus</v-icon>글쓰기
-                                        </v-chip>
-                                    </v-btn>
-                                </template>
-                                    <v-card>
-                                    <br><br>
-                                    <v-card-text class="font-weight-bold center">
-                                        로그인이 필요합니다 !
-                                    </v-card-text>
-                                    <v-divider></v-divider>
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn
-                                        color="success"
-                                        depressed
-                                        @click="login()"
-                                        >로그인하러 가기</v-btn>
-                                        <v-btn
-                                        depressed
-                                        @click="noneuser=false"
-                                        >닫기</v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
+    <div id = "container">
+        <div id="searchbar">
+            <SnsSidebar></SnsSidebar>
+            <div>
+                <v-btn color="red" class="mx-auto white--text font-weight-bold" @click="goMyFeed(member)">내 피드가기</v-btn>  
+            </div>
+            <div class="regFeed">
+                <!-- 로그인버튼-->
+                <v-btn text @click="regFeedForm(member)">
+                    <v-chip color="#2ac187" class="mx-auto white--text font-weight-bold">
+                        <v-icon left>mdi-plus</v-icon>글쓰기
+                    </v-chip>
+                </v-btn>
+                <!-- 로그인버튼 끝 -->
+                <!-- 검색창 -->
+                <div>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                            <v-autocomplete 
+                                    v-model="search" 
+                                    :items="ctg" 
+                                    item-text="tag" 
+                                    item-value="tag" 
+                                    label="해시태그나 유저 아이디를 검색해보세요"
+                                    dense 
+                                    outlined
+                                    :search-input.sync="userInput" 
+                                    @input="userInput=null"
+                                    menu-props="{'closeOnContentClick': true}"
+                                    class="rounded-xl mx-auto"
+                                    append-icon="mdi-magnify"
+                                    @change="search()"
+                                    @keydown.enter="enter(search)"
+                                    style="height:50px"
+                            />
+                    </v-card-actions>
+                    <!-- 검색창 끝 -->
+                    <!-- 상단바 HOT해시태그 -->
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <div id="chip">
+                            <v-row justify="space-around">
+                                <v-col cols="12">
+                                    <v-sheet ref="getHashtag">
+                                        <v-chip-group active-class="primary--text">
+                                            <v-chip v-for="(item,i) in items" 
+                                                    :key="i"
+                                                    @click="searchHashtag(item.hashtag)"
+                                                    color="#2ac187"
+                                                    class="mx-auto white--text font-weight-bold">
+                                                {{ item.hashtag }}
+                                            </v-chip>
+                                        </v-chip-group>
+                                    </v-sheet>
+                                </v-col>
+                            </v-row>
                         </div>
                     </v-card-actions>
-
-                    <!-- 글쓰기폼: 회원일때 -->
-                    <v-card-actions v-else>
-                        <v-spacer></v-spacer>
-                        <v-btn text>
-                            <v-chip
-                            color="success"
-                            outlined
-                            @click="select"
-                            >
-                            <v-icon left>mdi-plus</v-icon>
-                            글쓰기
-                            </v-chip>
-                        </v-btn>
-                    </v-card-actions>
-                </div>
-
-            <!-- 검색창 -->
-            <div>
-            <!-- 키워드 검색(해시태그) -->
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <div id="chip">
-                    <v-row justify="space-around">
-                        <v-col cols="12">
-                            <v-sheet ref="getHashtag">
-                                <v-chip-group active-class="primary--text">
-                                    <v-chip v-for="(item,i) in items" 
-                                            :key="i"
-                                            @click="searchHashtag(item.hashtag)"
-                                            color="#2ac187"
-                                            class="mx-auto white--text font-weight-bold">
-                                        {{ item.hashtag }}
-                                    </v-chip>
-                                </v-chip-group>
-                            </v-sheet>
-                        </v-col>
-                    </v-row>
-                </div>
-            </v-card-actions>
+            </div>
         </div>
-    </div>
 
         <!-- 검색컴포넌트 -->
         <div id="searchResult" v-if="show">
@@ -126,28 +94,47 @@
      
       data() {
           return {
-              feeds: [],
+              feeds: [],//해시검색에 받아온
               word: "",
-              noneuser : false,
-              items: [],
+            //   noneuser : false,
+              items: [], //HOT해시태그
               member : this.$store.state.id,
               show: false, //1:검색 결과 페이지
               noResult: false, //1:검색결과 없음
               main: true,
               showHashtag : "",
+              //자동검색
+              ctg: [
+                { tag: '운동' },
+                { tag: '오공완' },
+                { tag: '다이어트' },
+                { tag: '건강' },
+                { tag: '공예' },
+                { tag: '연극' },
+                { tag: '취향' },
+                { tag: '메이크업' },
+                { tag: '오운완' },
+
+            ],
+            userInput: null,
+            search:"", //검색한 단어
           }
       },
-      watch: {},
+      watch: {
+        //검색창
+        userInput(val) {
+            if (!val) {
+                return
+            }
+            this.fetchEntriesDebounced()
+        },
+      },
       created() {
           this.getHotHashtags();//함수실행
-          this.feeds=this.$route.params.hashtagResult; //피드디테일에서 받아옴
+          this.feeds=this.$route.params.hashtagResult; //피드디테일에서 받아옴 -> searchPage
           console.log(this.$route.params.hashtagResult);//(없을시 undefined)
           console.log(this.$store.state.id);
           this.show=this.$route.params.showing
-        //   if(this.$route.params.mainn != undefined || this.$route.params.mainn != ""){
-        //     this.main = this.$route.params.mainn;
-        //       console.log(this.$route.params.mainn);
-        //   }
       },
       methods: {
           //상단바에 표시되는 top6해시태그
@@ -182,16 +169,53 @@
                   console.log(err);
               });
           },
-          
+         //댓글 enter등록
+         enter(search){
+            if (window.event.keyCode == 13) {
+            this.search(search);
+            }
+        },
+          //검색
+          search(temp) {
+            //#을 붙여 검색해보세요 -> 해시태그
+            console.log(temp.indexOf('#'))
+            // if(temp.indexOf('#') == true)
+            //유저검색
+
+            // this.axios('/sns/search/hashtag', {
+            //       params : {
+            //           hashtag : getHashtag
+            //       }
+            //   }).then(res => {
+            //       this.feeds = res.data;
+            //       console.log("검색 성공!");
+            //       this.showHashtag = getHashtag;
+            //       this.show = true;
+            //       this.main = false;
+            //       if (this.feeds.length === 0){
+            //         this.noResult = true;
+            //         this.main = false;
+            //       }
+                  
+            //   }).catch(err =>{
+            //       console.log(err);
+            //   });
+          },
+
           //글 등록 이동
           select : function() {
               if (this.member) {
               this.$router.push({ path: 'snsFeedRegister' })
               }
           },
-          //로그인폼으로 이동
-          login() {
-              this.$router.push({ path: 'login' })
+          //글등록버튼
+          regFeedForm(member) {
+            if(member == "" || member == null){
+                this.$swal('로그인부터 부탁드립니다🙏');
+                this.$router.push({ path: 'login' });
+            } else{
+                this.$router.push({ path: 'snsFeedRegister' });
+            }
           },
           //내 피드로 이동
           goMyFeed(member){
@@ -200,7 +224,18 @@
                 this.$router.push({ name: 'snsUserFeed', query: {memId : member} });
             }
             this.$router.push({ name: 'snsUserFeed', query: {memId : member} });
-          }
+          },
+          //검색창
+          fetchEntriesDebounced() {
+            // cancel pending call
+            clearTimeout(this._timerId)
+
+            // delay new call 500ms
+            this._timerId = setTimeout(() => {
+                // maybe : this.fetch_data()
+                this.people = this.itemData ? this.itemData : []
+            }, 500)
+        },
         }
     };
   </script>
