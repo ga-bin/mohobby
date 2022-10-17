@@ -74,7 +74,7 @@ public interface MoimMapper {
 	public List<MoimVoteListVO> moimVoteAllList(@Param("moimId")int moimId, @Param("voteId")int voteId);
 	//public int moimCommentDelete(@Param("commId")int commId);
 	
-	//소모임 대표이미지 조회
-	public MoimVO getMoimInfo(String moimId);
+	//소모임 대표 조회
+	public MoimVO getMoimInfo(int moimId);
 
 }

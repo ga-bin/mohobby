@@ -1,6 +1,11 @@
 <template>
+
   <v-app-bar app color="white" elevate-on-scroll elevation="4">
+    <v-btn @click="test()" icon>
+      <v-icon>mdi-arrow-left-box</v-icon>
+    </v-btn>
     <v-toolbar-title @click="$router.push('/').catch(() => {})" style="cursor: pointer">Mohobby</v-toolbar-title>
+    <p>{{this.$store.state.id}}</p>
     <v-spacer />
     <v-btn text class="ml-2" to="/snsmain">sns</v-btn>
     <v-btn text class="ml-2" to="/class/list/all">강의</v-btn>
@@ -22,9 +27,9 @@
           </v-badge>
         </span>
       </template>
-      <v-list three-line width="400">
+      <v-list three-line width="400" height="400">
         <template v-for="(item, index) in items">
-          <div @click="pageMove(item.postId,item.boardType)">
+          <div @click="pageMove(item)" style="background-color: white">
             <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
             <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
             <v-list-item v-else :key="item.title">
@@ -68,7 +73,6 @@ export default {
   data() {
     return {
       subtitle: "",
-      messages1: 3,
       items: [
         { header: this.$moment().format('YYYY-MM-DD') },
         {
@@ -76,21 +80,42 @@ export default {
           title: "Brunch this weekend?",
           subtitle: `<span class="text--primary">Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
         },
-        { divider: true, inset: true },
-
       ],
     };
   },
   setup() { },
-  created() { this.noticeRev() },
+  created() {
+    this.getAllNotice()
+    this.noticeRev()
+  },
   mounted() { },
   unmounted() { },
   methods: {
+    test() {
+      console.log(this.items)
+    },
     logout() {
       this.$store.commit("setIsLoginFalse");
       this.$store.commit("logout");
       this.$store.commit("setUserData", null);
       this.$router.push("/");
+    },
+    getAllNotice() {
+      let vm = this
+      console.log("걸리나요")
+      this.axios.get('/getAllNotice/', {
+        params: {
+          memberId: this.$store.state.id
+        }
+      }).then(res => {
+        console.log(res.data)
+        for (let i = 0; i < res.data.length; i++) {
+          vm.items.push(res.data[i])
+          vm.items.push({ divider: true, inset: true })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     //알림 처리
     noticeRev() {
@@ -98,10 +123,13 @@ export default {
       this.stompClient.connect(
         {},
         (frame) => {
-          this.stompClient.subscribe("/queue/" + this.$store.state.id + "/sns", function (res) {
+          this.stompClient.subscribe("/queue/" + this.$store.state.id + "/notice", function (res) {
             let resNotice = JSON.parse(res.body)
+            console.log(resNotice)
             if (resNotice.memberId != vm.$store.state.id) {
-              if (resNotice.boardType == 0) {
+              //sns 알림 처리
+              if (resNotice.noticeType == 0) {
+                //sns - 좋아요 알림 처리
                 if (resNotice.contentType == 0) {
                   if (resNotice.likeStatus == 0) {
                     vm.subtitle = "좋아요를 눌렀습니다."
@@ -110,15 +138,38 @@ export default {
                     vm.subtitle = "좋아요를 취소했습니다."
                   }
                 }
-                else if(resNotice.contentType==1){
-                  vm.subtitle="댓글을 남겼습니다."
+                //sns - 댓글 알림 처리
+                else if (resNotice.contentType == 1) {
+                  vm.subtitle = "댓글을 남겼습니다."
                 }
                 vm.items.push({
                   avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
                   title: resNotice.nickname,
                   subtitle: vm.subtitle,
                   postId: resNotice.postId,
-                  boardType: resNotice.boardType
+                  noticeType: resNotice.noticeType,
+                  noticeId :resNotice.noticeId
+                })
+                vm.items.push({ divider: true, inset: true })
+              }
+              //소모임 알림 처리
+              else if (resNotice.boardType == 1) {
+                //소모임 댓글 알림 처리
+                if (resNotice.contentType == 0) {
+                  vm.subtitle = "댓글을 남기셨습니다."
+                }
+                else if (resNotice.contentType == 1) {
+                  vm.subtitle = "새로운 게시글이 등록되었습니다."
+                }
+                vm.items.push({
+                  avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
+                  title: resNotice.nickname,
+                  subtitle: vm.subtitle,
+                  postId: resNotice.postId,
+                  boardType: resNotice.boardType,
+                  moimId: resNotice.moimId,
+                  noticeType: resNotice.noticeType,
+                  noticeId :resNotice.noticeId
                 })
                 vm.items.push({ divider: true, inset: true })
               }
@@ -131,8 +182,22 @@ export default {
         }
       );
     },
-    pageMove(postId) {
-      this.$router.push("/snsFeedDetail?id=" + postId);
+    pageMove(item) {
+      this.axios.delete('/deleteNotice', {
+        params: {
+          noticeId: item.noticeId
+        }
+      }).then(res => {
+        console.log(res)
+      }).catch(err=>{
+        console.log(err)
+      })
+
+      if (item.noticeType == 0) {
+        this.$router.push("/snsFeedDetail?id=" + item.postId);
+      } else if (item.boardType == 1) {
+        this.$router.push("/moimDetail/" + item.moimId + "/" + item.postId + "/moimPost?moimId=" + item.moimId + "&boardId=" + item.postId + "&boardType=" + item.boardType);
+      }
     }
   },
 };

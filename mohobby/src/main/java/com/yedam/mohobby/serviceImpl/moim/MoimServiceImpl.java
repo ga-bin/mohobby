@@ -132,12 +132,6 @@ public class MoimServiceImpl implements MoimService{
 		return mapper.operateMoim(memberId);
 	}
 
-	//소모임 대표 이미지 조회
-	@Override
-	public int moimCommentDelete(int commId) {
-		return 0;
-	}
-
 	//소모임 권한별 메인화면
 	@Override
 	public int moimMainTop(String memberId) {
@@ -156,9 +150,9 @@ public class MoimServiceImpl implements MoimService{
 		 return mapper.moimVoteAllList(moimId, voteId);
 	 }
 
-	//소모임 대표 이미지 조회
+	//소모임 단건 조회
 	@Override
-	public MoimVO getMoimInfo(String moimId) {
+	public MoimVO getMoimInfo(int moimId) {
 		return mapper.getMoimInfo(moimId);
 	}
 	

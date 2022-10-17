@@ -135,7 +135,7 @@ export default {
       memId: "",
       postId: Number,
       show: true,
-      targetId,
+      targetId: "",
       colors: ["teal", "orange", "green", "purple", "indigo", "cyan"], //tag color
       nonce: 1,
       lists: [
@@ -290,7 +290,12 @@ export default {
 
     //좋아요
     like() {
-      const noticeContent = {
+      if (this.memId === null || this.memId === "") {
+        alert("로그인이 필요합니다!");
+        return;
+      } else {
+        // 좋아용 알림
+        const noticeContent = {
         myId: this.$store.state.id,
         targetId: this.items.memberId,
         contentType: 0,
@@ -299,17 +304,12 @@ export default {
         boardType: 0,
       };
       this.stompClient.send(
-        "/app/NoticeSns",
+        "/app/Notice",
         JSON.stringify(noticeContent),
         (res) => {
           console.log(res);
         }
       );
-
-      if (this.memId === null || this.memId === "") {
-        alert("로그인이 필요합니다!");
-        return;
-      } else {
         //DB Jjim insert
         this.axios
           .post("/sns/like", {

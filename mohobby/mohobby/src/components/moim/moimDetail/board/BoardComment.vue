@@ -35,7 +35,7 @@
         <v-col cols="10">
           <v-text-field class="ml-11" placeholder="댓글을 남겨보세요!" filled rounded dense hide-details v-model="content"
             @keyup.enter="insertComment()"></v-text-field>
-        </v-col>
+      
         <v-spacer></v-spacer>
         <div style="margin-right: 80px">
           <v-btn rounded color="orange" text @click="insertComment()">
@@ -49,7 +49,12 @@
 </template>
 <script>
 export default {
+  props: {
+    onerId: String,
+    boardType: String
+  },
   data() {
+
     return {
       dialog: false,
       boardId: this.$route.query.boardId,
@@ -103,23 +108,16 @@ export default {
           boardId : this.boardId
         }
       })
+      .then((resp)=> {
+        console.log(resp)
+        console.log(this.items)
+        this.items = resp.data;
+      })
+      .catch((err) => {
+        console.log(this.items)
+        console.log(err)
+      })
     },
-    insertComment() {
-        let vm = this;
-        this.axios.post("/insertMoimBoardComment", {
-            memberId : this.memberId,
-            targetId : this.boardId,
-            content : this.content
-        }).then((resp) => {
-          console.log(resp.data);
-          this.$swal("댓글등록 완료");
-          this.content = '';
-          vm.getBoard()
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-      },
       updateComment(commId, contents) {
         if(commId == this.editForm){ //수정창닫기
           this.editForm = -1;
@@ -158,13 +156,15 @@ export default {
         this.content = '';
         vm.getBoard()
         const noticeContent = {
-          myId: this.$store.state.id,
-          targetId: this.items.memberId,
-          contentType: 1,
-          boardId: this.$route.query.boardId,
+          myId: this.$store.state.id, //글작성 아이디
+          targetId: this.onerId, //알림 받을 아이디
+          contentType: 1, //댓글:1 게시글:2
+          postId: this.$route.query.boardId,
           moimId: this.$route.query.moimId,
+          boardType : this.boardType,
+          noticeType:1 //sns:1 moim:2 class:3
         }
-        this.stompClient.send("/app/NoticeMoim", JSON.stringify(noticeContent), res => {
+        this.stompClient.send("/app/Notice", JSON.stringify(noticeContent), res => {
           console.log(res)
         });
       })

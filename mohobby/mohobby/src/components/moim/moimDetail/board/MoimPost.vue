@@ -41,7 +41,7 @@
     </v-card-text>
     </div>
 
-    <BoardComment></BoardComment>
+    <BoardComment :onerId="item.memberId" :boardType="boardType"></BoardComment>
 </v-card>
 </div>
 </template>
@@ -51,6 +51,7 @@ import BoardComment from "./BoardComment.vue";
 export default {
     data() {
         return {
+          
           moimId : this.$route.query.moimId,
           boardId : this.$route.query.boardId,
           boardType : this.$route.query.boardType,

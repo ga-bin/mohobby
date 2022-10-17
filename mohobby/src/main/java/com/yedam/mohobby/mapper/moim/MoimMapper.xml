@@ -202,8 +202,8 @@ and moim_id = #{moimId}
 </select>
 
 
-
-<select id="getMoimInfo" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
+<!-- 소모임 단건조회 -->
+<select id="getMoimInfo" parameterType="Int" resultType="com.yedam.mohobby.service.moim.MoimVO">
 select MOIM_IMG,MOIM_NAME
 from moim
 where moim_id=#{moimId}

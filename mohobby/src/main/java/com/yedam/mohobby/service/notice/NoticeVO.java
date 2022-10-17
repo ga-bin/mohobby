@@ -10,7 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NoticeVO {
 	private String memberId;
-	private String noticeAvatar;
-	private String noticeTitle;
-	private String noticeSubtitle;
+	private String Avatar;
+	private String Title;
+	private String Subtitle;
+	private int noticeId;
+	private int postId;
+	private int moimId;
+	private int noticeType;
+	private int boardType;
 }

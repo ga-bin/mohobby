@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.chat.NoticeMapper">
+	<!-- 알림 전체조회 -->
 	<select id="getAllNotice" parameterType="String"
 		resultType="com.yedam.mohobby.service.notice.NoticeVO">
-		select NOTICE_AVATAR,
-		NOTICE_TITLE,
-		NOTICE_SUBTITLE
+		select *
 		from
 		notice
 		where member_id =#{memberId}
 	</select>
+	<!-- 알림 등록 -->
 	<insert id="insertNotice"
 		parameterType="com.yedam.mohobby.service.notice.NoticeVO">
 		insert into notice(MEMBER_ID,
-		NOTICE_AVATAR,
-		NOTICE_TITLE,
-		NOTICE_SUBTITLE,
-		NOTICE_DATE,
-		NOTICE_ID) values(#{memberId},
-		#{noticeAvatar},
-		#{noticeTitle},
-		#{noticeSubtitle},
-		sysdate,
-		notice_seq.nextval
+		AVATAR,
+		TITLE,
+		SUBTITLE,
+		NOTICE_ID,
+		NOTICE_TYPE,
+		BOARD_TYPE,
+		MOIM_ID,
+		POST_ID)
+		values(#{memberId},
+		#{Avatar},
+		#{Title},
+		#{Subtitle},
+		notice_seq.nextval,
+		#{noticeType},
+		#{boardType},
+		#{moimId},
+		#{postId}
 		)
 	</insert>
+	<!-- 알림 삭제 -->
+	<delete id="delectNotice" parameterType="integer">
+		delete from notice where notice_id=#{noticeId}
+	</delete>
+
+	<!-- 알림번호 조회 -->
+	<select id="getNoticeId" resultType="integer">
+		select Max(notice_id)+1
+		from notice
+	</select>
+
 </mapper>

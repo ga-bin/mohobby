@@ -245,7 +245,7 @@ export default {
             boardType: 0,
           };
           this.stompClient.send(
-            "/app/NoticeSns",
+            "/app/Notice",
             JSON.stringify(noticeContent),
             (res) => {
               console.log(res);

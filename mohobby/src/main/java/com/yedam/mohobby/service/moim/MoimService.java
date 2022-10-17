@@ -68,7 +68,7 @@ public interface MoimService {
 	public int moimUserUpdate(MemberVO vo);
 
 	//소모임 단건조회
-	public MoimVO getMoimInfo(String moimId);
+	public MoimVO getMoimInfo(int moimId);
 
 }
 
