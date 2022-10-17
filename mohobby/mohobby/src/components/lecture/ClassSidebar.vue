@@ -112,7 +112,8 @@ export default {
             { id: 34, text: "iamport테스트", route: "/class/test/iamportTest", catg: "/" }, 
             { id: 35, text: "계좌 실명 조회 테스트", route: "/class/test/AccountRealNameTest", catg: "/" }, 
             { id: 36, text: "QR코드 생성 테스트", route: "/class/test/AttdQRTest", catg: "/" }, 
-            { id: 37, text: "카카오 맵 테스트", route: "/class/test/KakaoMapTest", catg: "/" }, 
+            { id: 37, text: "카카오 맵 테스트", route: "/class/test/KakaoMapTest", catg: "/" },
+            { id: 38, text: "비디오 테스트", route: "/class/test/VideoTest", catg: "/" }, 
           ] },
         ]}
       ],
