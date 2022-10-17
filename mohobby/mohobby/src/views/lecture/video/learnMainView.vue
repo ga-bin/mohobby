@@ -89,8 +89,8 @@
     </v-bottom-navigation>
     <v-bottom-sheet v-model="sheet">
       <v-sheet class="text-center" height="300px">
-
         <div class="d-flex justify-end align-center">
+          <span class="mt-6 mr-3">{{ currentTime | runtime }}</span>
 
           <v-btn class="mt-6" text color="success" @click="console.log()">
             {{ form.submit }}
@@ -155,6 +155,7 @@ export default {
   },
   data() {
     return {
+      classInfo: {},
       panel: [],
       items: [
         {
@@ -376,12 +377,17 @@ export default {
         submit: '노트작성',
 
       },
+      currentTime: 0,
+
     };
   },
   components: {
     Artplayer,
   },
   methods: {
+    initInfo() {
+      this.axios.get('/class/detail/'+this.classId)
+    },
     getInstance(art) {
       console.log(art);
     },
@@ -390,12 +396,14 @@ export default {
     },
     questForm() {
       document.querySelector(".art-video").pause();
+      this.currentTime = document.querySelector(".art-video").currentTime;
       this.form.type = 2;
       this.form.submit = '질문등록';
       this.sheet = true;
     },
     noteForm() {
       document.querySelector(".art-video").pause();
+      this.currentTime = document.querySelector(".art-video").currentTime;
       this.form.type = 3;
       this.form.submit = '노트작성';
       this.sheet = true;
