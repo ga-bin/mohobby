@@ -35,7 +35,6 @@ import "highlight.js/styles/tomorrow.css";
 // import theme style
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
-import UploadImage from "v-upload-image";
 
 export default {
   name: "quill-example-snow",

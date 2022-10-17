@@ -70,7 +70,11 @@ Vue.filter("runtime", (val) => {
   }
 
   let m = (parseInt(val / 60)).toString();
-  let s = (val % 60).toString();
+  let s = (parseInt(val % 60)).toString();
+
+  if (s.includes('.')) {
+    s = s.substring(0, s.indexOf('.'));
+  }
 
   let mm = m;
   let ss = s;
