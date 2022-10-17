@@ -2,6 +2,7 @@
 <template>
     <div>
       <div>
+        <!-- 본 댓글입력창 -->
         <v-card-actions>
           <v-col cols="10">
             <v-text-field
@@ -19,6 +20,7 @@
             />
           </v-col>
           <v-spacer></v-spacer>
+          <!-- 댓글등록 버튼 -->
           <div style="margin-right: 80px">
             <v-btn class="ma-2 white--text" color="#2ac187" rounded @click="regCmt()">등록</v-btn>
           </div>
@@ -35,22 +37,24 @@
           <input type="hidden" class="cmtId" value="cmt.commId">
           <div class="user text-overline">{{cmt.memberId}}
             <small class="date"><span style="font-size: 1em;">{{ writeDate(cmt.writeDate) }}</span></small>
+            <!-- 버튼: 저장, 답장, 수정, 삭제 -->
             <div class="btn">
               <v-btn x-small outlined color="success" class="mr-3" v-if="cmt.memberId == memberId" @click="editCmt(cmt.commId)">저장</v-btn>
               <v-btn x-small outlined color="dark-grey" class="mr-3" v-if="cmt.commId != editForm" @click="showRegReCmt(cmt.commId, cmt.memberId)">답장</v-btn>
               <v-btn x-small outlined color="success" class="mr-3" v-if="cmt.memberId == memberId" @click="showEditForm(cmt.commId)">수정</v-btn>
               <v-btn x-small outlined color="error" v-if="cmt.memberId == memberId" @click="deleteCmt(cmt.commId, cmt.targetId)">삭제</v-btn>
-            </div>       
+            </div>
+            <!-- 대댓 유저소환 -->
             <v-card-actions>
-              <div class="content"> 
+              <div class="content">
                 <div v-if='cmt.parentCommId != ""'>
                   <span class="member_id" @click="$router.push({ path: '/snsUserFeed?memId='+cmt.parentMemberId}).catch(()=>{$router.go(0)})"><strong>@{{cmt.parentMemberId}}</strong></span>{{cmt.content}}
                 </div>
-                <div v-if='cmt.parentCommId == "" && cmt.commId != editForm'>
+                <div v-if='cmt.parentCommId == "" && cmt.commId != editForm && !formValue'>
                   {{cmt.content}}
                 </div>
                 <!-- 댓글 수정창 -->
-                <div v-if="cmt.commId == editForm && cmt.commId != reCmt">
+                <div v-if="cmt.commId == editForm && cmt.commId != reCmt && formValue">
                   <v-textarea
                     name="editContent"
                     auto-grow
@@ -108,12 +112,12 @@ export default {
       reCmt: "", //대댓등록창 show여부
       editForm:"",//댓글수정창 show여부
       cmtMemberId: "", //소환된 회원
+      formValue: false,
     }
   },
   created() {
     console.log(this.$store.state.id);
-    this.getCmtList();
-
+    this.getCmtList(); //댓글리스트 로딩
   },
   methods:{
     //date처리
@@ -151,7 +155,7 @@ export default {
             this.inputCmt = ""; //댓글입력창 초기화
             this.getCmtList();
           }).catch(err => {
-            console.log(err)
+            alert(err);
           });
     },
     //댓글 enter등록
@@ -177,16 +181,16 @@ export default {
       console.log("dd-----------------:"+commId, targetId);
       this.axios.delete('/sns/cmt/' + commId + '/' + targetId)
         .then(res => {
-          this.getCmtList();
           console.log("댓글 삭제 성공! "+res);
           this.inputCmt = ""; //댓글입력창 초기화
           this.getCmtList();
         }).catch(err => {
-          console.log(err)
+          alert(err);
         });
       },
       //댓글 수정폼 호출
       showEditForm(commId, content){
+        this.formValue = !this.formValue;
         if(commId == this.editForm){ //수정창닫기
           this.editForm = -1;
         } else{ //댓글창열기
@@ -204,14 +208,16 @@ export default {
           this.$swal('내용 입력부터 부탁드립니다🙏')
           return;
         }
+        
         this.axios.put('/sns/cmt/' + commId, {
               content : this.editedContent,
           }).then(res => {
             this.editForm = "";
             console.log("댓글수정 성공! "+res);
             this.getCmtList();
+            this.formValue = !this.formValue; //****true false값으로 수정폼 노출여부 결정하도록 수정하기
           }).catch(err => {
-            console.log(err)
+            alert(err);
           });
       },
       //대댓글 입력창 열기(닫기)
@@ -248,10 +254,10 @@ export default {
               this.reCmt = !this.reCmt;
               this.getCmtList();
             }).catch(err => {
-              console.log(err)
+              alert(err);
             });
       },
-          //댓글 삭제버튼 추가하기
+    //댓글 삭제버튼 추가하기
     // onAdd(){
     //   const input = documnet.querySelector('.input');
     //   const itemAdd = document.querySelector('.itemAdd');

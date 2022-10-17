@@ -7,13 +7,13 @@ import org.apache.ibatis.annotations.Param;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
-import com.yedam.mohobby.service.sns.SnsBookmarkCatgVO;
 import com.yedam.mohobby.service.sns.SnsBookmarkVO;
 import com.yedam.mohobby.service.sns.SnsFeedVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.sns.SnsProfileVO;
+import com.yedam.mohobby.service.sns.SnsSearchHistoryVO;
 import com.yedam.mohobby.service.user.MemberVO;
 /**
  * @create 22/10/08
@@ -97,7 +97,7 @@ public interface SnsMapper {
     //댓글수정
     public int updateCmt(CommentsVO commentsVO);
     //댓글삭제
-    public int deleteCmt(int commId, int targetId);
+    public int deleteCmt(@Param("commId")int commId, @Param("targetId") int targetId);
     //댓글조회
     public List<CommentsVO> getCmtLists(int postId);
     
@@ -113,13 +113,13 @@ public interface SnsMapper {
      * 북마크
      */
     //컬렉션 등록
-    public int createBookmarkCtg(SnsBookmarkCatgVO bmkCtgVO);
+    public int createBookmarkCtg(SnsBookmarkVO bmkCtgVO);
     //컬렉션 이름수정
-    public int updateBookmarkCtgName(SnsBookmarkCatgVO bmkCtgVO);
+    public int updateBookmarkCtgName(SnsBookmarkVO bmkCtgVO);
     //컬렉션 삭제(안의 게시물도 전부 삭제되도록)
     public int deleteBookmarkCtg(int catgId);
     //컬렉션 목록
-    public List<SnsBookmarkCatgVO> getBookmarkCtgs(int catgId);
+    public List<SnsBookmarkVO> getBookmarkCtgs(int catgId);
     
     //북마크 등록
     public int addBookmark(SnsBookmarkVO bmkVO);
@@ -129,6 +129,16 @@ public interface SnsMapper {
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회
 	public List<SnsBookmarkVO> getAllBookmarks();
+	
+	/*
+     * 검색기록
+     */
+    //검색기록 등록
+    public int addHistory(SnsSearchHistoryVO historyVO);
+    //검색기록 리스트
+    public List<SnsSearchHistoryVO> getHistoryList();
+    //검색기록 삭제
+    public int deleteHistory(int searchId);
 
 	
 	

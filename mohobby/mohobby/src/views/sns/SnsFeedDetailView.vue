@@ -3,63 +3,83 @@
     <SnsSidebar></SnsSidebar>
     <h1>피드디테일</h1>
     <v-container fluid>
-      <v-card class="mx-auto" min-width="600">
-        <!-- 프로필 -->
-        <div>
-          <div class="flex">
-            <v-avatar 
-              class="ml-10 my-10 mr-4" 
-              color="grey darken-1" 
-              size="64"
-              >
-                <v-img
-                  aspect-ratio="30"
-                  :src="require(`@/assets/image/user/${items.profileImg}`)" 
-                  @click="goMyFeed(items.memberId)" />
-              </v-avatar>
-            <div class="user text-overline">{{items.memberId}}<br>{{this.$moment(items.writeDate).format('YYYY.MM.DD')}}</div>
-          </div>
-        </div>
+
+    <v-card class="mx-auto" min-width="600">
+
+            <!-- 프로필 -->
+            <div>
+              <div class="flex">
+                <v-avatar 
+                  class="ml-10 my-10 mr-4" 
+                  color="grey darken-1" 
+                  size="64">
+                  <!--프로필이미지 -->
+                    <v-img
+                      aspect-ratio="30"
+                      :src="require(`@/assets/image/user/${items.profileImg}`)" 
+                      @click="goMyFeed(items.memberId)" />
+                  </v-avatar>
+                <div class="user text-overline">{{items.memberId}}<br>{{this.$moment(items.writeDate).format('YYYY.MM.DD')}}</div>
+                
+              </div>
+            </div>
 
         <!-- 썸네일 -->
         <v-row>
           <v-col cols="12" id="image_box">
               <v-carousel ref="myCarousel" hide-delimiters :touchless="true">
                 <v-carousel-item
-                v-for="(img,i) in imgs" :key="i"
-                  :aspect-ratio="4 / 3"
-                  :width="width"
-                  :src="require(`@/assets/image/sns/${img.postId}/${img.fileName}`)"
-                ></v-carousel-item>
+                v-for="(img,i) in imgs" :key="i" :aspect-ratio="4 / 3" :width="width"
+                  :src="require(`@/assets/image/sns/${img.postId}/${img.fileName}`)" />
               </v-carousel>
           </v-col>
         </v-row>
+        <!-- 썸네일 끝 -->
 
         <!-- 좋아요, 댓글, 메세지 -->
         <v-row>
           <v-col cols="4">
-            <v-btn v-if="items.likeStatus === 1" icon text @click="like()">
-              <v-icon color="red lighten-2">mdi-heart</v-icon>
-            </v-btn>
-            <v-btn v-else icon text @click="like()">
-              <v-icon>mdi-heart-outline</v-icon>
-            </v-btn>{{ items.likes }}
-            <v-icon>mdi-chat-outline</v-icon>{{ items.cmts }}
-            <v-icon @click="send">mdi-send</v-icon>
+            <div class="d-flex justify-start">
+              <v-btn v-if="items.likeStatus === 1" icon text @click="like()">
+                <v-icon color="red lighten-2">mdi-heart</v-icon>
+              </v-btn>
+              <v-btn v-else icon text @click="like()">
+                <v-icon>mdi-heart-outline</v-icon>
+              </v-btn>{{ items.likes }}
+              <v-icon>mdi-chat-outline</v-icon>{{ items.cmts }}
+              <v-icon @click="send">mdi-send</v-icon>
+            </div>
+          </v-col>
+          <v-col cols="8">
+            <div class="d-flex justify-end">
+              <v-menu>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn dark icon v-bind="attrs" v-on="on" >
+                    <v-icon color="grey">mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item v-for="(list, i) in lists" :key="i" >
+                    <v-list-item-title style="cursor:pointer;" @click="listBtn(i)">{{ list.title }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </div>
+              <!-- 메뉴 끝 -->
           </v-col>
         </v-row>
-
+        <!-- 좋아요, 댓글, 메세지 끝 -->
         <!-- 내용 -->
-      <div class="contents">
-        <v-card-text class="text--primary">
-        <!-- <v-row>
-          <v-col cols="12"> -->
-            <p id="content_box">{{ items.content }}</p>
-          <!-- </v-col>
-        </v-row> -->
-        </v-card-text>
-      </div>
-        
+        <div class="contents">
+          <v-card-text class="text--primary">
+          <!-- <v-row>
+            <v-col cols="12"> -->
+              <p id="content_box">{{ items.content }}</p>
+            <!-- </v-col>
+          </v-row> -->
+          </v-card-text>
+        </div>
+        <!-- 내용 끝 -->    
         <!-- 해시태그 -->
         <v-chip-group id="hashtagGroup">
             <v-chip v-for="hashtag in hashtags" :key="hashtag"
@@ -72,10 +92,10 @@
             </v-chip>
         </v-chip-group>
         <br>
+        <!-- 댓글 -->
         <v-col cols="12">
-
           <CmtReg :postid = "postId"></CmtReg>
-      </v-col>
+        </v-col>
       </v-card>
     </v-container>
   </div>
@@ -106,6 +126,11 @@ export default {
       show:true,
       colors: ['teal', 'orange', 'green', 'purple', 'indigo', 'cyan'], //tag color
       nonce: 1,
+      lists: [ //메뉴 리스트
+              { title: '수정' },
+              { title: '삭제' },
+              { title: '게시글 공유' },
+      ],
     }
   },
   setup() { },
@@ -129,7 +154,7 @@ export default {
         this.imgs = res.data;
         console.log("이미지 로딩 성공!");
       }).catch(err => {
-        console.log(err);
+        alert(err);
       });
     },
     //게시글 상세 로드
@@ -147,10 +172,77 @@ export default {
           }
         console.log("상세페이지 접근 성공!");
       }).catch(err => {
-        console.log(err);
+        alert(err);
       });
     },
+    //DOT LIST
+    listBtn(i){
+      if(i == 0){
+        //게시글 수정
+        console.log('수정하기');
+        this.editPost();
+      }
+      if(i == 1){
+        //게시글 삭제
+        console.log('삭제하기');
+        this.deletePost(this.items.postId);
+      }
+      if(i == 2){
+        //게시글 공유
+        console.log('공유하기')
+        this.sharePost();
+      }
+    },
+    //게시글 수정
+    editPost(){
+      console('게시글 수정 실행!');
+        // if (this.editedContent == "" || this.editedContent == undefined){
+        //   this.$swal('내용 입력부터 부탁드립니다🙏')
+        //   return;
+        // }
+        // this.axios.put('/sns/myfeed/' + this.postId, {
+        //       content : this.editedContent,
+        //   }).then(res => {
+        //     console.log("게시글수정 성공! "+res);
+        //   }).catch(err => {
+        //     console.log(err)
+        //   });
+    },
+    //게시글 삭제
+    deletePost(postId){
+      this.swal();
+      this.axios.delete('/sns/myfeed/' + postId)
+        .then(res => {
+          console.log("댓글 삭제 성공! "+res);
+          this.goMyFeed(this.items.memberId);
+        }).catch(err => {
+          alert(err);
+        });
+    },
+    //게시글 공유
+    sharePost(){
 
+    },
+    swal(){
+      this.$swal({
+        title: '정말 삭제할까요?',
+        text: "삭제된 게시글은 복구가 불가합니다🙏",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ac187',
+        cancelButtonColor: '#d33',
+        cancelButtonText: '취소',
+        confirmButtonText: '네, 삭제할게요!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$swal(
+            '삭제 완료!',
+            '게시글이 삭제되었습니다.',
+            'success'
+          )
+        }
+      })
+    },
     //해시태그 클릭 검색
     search(e){
             let getHashtag = e.target.innerText; //선택한 해시태그

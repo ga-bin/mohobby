@@ -19,13 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
-import com.yedam.mohobby.service.sns.SnsBookmarkCatgVO;
 import com.yedam.mohobby.service.sns.SnsBookmarkVO;
 import com.yedam.mohobby.service.sns.SnsFeedVO;
 import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.sns.SnsProfileVO;
+import com.yedam.mohobby.service.sns.SnsSearchHistoryVO;
 import com.yedam.mohobby.service.sns.SnsService;
 import com.yedam.mohobby.service.user.MemberVO;
 
@@ -46,7 +46,7 @@ public class SnsController {
     //게시물 등록 - 파일등록 성공 히히
     @PostMapping(value = "/myfeed", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public String insertFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
-       
+       System.out.println(snspostVO); //******해시태그에 값이 들어오지 않음. - 수정중
        snspostVO.setPostId(service.getPostId());
        
        System.out.println("snspostVO: " + snspostVO);
@@ -65,19 +65,21 @@ public class SnsController {
             System.out.println("글 수정 완료");
             return "success";
         } catch (Exception e) {
-            System.out.println("글 수정 실패: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("글 수정 실패");
             return "fail";
         }
     }
    //피드 삭제 - 테스트완료
     @DeleteMapping("/myfeed/{postId}")
-    public String deleteFeed(@PathVariable int postId){
+    public String deleteFeed(@PathVariable("postId") int postId){
         try {
             service.deleteFeed(postId);
             System.out.println("글 삭제 완료");
             return "success";
         } catch (Exception e) {
-            System.out.println("글 삭제 실패: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("글 삭제 실패");
             return "fail";
         }
     }
@@ -101,7 +103,7 @@ public class SnsController {
     public List<SnsPostVO> hotList() {
         return service.hotList();
     }
-   //해시태그 top6
+   //해시태그 top6 - 테스트완료
     @GetMapping("/main/hashtag")
     public List<HashtagVO> selectHashtagForMain(){
         return service.selectHashtagForMain();
@@ -114,9 +116,9 @@ public class SnsController {
   //프로필조회
     @GetMapping("/user/profile/{memberId}")
     public SnsProfileVO getProfile(@PathVariable("memberId") String memberId) {
-           return service.getProfile(memberId);//컬럼명과 컬럼값이 키와 값으로 매핑이 된다. ㄴ
+           return service.getProfile(memberId);//컬럼명과 컬럼값이 키와 값으로 매핑이 된다.
     }
-    //유저피드조회
+    //유저피드조회 - 테스트완료
     @GetMapping("/user/user_feeds/{memberId}")
     public List<SnsPostVO> getUserFeed(@PathVariable("memberId") String memberId) {
         return service.getUserFeed(memberId);
@@ -125,16 +127,14 @@ public class SnsController {
     @GetMapping("/user/feed_detail/{postId}")
     public SnsFeedVO getFeedDetail(@PathVariable("postId") int postId, @RequestParam String memberId) {
            System.out.println("프로필조회 성공");
-           System.out.println(postId+", "+memberId);
             return service.getFeedDetail(postId, memberId);
     }
-   //피드상세이미지로드
+   //피드상세이미지로드(컴포넌트)
     @GetMapping("/user/feed_detail_img/{postId}")
     public List<SnsMediaVO> getFeedImg(@PathVariable("postId") int postId) {
-       System.out.println("상세이미지 로딩 성공");
-       System.out.println(postId);
-        return service.getFeedImg(postId);
-}
+           System.out.println("상세이미지 로딩 성공");
+           return service.getFeedImg(postId);
+    }
     
     /*
      * 해시태그
@@ -147,7 +147,8 @@ public class SnsController {
             System.out.println("해시태그 처리 완료");
             return "success";
         } catch (Exception e) {
-            System.out.println("해시태그 처리 실패: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("해시태그 처리 실패");
             return "fail";
         }
     }
@@ -163,7 +164,8 @@ public class SnsController {
             System.out.println("팔로우 완료");
             return "success";
         } catch (Exception e) {
-            System.out.println("팔로우 실패: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("팔로우 실패");
             return "fail";        
         }
     }
@@ -175,7 +177,8 @@ public class SnsController {
             System.out.println("언팔로우 완료");
             return "success";
         } catch (Exception e) {
-            System.out.println("언팔로우 실패: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("언팔로우 실패");
             return "fail";        
         }
     }
@@ -240,6 +243,7 @@ public class SnsController {
             System.out.println("댓글수정 완료");
             return "success";
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("댓글수정 실패");
             return "fail";
         }
@@ -253,6 +257,7 @@ public class SnsController {
             System.out.println("댓글삭제 완료");
             return "success";
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("댓글삭제 실패");
             return "fail";
         }
@@ -274,19 +279,8 @@ public class SnsController {
             System.out.println(commentsVO);
             return "success";
         } catch (Exception e) {
-            System.out.println("댓글입력 실패: " + e.getMessage());
-            return "fail";
-        }
-    }
-    //대댓수정
-    @PutMapping("/recmt/{commId}")
-    public String updateReCmt(@PathVariable int commId, @RequestBody CommentsVO commentsVO) {
-        try {
-          commentsVO.setCommId(commId);
-          service.updateReCmt(commentsVO);
-          return "success";
-        } catch (Exception e) {
-            System.out.println("댓글수정 실패: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("댓글입력 실패");
             return "fail";
         }
     }
@@ -294,27 +288,29 @@ public class SnsController {
      * 북마크
      */
     //컬렉션등록
-    @PostMapping("/bookmark/collection") 
-    public String createBookmarkCtg(@RequestBody SnsBookmarkCatgVO bmCtgVO) {
-        try {
-           service.createBookmarkCtg(bmCtgVO);
-           System.out.println("컬렉션추가 완료");
-           return "success";
-      } catch (Exception e) {
-         System.out.println("컬렉션추가 실패: " + e.getMessage() );
-         return "fail";
-      }
+    @PostMapping("/collection") 
+    public String createBookmarkCtg(@RequestBody SnsBookmarkVO bmCtgVO) {
+          try {
+               service.createBookmarkCtg(bmCtgVO);
+               System.out.println("컬렉션추가 완료");
+               return "success";
+          } catch (Exception e) {
+             e.printStackTrace();
+             System.out.println("컬렉션추가 실패");
+             return "fail";
+          }
     }
     //컬렉션이름수정
     @PutMapping("/collection/{catgId}")
-    public String updateReCmt(@PathVariable int catgId, @RequestBody SnsBookmarkCatgVO bmCtgVO) {
+    public String updateReCmt(@PathVariable int catgId, @RequestBody SnsBookmarkVO bmCtgVO) {
         try {
           bmCtgVO.setCatgId(catgId);
           service.updateBookmarkCtgName(bmCtgVO);
           System.out.println("컬렉션수정 완료");
           return "success";
         } catch (Exception e) {
-            System.out.println("컬렉션수정 실패: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("컬렉션수정 실패");
             return "fail";
         }
     }
@@ -326,10 +322,17 @@ public class SnsController {
              System.out.println("컬렉션삭제 완료");
              return "success";
         } catch (Exception e) {
-            System.out.println("컬렉션삭제 실패" + e.getMessage());
+            e.printStackTrace();
+            System.out.println("컬렉션삭제 실패");
             return "fail";
         }
     }
+    //컬렉션리스트 호출
+    @GetMapping("/collection/{memberId}")
+    public List<SnsBookmarkVO> getCollectionList(@PathVariable int memberId){
+        return service.getBookmarkCtgs(memberId);
+    }
+    
     //북마크 등록
     @PostMapping("/collection/bookmark")
     public String addBookmark(@RequestBody SnsBookmarkVO bmVO) {
@@ -338,7 +341,8 @@ public class SnsController {
          System.out.println("북마크완료");
          return "success";
       } catch (Exception e) {
-         System.out.println("북마크실패: " + e.getMessage());
+         e.printStackTrace();
+         System.out.println("북마크실패");
          return "fail";
       }
     }
@@ -350,7 +354,8 @@ public class SnsController {
          System.out.println("북마크삭제 완료");
          return "success";
       } catch (Exception e) {
-         System.out.println("북마크삭제 실패: " + e.getMessage());
+          e.printStackTrace();
+         System.out.println("북마크삭제 실패");
          return "fail";
       }
     }
@@ -360,4 +365,41 @@ public class SnsController {
          System.out.println("북마크조회 완료");
          return service.getBookmarks(catgId);
     }
+    
+    /*
+     * 검색기록
+     */
+    //검색기록 저장
+    @PostMapping("/search/history")
+    public String addHistory(@RequestBody SnsSearchHistoryVO historyVO) {
+       try {
+         service.addHistory(historyVO);
+         System.out.println("검색기록 저장완료");
+         return "success";
+      } catch (Exception e) {
+         e.printStackTrace();
+         System.out.println("검색기록 저장실패");
+         return "fail";
+      }
+    }
+    //검색기록 리스트
+    @GetMapping("/search/history/{memberId}")
+    public List<SnsSearchHistoryVO> getHistoryList(@PathVariable String memberId){
+        System.out.println("검색기록조회 완료");
+        return service.getHistoryList(memberId);
+    }
+    //검색기록 삭제
+    @DeleteMapping("/search/history/{searchId}")
+    public String deleteHistory(@PathVariable int searchId) {
+       try {
+         service.deleteHistory(searchId);
+         System.out.println("검색기록삭제 완료");
+         return "success";
+      } catch (Exception e) {
+         e.printStackTrace();
+         System.out.println("검색기록삭제 실패");
+         return "fail";
+      }
+    }
+    
 }
