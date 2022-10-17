@@ -83,8 +83,8 @@
 export default {
   data() {
     return {
-      memberId : "",
-      profileImg : "",
+      memberId : this.$store.state.id,
+      profileImg : this.$store.state.user.profileImg,
       dialog : false,
       links: [
         {
@@ -118,30 +118,15 @@ export default {
     invite() {
       this.$router.push({ name: 'moiminvite' })
     },
-     setMemberInfo() {
-      const vm = this;
-      this.memberId = this.$store.state.id;
+    setMemberInfo() {
       if (this.memberId == "") {
         this.memberId = "비회원";
         this.profileImg = "comfuck.jpg";
         return;
+      } else if (this.memberId == "admin") {
+        this.profileImg = "female.png";
       }
-      this.axios({
-        url: "http://localhost:8088/java/member/" + this.memberId,
-        method: "get",
-      })
-        .then(function (response) {
-          if (response.data != "") {
-            console.log(response.data);
-            vm.memberId = response.data.memberId;
-            vm.profileImg = response.data.profileImg;
-            console.log(vm.profileImg);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
+    }, 
   },
 };
 </script>

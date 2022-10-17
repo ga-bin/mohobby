@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.moim.MoimMemberVO;
@@ -53,23 +53,11 @@ public void updateProfileMoim(@RequestBody MoimMemberVO moimMemberVO) {
  * @param memberId
  * @param moimCatg
  * @return List<MypageMoimVO>
- * @title 유저가 참여한 소모임 목록(카테고리별 조회)
+ * @title 유저가 참여, 운영중 소모임 목록(카테고리별 조회) / 참여중 memberRole 0/ 운영중 memberRole 1
  */
-@GetMapping("/mypagetakemoim")
-public List<MypageMoimVO> getTakeMoim(@RequestParam("memberId") String memberId, @RequestParam("moimCatg") String moimCatg) {
-	return service.getTakeMoim(memberId, moimCatg);
-}
-
-/**
- * 
- * @param memberId
- * @param moimCage
- * @return List<MypageMoimVO>
- * @title 유저가 운영중인 소모임 목록(카테고리별 조회)
- */
-@GetMapping("/mypagemanagemoim")
-public List<MypageMoimVO> getManageMoim(@RequestParam("memberId") String memberId, @RequestParam("moimCatg") String moimCatg) {
-	return service.getManageMoim(memberId, moimCatg);
+@PostMapping("/mypagemoim")
+public List<MypageMoimVO> getMoim(@RequestBody MypageMoimVO mypageMoimVO) {
+	return service.getMoim(mypageMoimVO);
 }
 
 }

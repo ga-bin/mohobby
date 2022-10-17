@@ -30,23 +30,12 @@ public class MypageMoimServiceImpl implements MypageMoimService {
 		mapper.updateProfileMoim(moimMemberVO);
 	}
 
-	// 유저가 참여한 소모임 목록(카테고리별 조회)
+	// 유저가 참여, 운영중 소모임 목록(카테고리별 조회) / 참여중 memberRole 0/ 운영중 memberRole 1
 	@Override
-	public List<MypageMoimVO> getTakeMoim(String memberId, String moimCatg) {
-		HashMap<String, String> map = new HashMap<>();
-		map.put("memberId", memberId);
-		map.put("moimCatg", moimCatg);
-		return mapper.getTakeMoim(map);
+	public List<MypageMoimVO> getMoim(MypageMoimVO mypageMoimVO) {
+		return mapper.getMoim(mypageMoimVO);
 	}
 
-	// 유저가 운영중인 소모임 목록(카테고리별 조회)
-	@Override
-	public List<MypageMoimVO> getManageMoim(String memberId, String moimCatg) {
-		HashMap<String, String> map = new HashMap<>();
-		map.put("memberId", memberId);
-		map.put("moimCatg", moimCatg);
-		return mapper.getManageMoim(map);
-	}
-
+	
 
 }

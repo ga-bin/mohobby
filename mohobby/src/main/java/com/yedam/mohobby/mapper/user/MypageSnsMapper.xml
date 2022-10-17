@@ -3,13 +3,19 @@
 <mapper namespace="com.yedam.mohobby.mapper.user.MypageSnsMapper">
 
 	<!-- 유저의 팔로워 목록 -->
-	<select id="getFollower" parameterType="String" resultType="String">
-		select follower_id from sns_follow where following_id = #{memberId}
+	<select id="getFollower" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+		select b.following_id, b.follower_id, a.profile_img, a.nickname
+		from member a join follow b
+		on a.member_id = b.following_id
+		where b.follower_id = #{memberId}
 	</select>
 	
 	<!-- 유저의 팔로잉 목록 -->
-	<select id="getFollowing" parameterType="String" resultType="String">
-		select following_id from sns_follow where follower_id = #{memberId}
+	<select id="getFollowing" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+		select b.following_id, b.follower_id, a.profile_img, a.nickname
+		from member a join follow b
+		on a.member_id = b.follower_id
+		where b.following_id = #{memberId}
 	</select>
 	
 	<!-- sns 유저가 작성한 게시글 목록 -->
