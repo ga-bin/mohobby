@@ -22,6 +22,12 @@ public class MoimServiceImpl implements MoimService{
 	@Autowired
 	MoimMapper mapper;
 
+	// 소모임 단건조회
+	@Override
+	public MoimVO getMoimOneInfo(int moimId) {
+		return mapper.getMoimOneInfo(moimId);
+	}
+	
 	//소모임 등록
 	@Override
 	public void moimInsert(MoimVO moimVO) {
@@ -133,10 +139,10 @@ public class MoimServiceImpl implements MoimService{
 	}
 
 	//소모임 대표 이미지 조회
-	@Override
-	public int moimCommentDelete(int commId) {
-		return 0;
-	}
+//	@Override
+//	public int moimCommentDelete(int commId) {
+//		return 0;
+//	}
 
 	//소모임 권한별 메인화면
 	@Override
@@ -155,12 +161,7 @@ public class MoimServiceImpl implements MoimService{
 	 public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId) {
 		 return mapper.moimVoteAllList(moimId, voteId);
 	 }
-
-	//소모임 대표 이미지 조회
-	@Override
-	public MoimVO getMoimInfo(String moimId) {
-		return mapper.getMoimInfo(moimId);
-	}
+ 
 	
 	//소모임 게시글 댓글 삭제
 	@Override

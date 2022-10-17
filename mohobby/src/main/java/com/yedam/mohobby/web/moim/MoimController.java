@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,14 @@ public class MoimController {
 	@Autowired
 	MoimService service;
 	
+	/**
+	 * @title 소모임 단건조회
+	 * @param moimVO
+	 */
+	@GetMapping("/moimOneInfo/{moimId}")
+	public MoimVO getMoimOneInfo(@PathVariable int moimId) {
+		return service.getMoimOneInfo(moimId);
+	}
 	/**
 	 * @param moimVO
 	 * @title 소모임 등록

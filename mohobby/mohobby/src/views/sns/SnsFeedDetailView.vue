@@ -135,7 +135,7 @@ export default {
       memId: "",
       postId: Number,
       show: true,
-      targetId,
+      targetId: null,
       colors: ["teal", "orange", "green", "purple", "indigo", "cyan"], //tag color
       nonce: 1,
       lists: [

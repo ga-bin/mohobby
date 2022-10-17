@@ -2,6 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.moim.MoimMapper">
 
+<!-- 소모임 단건 조회 -->
+<select id="getMoimOneInfo" parameterType="Integer" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select *
+from moim
+where moim_id=#{moimId}
+</select>
+
 <!-- 소모임 등록 -->
 <insert id="moimInsert" parameterType="com.yedam.mohobby.service.moim.MoimVO">
 <selectKey keyProperty="moimId" resultType="Integer" order="BEFORE">
@@ -199,13 +206,5 @@ from moim_vote a, moim_vote_item b
 where a.vote_id = b.vote_id
 and a.vote_id = #{voteId}
 and moim_id = #{moimId}
-</select>
-
-
-
-<select id="getMoimInfo" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
-select MOIM_IMG,MOIM_NAME
-from moim
-where moim_id=#{moimId}
 </select>
 </mapper>

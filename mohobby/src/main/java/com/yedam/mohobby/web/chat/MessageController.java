@@ -1,4 +1,4 @@
-spackage com.yedam.mohobby.web.chat;
+package com.yedam.mohobby.web.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,8 +20,8 @@ public class MessageController {
 	@Autowired
 	MemberService mService;
 
-//	@Autowired
-//	NoticeService nService;
+	@Autowired
+	NoticeService nService;
 
 	@Autowired
 	MoimService moService;

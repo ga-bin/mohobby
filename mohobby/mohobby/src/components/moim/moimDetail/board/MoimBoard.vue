@@ -9,7 +9,7 @@
       class="mx-auto mb-8"
       max-width="800"
       outlined
-      v-for=" (item,idx) in items"
+      v-for="(item, idx) in items"
       :key="item.writeDate"
       @click="goPost(idx)"
     >
@@ -18,9 +18,8 @@
         <v-list-item-content>
           <div class="text-overline mt-6">
             {{ item.memberId }}
-            <hr>
-            {{item.writeDate | yyyyMMdd}}
-
+            <hr />
+            {{ item.writeDate | yyyyMMdd }}
           </div>
           <v-list-item-subtitle class="content mt-5">
             {{ item.content }}</v-list-item-subtitle
@@ -30,7 +29,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <div class="text-overline mb-1 mr-2">댓글 {{item.cnt}}</div>
+        <div class="text-overline mb-1 mr-2">댓글 {{ item.cnt }}</div>
       </v-card-actions>
     </v-card>
   </div>
@@ -44,34 +43,42 @@ export default {
       //moimRight : 비회원 0 회원 1
       moim: 1,
       moimRight: 1,
-      Id : this.$route.params.moimId,
-      boardType : 1
+      Id: this.$route.params.moimId,
+      boardType: 1,
     };
   },
   methods: {
     goPost(idx) {
-      this.$router.push({ name: 'moimPost', query : { moimId : this.Id, boardId: this.items[idx].boardId, boardType: 1}});
+      this.$router.push({
+        name: "moimPost",
+        query: {
+          moimId: this.Id,
+          boardId: this.items[idx].boardId,
+          boardType: 1,
+        },
+      });
     },
     getBoard() {
-      this.axios.get("/moimBoardList", {
-        params : {
-          moimId : this.Id,
-          boardType : this.boardType
-        }
-      })
-      .then((resp)=> {
-        console.log(resp)
-        console.log(this.items)
-        this.items = resp.data;
-      })
-      .catch((err) => {
-        console.log(this.items)
-        console.log(err)
-      })
-      }
+      this.axios
+        .get("/moimBoardList", {
+          params: {
+            moimId: this.Id,
+            boardType: this.boardType,
+          },
+        })
+        .then((resp) => {
+          console.log(resp);
+          console.log(this.items);
+          this.items = resp.data;
+        })
+        .catch((err) => {
+          console.log(this.items);
+          console.log(err);
+        });
     },
+  },
   created() {
-    this.getBoard()
+    this.getBoard();
   },
   filters: {
     // filter로 쓸 filter ID 지정
@@ -94,7 +101,7 @@ export default {
       // 최종 포맷 (ex - '2021/10/08')
       return year + "/" + month + "/" + day;
     },
-  }
+  },
 };
 </script>
 

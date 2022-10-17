@@ -34,46 +34,46 @@
 export default {
   data() {
     return {
+      memberId: "",
+      profileImg: "comfuck.jpg",
       links: [
         { icon: "mdi-account", text: "나의 프로필", route: "/mypageprofile" },
         { icon: "mdi-instagram", text: "나의 SNS", route: "/mypagesns" },
-        { icon: "mdi-human-male-board", text: "나의 강의", route: "/mypageclass" },
-        { icon: "mdi-account-group", text: "나의 소모임", route: "/mypagemoim" },
-        { icon: "mdi-stairs-up", text: "나의 챌린지", route: "/mypagechallenge" },
+        {
+          icon: "mdi-human-male-board",
+          text: "나의 강의",
+          route: "/mypageclass",
+        },
+        {
+          icon: "mdi-account-group",
+          text: "나의 소모임",
+          route: "/mypagemoim",
+        },
+        {
+          icon: "mdi-stairs-up",
+          text: "나의 챌린지",
+          route: "/mypagechallenge",
+        },
       ],
-      memberId : "",
-      profileImg : "",
     };
   },
   created() {
     this.setMemberInfo();
   },
-   methods: {
+  methods: {
     setMemberInfo() {
-      const vm = this;
       this.memberId = this.$store.state.id;
-      if (this.memberId == "") {
+      if (!this.memberId) {
         this.memberId = "비회원";
         this.profileImg = "comfuck.jpg";
         return;
+      } else if (this.memberId == "admin") {
+        this.profileImg = "female.png";
+      } else if (this.memberId != "" && this.memberId != "admin") {
+        this.profileImg = this.$store.state.user.profileImg;
       }
-      this.axios({
-        url: "http://localhost:8088/java/member/" + this.memberId,
-        method: "get",
-      })
-        .then(function (response) {
-          if (response.data != "") {
-            console.log(response.data);
-            vm.memberId = response.data.memberId;
-            vm.profileImg = response.data.profileImg;
-            console.log(vm.profileImg);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
     },
-   }
+  },
 };
 </script>
 <style scoped>
