@@ -35,11 +35,7 @@ public class ClassController {
 	//에디터 이미지 저장
 	@PostMapping("/uploadClassImage")
 	public void uploadClassImage(@RequestBody ClassImageVO req) {
-	    if(req.getSrc().contains("base64")) {
-	        classService.uploadClassImage(req);
-	    } else if(!req.getSrc().contains(req.getFilename()+".jpg")) {
-	        classService.changeImageName(req);
-	    }
+	    classService.uploadClassImage(req);
 	}
 	
 	//html 파일 생성

@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container fluid style="padding: 30px 40px;">
         <div>
             <v-card
                 class="d-flex justify-end"

@@ -1,4 +1,4 @@
-<template>
+<template id="learn-page-box">
     <Artplayer @get-instance="getInstance" :option="option" :style="style" />
 </template>
   
@@ -102,3 +102,6 @@ import Artplayer from "artplayer/examples/vue/Artplayer";
     }
   };
 </script>
+<style scoped>
+ 
+</style>
