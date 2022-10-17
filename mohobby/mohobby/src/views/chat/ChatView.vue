@@ -185,7 +185,6 @@ export default {
         const noticeContent = {
           memberId: this.targetId,
           roomNo: this.roomId,
-          msgTime: new Date(),
           content: this.message,
           msgTime: this.createAt,
         };
