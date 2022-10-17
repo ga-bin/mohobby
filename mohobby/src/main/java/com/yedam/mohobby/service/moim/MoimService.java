@@ -56,5 +56,8 @@ public interface MoimService {
 	
 	//소모임 게시글 댓글 삭제
 	public int moimCommentDelete(int commId);
+	
+	//소모임 단건조회
+	public MoimVO getMoimInfo(String moimId);
 }
 

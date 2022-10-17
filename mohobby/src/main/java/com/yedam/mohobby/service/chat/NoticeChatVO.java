@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendNoticeVO {
+public class NoticeChatVO {
     private String targetId;
     private String myId;
 	private String profileImge;
