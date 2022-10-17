@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.yedam.mohobby.service.communal.CommentsVO;
+
 @Service
 public interface MoimService {
 	//소모임 등록
@@ -24,5 +26,35 @@ public interface MoimService {
 	
 	//소모임 종합 검색
 	public List<MoimVO> moimAllSearch(String moimName, String moimCatg);
+	
+	//소모임 게시판 전체 리스트 조회
+	public List<MoimBoardVO> moimAllBoard(int moimId, int boardType);
+	
+	//소모임 모임이름 중복체크
+	public int memberIdCheck(String moimName);
+	
+	//소모임 공지사항 리스트 조회
+	public List<MoimBoardVO> moimNoticeBoard(int moimId, int boardType);
+	
+	//소모임 게시글내 댓글 조회
+	public List<MoimCommentVO> moimCommentAllList(int moimId, int boardType, int boardId);
+
+	//소모임 게시글 단건조회
+	public List<MoimBoardVO> moimOneBoard(int moimId, int boardType, int boardId);
+	
+	//소모임 게시글 댓글 등록
+	public void moimCommentInsert(CommentsVO commVO);
+	
+	//소모임 댓글 수정
+	public int moimCommentUpdate(CommentsVO commVO);
+
+	//내가 참여한 소모임 목록
+	public List<MoimVO> joinMoim(String memberId);
+	
+	//내가 운영중인 소모임 목록
+	public List<MoimVO> operateMoim(String memberId);
+	
+	//소모임 게시글 댓글 삭제
+	public int moimCommentDelete(int commId);
 }
 

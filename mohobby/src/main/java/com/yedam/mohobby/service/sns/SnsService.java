@@ -1,25 +1,30 @@
 package com.yedam.mohobby.service.sns;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
 import com.yedam.mohobby.service.user.MemberVO;
-
+/**
+ * @create 22/10/08
+ * @author sunjin
+ * @title sns service
+ */
 @Service
 public interface SnsService {
 	/*
      * 게시물
      */
-    //게시물 등록
-    public int insertFeed(SnsPostVO snsPostVO);
-    //미디어 등록
-    public int insertMedia(SnsMediaVO snsMediaVO);
+    
+	//게시물 등록 전 포스트아이디 가져오기
+	public int getPostId();
+	//게시물 등록
+	public boolean regFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList);
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
     //피드 삭제
@@ -40,6 +45,8 @@ public interface SnsService {
     public List<SnsPostVO> getUserFeed(String memberId);
     //피드상세조회
     public SnsFeedVO getFeedDetail(int postId, String memberId);
+    //피드이미지조회
+    public List<SnsMediaVO> getFeedImg(int postId);
     
     /*
      * 해시태그
@@ -85,7 +92,7 @@ public interface SnsService {
     //댓글수정
     public int updateCmt(CommentsVO commentsVO);
     //댓글삭제
-    public int deleteCmt(int commId);
+    public int deleteCmt(int commId, int targetId);
     //댓글조회
     public List<CommentsVO> getCmtLists(int postId);
     
@@ -96,9 +103,6 @@ public interface SnsService {
     public int insertReCmt(CommentsVO commentsVO);
     //대댓수정
     public int updateReCmt(CommentsVO commentsVO);
-    //대댓삭제
-    public int deleteReCmt(int commId);
-    
     /*
      * 북마크
      */
@@ -119,6 +123,9 @@ public interface SnsService {
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회
 	public List<SnsBookmarkVO> getAllBookmarks();
+	
+
+	
 	
 //	test
 

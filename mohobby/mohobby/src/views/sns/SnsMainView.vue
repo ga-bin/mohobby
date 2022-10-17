@@ -74,7 +74,7 @@
                 <div id="chip">
                     <v-row justify="space-around">
                         <v-col cols="12">
-                            <v-sheet ref="getHashtag" >
+                            <v-sheet ref="getHashtag">
                                 <v-chip-group active-class="primary--text">
                                     <v-chip v-for="(item,i) in items" 
                                             :key="i"
@@ -93,25 +93,23 @@
     </div>
 
         <!-- 검색컴포넌트 -->
-        <div id="searchResult">
+        <div id="searchResult" v-if="show">
             <SearchPage :feeds="feeds" />
-                <div id = "noSearchResult">
-                <h1> 검색 결과가 없습니다 !</h1>
+            </div>
+            <div v-else>
+                <!-- 메인 컴포넌트 -->
+                <div id="hotLecturers">
+                <!-- 인기 피드리스트 -->
+                    <h3>추천 만능 재주꾼들 피드</h3>
+                    <HotLecturer name="this.items" />
                 </div>
-            </div>
 
-            <!-- 메인 컴포넌트 -->
-            <div id="hotLecturers">
-            <!-- 인기 피드리스트 -->
-                <h3>추천 만능 재주꾼들 피드</h3>
-                <HotLecturer name="this.items" />
-            </div>
-
-            <div id="nonuserFeeds">
-                <h3>재주 견습생들 피드</h3>
-                <!-- 랜덤피드 무한스크롤링 -->
-                <NoneUser />
-            </div>   
+                <div id="nonuserFeeds">
+                    <h3>재주 견습생들 피드</h3>
+                    <!-- 랜덤피드 무한스크롤링 -->
+                    <NoneUser />
+                </div>
+            </div> 
         </div>
     </div>
   </template>
@@ -133,14 +131,23 @@
               noneuser : false,
               items: [],
               member : this.$store.state.id,
+              show: false, //1:검색 결과 페이지
+              noResult: false, //1:검색결과 없음
+              main: true,
+              showHashtag : "",
           }
       },
       watch: {},
       created() {
           this.getHotHashtags();//함수실행
           this.feeds=this.$route.params.hashtagResult; //피드디테일에서 받아옴
-          console.log(this.$route.params.hashtagResult);
+          console.log(this.$route.params.hashtagResult);//(없을시 undefined)
           console.log(this.$store.state.id);
+          this.show=this.$route.params.showing
+        //   if(this.$route.params.mainn != undefined || this.$route.params.mainn != ""){
+        //     this.main = this.$route.params.mainn;
+        //       console.log(this.$route.params.mainn);
+        //   }
       },
       methods: {
           //상단바에 표시되는 top6해시태그
@@ -154,25 +161,21 @@
 
           //해시태그 검색
           searchHashtag(getHashtag){
-              console.log("받아온 해시태그");
+              console.log("받아온 해시태그 ->");
               console.log(getHashtag);
               this.axios('/sns/search/hashtag', {
                   params : {
                       hashtag : getHashtag
                   }
               }).then(res => {
-                  console.log(res);
                   this.feeds = res.data;
-                  console.log("피드받아옴"+this.feeds);
+                  console.log("피드받기 성공!");
+                  this.showHashtag = getHashtag;
+                  this.show = true;
+                  this.main = false;
                   if (this.feeds.length === 0){
-                      document.getElementById('searchResult').style.display = "block";
-                      document.getElementById('noSearchResult').style.display = "block";
-                      document.getElementById('hotLecturers').style.display = "none";
-                      document.getElementById('hotLecturers').style.display = "none";
-                  } else {
-                      document.getElementById('searchResult').style.display = "block"; 
-                      document.getElementById('hotLecturers').style.display = "none";
-                      document.getElementById('nonuserFeeds').style.display = "none";
+                    this.noResult = true;
+                    this.main = false;
                   }
                   
               }).catch(err =>{
@@ -221,14 +224,5 @@
       label {
           margin-right: 3px;
       }
-  
-      #searchResult{
-          display : none;
-      }
-  
-      #noSearchResult{
-          display : none;
-      }
-  
-  
+
   </style>

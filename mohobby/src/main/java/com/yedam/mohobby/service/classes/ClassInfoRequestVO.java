@@ -6,4 +6,6 @@ import lombok.Data;
 public class ClassInfoRequestVO {
 	private String content;
 	private String filename;
+	
+	
 }

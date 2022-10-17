@@ -2,7 +2,10 @@
   <div>
     <v-container fluid>
       <h3>해시태그 검색결과 페이지</h3>
-      <v-row dense>
+      <div id = "noSearchResult" v-if='feeds == ""'>
+          <h1>검색 결과가 없습니다 !</h1>
+      </div>
+      <v-row dense v-else>
         <v-col v-for="feed in feeds" :key="feed.title" :cols="2">
           <v-card @click="getFeedDetail(feed.postId)">
             <v-img 
@@ -34,7 +37,7 @@ export default {
     }
   },
   created(){
-    console.log("snsserchpage돈다");
+    console.log("검색컴포넌트 입장!");
   },
   methods: {
     getFeedDetail(postId) {

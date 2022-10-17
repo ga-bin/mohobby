@@ -84,17 +84,125 @@
 	<!-- 단건조회 -->
 	<select id="listOne" parameterType="com.yedam.mohobby.service.classes.ClassListRequestVO" resultType="com.yedam.mohobby.service.classes.ClassesVO">
 		select
-		    nvl2(j.target_id, 1, 0)jjim, nvl(q.qnaTotal, 0) qnaTotal, nvl(r.reviewTotal, 0)reviewTotal, c.*
+		    nvl(cptt.chap, 0)chapTotal, nvl(crtt.curr, 0)currTotal, nvl2(j.target_id, 1, 0)jjim, nvl(q.qnaTotal, 0) qnaTotal, nvl(r.reviewTotal, 0)reviewTotal, c.*, m.nickname
 		from
 		    (select count(*)qnaTotal, class_id from class_board where board_type = 1 group by class_id)q,
 		    (select count(*)reviewTotal, class_id from class_board where board_type = 4 group by class_id)r,
 		    (select * from jjim where target_type=1 and member_id = <if test="memberId == null">null</if> <if test="memberId != null">#{memberId}</if>)j,
-		    class c
+		    class c,
+		    member m,
+		    (select cl.class_id, cp.chap
+		    from class cl, (select count(chap_id) chap, class_id
+		    from class_chapter
+		    group by class_id) cp
+		    where cl.class_id = cp.class_id(+))cptt,
+		    (select class_id, count(mu.curr_id) curr
+		    from(
+		    select z.class_id, y.chap_id, i.curr_id
+		    from class z, class_chapter y, class_curriculum i
+		    where z.class_id = y.class_id(+)
+		    and y.chap_id = i.chap_id(+))mu
+		    group by class_id)crtt
 		where c.class_id = q.class_id(+)
 		and c.class_id = r.class_id(+)
 		and c.class_id = j.target_id(+)
+		and c.class_id = cptt.class_id(+)
+		and c.class_id = crtt.class_id(+)
+		and c.member_id = m.member_id
 		and c.class_id = #{classId}
 	</select>
+	
+	<!-- 후기평가조회 -->
+	<select id="getClassReview" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassReviewVO">
+		select	c.class_id, 
+				nvl(rate.avg,0)avg, 
+				nvl(rate.five,0)five, 
+				nvl(rate.four,0)four, 
+				nvl(rate.three,0)three, 
+				nvl(rate.two,0)two, 
+				nvl(rate.one,0)one, 
+				nvl(rate.zero,0)zero
+		from	class c,
+				(
+				select class_id, 
+				avg(rate)avg, 
+				count(decode(rate, 5, 1))five, 
+				count(decode(rate, 4, 1))four, 
+				count(decode(rate, 3, 1))three,  
+				count(decode(rate, 2, 1))two,
+				count(decode(rate, 1, 1))one,
+				count(decode(rate, 0, 1))zero
+				from class_board where board_type=4 group by class_id
+				)rate
+		where	c.class_id = rate.class_id(+)
+		and		c.class_id = #{classId}
+	</select>
+	
+	<!-- 강의게시글조회 -->
+	<select id="getClassBoardList" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassBoardVO" >
+		select b.*, m.profile_img, m.nickname
+		from class_board b,
+		member m
+		where b.member_id = m.member_id(+)
+		and board_type=#{boardType}
+		and class_id=#{classId}
+		order by write_date desc
+	</select>
+	
+	<!-- 강의게시글등록 -->
+	<insert id="addClassBoard" parameterType="com.yedam.mohobby.service.classes.ClassBoardVO">
+		<selectKey keyColumn="boardId,writeDate" keyProperty="boardId,writeDate" resultType="com.yedam.mohobby.service.classes.ClassBoardVO" order="AFTER">
+		select board_id, write_date from class_board where board_id in (select NVL(MAX(board_id), 0) from class_board)
+		</selectKey>
+		insert into class_board(
+								board_id,
+								member_id,
+								class_id,
+								board_type,
+								title,
+								content,
+								rate,
+								reply_check,
+								write_date,
+								secret
+								)
+				values(
+						(select NVL(MAX(board_id), 0) + 1 from class_board),
+						#{memberId, jdbcType=VARCHAR},
+						#{classId, jdbcType=INTEGER},
+						#{boardType, jdbcType=INTEGER},
+						#{title, jdbcType=VARCHAR},
+						#{content, jdbcType=VARCHAR},
+						#{rate, jdbcType=INTEGER},
+						#{replyCheck, jdbcType=INTEGER},
+						sysdate,
+						#{secret, jdbcType=INTEGER}
+						)
+	</insert>
+	
+	<!-- 강의게시글수정 -->
+	<update id="updateClassBoard" parameterType="com.yedam.mohobby.service.classes.ClassBoardVO">
+		update class_board set
+		title = #{title}
+		<if test="content != null">
+		,content = #{content}
+		</if>
+		<if test="rate != null">
+		,rate = #{rate}
+		</if>
+		<if test="replyCheck != null">
+		,reply_check = #{replyCheck}
+		</if>
+		<if test="secret != null">
+		,secret = #{secret}
+		</if>		
+		where board_id = #{boardId}
+	</update>
+	
+	<!-- 강의게시글삭제 -->
+	<delete id="deleteClassBoard" parameterType="java.lang.Integer">
+		delete from class_board where board_id = #{boardId}
+	</delete>
 	
 	<!-- 찜등록 -->
 	<insert id="addJjim" parameterType="com.yedam.mohobby.service.communal.JjimVO">

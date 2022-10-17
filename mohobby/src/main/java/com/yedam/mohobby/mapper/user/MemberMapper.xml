@@ -47,6 +47,11 @@
 			(#{memberId}, #{regionId}, #{password}, #{memberName}, #{nickName}, #{gender}, #{birth}, #{email}, #{phoneNum}, 0, sysdate)
    </insert>
    
+   <!-- 회원 프로필 사진 수정 -->
+   <update id="updateProfile" parameterType="com.yedam.mohobby.service.admin.MemberVO">
+    update member set profile_img = #{profileImg} where member_id = #{memberId}
+   </update>
+   
    <!-- 회원탈퇴 날짜 update -->
    <update id="deleteMember" parameterType="string"> 
    		update member set del_date = sysdate where member_id = #{memberId}
@@ -56,12 +61,13 @@
    
    <!-- 회원정보 수정 update -->
    <update id="updateMember" parameterType="com.yedam.mohobby.service.admin.MemberVO">
-   		update member set region_id = #{regionId}, nickname = #{nickName}, 
+   		update member set region_id = #{regionId}, nickname = #{nickName}, password = #{password},
    						  email = #{email}, 
    						  phone_num = #{phoneNum},
    						  profile_img = #{profileImg},
    						  intro = #{intro},
-   						  member_name = #{memberName}
+   						  member_name = #{memberName},
+   						  gender= #{gender}
         where member_id = #{memberId}
    </update>
    

@@ -58,7 +58,8 @@ export default {
           ],
           syntax: {
             highlight: (text) => hljs.highlightAuto(text).value,
-          },
+          }
+
         },
       },
       content: "",

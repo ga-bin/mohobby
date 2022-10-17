@@ -1,7 +1,5 @@
 package com.yedam.mohobby.service.classes;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
@@ -14,5 +12,8 @@ public class ClassBoardVO {
     private String content; //글 내용
     private int rate; //점수
     private int replyCheck; //답변처리
-    private Date writeDate; //작성시간
+    private String writeDate; //작성시간
+    private String profileImg;  //프로필이미지
+    private String nickname;  //닉네임
+    private int secret; //0:공개, 1:비공개
 }

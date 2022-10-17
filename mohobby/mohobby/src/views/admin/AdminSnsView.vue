@@ -2,31 +2,90 @@
     <main>
         <AdminSidebar></AdminSidebar>
         <h3>TOP10해시태그</h3>
-         <v-col class="py-2" v-for="(hashtag, index) in hashtags" :key="index">
-            <v-btn>{{ hashtag }}</v-btn>
-        </v-col>
-        
+                <v-row justify="space-around">
+                      <v-col cols="12" sm="30" md="30">
+                        <v-sheet class="py-4 px-1">
+                          <v-slide-group class="pa-2">
+                            <v-slide-item
+                              v-for="(hashtagData, index) in hashtagList"
+                              :key="index"
+                            >
+                              <div class="displayflex">
+                                <v-chip-group
+                                  active-class="primary--text"
+                                >
+                                  <v-chip :value="hashtagData.hashtag"
+                                  @click="search()"
+                                  >
+                                    {{ hashtagData.hashtag }}
+                                  </v-chip>
+                                </v-chip-group>
+                              </div>
+                            </v-slide-item>
+                          </v-slide-group>
+                        </v-sheet>
+                      </v-col>
+                    </v-row>
+        <h3>인기 SNS피드</h3>   
+        <snsHighLikesList :snsHighLikesList="snsHighLikesList"></snsHighLikesList>     
     </main>
 </template>s
 <script>
 import AdminSidebar from "../../components/admin/AdminSidebar.vue";
+import snsHighLikesList from "../../components/main/SnsHighLikesList.vue";
+
 export default {
     name: '',
-    components: { AdminSidebar },
+    components: { AdminSidebar, snsHighLikesList, },
     data() {
         return {
-            hashtags: ['#공예', '#운동', '#자전거', '#대구', '#서울', '#부산', '#정모', '#동호회', '#뜨개질', '#기타']
+            hashtagList: [],
+            snsHighLikesList: [],
     }
 },
     beforeCreate() {},
-    created() {},
+    created() {
+        this.getHashtags();
+        this.getSnsList();
+    },
     beforeMount() {},
     mounted() {},
     beforeUpdate() {},
     updated() {},
     beforeUnmount() {},
     unmounted() {},
-    methods: {}
+    methods: {
+        search() {
+
+        },
+        getHashtags() {
+            const vm = this;
+            this.axios({
+                url: "http://localhost:8088/java/adminHashtag",
+                method: "get",
+            })
+                .then(function (response) {
+                console.log(response);
+                vm.hashtagList = response.data;
+                })
+                .catch(function (error) {
+                console.log(error);
+                });
+        },
+        getSnsList() {
+            const vm = this;
+            this.axios({
+                url: "http://localhost:8088/java/mainsnslist",
+                method: "get",
+            })
+                .then(function (response) {
+                vm.snsHighLikesList = response;
+                })
+                .catch(function (error) {
+                console.log(error);
+                });
+            },
+    }
 }
 </script>
 <style scoped>

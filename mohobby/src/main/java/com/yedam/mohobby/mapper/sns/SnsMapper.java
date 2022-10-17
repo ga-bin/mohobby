@@ -21,9 +21,11 @@ import com.yedam.mohobby.service.user.MemberVO;
  * @title sns controller
  */
 public interface SnsMapper {
-    /*
+    
+	/*
      * 게시물
      */
+	public int getPostId();
     //게시물 등록
     public int insertFeed(SnsPostVO snsPostVO);
     //미디어 등록
@@ -51,7 +53,8 @@ public interface SnsMapper {
     public List<HashtagVO> selectHashtagForMain();
     //피드상세조회
     public SnsFeedVO getFeedDetail(@Param("postId") int postId, @Param("memberId") String memberId);
-    
+    //피드이미지조회
+    public List<SnsMediaVO> getFeedImg(int postId);
     /*
      * 해시태그
      */
@@ -94,7 +97,7 @@ public interface SnsMapper {
     //댓글수정
     public int updateCmt(CommentsVO commentsVO);
     //댓글삭제
-    public int deleteCmt(int commId);
+    public int deleteCmt(int commId, int targetId);
     //댓글조회
     public List<CommentsVO> getCmtLists(int postId);
     
@@ -105,8 +108,6 @@ public interface SnsMapper {
     public int insertReCmt(CommentsVO commentsVO);
     //대댓수정
     public int updateReCmt(CommentsVO commentsVO);
-    //대댓삭제
-    public int deleteReCmt(int commId);
     
     /*
      * 북마크
@@ -128,6 +129,9 @@ public interface SnsMapper {
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회
 	public List<SnsBookmarkVO> getAllBookmarks();
+
+	
+	
 
 
 }	

@@ -1,23 +1,13 @@
 <template>
   <v-navigation-drawer app>
-    <div class="text-center mt-4 pa-10">
+     <div class="text-center mt-4 pa-10">
       <v-avatar class="mb-4" color="grey darken-1" size="64">
-        <v-card @click="console.log('test')">
-          <v-img v-if='`${!member && member.profileImg == ""}`'
-            aspect-ratio="30"
-            :src="require(`@/assets/image/user/${member.profileImg}`)"
-          />
-          <v-img v-if='`${member != "" && !member.profileImg != null && member.gender == "f"}`'
-            aspect-ratio="30"
-            :src="require(`@/assets/image/user/female.png`)"
-          />
-          <v-img v-if='`${member != "" && member.profileImg != null && member.gender == "m"}`'
-            aspect-ratio="30"
-            :src="require(`@/assets/image/user/male.png`)"
-          />
-        </v-card>
+        <v-img
+          aspect-ratio="30"
+          :src="require(`@/assets/image/user/${profileImg}`)"
+        ></v-img>
       </v-avatar>
-      <h4 class="white--text">{{ member.memberId }}</h4>
+      <h4 class="white--text">{{ memberId }}</h4>
     </div>
 
     <v-divider></v-divider>
@@ -64,7 +54,8 @@
 export default {
   data() {
     return {
-      member : this.$store.state.user,
+      memberId : this.$store.state.id,
+      profileImg : this.$store.state.user.profileImg,
       links: [
         { icon: "mdi-account", text: "내 피드", subheaders: [
           { text:"", items: [
@@ -98,7 +89,21 @@ export default {
       selectedItem:"",
     };
   },
-};
+   created() {
+    this.setMemberInfo();
+  },
+   methods: {
+    setMemberInfo() {
+      if (this.memberId == "") {
+        this.memberId = "비회원";
+        this.profileImg = "comfuck.jpg";
+        return;
+      } else if (this.memberId == "admin") {
+        this.profileImg = "female.png";
+      }
+    },
+   }
+}
 </script>
 <style scoped>
 .text-center {

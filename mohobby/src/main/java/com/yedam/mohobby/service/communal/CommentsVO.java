@@ -14,4 +14,7 @@ public class CommentsVO {
     private int targetType; //타겟유형 강의:1,sns:2,소모임:3
     private String content; //댓글내용
     private Date writeDate; //등록일자
+    private String profileImg; //프로필이미지
+    private String parentMemberId; //상위댓글아이디
+    private int cmts; //댓글 개수
 }

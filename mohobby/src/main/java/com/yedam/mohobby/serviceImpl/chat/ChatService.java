@@ -3,15 +3,17 @@ package com.yedam.mohobby.serviceImpl.chat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.chat.ChatMapper;
 import com.yedam.mohobby.service.chat.ChatUserVO;
 import com.yedam.mohobby.service.chat.ChatVO;
+import com.yedam.mohobby.service.chat.ChatVO2;
 import com.yedam.mohobby.service.chat.CreateRoomVO;
-import com.yedam.mohobby.service.chat.MessageVO;
+import com.yedam.mohobby.service.chat.NonReadChatVO;
 import com.yedam.mohobby.service.chat.RoomVO;
+
+
 
 @Service
 public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
@@ -26,7 +28,6 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 
 	@Override
 	public List<RoomVO> getChatMoimRoom(String memberId) {
-
 		return mapper.getChatMoimRoom(memberId);
 	}
 
@@ -36,29 +37,27 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 	}
 
 	@Override
-	public int insertMessage(MessageVO message) {
-		return mapper.insertMessage(message);
-	}
-
-	@Override
 	public int CreateRoom(CreateRoomVO cr) {
 		return mapper.createRoom(cr);
 	}
 
 	@Override
-	public ChatUserVO getOtherUser(ChatUserVO chatUserVO) {
-		return null;
+	public List<String> getTargetId(ChatUserVO chatUser) {
+		return mapper.getTargetId(chatUser);
 	}
 
 	@Override
-	public List<ChatVO> getTargetId(String roomNo) {
-		return mapper.getTargetId(roomNo);
+	public List<NonReadChatVO> getNonReadChat(ChatUserVO chatUser) {
+		return mapper.getNonReadChat(chatUser);
+	}
+	@Override
+	public int insertMessage(ChatVO2 chat) {
+		return mapper.insertMessage(chat);
 	}
 
 	@Override
-	public ChatVO getprofileImg(ChatVO chat) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	public int updateCheckTime(ChatUserVO chatUser) {
+		return mapper.updateCheckTime(chatUser);
+	} 
+	
 }

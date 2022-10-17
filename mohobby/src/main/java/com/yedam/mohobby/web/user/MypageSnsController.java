@@ -3,11 +3,12 @@ package com.yedam.mohobby.web.user;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.user.MypageSnsService;
 
@@ -17,6 +18,7 @@ import com.yedam.mohobby.service.user.MypageSnsService;
  * @title 회원 마이페이지 sns
  */
 @RestController
+@CrossOrigin(origins = "*")
 public class MypageSnsController {
 	
 	@Autowired
@@ -29,7 +31,7 @@ public class MypageSnsController {
 	 * @title 유저의 팔로워 목록
 	 */
 	@GetMapping("/mypagefollower/{memberId}")
-	public List<String> getFollower(@PathVariable String memberId) {
+	public List<SnsFollowVO> getFollower(@PathVariable String memberId) {
 		return service.getFollower(memberId);
 	}
 	
@@ -39,7 +41,7 @@ public class MypageSnsController {
 	 * @title 유저의 팔로잉 목록
 	 */
 	@GetMapping("/mypagefollowing/{memberId}")
-	public List<String> getFollowing(@PathVariable String memberId) {
+	public List<SnsFollowVO> getFollowing(@PathVariable String memberId) {
 		return service.getFollowing(memberId);
 	}
 	

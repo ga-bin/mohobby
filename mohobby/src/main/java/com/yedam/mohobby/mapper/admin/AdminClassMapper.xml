@@ -3,10 +3,10 @@
 <mapper namespace="com.yedam.mohobby.mapper.admin.AdminClassMapper">
 
 
-<!-- 승인 신청한 강의 목록 -->
+<!-- 승인 여부에 따른 강의 목록 -->
 <select id="getAuditClassList" resultType="com.yedam.mohobby.service.admin.AdminClassVO">
 select a.class_id, a.member_id, b.keyword_name as region_name, c.keyword_name as category_name, a.class_name, a.class_price, a.class_type, a.start_date, a.end_date, a.audit_status, a.audit_return
-from keyword b join classes a
+from keyword b join class a
 on a.region_id = b.keyword_id
 join keyword c
 on a.keyword_id = c.keyword_id
