@@ -1,4 +1,4 @@
-spackage com.yedam.mohobby.web.chat;
+package com.yedam.mohobby.web.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -100,7 +100,7 @@ public class MessageController {
 		}
 
 		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
-		nService.insertNotice(noticeVO);
+		//nService.insertNotice(noticeVO);
 	}
 	// 소모임알리
 
