@@ -18,7 +18,7 @@
               "
             >
               <v-img
-                :src="require(`@/assets/image/class/info/1/1.jpg`)"
+                :src="require(`@/assets/image/class/thumb/1/1.jpg`)"
                 height="200px"
               ></v-img>
 

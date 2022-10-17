@@ -35,13 +35,14 @@ import "highlight.js/styles/tomorrow.css";
 // import theme style
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
+import UploadImage from "v-upload-image";
 
 export default {
   name: "quill-example-snow",
   title: "Theme: snow",
   components: {
     quillEditor
-},
+  },
   data() {
     return {
       editorOption: {
@@ -63,7 +64,8 @@ export default {
         },
       },
       content: "",
-      sampleData: ""
+      sampleData: "",
+      imgList: [],
     };
   },
   setup() {},
@@ -77,13 +79,13 @@ export default {
       this.content = value.html;
     }, 466),
     onEditorBlur(editor) {
-      console.log("editor blur!", editor);
+      //console.log("editor blur!", editor);
     },
     onEditorFocus(editor) {
-      console.log("editor focus!", editor);
+      //console.log("editor focus!", editor);
     },
     onEditorReady(editor) {
-      console.log("editor ready!", editor);
+      //console.log("editor ready!", editor);
     },
     saveEditor() {
       this.axios({
@@ -100,6 +102,19 @@ export default {
       }).catch((error) => {
           console.log(`error: ${error}`);
       })
+    },
+    uploadImage(folder, file, img) {   //폴더이름은 pk, 파일이름은 index로 
+      this.axios.post('/uploadClassImage', {
+        foldername: folder,
+        filename: file,
+        src: img
+      }).then( res => {
+        console.log(res);
+        let html = `<v-img :src="require(`+"`"+`@/assets/image/class/info/1/0.jpg`+"`"+`)" />`;
+        let idx = file;
+
+        document.querySelector(".ql-editor").getElementsByTagName("img")[idx].innerHTML = html;
+      })
     }
   },
   computed: {
@@ -109,6 +124,23 @@ export default {
     contentCode() {
       return hljs.highlightAuto(this.content).value;
     },
+  },
+  watch: {
+    content: function() {   //이미지 순서(index)를 파일 이름으로
+      let len = document.querySelector(".ql-editor").querySelectorAll("img").length;
+      if(len != 0 ) {
+        for(let i = 0; i < len; i++) {
+          let src = document.querySelector(".ql-editor").getElementsByTagName("img")[i].src;
+          if(src.includes('base64') || !src.includes((i)+'.jpg')) {   //이미지 업로드가 안 되었거나, 파일 이름이 순서랑 안 맞거나
+            //this.uploadImage(1, i, src);
+            let html = `<img src="file:///D://dev/mohobby/mohobby/mohobby/src/assets/image/class/thumb/1/1.jpg">`;
+            console.log(html);
+            console.log(document.querySelector(".ql-editor").getElementsByTagName("img")[i].outerHTML);
+            document.querySelector(".ql-editor").getElementsByTagName("img")[i].outerHTML = html;
+          }
+        }
+      }
+    }
   }
 };
 </script>

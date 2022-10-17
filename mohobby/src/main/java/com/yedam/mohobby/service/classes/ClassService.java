@@ -38,6 +38,9 @@ public interface ClassService {
     //찜삭제
     public void deleteJjim(JjimVO jjim);
     
+    //챕터조회
+    public List<ClassChapterVO> getChapterList(int classId);
+    
     //html저장
     public void saveClassInfo(ClassInfoRequestVO req);
     
@@ -46,5 +49,11 @@ public interface ClassService {
     
     //qr코드생성
     public String createCodeImg(String link);
+    
+    //에디터 이미지 저장
+    public void uploadClassImage(ClassImageVO vo);
+
+    //이미지 파일 이름 변경
+    public void changeImageName(ClassImageVO req); 
 
 }

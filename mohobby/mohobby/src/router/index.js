@@ -47,6 +47,11 @@ const routes = [
     name: "login",
     component: () => import("./../views/user/LoginView"),
   },
+    {
+    path: "/follow",
+    name: "follow",
+    component: () => import("./../components/user/FollowModal"),
+  },
   {
     path: "/register",
     name: "register",
@@ -167,6 +172,11 @@ const routes = [
             name: "KakaoMapTest",
             component: () => import("./../components/lecture/test/KakaoMapTest"),
           },
+          {
+            path: "VideoTest",
+            name: "VideoTest",
+            component: () => import("./../components/lecture/test/VideoPlayer"),
+          },
         ],
       },
       {
@@ -208,6 +218,13 @@ const routes = [
         ],
       },
     ],
+  },
+  // 강의 영상
+  {
+    path: "/learn/:currId",
+    name: "learnVideo",
+    component: () => import("./../views/lecture/video/learnMainView"),
+    props: true,
   },
 
   // moim

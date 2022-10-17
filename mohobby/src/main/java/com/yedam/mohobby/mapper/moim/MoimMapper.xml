@@ -127,17 +127,6 @@
 		   sysdate)
 </insert>
 
-<!-- 소모임 게시물 댓글 수정 -->
-<!-- <update>
-update comments
-set
-content = #{content},
-write_date =#{commentDate}
-where
-comm_id = #{commId}
-</update> -->
-
-
 <!-- 참여중인 소모임 리스트 조회 -->
 <select id="joinMoim" resultType="com.yedam.mohobby.service.moim.MoimVO">
 select a.moim_id, a.moim_img, a.moim_name
@@ -156,7 +145,7 @@ and memeber_role = 3
 and member_id = #{memberId}
 </select>
 
-<!-- 내가 찬여중인 소모임 없음 -->
+<!-- 내가 참여중인 소모임 없음 -->
 <select id="noneMoim" resultType="Integer">
 	select count(moim_name)
 	from moim a, moim_member b 
@@ -165,4 +154,58 @@ and member_id = #{memberId}
 	and member_id = #{memberId}
 </select>
 
+<!-- 소모임 게시글 댓글 수정 -->
+<update id="moimCommentUpdate" parameterType="com.yedam.mohobby.service.moim.MoimCommentVO">
+update comments
+set
+content = #{content},
+write_date = current_date
+where
+comm_id = #{commId}
+</update>
+
+<!-- 소모임 게시글 댓글 삭제 -->
+<delete id="moimCommentDelete" parameterType="integer">
+delete from comments where comm_id = #{commId}
+</delete>
+
+<!-- 소모임 생성 유저 권한 업데이트 -->
+<update id="moimUserUpdate" parameterType="com.yedam.mohobby.service.admin.MemberVO">
+DECLARE
+v_member VARCHAR2(100) := #{memberId};
+v_temp varchar2(100);
+BEGIN
+select role
+into v_temp
+from member
+where member_id=v_member;
+if v_temp =0 then
+update member set role=2 where member_id= v_member;
+elsif v_temp=1 then
+update member set role=3 where member_id= v_member;
+end if;
+update moim_member
+set
+member_role = 2
+where 
+member_id = v_member;
+end;
+</update>
+
+<!-- 소모임 투표 게시글 리스트 조회 -->
+<select id="moimVoteAllList" resultType="com.yedam.mohobby.service.moim.MoimVoteListVO">
+select a.start_date, a.topic, a.moim_id, b.content, b.cnt
+from moim_vote a, moim_vote_item b
+where a.vote_id = b.vote_id
+and a.vote_id = #{voteId}
+and moim_id = #{moimId}
+</select>
+
+
+
+<select id="getMoimInfo" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select MOIM_IMG,MOIM_NAME
+from moim
+where moim_id=#{moimId}
+</select>
 </mapper>

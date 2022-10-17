@@ -4,11 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimVO;
+import com.yedam.mohobby.service.moim.MoimVoteListVO;
+import com.yedam.mohobby.service.moim.MoimVoteVO;
+import com.yedam.mohobby.service.user.MemberVO;
 
 public interface MoimMapper {
 	
@@ -59,4 +63,18 @@ public interface MoimMapper {
 	
 	//소모임 게시글 댓글 삭제
 	public int moimCommentDelete(@Param("commId")int commId);
+	
+	//소모임 권한별 메인화면
+	public int moimMainTop(@Param("memberId")String memberId);
+	
+	//소모임 등록 권한 업데이트
+	public int moimUserUpdate(MemberVO vo);
+	
+	//소모임 투표 디테일 리스트
+	public List<MoimVoteListVO> moimVoteAllList(@Param("moimId")int moimId, @Param("voteId")int voteId);
+	//public int moimCommentDelete(@Param("commId")int commId);
+	
+	//소모임 대표이미지 조회
+	public MoimVO getMoimInfo(String moimId);
+
 }

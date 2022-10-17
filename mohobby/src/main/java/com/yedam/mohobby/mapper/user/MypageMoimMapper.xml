@@ -18,21 +18,14 @@ where member_id = #{memberId} and moim_id = #{moimId}
 </update>
 
 
-<!-- 유저가 참여한 소모임 목록(카테고리별 조회) -->
-<select id="getTakeMoim" parameterType="hashMap" resultType="com.yedam.mohobby.service.user.MypageMoimVO">
-select a.moim_name, a.moim_img, a.moim_catg, a.moim_region, a.reg_cnt
-from moim a join moim_member b
+<!-- 유저가 참여, 운영중 소모임 목록(카테고리별 조회) / 참여중 memberRole 0/ 운영중 memberRole 1-->
+<select id="getMoim" parameterType="hashMap" resultType="com.yedam.mohobby.service.user.MypageMoimVO">
+select a.member_id, a.moim_id, b.reg_cnt, b.moim_img, b.moim_name, b.moim_info, b.moim_catg, b.moim_region
+from moim_member a join moim b
 on a.moim_id = b.moim_id
-where a.moim_catg = #{moimCatg} and b.member_id = #{memberId} and b.member_role = 0
-</select>
-
-
-
-<!-- 유저가 운영중인 소모임 목록(카테고리별 조회) -->
-<select id="getManageMoim" parameterType="hashMap" resultType="com.yedam.mohobby.service.user.MypageMoimVO">
-select a.moim_name, a.moim_img, a.moim_catg, a.moim_region, a.reg_cnt
-from moim a join moim_member b
-on a.moim_id = b.moim_id
-where a.moim_catg = #{moimCatg} and b.member_id = #{memberId} and b.member_role = 1
+where a.member_id = #{memberId} and a.member_role = #{memberRole} 
+and b.moim_catg in (select sub_keyword_name
+                    from sub_keyword
+                    where keyword_id = (select keyword_id from keyword where keyword_name = #{keywordName}))
 </select>
 </mapper>

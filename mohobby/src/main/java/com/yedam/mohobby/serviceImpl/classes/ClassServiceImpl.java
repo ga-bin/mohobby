@@ -1,5 +1,6 @@
 package com.yedam.mohobby.serviceImpl.classes;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,6 +21,8 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.yedam.mohobby.mapper.classes.ClassMapper;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
+import com.yedam.mohobby.service.classes.ClassChapterVO;
+import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
 import com.yedam.mohobby.service.classes.ClassReviewVO;
@@ -92,6 +95,12 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public void deleteJjim(JjimVO jjim) {
         classMapper.deleteJjim(jjim);
+    }
+    
+    // 강의챕터조회
+    @Override
+    public List<ClassChapterVO> getChapterList(int classId) {
+        return classMapper.getChapterList(classId);
     }
 
     // html 저장
@@ -175,6 +184,66 @@ public class ClassServiceImpl implements ClassService {
         }
         return "data:image/png;base64," + base64;
     }
+
+    
+    // 에디터 이미지 저장
+    @Override
+    public void uploadClassImage(ClassImageVO vo) {
+        File file = null;
+        
+        String path = ClassController.class.getResource("/").getPath();
+        path = path.substring(0, path.lastIndexOf("mohobby"));
+        path = path.substring(0, path.lastIndexOf("mohobby") + "mohobby".length());
+
+        path += "/mohobby/mohobby/src/assets/image/class/info/";
+        path += vo.getFoldername();
+        path += "/";
+        
+        File dir = new File(path);
+        if (!dir.exists() && !dir.isDirectory()) {
+            dir.mkdir();
+        }
+        
+        BufferedOutputStream bos = null;
+        FileOutputStream fos = null;
+        try {
+            byte[] bytes = Base64.getDecoder().decode(vo.getSrc());
+            file = new File(path + vo.getFilename() + ".jpg");
+            fos = new FileOutputStream(file, false);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+    }
+    
+    // 이미지 파일 이름 변경
+    @Override
+    public void changeImageName(ClassImageVO req) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    
+    
+    
+    
 
    
 

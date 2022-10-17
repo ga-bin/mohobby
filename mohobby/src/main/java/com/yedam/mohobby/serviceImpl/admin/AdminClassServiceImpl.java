@@ -16,7 +16,7 @@ public class AdminClassServiceImpl implements AdminClassService {
 	@Autowired
 	AdminClassMapper mapper;
 
-	// 승인 신청한 강의 목록
+	// 승인 여부에 따른 강의 목록
 	@Override
 	public List<AdminClassVO> getAuditClassList() {
 		return mapper.getAuditClassList();

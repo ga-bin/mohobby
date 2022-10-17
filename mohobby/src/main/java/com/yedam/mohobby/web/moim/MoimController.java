@@ -17,6 +17,8 @@ import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
+import com.yedam.mohobby.service.moim.MoimVoteListVO;
+import com.yedam.mohobby.service.user.MemberVO;
 
 /**
  * @create 2022/10/10
@@ -159,9 +161,12 @@ public class MoimController {
 		service.moimCommentInsert(commVO);
 	}
 	
-
-	
-	@PutMapping("/")
+	/**
+	 * @param commVO
+	 * @return
+	 * @title 소모임 댓글 수정
+	 */
+	@PutMapping("/updateComment")
 	public String updateMoimBoardComment(@RequestBody CommentsVO commVO) {
 		try {
 	        service.moimCommentUpdate(commVO);
@@ -171,6 +176,7 @@ public class MoimController {
 	        System.out.println("댓글 수정 실패 : " + e.getMessage());
 	        return "fail";
 	    }
+
 	}
 
 	/**
@@ -208,5 +214,46 @@ public class MoimController {
 			return "fail";
 		}
 	}
+	
+	//소모임 메인 권한별 페이지
+	public String rightMoimMainTop(@RequestParam("memberId") String memberId) {
+		String result = "";
+		int count = service.moimMainTop(memberId);
+		if(count == 0) {
+			result="YES";
+		} else {
+			result="NO";
+		}
+		return result;
+	}
+	
+	
+	//소모임 생성 후 유저 권한 업데이트
+	@PutMapping("/updaterole")
+	public int updateComment(@RequestBody MemberVO vo) {
+	    try {
+	       service.moimUserUpdate(vo);
+	       return 1;
+	       } catch (Exception e) {
+	       return 0;
+	       }
+	      
+	}
+	
+	//소모임 투표 게시글 리스트 조회
+	@GetMapping("/voteList")
+	public List<MoimVoteListVO> moimVoteList(@RequestParam ("moimId") int moimId, @RequestParam ("voteId")int votdId){
+		return service.moimVoteAllList(moimId, votdId);
+	}
+//	@DeleteMapping("/boardDeleteComm")
+//	public String deleteMoimBaordComment(@RequestParam ("commId") int commId) {
+//		try {
+//			service.moimCommentDelete(commId);
+//			return "success";
+//		} catch (Exception e) {
+//			System.out.println("댓글 삭제 실패 : " + e.getMessage());
+//			return "fail";
+//		}
+//	}
 }
 

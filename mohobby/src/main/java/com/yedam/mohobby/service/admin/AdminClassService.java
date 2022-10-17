@@ -8,7 +8,7 @@ import com.yedam.mohobby.service.classes.ClassesVO;
 
 @Service
 public interface AdminClassService {
-	// 승인 신청한 강의 목록
+	// 승인 여부에 따른 강의 목록
 	public List<AdminClassVO> getAuditClassList();
 		
 	// 승인 신청한 강의 정보(vue에서 상세 설명 경로 가지고오기)

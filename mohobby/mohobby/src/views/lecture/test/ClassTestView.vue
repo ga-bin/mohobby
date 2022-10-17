@@ -8,6 +8,7 @@
       <router-link to="/classmain/test/AccountRealNameTest" class="btn btn-info btn-sm mr-2">계좌 실명 조회 테스트</router-link> | 
       <router-link to="/classmain/test/AttdQRTest" class="btn btn-info btn-sm mr-2">QR코드 생성 테스트</router-link> | 
       <router-link to="/classmain/test/KakaoMapTest" class="btn btn-info btn-sm mr-2">카카오 맵 테스트</router-link> | 
+      <router-link to="/classmain/test/VideoTest" class="btn btn-info btn-sm mr-2">비디오 테스트</router-link> | 
     </nav>
     <router-view />
   </div>

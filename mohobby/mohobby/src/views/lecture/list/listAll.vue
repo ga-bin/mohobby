@@ -60,7 +60,7 @@
                         lazy-src="https://picsum.photos/id/11/10/6"
                         height="250"
                         width="365"
-                        :src="require(`@/assets/image/class/info/${item.classId}/1.jpg`)"
+                        :src="require(`@/assets/image/class/thumb/${item.classId}/1.jpg`)"
                         @click.stop="$router.push({ path: '/class/'+item.classId+'/info', }).catch(()=>{$router.go(0)})"
                         style="padding-top: 6px"
                     >

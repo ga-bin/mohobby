@@ -32,8 +32,8 @@
             </v-icon>
           </v-btn>
           
-          <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
+          <v-toolbar-title v-if="calendar">
+            {{ calendar.title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu
@@ -70,8 +70,9 @@ export default {
         startTime: '',
         hasTime: '',
         year: '',
-        month: ''
-      },
+        month: '',
+        title: this.$moment().format('YYYY-MM')
+            },
       dateOpen: false,
       start: '2022-10-07',
       type: 'month',

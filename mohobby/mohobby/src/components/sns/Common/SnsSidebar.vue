@@ -54,8 +54,8 @@
 export default {
   data() {
     return {
-      memberId : "",
-      profileImg : "",
+      memberId : this.$store.state.id,
+      profileImg : this.$store.state.user.profileImg,
       links: [
         { icon: "mdi-account", text: "내 피드", subheaders: [
           { text:"", items: [
@@ -94,28 +94,13 @@ export default {
   },
    methods: {
     setMemberInfo() {
-      const vm = this;
-      this.memberId = this.$store.state.id;
       if (this.memberId == "") {
         this.memberId = "비회원";
         this.profileImg = "comfuck.jpg";
         return;
+      } else if (this.memberId == "admin") {
+        this.profileImg = "female.png";
       }
-      this.axios({
-        url: "http://localhost:8088/java/member/" + this.memberId,
-        method: "get",
-      })
-        .then(function (response) {
-          if (response.data != "") {
-            console.log(response.data);
-            vm.memberId = response.data.memberId;
-            vm.profileImg = response.data.profileImg;
-            console.log(vm.profileImg);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
     },
    }
 }

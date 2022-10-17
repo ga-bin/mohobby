@@ -248,14 +248,14 @@
       AND following_id = #{ followingId }
    </delete>
    <!-- 팔로잉조회 -->
-   <select id="getFollowingList" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+   <select id="getFollowingList" parameterType = "String" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
    	  SELECT f.following_id, m.profile_img, m.nickname, m.intro
    	  FROM follow f, member m
-   	  WHERE f.follower_id = m.member_id
+   	  WHERE f.following_id = m.member_id
    	  AND follower_id = #{ followerId }
    </select>
    <!-- 팔로워조회 -->
-   <select id="getFollowerList" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
+   <select id="getFollowerList" parameterType = "String" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
       SELECT f.follower_id, m.profile_img, m.nickname, m.intro 
    	  FROM follow f, member m
    	  WHERE f.follower_id = m.member_id
