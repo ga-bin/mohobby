@@ -3,7 +3,7 @@
         <div id="header-carousel">
             <v-carousel hide-delimiters style="height: 100%">
                 <v-carousel-item v-for="i in classInfo.imgAmount" :key="i"
-                    :src="require(`@/assets/image/class/info/${classId}/${i}.jpg`)" style="filter: brightness(75%)">
+                    :src="require(`@/assets/image/class/thumb/${classId}/${i}.jpg`)" style="filter: brightness(75%)">
 
                 </v-carousel-item>
                 <v-btn :color="classInfo.jjim == 1 ? 'pink' : 'gray'" icon x-large absolute right

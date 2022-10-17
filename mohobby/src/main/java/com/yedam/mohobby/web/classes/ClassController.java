@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.classes.ClassBoardVO;
+import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
 import com.yedam.mohobby.service.classes.ClassReviewVO;
@@ -30,6 +31,16 @@ import com.yedam.mohobby.service.communal.JjimVO;
 public class ClassController {
 	@Autowired
 	ClassService classService;
+	
+	//에디터 이미지 저장
+	@PostMapping("/uploadClassImage")
+	public void uploadClassImage(@RequestBody ClassImageVO req) {
+	    if(req.getSrc().contains("base64")) {
+	        classService.uploadClassImage(req);
+	    } else if(!req.getSrc().contains(req.getFilename()+".jpg")) {
+	        classService.changeImageName(req);
+	    }
+	}
 	
 	//html 파일 생성
 	@PostMapping("/saveClassInfo")

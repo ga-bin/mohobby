@@ -15,7 +15,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 
-const serverURL = "http://localhost:8088//java/sock";
+const serverURL = "http://localhost:8088/java/sock";
 let socket = new SockJS(serverURL);
 let stompClient=Stomp.over(socket);
 Vue.prototype.stompClient=stompClient;
