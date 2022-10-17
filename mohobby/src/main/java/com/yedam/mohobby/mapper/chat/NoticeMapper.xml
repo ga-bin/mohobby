@@ -20,7 +20,8 @@
 		NOTICE_TYPE,
 		BOARD_TYPE,
 		MOIM_ID,
-		POST_ID)
+		POST_ID,
+		CONTENT_TYPE)
 		values(#{memberId},
 		#{Avatar},
 		#{Title},
@@ -29,7 +30,8 @@
 		#{noticeType},
 		#{boardType},
 		#{moimId},
-		#{postId}
+		#{postId},
+		#{contentType}
 		)
 	</insert>
 	<!-- 알림 삭제 -->
@@ -39,7 +41,7 @@
 
 	<!-- 알림번호 조회 -->
 	<select id="getNoticeId" resultType="integer">
-		select Max(notice_id)+1
+		select nvl(Max(notice_id),0)+1
 		from notice
 	</select>
 

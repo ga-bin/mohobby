@@ -240,9 +240,9 @@ export default {
           const noticeContent = {
             myId: this.$store.state.id,
             targetId: this.targetId,
-            contentType: 1,
+            contentType: 1, //0:좋아요 1:댓글
             postId: this.postid,
-            boardType: 0,
+            noticeType: 0, //0:sns ,1:소모임, 2:강의
           };
           this.stompClient.send(
             "/app/Notice",

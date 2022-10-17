@@ -63,12 +63,16 @@ public class MessageController {
 	// 알림
 	@MessageMapping("Notice")
 	public void NoticeSns(ResNoticeVO resNotice) {
+		System.out.println("222222222222222222222222222222");
+		System.out.println(resNotice);
+		System.out.println("222222222222222222222222222222");
 		NoticeVO noticeVO = new NoticeVO();
 		resNotice.setNoticeId(nService.getNoticeId());
 		noticeVO.setBoardType(resNotice.getBoardType());
 		noticeVO.setMoimId(resNotice.getMoimId());
 		noticeVO.setPostId(resNotice.getPostId());
 		noticeVO.setNoticeType(resNotice.getNoticeType());
+		noticeVO.setContentType(resNotice.getContentType());
 		// sns 알림
 		if (resNotice.getNoticeType() == 0) {
 			resNotice.setProfileImge(mService.getMember(resNotice.getMyId()).getProfileImg());
@@ -76,7 +80,7 @@ public class MessageController {
 
 			// db에 담을정보
 			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setAvatar("require(`@/assets/image/user/${" + resNotice.getProfileImge() + "}`)");
+		noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
 			noticeVO.setTitle(resNotice.getNickname());
 			// sns - 좋아요 클릭시
 			if (resNotice.getContentType() == 0) {
@@ -94,10 +98,10 @@ public class MessageController {
 		else if (resNotice.getNoticeType() == 1) {
 			resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMoimId()).getMoimImg());
 			resNotice.setNickname(moService.getMoimInfo(resNotice.getMoimId()).getMoimName());
-
+																
 			// db에 담을정보
 			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setAvatar("require(`@/assets/image/moim/${" + resNotice.getProfileImge() + "}`)");
+			noticeVO.setAvatar("require(`@/assets/image/moim/" + resNotice.getProfileImge()+"`)");
 			noticeVO.setTitle(resNotice.getNickname());
 			// 소모임 - 댓글
 			if (resNotice.getContentType() == 0) {
@@ -109,7 +113,6 @@ public class MessageController {
 			}
 		} else if (resNotice.getBoardType() == 2) {
 		}
-		System.out.println("=====");
 		System.out.println(noticeVO);
 		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
 		nService.insertNotice(noticeVO);

@@ -1,9 +1,11 @@
+
 <template>
 
   <v-app-bar app color="white" elevate-on-scroll elevation="4">
     <v-btn @click="test()" icon>
       <v-icon>mdi-arrow-left-box</v-icon>
     </v-btn>
+
     <v-toolbar-title @click="$router.push('/').catch(() => {})" style="cursor: pointer">Mohobby</v-toolbar-title>
     <p>{{this.$store.state.id}}</p>
     <v-spacer />
@@ -22,7 +24,7 @@
     <v-menu offset-y v-if="this.$store.state.id">
       <template v-slot:activator="{ on, attrs }">
         <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer">
-          <v-badge offset-x="10" offset-y="10" color="red" content="5">
+          <v-badge v-if="noticeCount!=0" offset-x="10" offset-y="10" color="red" :content="noticeCount">
             <v-icon>mdi-bell</v-icon>
           </v-badge>
         </span>
@@ -33,8 +35,10 @@
             <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
             <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
             <v-list-item v-else :key="item.title">
+            
               <v-list-item-avatar>
-                <v-img :src="item.avatar"></v-img>
+                 <v-img :src="item.avatar"></v-img> 
+                
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title v-html="item.title"></v-list-item-title>
@@ -60,36 +64,34 @@
     <v-btn v-if="this.$store.state.id" icon>
       <v-icon @click="$router.push('/mypageprofile')">mdi-account</v-icon>
     </v-btn>
-
+   
     <v-btn v-if="this.$store.state.id" @click="logout()" icon>
       <v-icon>mdi-arrow-right-box</v-icon>
     </v-btn>
   </v-app-bar>
 </template>
 <script>
-
 export default {
   components: {},
   data() {
     return {
+      avatar:"",
+      noticeCount:0,
       subtitle: "",
       items: [
         { header: this.$moment().format('YYYY-MM-DD') },
-        {
-          avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-          title: "Brunch this weekend?",
-          subtitle: `<span class="text--primary">Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-        },
       ],
     };
   },
   setup() { },
   created() {
+    this.avatar="comfuck.jpg"
     this.getAllNotice()
-    this.noticeRev()
+    this.startSckct()
   },
   mounted() { },
   unmounted() { },
+ 
   methods: {
     test() {
       console.log(this.items)
@@ -108,7 +110,9 @@ export default {
           memberId: this.$store.state.id
         }
       }).then(res => {
-        console.log(res.data)
+       
+        vm.noticeCount = res.data.length
+    
         for (let i = 0; i < res.data.length; i++) {
           vm.items.push(res.data[i])
           vm.items.push({ divider: true, inset: true })
@@ -116,6 +120,11 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    startSckct() {
+      if(this.$store.state.id == "") {
+        this.noticeRev();
+      } 
     },
     //알림 처리
     noticeRev() {
@@ -148,12 +157,13 @@ export default {
                   subtitle: vm.subtitle,
                   postId: resNotice.postId,
                   noticeType: resNotice.noticeType,
-                  noticeId :resNotice.noticeId
+                  noticeId: resNotice.noticeId
                 })
                 vm.items.push({ divider: true, inset: true })
+                ++vm.noticeCount
               }
               //소모임 알림 처리
-              else if (resNotice.boardType == 1) {
+              else if (resNotice.noticeType == 1) {
                 //소모임 댓글 알림 처리
                 if (resNotice.contentType == 0) {
                   vm.subtitle = "댓글을 남기셨습니다."
@@ -161,6 +171,7 @@ export default {
                 else if (resNotice.contentType == 1) {
                   vm.subtitle = "새로운 게시글이 등록되었습니다."
                 }
+
                 vm.items.push({
                   avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
                   title: resNotice.nickname,
@@ -169,9 +180,10 @@ export default {
                   boardType: resNotice.boardType,
                   moimId: resNotice.moimId,
                   noticeType: resNotice.noticeType,
-                  noticeId :resNotice.noticeId
+                  noticeId: resNotice.noticeId
                 })
                 vm.items.push({ divider: true, inset: true })
+                ++vm.noticeCount
               }
             }
           })
@@ -182,17 +194,29 @@ export default {
         }
       );
     },
+   
     pageMove(item) {
+      
+      console.log(this.items)
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i].noticeId == item.noticeId) {
+          this.items.splice(i, 2);
+          i--;
+        }
+      }
+      console.log("11")
+      console.log(this.items)
+      --this.noticeCount
+     
       this.axios.delete('/deleteNotice', {
         params: {
           noticeId: item.noticeId
         }
       }).then(res => {
         console.log(res)
-      }).catch(err=>{
+      }).catch(err => {
         console.log(err)
       })
-
       if (item.noticeType == 0) {
         this.$router.push("/snsFeedDetail?id=" + item.postId);
       } else if (item.boardType == 1) {
