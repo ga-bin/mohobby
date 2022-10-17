@@ -17,10 +17,8 @@ public interface MypageMoimMapper {
 	// 유저가 공개중인 소모임 목록 수정
 	public void updateProfileMoim(MoimMemberVO moimMemberVO);
 	
-	// 유저가 참여한 소모임 목록(카테고리별 조회)
-	public List<MypageMoimVO> getTakeMoim(HashMap<String, String> map);
-
-	// 유저가 운영중인 소모임 목록(카테고리별 조회)
-	public List<MypageMoimVO> getManageMoim(HashMap<String, String> map);
+	// 유저가 참여, 운영중 소모임 목록(카테고리별 조회) / 참여중 memberRole 0/ 운영중 memberRole 1
+	public List<MypageMoimVO> getMoim(MypageMoimVO mypageMoimVO);
+	
 	
 }

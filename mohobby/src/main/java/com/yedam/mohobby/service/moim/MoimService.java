@@ -66,5 +66,9 @@ public interface MoimService {
 	
 	//소모임 등록 권한 업데이트
 	public int moimUserUpdate(MemberVO vo);
+
+	//소모임 단건조회
+	public MoimVO getMoimInfo(String moimId);
+
 }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +26,7 @@ import com.yedam.mohobby.service.classes.ClassesVO;
 import com.yedam.mohobby.service.communal.JjimVO;
 
 @RestController
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class ClassController {
 	@Autowired
 	ClassService classService;
@@ -109,6 +110,24 @@ public class ClassController {
 	@GetMapping("/class/qna/{classId}")
 	public @ResponseBody List<ClassBoardVO> getClassQnaList(@PathVariable int classId) {
 		return classService.getClassBoardList(classId, 1);
+	}
+	
+	//강의게시글등록
+	@PostMapping("/class/board")
+	public ClassBoardVO addClassBoard(@RequestBody ClassBoardVO board) {
+	    return classService.addClassBoard(board);
+	}
+	
+	//강의게시글삭제
+	@DeleteMapping("/class/board")
+	public void deleteClassBoard(@RequestParam int boardId) {
+	    classService.deleteClassBoard(boardId);
+	}
+	
+	//강의게시글수정
+	@PutMapping("/class/board")
+	public void updateClassBoard(@RequestBody ClassBoardVO board) {
+	    classService.updateClassBoard(board);
 	}
 	
 	//찜 등록

@@ -176,6 +176,7 @@ public class MoimController {
 	        System.out.println("댓글 수정 실패 : " + e.getMessage());
 	        return "fail";
 	    }
+
 	}
 
 	/**
@@ -244,5 +245,15 @@ public class MoimController {
 	public List<MoimVoteListVO> moimVoteList(@RequestParam ("moimId") int moimId, @RequestParam ("voteId")int votdId){
 		return service.moimVoteAllList(moimId, votdId);
 	}
+//	@DeleteMapping("/boardDeleteComm")
+//	public String deleteMoimBaordComment(@RequestParam ("commId") int commId) {
+//		try {
+//			service.moimCommentDelete(commId);
+//			return "success";
+//		} catch (Exception e) {
+//			System.out.println("댓글 삭제 실패 : " + e.getMessage());
+//			return "fail";
+//		}
+//	}
 }
 

@@ -47,6 +47,11 @@ const routes = [
     name: "login",
     component: () => import("./../views/user/LoginView"),
   },
+    {
+    path: "/follow",
+    name: "follow",
+    component: () => import("./../components/user/FollowModal"),
+  },
   {
     path: "/register",
     name: "register",
@@ -166,6 +171,11 @@ const routes = [
             path: "KakaoMapTest",
             name: "KakaoMapTest",
             component: () => import("./../components/lecture/test/KakaoMapTest"),
+          },
+          {
+            path: "VideoTest",
+            name: "VideoTest",
+            component: () => import("./../components/lecture/test/VideoPlayer"),
           },
         ],
       },

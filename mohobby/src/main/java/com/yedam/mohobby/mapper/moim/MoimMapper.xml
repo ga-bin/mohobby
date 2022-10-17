@@ -203,4 +203,9 @@ and moim_id = #{moimId}
 
 
 
+<select id="getMoimInfo" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select MOIM_IMG,MOIM_NAME
+from moim
+where moim_id=#{moimId}
+</select>
 </mapper>
