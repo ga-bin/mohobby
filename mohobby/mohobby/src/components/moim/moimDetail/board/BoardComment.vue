@@ -42,6 +42,7 @@
             <v-icon>mdi-send</v-icon>
           </v-btn>
         </div>
+        </v-col>
       </v-card-actions>
     </div>
   </div>
@@ -76,36 +77,69 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           let vm = this;
-          this.axios.delete("/boardDeleteComm", {
-            params: {
-              commId: this.items[idx].commId,
-            }
-          }).then((resp) => {
-            console.log("댓글 삭제 결과" + resp);
-            this.$swal(
-              '삭제 완료!',
-              '작성한 댓글을 삭제하였습니다.',
-              'success'
-            )
-            vm.getBoard()
-          }).catch((err) => {
-            console.log(err)
-          })
+      this.axios.delete("/boardDeleteComm",{
+        params:{
+          commId : this.items[idx].commId,
+        }
+      }).then((resp) => {
+        console.log("댓글 삭제 결과" + resp);
+        this.$swal(
+            '삭제 완료!',
+            '작성한 댓글을 삭제하였습니다.',
+            'success'
+          )
+        vm.getBoard()
+      }).catch((err)=> {
+        console.log(err)
+      })
         }
       })
     },
     getBoard() {
       this.axios.get("/detailComment", {
-        params: {
-          moimId: this.moimId,
-          boardType: this.boardType,
-          boardId: this.boardId
+        params : {
+          moimId : this.moimId,
+          boardType : this.boardType,
+          boardId : this.boardId
         }
       })
-        .then((resp) => {
-          console.log(resp)
-          console.log(this.items)
-          this.items = resp.data;
+    },
+    insertComment() {
+        let vm = this;
+        this.axios.post("/insertMoimBoardComment", {
+            memberId : this.memberId,
+            targetId : this.boardId,
+            content : this.content
+        }).then((resp) => {
+          console.log(resp.data);
+          this.$swal("댓글등록 완료");
+          this.content = '';
+          vm.getBoard()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      },
+      updateComment(commId, contents) {
+        if(commId == this.editForm){ //수정창닫기
+          this.editForm = -1;
+        } else{ //댓글창열기
+          this.editForm = commId;
+          this.contents = contents
+        }
+      },
+      updateComplete(idx){  
+        let vm = this
+
+        this.axios.put("/updateComment",{
+          content : this.contents,
+          commId : this.items[idx].commId,
+      })
+        .then((resp)=> {
+          console.log("댓글 수정 결과" + resp);
+          this.$swal("댓글 수정 완료");
+          this.editForm = -1;
+          vm.getBoard()
         })
         .catch((err) => {
           console.log(this.items)
@@ -232,8 +266,8 @@ export default {
   right: 0;
 }
 
-.btn {
+ .btn{
   position: absolute;
   right: 0;
-}
+ }
 </style>
