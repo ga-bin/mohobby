@@ -42,7 +42,6 @@
             <v-icon>mdi-send</v-icon>
           </v-btn>
         </div>
-        </v-col>
       </v-card-actions>
     </div>
   </div>
@@ -103,23 +102,16 @@ export default {
           boardId : this.boardId
         }
       })
+      .then((resp)=> {
+        console.log(resp)
+        console.log(this.items)
+        this.items = resp.data;
+      })
+      .catch((err) => {
+        console.log(this.items)
+        console.log(err)
+      })
     },
-    insertComment() {
-        let vm = this;
-        this.axios.post("/insertMoimBoardComment", {
-            memberId : this.memberId,
-            targetId : this.boardId,
-            content : this.content
-        }).then((resp) => {
-          console.log(resp.data);
-          this.$swal("댓글등록 완료");
-          this.content = '';
-          vm.getBoard()
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-      },
       updateComment(commId, contents) {
         if(commId == this.editForm){ //수정창닫기
           this.editForm = -1;
