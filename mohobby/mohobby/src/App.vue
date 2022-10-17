@@ -12,12 +12,10 @@
 <script>
 
 import Header from "./components/common/Header";
-
 export default {
 
   components: { Header },
   data: () => ({
-    
     cards: ["Today", "Yesterday"],
     menu5: "asd",
   }),

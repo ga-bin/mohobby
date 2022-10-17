@@ -4,10 +4,10 @@
             <v-container>
                 <v-row>
                     <v-col cols="12" sm="6" md="4">
-                        <v-text-field outlined disabled value="KRW(₩)"></v-text-field>
+                        <v-text-field outlined disabled value="KRW(₩)" v-model="price"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="8">
-                        <v-text-field outlined placeholder="금액을 입력해주세요" prefix="₩">
+                        <v-text-field outlined placeholder="금액을 입력해주세요" v-model="price" prefix="₩">
                         </v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
@@ -49,6 +49,7 @@ import MemberSelect from "./MemberSelect.vue";
 export default {
     data() {
         return {
+            price: '',
             src: "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg"
         };
     },

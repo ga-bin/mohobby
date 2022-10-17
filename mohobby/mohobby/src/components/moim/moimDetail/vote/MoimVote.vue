@@ -8,28 +8,30 @@
         </v-btn>
       </div>
     </v-card-actions>
-    <v-card class="mx-auto mb-8" max-width="800" outlined v-for="(item,idx) in items" :key="item.date" @click="goDetail()">
+
+    <!-- 투표 리스트 시작 -->
+    <v-card class="mx-auto mb-8" max-width="800" outlined v-for="item in items" @click="goDetail()">
       <v-list-item three-line>
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
         <v-list-item-content>
           <div class="text-overline mt-6">
-            {{ item.id }}
+            {{ item.voteId }}
             <hr />
-            {{ item.date }}
+            {{ item.startDate }}
           </div>
           <v-list-item-subtitle class="content mt-5">
-            {{ item.contents }}
+            {{ item.content }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <div class="vote">
         <div class="voteContent">
           <v-card>
-            <v-card-actions class="pl-4">{{item.voteName}}</v-card-actions>
+            <v-card-actions class="pl-4">{{item.topic}}</v-card-actions>
             <v-row>
               <v-col cols="12" sm="4" md="4">
                 <v-radio-group v-model="radioGroup[idx]['check']">
-                  <v-radio v-for="vote in item.voteLabel" :key="vote.type" :label="vote.type" :value="vote.checked"
+                  <v-radio v-for="vote in items" :key="vote.topic" :label="vote.topic" :value="vote.content"
                     hide-details />
                 </v-radio-group>
               </v-col>
@@ -41,7 +43,6 @@
       </div>
       <v-card-actions class="mr-5">
         <v-spacer></v-spacer>
-        <div class="text-overline mb-1 mr-2">댓글 {{commentNo}}</div>
       </v-card-actions>
     </v-card>
   </div>
@@ -53,71 +54,43 @@ export default {
   },
   data() {
     return {
-      radioGroup: [{
-        check: 1
-      },
-      {
-        check: 3
-      },
-      {
-        check: 2
-      }
+      radioGroup: 
+      [{cnt: 1},
+      {cnt: 3},
+      {cnt: 2}
       ],
       commentNo: 22,
-      items: [
-        {
-          date: "2022-10-04 11:12",
-          id: "관리자",
-          voteName: "가입자 더 받기",
-          voteLabel: [{
-            type: "ㄴㄴ",
-            checked: 1
-          },
-          {
-            type: "50명",
-            checked: 2
-          },
-          {
-            type: "100명",
-            checked: 3
-          }]
-        },
-        {
-          date: "2022-10-05 10:42",
-          id: "식빵이",
-          voteName: "야식 추천",
-          voteNum: 2,
-          voteLabel: [{
-            type: "빵",
-            checked: 1
-          },
-          {
-            type: "닭발",
-            checked: 2
-          },
-          {
-            type: "치킨",
-            checked: 3
-          }]
-        },
-        {
-          date: "2022-10-05 10:50",
-          id: "샹달프 미니잼",
-          voteName: "잼 대회",
-          voteNum: 3,
-          voteLabel: [{ type: "오뚜끼 딸기" },
-          { type: "샹달프 포도" }]
-        },
-      ],
+      items: [{voteLabel : [items.content]}],
+      moimId : this.$route.params.moimId,
     };
   },
   methods: {
+    getVoteList() {
+      this.axios.get("/voteList", {
+        params : {
+          moimId: this.moimId
+        }
+      })
+      .then((resp)=> {
+        console.log(resp)
+        console.log(this.items)
+        this.items = resp.data;
+      })
+      .catch((err) => {
+        console.log(this.items)
+        console.log(err)
+      })
+    },
+
     voteMake: function () {
       this.$router.push({ path: "makeVote" });
     },
     goDetail: function () {
       this.$router.push({ path: "voteDetail" });
     },
+  },
+  created() {
+    this.getVoteList()
   }
 }
 </script>
