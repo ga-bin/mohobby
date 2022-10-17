@@ -26,25 +26,13 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 
 	@Override
 	public List<RoomVO> getChatMoimRoom(String memberId) {
-		// TODO Auto-generated method stub
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-		System.out.println("=******************="); 
-			System.out.println(memberId);
+
 		return mapper.getChatMoimRoom(memberId);
 	}
 
 	@Override
 	public List<ChatVO> getChat(String roomNo) {
 		return mapper.getChat(roomNo);
-	}
-
-	@Override
-	public ChatUserVO getOtherUser(ChatUserVO chatUserVO) {
-		return mapper.getOtherUser(chatUserVO);
 	}
 
 	@Override
@@ -55,6 +43,22 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 	@Override
 	public int CreateRoom(CreateRoomVO cr) {
 		return mapper.createRoom(cr);
+	}
+
+	@Override
+	public ChatUserVO getOtherUser(ChatUserVO chatUserVO) {
+		return null;
+	}
+
+	@Override
+	public List<ChatVO> getTargetId(String roomNo) {
+		return mapper.getTargetId(roomNo);
+	}
+
+	@Override
+	public ChatVO getprofileImg(ChatVO chat) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

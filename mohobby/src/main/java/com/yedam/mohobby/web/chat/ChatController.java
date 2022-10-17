@@ -28,8 +28,12 @@ public class ChatController {
 	@Autowired
 	ChatService service;
 
-	@GetMapping("/ChatList/{roomNo}")
-	public List<ChatVO> allRoom(@PathVariable String roomNo) {
+	@GetMapping("/getTargetId/{roomNo}")
+	public List<ChatVO> getTargetId(@PathVariable String roomNo){
+		return service.getTargetId(roomNo);
+	}
+	@GetMapping("/getChatList/{roomNo}")
+	public List<ChatVO> getChat(@PathVariable String roomNo) {
 		return service.getChat(roomNo);
 	}
 
@@ -39,18 +43,17 @@ public class ChatController {
 	}
 	@GetMapping("/ChatMoimRoom/{memberId}")
 	public List<RoomVO> getChatMoimRoom(@PathVariable String memberId) {
-		
 		return service.getChatMoimRoom(memberId);
 	}
-
-	@PostMapping("/ChatUser")
-	public ChatUserVO getOtherUser(@RequestBody ChatUserVO chatUserVO) {
-		return service.getOtherUser(chatUserVO);
+	@PostMapping("/getProfileImg")
+	public ChatVO getProfileImg(@RequestBody ChatVO chat) {
+		return service.getprofileImg(chat);
 	}
 	
 	@PostMapping("/InsertMessage")
-	public void insertMessage(@RequestBody MessageVO message) {
-		System.out.println(11);
+	public int insertMessage(@RequestBody MessageVO message) {
+		System.out.println(message);
+		return service.insertMessage(message);
 	}
 	
 	@PostMapping("/CreateRoom")

@@ -12,4 +12,6 @@ public List<ChatVO>getChat(String roomNo);
 public ChatUserVO getOtherUser(ChatUserVO chatUserVO);
 public int insertMessage(MessageVO message);
 public int CreateRoom(CreateRoomVO cr);
+public List<ChatVO>getTargetId(String roomNo);
+public ChatVO getprofileImg(ChatVO chat);
 }
