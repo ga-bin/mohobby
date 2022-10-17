@@ -1,21 +1,18 @@
-package com.yedam.mohobby.web.chat;
-
-import java.util.HashMap;
+spackage com.yedam.mohobby.web.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
-import com.yedam.mohobby.mapper.admin.AdminMoimMapper;
-import com.yedam.mohobby.mapper.user.MemberMapper;
 import com.yedam.mohobby.service.chat.ContentVO;
-//import com.yedam.mohobby.service.chat.NoticeService;
-//import com.yedam.mohobby.service.chat.NoticeVO;
-//import com.yedam.mohobby.service.chat.SendNoticeVO;
-//import com.yedam.mohobby.service.chat.SnsNoticeVO;
+import com.yedam.mohobby.service.notice.NoticeService;
+import com.yedam.mohobby.service.notice.NoticeVO;
+import com.yedam.mohobby.service.notice.ResNoticeVO;
 import com.yedam.mohobby.service.user.MemberService;
 import com.yedam.mohobby.service.chat.RevNoticeVO;
+import com.yedam.mohobby.service.moim.MoimService;
 
 @Controller
 public class MessageController {
@@ -25,6 +22,9 @@ public class MessageController {
 
 //	@Autowired
 //	NoticeService nService;
+
+	@Autowired
+	MoimService moService;
 
 	@Autowired
 	SimpMessageSendingOperations sendTemplate;
@@ -61,22 +61,47 @@ public class MessageController {
 		sendTemplate.convertAndSend("/" + content.getMemberId(), content);
 	}
 
-	// sns알림
-//	@MessageMapping("/NoticeSnsLike")
-//	public void NoticeSns(SnsNoticeVO snsNotice) {
-//		NoticeVO noticeVO = new NoticeVO();
-//		snsNotice.setProfileImge(mService.getMember(snsNotice.getMyId()).getProfileImg());
-//		snsNotice.setNickname(mService.getMember(snsNotice.getTargetId()).getNickName());
-//		noticeVO.setMemberId(snsNotice.getTargetId());
-//		noticeVO.setNoticeAvatar(snsNotice.getProfileImge());
-//		noticeVO.setNoticeTitle(snsNotice.getNickname());
-//		if (snsNotice.getContentType() == 0) {
-//			noticeVO.setNoticeSubtitle("좋아요를 눌렀습니다.");
-//		}
-//		else if(snsNotice.getContentType() ==1) {
-//			noticeVO.setNoticeSubtitle("댓글을 남기셨습니다.");
-//		}
-//		nService.insertNotice(noticeVO);
-//		sendTemplate.convertAndSend("/queue/" + snsNotice.getTargetId() + "/sns", snsNotice);
-//	}
+	// 알림
+	@MessageMapping("Notice")
+	public void NoticeSns(ResNoticeVO resNotice) {
+		NoticeVO noticeVO = new NoticeVO();
+		//sns 알림
+		if (resNotice.getBoardType() == 0) {
+			resNotice.setProfileImge(mService.getMember(resNotice.getMyId()).getProfileImg());
+			resNotice.setNickname(mService.getMember(resNotice.getMyId()).getNickName());
+
+			noticeVO.setMemberId(resNotice.getTargetId());
+			noticeVO.setNoticeAvatar(resNotice.getProfileImge());
+			noticeVO.setNoticeTitle(resNotice.getNickname());
+
+			if (resNotice.getContentType() == 0) {
+				if (resNotice.getLikeStatus() == 0) {
+					noticeVO.setNoticeSubtitle("좋아요를 눌렀습니다.");
+				} else if (resNotice.getLikeStatus() == 1) {
+					noticeVO.setNoticeSubtitle("좋아요를 취소했습니다.");
+				}
+			} else if (resNotice.getContentType() == 1) {
+				noticeVO.setNoticeSubtitle("댓글을 남기셨습니다.");
+			}
+		}
+		//소모임 알림
+		else if (resNotice.getBoardType()==1) {
+			resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMyId()).getMoimImg());
+			resNotice.setNickname(moService.getMoimInfo(resNotice.getMyId()).getMoimName());
+			
+			noticeVO.setMemberId(resNotice.getTargetId());
+			noticeVO.setNoticeAvatar(resNotice.getProfileImge());
+			noticeVO.setNoticeTitle(resNotice.getNickname());
+		}
+		else if(resNotice.getBoardType()==2) {
+			
+			
+			
+		}
+
+		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
+		nService.insertNotice(noticeVO);
+	}
+	// 소모임알리
+
 }

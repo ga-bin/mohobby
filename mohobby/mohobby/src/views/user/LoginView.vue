@@ -220,19 +220,30 @@ export default {
         },
       })
         .then(function (response) {
-          console.log(response);
-          if (response.data != "") {
-            console.log(response.data);
+          if (response.data != "" && response.data.memberId != "admin") {
+            console.log("if문 안에" + response.data);
             // 유저 id, 유저 정보 넣기
             vm.$store.state.id = vm.memberId;
             vm.$store.commit("setUserData", response.data);
             // 메인으로 이동(로그인성공)
             vm.$router.push("/");
-          } else {
-            alert("아이디, 비밀번호가 일치하지 않습니다.");
+          } else if(response.data != "" && response.data.memberId == "admin") {
+            console.log("else if문 안에" + response.data);
+            vm.$store.state.id = vm.memberId;
+            vm.$store.commit("setUserData", response.data);
+            // 메인으로 이동(로그인성공)
+            vm.$router.push("/adminuser");
+          }
+          else {
+            vm.$swal.fire({
+              icon: 'error',
+              title: '아이디, 비밀번호가 일치하지 않습니다.',
+        })
           }
         })
-        .catch(function (error) {});
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     // 네이버, 카카오 로그인 시 이메일 있는지 검사
     checkMemberByEmail() {

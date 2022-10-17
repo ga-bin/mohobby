@@ -47,6 +47,11 @@ const routes = [
     name: "login",
     component: () => import("./../views/user/LoginView"),
   },
+    {
+    path: "/follow",
+    name: "follow",
+    component: () => import("./../components/user/FollowModal"),
+  },
   {
     path: "/register",
     name: "register",

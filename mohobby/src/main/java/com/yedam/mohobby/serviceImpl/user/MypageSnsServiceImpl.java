@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.mapper.user.MypageSnsMapper;
+import com.yedam.mohobby.service.sns.SnsFollowVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.user.MypageSnsService;
 
@@ -17,13 +18,13 @@ public class MypageSnsServiceImpl implements MypageSnsService {
 	
 	//유저의 팔로워 목록
 	@Override
-	public List<String> getFollower(String memberId) {
+	public List<SnsFollowVO> getFollower(String memberId) {
 		return mapper.getFollower(memberId);
 	}
 
 	//유저의 팔로잉 목록
 	@Override
-	public List<String> getFollowing(String memberId) {
+	public List<SnsFollowVO> getFollowing(String memberId) {
 		return mapper.getFollowing(memberId);
 	}
 

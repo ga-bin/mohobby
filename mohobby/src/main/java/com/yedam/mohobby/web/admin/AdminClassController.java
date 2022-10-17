@@ -3,6 +3,7 @@ package com.yedam.mohobby.web.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,13 +18,17 @@ import com.yedam.mohobby.service.classes.ClassesVO;
  * @title 관리자 강의
  */
 @RestController
+@CrossOrigin(origins = "*")
 public class AdminClassController {
 	
 	@Autowired
 	AdminClassService service;
-	
-	// 승인 신청한 강의 목록
-	@GetMapping("/adminAuditClass")
+	/**
+	 * @title 강의목
+	 * @param adminClassVO
+	 * @return
+	 */
+	@GetMapping("/adminClassList")
 	public List<AdminClassVO> getAuditClassList() {
 		return service.getAuditClassList();
 	};

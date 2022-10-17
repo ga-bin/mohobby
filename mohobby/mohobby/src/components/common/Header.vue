@@ -24,17 +24,19 @@
       </template>
       <v-list three-line width="400">
         <template v-for="(item, index) in items">
-          <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
-          <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
-          <v-list-item v-else :key="item.title">
-            <v-list-item-avatar>
-              <v-img :src="item.avatar"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title v-html="item.title"></v-list-item-title>
-              <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+          <div @click="pageMove(item.postId,item.boardType)">
+            <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
+            <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
+            <v-list-item v-else :key="item.title">
+              <v-list-item-avatar>
+                <v-img :src="item.avatar"></v-img>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title v-html="item.title"></v-list-item-title>
+                <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
         </template>
       </v-list>
     </v-menu>
@@ -65,6 +67,7 @@ export default {
   components: {},
   data() {
     return {
+      subtitle: "",
       messages1: 3,
       items: [
         { header: this.$moment().format('YYYY-MM-DD') },
@@ -95,26 +98,30 @@ export default {
       this.stompClient.connect(
         {},
         (frame) => {
-          this.stompClient.subscribe("/queue/" + this.$store.state.id+"/snsLike", function (res) {
-            let revNotice = JSON.parse(res.body)
-            if (revNotice.memberId != this.$store.state.id) {
-              vm.items.push({
-                avatar: require(`@/assets/image/user/${revNotice.profileImge}`),
-                title: revNotice.nickname,
-                subtitle: "좋아요를 누른거 수정좀해야겠다"
-              })
-              vm.items.push({ divider: true, inset: true })
-            }
-          })
-          this.stompClient.subscribe("/queue/" + this.$store.state.id+"/snsComent", function (res) {
-            let revNotice = JSON.parse(res.body)
-            if (revNotice.memberId != this.$store.state.id) {
-              vm.items.push({
-                avatar: require(`@/assets/image/user/${revNotice.profileImge}`),
-                title: revNotice.nickname,
-                subtitle: "댓글남겼습니다."
-              })
-              vm.items.push({ divider: true, inset: true })
+          this.stompClient.subscribe("/queue/" + this.$store.state.id + "/sns", function (res) {
+            let resNotice = JSON.parse(res.body)
+            if (resNotice.memberId != vm.$store.state.id) {
+              if (resNotice.boardType == 0) {
+                if (resNotice.contentType == 0) {
+                  if (resNotice.likeStatus == 0) {
+                    vm.subtitle = "좋아요를 눌렀습니다."
+                  }
+                  else if (resNotice.likeStatus == 1) {
+                    vm.subtitle = "좋아요를 취소했습니다."
+                  }
+                }
+                else if(resNotice.contentType==1){
+                  vm.subtitle="댓글을 남겼습니다."
+                }
+                vm.items.push({
+                  avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
+                  title: resNotice.nickname,
+                  subtitle: vm.subtitle,
+                  postId: resNotice.postId,
+                  boardType: resNotice.boardType
+                })
+                vm.items.push({ divider: true, inset: true })
+              }
             }
           })
           console.log("소켓 연결 성공", frame);
@@ -123,6 +130,9 @@ export default {
           console.log("소켓 연결 실패", error);
         }
       );
+    },
+    pageMove(postId) {
+      this.$router.push("/snsFeedDetail?id=" + postId);
     }
   },
 };
