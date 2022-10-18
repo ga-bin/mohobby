@@ -117,7 +117,7 @@
       
       <v-tabs-items v-model="tab" style="padding: 20px 0px">
         <v-tab-item key="2">
-          <!-- qna 내역 존재 -->
+          <!-- 질문 내역 존재 -->
           <div v-if="questList.length != 0">
             <div>
               <v-card class="d-flex justify-end align-center" flat tile>
@@ -126,10 +126,16 @@
                   <v-btn
                     outlined
                     color="#2b2b2b"
+                    @click="clickWriteBtn"
                   >
-                    작성하기
+                    질문 작성하기
                   </v-btn>
                 </div>
+                <v-card tile flat>
+                  <!-- 정렬 방식 -->
+                  <v-select :items="listFilter" item-text="title" item-value="value"
+                    :menu-props="{ bottom: true, offsetY: true }" attach style="width: 160px;" v-model="defaultFilter" />
+                </v-card>
               </v-card>
             </div>
             <!-- 질문 게시글 목록 -->
@@ -153,18 +159,24 @@
                         {{ rv.nickname }}
                       </span>
                       <span style="font-size: 1em; color: gray; padding-left: 7px;">{{ replaceDate(rv.writeDate) }}</span>
-                      <div style="font-size: 1.3em; padding-top: 14px">{{ rv.content }}</div>
+                      <div style="font-size: 1.3em; color: #2b2b2b; padding-top: 14px">{{ rv.content }}</div>
                     </v-col>
                     <!-- 수정 / 삭제 -->
-                    <div style="padding: 12px 17px 0px 0px;">
+                    <div style="padding: 20px 17px 0px 0px;">
                       <v-row v-if="rv.memberId == $store.state.id">
-                        <div class="modBtn" @click="clickUpdate(i)">수정</div>
+                        <div class="modBtn" @click="clickUpdateBtn(i)">수정</div>
                         <div class="delBtn" @click="clickDelete(i)">삭제</div>
                       </v-row>
                     </div>
                   </v-row>
                   <!--댓글-->
-                  
+                  <v-divider class="mt-5 mb-5" inset></v-divider>
+                  <details>
+                    <summary style="font-size: 1.2em;">댓글({{ rv.commentTotal }})</summary>
+                    <div v-if="rv.commentTotal > 0" class="output ql-snow">
+                      ㅇㅇ
+                    </div>
+                  </details>
                 
                 </v-card-text>
               </v-card>
@@ -178,7 +190,62 @@
           </div>
         </v-tab-item>
         <v-tab-item key="3">
-3번
+          <!-- 노트 내역 존재 -->
+          <div v-if="questList.length != 0">
+            <div>
+              <v-card class="d-flex justify-end align-center" flat tile>
+                <!-- 작성하기 버튼 -->
+                <div class="text-center mb-3" style="padding-right: 20px;">
+                  <v-btn
+                    outlined
+                    color="#2b2b2b"
+                    @click="sheet = true"
+                  >
+                    노트 작성하기
+                  </v-btn>
+                </div>
+                <v-card tile flat>
+                  <!-- 정렬 방식 -->
+                  <v-select :items="listFilter" item-text="title" item-value="value"
+                    :menu-props="{ bottom: true, offsetY: true }" attach style="width: 160px;" v-model="defaultFilter" />
+                </v-card>
+              </v-card>
+            </div>
+            <!-- 노트 게시글 목록 -->
+            <div style="padding: 5px 20px" v-for="(rv,i) in noteList" :key="i">
+              <v-card class="mx-auto" outlined>
+                <v-card-text>
+                  <v-row>
+                    <v-chip
+                      class="mt-2 ml-2"
+                      @click="moveTime(rv.title)"
+                      color="#AAABB7"
+                      dark
+                    >
+                      #{{ rv.title | runtime }}
+                    </v-chip>
+                    <v-col>
+                      <span style="font-size: 1em; color: gray;">{{ replaceDate(rv.writeDate) }}</span>
+                      <div style="font-size: 1.3em; color: #2b2b2b; padding-top: 14px">{{ rv.content }}</div>
+                    </v-col>
+                    <!-- 수정 / 삭제 -->
+                    <div style="padding: 20px 17px 0px 0px;">
+                      <v-row v-if="rv.memberId == $store.state.id">
+                        <div class="modBtn" @click="clickUpdateBtn(i)">수정</div>
+                        <div class="delBtn" @click="clickDelete(i)">삭제</div>
+                      </v-row>
+                    </div>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+            </div>
+          </div>
+          <div v-if="questList.length == 0">
+            <v-card flat justify="center" align="center" style="padding-top: 50px">
+              <h1>🙇</h1>
+              <h1>작성한 학습노트가 없습니다</h1>
+            </v-card>
+          </div>
         </v-tab-item>
       </v-tabs-items>
 
@@ -201,6 +268,17 @@ export default {
   },
   data() {
     return {
+      defaultFilter: 0,
+      listFilter: [
+        {
+          title: '최신순',
+          value: 0,
+        },
+        {
+          title: '댓글순',
+          value: 1,
+        },
+      ],
       tab: '2',
       classInfo: {},
       questList: [],
@@ -404,12 +482,13 @@ export default {
       sheet: false,
       newContent: '',
       form: {
-        type: 3, //2:질문, 3:노트
-        submit: '노트작성',
+        type: 2, //2:질문, 3:노트
+        submit: '질문등록',
 
       },
       currentTime: 0,
       noteList: [],
+      updateObj: {},
 
     };
   },
@@ -478,6 +557,30 @@ export default {
       //this.sheet = true;
     },
     clickSubmit() {
+      if(this.form.submit.includes('수정')) {
+        this.updateContent(this.updateObj);
+      } else {
+        this.insertContent();
+      }
+    },
+    updateContent(obj) {
+      if(this.newContent == obj.content) {
+        this.$swal('변경된 내용이 없습니다!', '', 'info');
+      } else {
+        this.axios.put('/class/board', {
+            boardId: obj.boardId,
+            title: obj.title,
+            content: this.newContent,
+            boardType: obj.boardType,
+        }).then( res => {
+          if(res.status == 200) {
+            obj.content = this.newContent;
+            this.sheet = false;
+          }
+        }).catch( err => console.log(err) )
+      }
+    },
+    insertContent() {
       if(this.newContent == '') {
         this.$swal('내용을 입력하세요!', '', 'info');
         return;
@@ -507,6 +610,7 @@ export default {
         if(res.status == 200) {
           this.sheet = false;
           this.newContent = '';
+          this.questList.unshift(res.data);
         }
       }).catch( err => console.log(err) )
     },
@@ -528,6 +632,7 @@ export default {
         if(res.status == 200) {
           this.sheet = false;
           this.newContent = '';
+          this.noteList.unshift(res.data);
         }
       }).catch( err => console.log(err) )
     },
@@ -536,9 +641,87 @@ export default {
     },
     moveTime(time) {
       document.querySelector(".art-video").currentTime = time;
+    },
+    clickUpdateBtn(idx) {
+      if(this.form.type == 2) {
+        this.newContent = this.questList[idx].content;
+        this.currentTime = this.questList[idx].title;
+        this.form.submit = '질문수정';
+        this.updateObj = this.questList[idx];
+        this.sheet = true;
+      } else if(this.form.type == 3) {
+        this.newContent = this.noteList[idx].content;
+        this.currentTime = this.noteList[idx].title;
+        this.form.submit = '노트수정';
+        this.updateObj = this.noteList[idx];
+        this.sheet = true;
+      }
+    },
+    clickDelete(idx) {
+      this.$swal({
+        title: '정말 삭제할까요?',
+        text: "삭제를 원하지 않으면 취소버튼을 눌러주세요!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ac187',
+        cancelButtonColor: '#d33',
+        cancelButtonText: '취소',
+        confirmButtonText: '네, 삭제할게요!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deleteContent(idx);
+        }
+      })
+    },
+    deleteContent(idx) {
+      let obj = {};
+      if(this.form.type == 2){
+        obj = this.questList[idx];
+      } else if(this.form.type == 3) {
+        obj = this.noteList[idx];
+      }
+
+      this.axios.delete('/class/board', {
+        params: {
+          boardId: obj.boardId,
+        },
+      }).then( res => {
+        if(res.status == 200) {
+          this.$swal(
+            '삭제 완료!',
+            '작성한 QnA를 삭제하였습니다.',
+            'success'
+          );
+          this.sheet = false;
+          if(this.form.type == 2){
+            this.questList.splice(idx, 1);
+          } else if(this.form.type == 3) {
+            this.noteList.splice(idx, 1);
+          }
+        }
+      })
+      
+    },
+    clickWriteBtn() {
+      this.currentTime = document.querySelector(".art-video").currentTime;
+      this.sheet = true;
     }
   },
   watch: {
+    sheet: function() {
+      if(this.sheet == true) {
+        document.querySelector(".art-video").pause();
+      }
+      if(this.sheet == false) {
+        this.newContent = '';
+        this.currentTime = document.querySelector(".art-video").currentTime;
+        if(this.form.type == 2) {
+          this.form.submit = '질문등록';
+        } else if(this.form.type == 3) {
+          this.form.submit = '노트작성';
+        }
+      }
+    },
   },
   created() {
     this.getNoteList();
@@ -557,6 +740,9 @@ export default {
 }
 </style>
 <style scoped>
+* {
+  word-break: keep-all;
+}
 .currName {
   color: #f3f3f3;
   padding-left: 15px;
