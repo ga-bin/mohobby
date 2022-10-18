@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <Header></Header>
     <v-main>
-      <v-container class="py-8 px-6" fluid>
+      <v-container fluid style="padding: 0px;">
         <router-view></router-view>
       </v-container>
     </v-main>
@@ -12,12 +12,10 @@
 <script>
 
 import Header from "./components/common/Header";
-
 export default {
 
   components: { Header },
   data: () => ({
-    
     cards: ["Today", "Yesterday"],
     menu5: "asd",
   }),

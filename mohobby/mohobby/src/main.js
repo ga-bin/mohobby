@@ -18,6 +18,7 @@ import SockJS from "sockjs-client";
 const serverURL = "http://localhost:8088/java/sock";
 let socket = new SockJS(serverURL);
 let stompClient=Stomp.over(socket);
+
 Vue.prototype.stompClient=stompClient;
 moment.locale("ko");
 
@@ -70,7 +71,11 @@ Vue.filter("runtime", (val) => {
   }
 
   let m = (parseInt(val / 60)).toString();
-  let s = (val % 60).toString();
+  let s = (parseInt(val % 60)).toString();
+
+  if (s.includes('.')) {
+    s = s.substring(0, s.indexOf('.'));
+  }
 
   let mm = m;
   let ss = s;
@@ -95,3 +100,4 @@ new Vue({
   store,
   render: (h) => h(App),
 }).$mount("#app");
+

@@ -8,6 +8,8 @@ import com.yedam.mohobby.service.notice.NoticeVO;
 
 @Mapper
 public interface NoticeMapper {
-public List<NoticeVO> getAllNotice(String memberId);
-public int insertNotice(NoticeVO notice);
+	public List<NoticeVO> getAllNotice(String memberId);
+	public int insertNotice(NoticeVO notice);
+	public int delectNotice(int noticeId);
+	public int getNoticeId();
 }

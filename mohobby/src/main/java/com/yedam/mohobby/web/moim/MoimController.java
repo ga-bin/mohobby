@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
+import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
@@ -249,11 +250,25 @@ public class MoimController {
 	      
 	}
 	
-	//소모임 투표 게시글 리스트 조회
-	@GetMapping("/voteList")
-	public List<MoimVoteListVO> moimVoteList(@RequestParam ("moimId") int moimId, @RequestParam ("voteId")int votdId){
-		return service.moimVoteAllList(moimId, votdId);
+	//소모임 N빵 전체조회
+	@GetMapping("/moimNbbangList")
+	public List<MoimDutchVO> getAllNbbangList(@RequestParam ("moimId")int moimId){
+		System.out.println(moimId);
+		return service.getAllDuchList(moimId);
 	}
+	
+	//소모임 전체 멤버 리스트 조회
+	@GetMapping("/moimMemberList")
+	public List<MoimVO> getMoimMemberList(@RequestParam ("moimId")int moimId ){
+		return service.getAllMemberList(moimId);
+	}
+	
+	//소모임 멤버 검색 조회(단건 조회)
+	@GetMapping("/oneMemberSearch")
+	public List<MoimVO> getMoimMemberSearch(@RequestParam ("moimId")int moimId ){
+		return service.getSearchMember(moimId);
+	}
+	
 //	@DeleteMapping("/boardDeleteComm")
 //	public String deleteMoimBaordComment(@RequestParam ("commId") int commId) {
 //		try {
@@ -270,5 +285,6 @@ public class MoimController {
 	public int moimMemberCount(@PathVariable int moimId) {
 		return service.moimMemberCount(moimId);
 	}
+
 }
 

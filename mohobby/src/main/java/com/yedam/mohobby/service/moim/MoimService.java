@@ -64,13 +64,21 @@ public interface MoimService {
 	//소모임 권한별 메인화면
 	public int moimMainTop(String memberId);
 	
-	//소모임 투표 디테일 리스트
-	public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId);
-	
 	//소모임 등록 권한 업데이트
 	public int moimUserUpdate(MemberVO vo);
 
 	// 소모임 가입 회원 수 조회하는 로직
 	public int moimMemberCount(int moimId);
+	//소모임 단건조회
+	public MoimVO getMoimInfo(int moimId);
+
+	//소모임 N빵 전체 리스트 조회
+	public List<MoimDutchVO> getAllDuchList(int moimId);
+	
+	//소모임 전체 멤버 리스트 조회
+	public List<MoimVO> getAllMemberList(int moimId);
+
+	//소모임 멤버 검색 조회
+	public List<MoimVO> getSearchMember(int moimId);
 }
 

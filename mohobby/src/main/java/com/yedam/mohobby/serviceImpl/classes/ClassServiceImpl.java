@@ -118,7 +118,7 @@ public class ClassServiceImpl implements ClassService {
         File file = new File(path);
 
         try {
-            FileOutputStream fos = new FileOutputStream(file, false);
+            FileOutputStream fos = new FileOutputStream(file);
             fos.write(req.getContent().getBytes());
             fos.flush();
             fos.close();
@@ -158,7 +158,6 @@ public class ClassServiceImpl implements ClassService {
         }
         
         
-        
         return res;
     }
 
@@ -189,6 +188,7 @@ public class ClassServiceImpl implements ClassService {
     // 에디터 이미지 저장
     @Override
     public void uploadClassImage(ClassImageVO vo) {
+    	System.out.println(vo);
         File file = null;
         
         String path = ClassController.class.getResource("/").getPath();
@@ -196,55 +196,45 @@ public class ClassServiceImpl implements ClassService {
         path = path.substring(0, path.lastIndexOf("mohobby") + "mohobby".length());
 
         path += "/mohobby/mohobby/src/assets/image/class/info/";
-        path += vo.getFoldername();
-        path += "/";
+        path += String.valueOf(vo.getFoldername());
+        //path += "/";
         
         File dir = new File(path);
-        if (!dir.exists() && !dir.isDirectory()) {
+        if (!dir.exists()) {
             dir.mkdir();
         }
         
-        BufferedOutputStream bos = null;
+        byte[] targetBytes = null;
         FileOutputStream fos = null;
-        try {
-            byte[] bytes = Base64.getDecoder().decode(vo.getSrc());
-            file = new File(path + vo.getFilename() + ".jpg");
-            fos = new FileOutputStream(file, false);
-            bos = new BufferedOutputStream(fos);
-            bos.write(bytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (bos != null) {
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        
+        if(vo.getSrc().contains("base64")) {
+        	System.out.println(vo.getSrc().split(",")[1]);
+        	String data = vo.getSrc().split(",")[1];
+        	targetBytes = data.getBytes();
+        	byte[] bytes = Base64.getDecoder().decode(targetBytes);
+        	
+            try {
+            	file = new File(path + "/" + vo.getFilename() + ".jpg");
+            	fos = new FileOutputStream(file);
+            	fos.write(bytes);
+            	fos.close();
+            } catch(Exception e) {
+            	e.printStackTrace();
+            } finally {
+            	if (fos != null) {
+            		try {
+            			fos.close();
+            		} catch (IOException e) {
+            			e.printStackTrace();
+            		}
+            	}
             }
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        } else {
+        	System.out.println("기존파일");
         }
         
-    }
-    
-    // 이미지 파일 이름 변경
-    @Override
-    public void changeImageName(ClassImageVO req) {
-        // TODO Auto-generated method stub
         
     }
 
-    
-    
-    
-    
-
-   
 
 }

@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <div class="box">
+    <div class="box1">
       <h3>인기있는 소모임을 확인하세요!</h3>
     </div>
-    <div class="box">
+    <div class="box1">
       <h3 style="visibility: hidden">.</h3>
     </div>
     <div
@@ -86,6 +86,13 @@ export default {
   width: 50%;
   margin-bottom: 15px;
   cursor: pointer;
+}
+
+.box1 {
+  float: left;
+  width: 50%;
+  margin-bottom: 15px;
+
 }
 
 .people {
