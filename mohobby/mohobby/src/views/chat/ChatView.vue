@@ -19,13 +19,11 @@
                           <v-list-item-title v-text="item.nickName" />
                           <v-list-item-subtitle v-text="item.content" />
                           <v-list-item-subtitle v-text="item.nonReadChat" />
-
                           <v-list-item-subtitle v-text="item.checkIn" />
                         </v-list-item-content>
                         <v-list-item-icon>
                           <v-icon :color="
-                            item.active ? 'deep-purple accent-4' : 'grey'
-                          ">
+                            item.active ? 'deep-purple accent-4' : 'grey'">
                             chat_bubble
                           </v-icon>
                         </v-list-item-icon>
@@ -42,21 +40,20 @@
               v-scroll.self="onScroll">
               <v-card-title>
                 {{ this.$store.state.id }}
+                {{ roomId}}
               </v-card-title>
               <v-card-text class="flex-grow-1 overflow-y-auto">
                 <template v-for="(msg, i) in messages">
                   <div :class="{
-                    'd-flex flex-row-reverse': msg.memberId == memberId,
-                  }">
+                    'd-flex flex-row-reverse': msg.memberId,}">
                     <v-menu offset-y>
                       <template v-slot:activator="{ on }">
                         <v-hover v-slot:default="{ hover }">
                           <v-chip :color="msg.memberId ? 'primary' : ''" dark style="height: auto; white-space: normal"
                             class="pa-4 mb-2" v-on="on">
                             {{ msg.content }}
-                            <sub class="ml-2" style="font-size: 0.5rem">{{
-                            msg.hour
-                            }}</sub>
+                            <sub class="ml-2" style="font-size: 0.5rem">
+                            {{msg.hour}}</sub>
                           </v-chip>
                         </v-hover>
                       </template>
@@ -77,6 +74,8 @@
 </template>
 
 <script>
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 
 export default {
   name: "App",
@@ -87,7 +86,7 @@ export default {
       memberId: this.$store.state.id, //세션 로그인값
       messages: [], //메세지 내역
       message: "",
-      roomId: this.$route.params.vroomNo, //방번호
+      roomId: "", //방번호
       roomList: [], //방목록정보
       stompClient: "", //소켓서버
       hour: "", //메세지시간
@@ -176,6 +175,7 @@ export default {
     openRoom(roomNo) {
       var vm = this;
       this.roomId = roomNo;
+      
       this.messages = [];
       this.targetId = [];
       //안읽은 메세지수 추출
@@ -221,16 +221,23 @@ export default {
           console.log(res);
           vm.targetId = res.data;
         })
-        .catch(function (err) { })
-        .finally(function (ros) { });
+        .catch(function (err) { console.log(err) })
       //같은방 클릭시 재구독 방지
       vm.stompClient.unsubscribe(vm.subscribeRoot);
 
       //채팅내역 불러오기
       this.axios
-        .get("/ChatList/" + this.roomId, {})
+        .get("/getChatList/" + this.roomId, {})
         .then(function (res) {
           for (let i = 0; i < res.data.length; i++) {
+            console.log(res.data)
+            console.log(res.data)
+            console.log(res.data)
+            console.log(res.data)
+            console.log(res.data)
+            console.log(res.data)
+            console.log(res.data)
+            console.log(res.data)  
             if (vm.memberId == res.data[i].memberId) {
               res.data[i].memberId = true;
             } else {
@@ -291,6 +298,7 @@ export default {
             .get("/ChatMoimRoom/" + vm.memberId, {})
             .then(function (res) {
               for (let i = 0; i < res.data.length; i++) {
+                console.log(res.data)
                 vm.roomList.push(res.data[i]);
               }
               console.log(res.data);
@@ -300,27 +308,43 @@ export default {
             })
             .finally(function (ros) {
               vm.sortRoom();
-              vm.openRoom(vm.roomId);
+              vm.openRoom(vm.$route.params.getRoomId);
             });
         });
     },
     connect() {
-      let vm = this;
-      this.stompClient.subscribe(
-        "/queue/" + this.$store.state.id,
-        function (res) {
-          let changeContent = JSON.parse(res.body);
-          for (let i = 0; i < vm.roomList.length; i++) {
-            if (vm.roomList[i].roomNo == changeContent.roomNo) {
-              vm.roomList[i].content = changeContent.content;
-              vm.roomList[i].msgTime = changeContent.msgTime;
-              ++vm.roomList[i].nonReadChat;
-              vm.sortRoom();
-            } else console.log("안되나요");
-          }
-          console.log("구독했나요", frame);
+      const serverURL = "http://localhost:8088/java/sock";
+      let socket = new SockJS(serverURL);
+    this.stompClient = Stomp.over(socket);
+      console.log("와치뒤에 걸리나요")
+      let vm = this
+
+      this.stompClient.connect(
+        {},
+        (frame) => {
+          console.log("소켓 연결 성공?", frame);
+
+          vm.stompClient.subscribe(
+            "/queue/" + this.$store.state.id,
+            function (res) {
+              let changeContent = JSON.parse(res.body);
+              for (let i = 0; i < vm.roomList.length; i++) {
+                if (vm.roomList[i].roomNo == changeContent.roomNo) {
+                  vm.roomList[i].content = changeContent.content;
+                  vm.roomList[i].msgTime = changeContent.msgTime;
+                  ++vm.roomList[i].nonReadChat;
+                  vm.sortRoom();
+                } else console.log("안되나요");
+              }
+              console.log("구독했나요", frame);
+            }
+          );
+        },
+        (error) => {
+          console.log("소켓 연결 실패", error);
         }
       );
+
     },
   },
 }

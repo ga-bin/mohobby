@@ -133,8 +133,8 @@
 				b.moim_img as profile_img,
 				nvl(null,0)check_in
 				,nvl(null,0)non_read_chat 
-		from getMoimInfo a 
-		join getRoomNo b 
+		from getRoomNo a 
+		join getMoimInfo b 
 	     on (a.room_no=b.moim_id)
 	</select>
 	<!-- 채팅내역 추출 -->
