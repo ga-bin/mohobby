@@ -2,6 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.moim.MoimMapper">
 
+<!-- 소모임 단건 조회 -->
+<select id="getMoimOneInfo" parameterType="Integer" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select *
+from moim
+where moim_id=#{moimId}
+</select>
+
 <!-- 소모임 등록 -->
 <insert id="moimInsert" parameterType="com.yedam.mohobby.service.moim.MoimVO">
 <selectKey keyProperty="moimId" resultType="Integer" order="BEFORE">
@@ -132,8 +139,8 @@
 select a.moim_id, a.moim_img, a.moim_name
 from moim a, moim_member b 
 where a.moim_id = b.moim_id
-and member_role = 0
-and member_id = #{memberId}
+and b.member_role = 0
+and b.member_id = #{memberId}
 </select>
 
 <!-- 내가 운영중인 소모임 리스트 조회 -->
@@ -141,8 +148,8 @@ and member_id = #{memberId}
 select a.moim_id, a.moim_img, a.moim_name
 from moim a, moim_member b 
 where a.moim_id = b.moim_id
-and memeber_role = 3
-and member_id = #{memberId}
+and b.memeber_role = 3
+and b.member_id = #{memberId}
 </select>
 
 <!-- 내가 참여중인 소모임 없음 -->
@@ -150,8 +157,8 @@ and member_id = #{memberId}
 	select count(moim_name)
 	from moim a, moim_member b 
 	where a.moim_id = b.moim_id
-	and member_role = 0
-	and member_id = #{memberId}
+	and b.member_role = 0
+	and b.member_id = #{memberId}
 </select>
 
 <!-- 소모임 게시글 댓글 수정 -->
@@ -192,6 +199,20 @@ member_id = v_member;
 end;
 </update>
 
+<!-- 소모임 투표 게시글 리스트 조회 -->
+<select id="moimVoteAllList" resultType="com.yedam.mohobby.service.moim.MoimVoteListVO">
+select a.start_date, a.topic, a.moim_id, b.content, b.cnt
+from moim_vote a, moim_vote_item b
+where a.vote_id = b.vote_id
+and a.vote_id = #{voteId}
+and moim_id = #{moimId}
+</select>
+
+<!-- 소모임 가입 회원 수 조회하는 로직 -->
+<select id="moimMemberCount" parameterType="integer" resultType="integer">
+select count(*)
+from moim_member
+where moim_id = #{moimId}
 <!-- 소모임 단건조회 -->
 <select id="getMoimInfo" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
 select MOIM_IMG,MOIM_NAME

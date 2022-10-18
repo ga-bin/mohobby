@@ -23,6 +23,12 @@ public class MoimServiceImpl implements MoimService{
 	@Autowired
 	MoimMapper mapper;
 
+	// 소모임 단건조회
+	@Override
+	public MoimVO getMoimOneInfo(int moimId) {
+		return mapper.getMoimOneInfo(moimId);
+	}
+	
 	//소모임 등록
 	@Override
 	public void moimInsert(MoimVO moimVO) {
@@ -144,6 +150,13 @@ public class MoimServiceImpl implements MoimService{
 	 public int moimUserUpdate(MemberVO vo) {
 	    return mapper.moimUserUpdate(vo);
 	 }
+	 
+	 //소모임 투표 디테일 리스트
+	 @Override
+	 public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId) {
+		 return mapper.moimVoteAllList(moimId, voteId);
+	 }
+ 
 
 	//소모임 단건조회
 	@Override
@@ -156,6 +169,12 @@ public class MoimServiceImpl implements MoimService{
 	public int moimCommentDelete(int commId) {
 		System.out.println("serviceimpl" + commId);
 		return mapper.moimCommentDelete(commId);
+	}
+
+	// 소모임 가입 회원 수 조회하는 로직
+	@Override
+	public int moimMemberCount(int moimId) {
+		return mapper.moimMemberCount(moimId);
 	}
 
 	//N빵 전체 리스트 조회

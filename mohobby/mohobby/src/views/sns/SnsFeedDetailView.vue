@@ -8,10 +8,16 @@
         <div>
           <div class="flex">
             <v-avatar class="ml-10 my-10 mr-4" color="grey darken-1" size="64">
-              <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${items.profileImg}`)"
-                @click="goMyFeed(items.memberId)" />
+              <v-img
+                aspect-ratio="30"
+                :src="require(`@/assets/image/user/${items.profileImg}`)"
+                @click="goMyFeed(items.memberId)"
+              />
             </v-avatar>
-            <div class="user text-overline">{{items.memberId}}<br>{{this.$moment(items.writeDate).format('YYYY.MM.DD')}}
+            <div class="user text-overline">
+              {{ items.memberId }}<br />{{
+                this.$moment(items.writeDate).format("YYYY.MM.DD")
+              }}
             </div>
           </div>
         </div>
@@ -20,8 +26,15 @@
         <v-row>
           <v-col cols="12" id="image_box">
             <v-carousel ref="myCarousel" hide-delimiters :touchless="true">
-              <v-carousel-item v-for="(img,i) in imgs" :key="i" :aspect-ratio="4 / 3" :width="width"
-                :src="require(`@/assets/image/sns/${img.postId}/${img.fileName}`)"></v-carousel-item>
+              <v-carousel-item
+                v-for="(img, i) in imgs"
+                :key="i"
+                :aspect-ratio="4 / 3"
+                :width="width"
+                :src="
+                  require(`@/assets/image/sns/${img.postId}/${img.fileName}`)
+                "
+              ></v-carousel-item>
             </v-carousel>
           </v-col>
         </v-row>
@@ -33,9 +46,8 @@
               <v-icon color="red lighten-2">mdi-heart</v-icon>
             </v-btn>
             <v-btn v-else icon text @click="like()">
-              <v-icon>mdi-heart-outline</v-icon>
-            </v-btn>{{ items.likes }}
-            <v-icon>mdi-chat-outline</v-icon>{{ items.cmts }}
+              <v-icon>mdi-heart-outline</v-icon> </v-btn
+            >{{ items.likes }} <v-icon>mdi-chat-outline</v-icon>{{ items.cmts }}
             <v-icon @click="send">mdi-send</v-icon>
           </v-col>
         </v-row>
@@ -53,12 +65,19 @@
 
         <!-- 해시태그 -->
         <v-chip-group id="hashtagGroup">
-          <v-chip v-for="hashtag in hashtags" :key="hashtag" :color="`${colors[nonce - 1]} lighten-3`"
-            @click="search($event)" dark label small>
+          <v-chip
+            v-for="hashtag in hashtags"
+            :key="hashtag"
+            :color="`${colors[nonce - 1]} lighten-3`"
+            @click="search($event)"
+            dark
+            label
+            small
+          >
             #{{ hashtag }}
           </v-chip>
         </v-chip-group>
-        <br>
+        <br />
         <v-col cols="12">
           <CmtReg :postid="postId" :targetId="items.memberId"></CmtReg>
         </v-col>
@@ -90,52 +109,54 @@ export default {
       memId: "",
       postId: Number,
       show: true,
-      targetId:"",
-      colors: ['teal', 'orange', 'green', 'purple', 'indigo', 'cyan'], //tag color
+      targetId: "",
+      colors: ["teal", "orange", "green", "purple", "indigo", "cyan"], //tag color
       nonce: 1,
-    }
+    };
   },
-  setup() { },
+  setup() {},
   created() {
     this.postId = this.$route.query.id;
     this.memId = this.$store.state.id;
     this.showDetail();
     this.detailImg();
   },
-  mounted() {
-
-  },
-  unmounted() { },
+  mounted() {},
+  unmounted() {},
   methods: {
     detailImg() {
-      this.axios('/sns/user/feed_detail_img/' + this.postId, {
+      this.axios("/sns/user/feed_detail_img/" + this.postId, {
         params: {
           memberId: this.memId,
-        }
-      }).then(res => {
-        this.imgs = res.data;
-        console.log("이미지 로딩 성공!");
-      }).catch(err => {
-        console.log(err);
-      });
+        },
+      })
+        .then((res) => {
+          this.imgs = res.data;
+          console.log("이미지 로딩 성공!");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     //게시글 상세 로드
     showDetail() {
-      this.axios('/sns/user/feed_detail/' + this.postId, {
+      this.axios("/sns/user/feed_detail/" + this.postId, {
         params: {
           memberId: this.memId,
-        }
-      }).then(res => {
-        this.items = res.data;
-        if (this.items.hashtag != null) {
-          let str = this.items.hashtag; //%%,%%,%% 형태
-          let hashtag = str.split(','); //해시태그 자르기
-          this.hashtags = hashtag; //자른 해시태그들 hashtags에 담기
-        }
-        console.log("상세페이지 접근 성공!");
-      }).catch(err => {
-        console.log(err);
-      });
+        },
+      })
+        .then((res) => {
+          this.items = res.data;
+          if (this.items.hashtag != null) {
+            let str = this.items.hashtag; //%%,%%,%% 형태
+            let hashtag = str.split(","); //해시태그 자르기
+            this.hashtags = hashtag; //자른 해시태그들 hashtags에 담기
+          }
+          console.log("상세페이지 접근 성공!");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     //해시태그 클릭 검색
@@ -143,24 +164,28 @@ export default {
       let getHashtag = e.target.innerText; //선택한 해시태그
       let hashtag = getHashtag.slice(1); //# 잘라내기
       console.log(hashtag);
-      this.axios('/sns/search/hashtag', {
+      this.axios("/sns/search/hashtag", {
         params: {
-          hashtag: hashtag
-        }
-      }).then(res => {
-        this.feeds = res.data; //해시태그 검색결과 담기
-        console.log("AXIOS SUCCESS")
-        this.goSearch(this.feeds, this.show);// 메인 ->컴색컴포넌트
-
-      }).catch(err => {
-        console.log(err);
-      });
+          hashtag: hashtag,
+        },
+      })
+        .then((res) => {
+          this.feeds = res.data; //해시태그 검색결과 담기
+          console.log("AXIOS SUCCESS");
+          this.goSearch(this.feeds, this.show); // 메인 ->컴색컴포넌트
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     //검색페이지 이동
     goSearch(feeds, show) {
       console.log("main->searchPage실행" + feeds);
-      this.$router.push({ name: "snsmain", params: { hashtagResult: feeds, showing: show } })
+      this.$router.push({
+        name: "snsmain",
+        params: { hashtagResult: feeds, showing: show },
+      });
     },
 
     //채팅방 이동
@@ -176,32 +201,41 @@ export default {
         contentType: 0,
         postId: this.postId,
         likeStatus: this.items.likeStatus,
-        noticeType: 0
-      }
-      this.stompClient.send("/app/Notice",JSON.stringify(noticeContent), res => {
-        console.log(res)
-      });
+        noticeType: 0,
+      };
+      this.stompClient.send(
+        "/app/Notice",
+        JSON.stringify(noticeContent),
+        (res) => {
+          console.log(res);
+        }
+      );
 
       if (this.memId === null || this.memId === "") {
-        alert('로그인이 필요합니다!')
+        alert("로그인이 필요합니다!");
         return;
       } else {
         //DB Jjim insert
-        this.axios.post('/sns/like', {
-          targetId: this.postId,
-          memberId: this.memId
-        }).then(res => {
-          console.log(res);
-          if (this.items.likeStatus == 0) { //좋아요 상태가 0이면 개수++,상태를 1로
-            ++this.items.likes;
-            this.items.likeStatus = 1;
-          } else if (this.items.likes > 0) { //좋상이 1이고 좋개가 0이 아니면 개수--,상태를 0으로
-            --this.items.likes;
-            this.items.likeStatus = 0;
-          }
-        }).catch(err => {
-          console.log(err)
-        });
+        this.axios
+          .post("/sns/like", {
+            targetId: this.postId,
+            memberId: this.memId,
+          })
+          .then((res) => {
+            console.log(res);
+            if (this.items.likeStatus == 0) {
+              //좋아요 상태가 0이면 개수++,상태를 1로
+              ++this.items.likes;
+              this.items.likeStatus = 1;
+            } else if (this.items.likes > 0) {
+              //좋상이 1이고 좋개가 0이 아니면 개수--,상태를 0으로
+              --this.items.likes;
+              this.items.likeStatus = 0;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
     //사진 넘기기
@@ -229,16 +263,16 @@ export default {
     },
     //내 피드로 이동
     goMyFeed(member) {
-      this.$router.push({ name: 'snsUserFeed', query: { memId: member } });
-    }
-  }
+      this.$router.push({ name: "snsUserFeed", query: { memId: member } });
+    },
+  },
 };
 </script>
 
 <style scoped>
 #container {
   margin: 0 auto;
-  width: 30%
+  width: 30%;
 }
 
 #mdi-dots-vertical {
@@ -259,7 +293,6 @@ export default {
   margin: 0 auto;
 }
 
-
 #content_box {
   padding: 0 20px;
 }
@@ -271,7 +304,6 @@ export default {
 
 div.user.text-overline {
   display: inline-block;
-
 }
 
 #hashtagGroup {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +35,14 @@ public class MoimController {
 	@Autowired
 	MoimService service;
 	
+	/**
+	 * @title 소모임 단건조회
+	 * @param moimVO
+	 */
+	@GetMapping("/moimOneInfo/{moimId}")
+	public MoimVO getMoimOneInfo(@PathVariable int moimId) {
+		return service.getMoimOneInfo(moimId);
+	}
 	/**
 	 * @param moimVO
 	 * @title 소모임 등록
@@ -259,5 +268,23 @@ public class MoimController {
 	public List<MoimVO> getMoimMemberSearch(@RequestParam ("moimId")int moimId ){
 		return service.getSearchMember(moimId);
 	}
+	
+//	@DeleteMapping("/boardDeleteComm")
+//	public String deleteMoimBaordComment(@RequestParam ("commId") int commId) {
+//		try {
+//			service.moimCommentDelete(commId);
+//			return "success";
+//		} catch (Exception e) {
+//			System.out.println("댓글 삭제 실패 : " + e.getMessage());
+//			return "fail";
+//		}
+//	}
+	
+	// 소모임 가입 회원 수 조회하는 로직
+	@GetMapping("/moimMemberCount/{moimId}")
+	public int moimMemberCount(@PathVariable int moimId) {
+		return service.moimMemberCount(moimId);
+	}
+
 }
 

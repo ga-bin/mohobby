@@ -16,7 +16,9 @@ import com.yedam.mohobby.service.moim.MoimVoteVO;
 import com.yedam.mohobby.service.user.MemberVO;
 
 public interface MoimMapper {
-	
+	//소모임 단건 조회
+	public MoimVO getMoimOneInfo(int moimId);
+		
 	//소모임 등록
 	public void moimInsert (MoimVO moimVO);
 
@@ -74,6 +76,9 @@ public interface MoimMapper {
 	//소모임 단건조회
 	public MoimVO getMoimInfo(int moimId);
 	
+	// 소모임 가입 회원 수 조회하는 로직
+	public int moimMemberCount(int moimId);
+
 	//소모임 대표 조회
 	public MoimVO getMoimInfo(int moimId);
 
@@ -86,4 +91,5 @@ public interface MoimMapper {
 	
 	//소모임 멤버 검색 조회
 	public List<MoimVO> getSearchMember(int moimId);
+
 }

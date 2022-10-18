@@ -121,17 +121,17 @@
                             <v-radio-group label="성별" row v-model="gender">
                               <v-radio
                                 label="여성"
-                                value="f"
+                                value="2"
                                 color="#2ac187"
                               ></v-radio>
                               <v-radio
                                 label="남성"
-                                value="m"
+                                value="1"
                                 color="#2ac187"
                               ></v-radio>
                               <v-radio
                                 label="선택안함"
-                                value="null"
+                                value="0"
                                 color="#2ac187"
                               ></v-radio>
                             </v-radio-group>
