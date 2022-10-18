@@ -14,7 +14,7 @@ export default new Vuex.Store({
         id : "",
         user:null,
     },
-    getter : {
+    getters : {
         isLogin(state) {
             return state.isLogin;
         }, getId(state) {

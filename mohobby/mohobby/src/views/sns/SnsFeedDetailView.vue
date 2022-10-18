@@ -50,7 +50,7 @@
                 <v-icon>mdi-heart-outline</v-icon></v-btn
               >{{ items.likes }} <v-icon>mdi-chat-outline</v-icon
               >{{ items.cmts }}
-              <v-icon @click="send">mdi-send</v-icon>
+              <v-icon v-if="this.$store.state.id" @click="send">mdi-send</v-icon>
             </div>
           </v-col>
           <v-col cols="8">
@@ -393,9 +393,17 @@ export default {
 
     //채팅방 이동
     send() {
-      this.$router.push({ name: "chat", params: { roomId: this.roomId } });
+      let vm =this
+      this.axios.get("/getSnsChatRoomNo",{
+        params:{myId : this.$store.state.id,
+                targetId:this.items.memberId}})
+      .then(function(res){
+        console.log(res.data.vroomNo)
+ 
+        vm.$router.push({ name: "chat", params: { roomId: res.data.vroomNo } });}
+        )
+        .catch(function(err){console.log(err)})
     },
-
     //좋아요
     like() {
       //좋아요 알림

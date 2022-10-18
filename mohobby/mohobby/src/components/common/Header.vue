@@ -9,7 +9,7 @@
       style="cursor: pointer"
       >Mohobby</v-toolbar-title
     >
-    <p>{{ this.$store.state.id }}</p>
+    <p>{{memberId}}</p>
     <v-spacer />
     <v-btn text class="ml-2" to="/snsmain">sns</v-btn>
     <v-btn text class="ml-2" to="/class/list/all">강의</v-btn>
@@ -96,10 +96,12 @@
     <v-btn v-if="this.$store.state.id" icon>
       <v-icon @click="$router.push('/mypageprofile')">mdi-account</v-icon>
     </v-btn>
+    <input type="hidden" v-model="memberId">
 
     <v-btn v-if="this.$store.state.id" @click="logout()" icon>
       <v-icon>mdi-arrow-right-box</v-icon>
     </v-btn>
+    
   </v-app-bar>
 </template>
 <script>
@@ -107,6 +109,7 @@ export default {
   components: {},
   data() {
     return {
+      memberId :this.$store.state.id,
       avatar:"",
       noticeCount:0,
       subtitle: "",
@@ -117,12 +120,14 @@ export default {
   },
   setup() { },
   created() {
-    this.avatar="comfuck.jpg"
-    this.getAllNotice()
-    this.startSckct()
+ 
   },
-  mounted() { },
+  mounted() { this.$store.watch(() => this.$store.getters.getId, 
+              n => {  console.log("watch걸리나요") ; this.noticeRev(); }
+            )},
   unmounted() { },
+  watch:{},
+
 
   methods: {
     test() {
@@ -149,21 +154,17 @@ export default {
           vm.items.push(res.data[i])
           vm.items.push({ divider: true, inset: true })
         }
+     
       }).catch(err => {
         console.log(err)
-      })
+      }),
+      vm.noticeRev()
     },
-    startSckct() {
-      if(this.$store.state.id == "") {
-        this.noticeRev();
-      }
-    },
+   
     //알림 처리
     noticeRev() {
+      console.log('되나요')
       let vm = this;
-      this.stompClient.connect(
-        {},
-        (frame) => {
           this.stompClient.subscribe("/queue/" + this.$store.state.id + "/notice", function (res) {
             let resNotice = JSON.parse(res.body)
             console.log(resNotice)
@@ -226,15 +227,8 @@ export default {
                 ++vm.noticeCount
               }
             }
-          );
-          console.log("소켓 연결 성공", frame);
-        },
-        (error) => {
-          console.log("소켓 연결 실패", error);
-        }
-      );
+        });
     },
-
     pageMove(item) {
 
       console.log(this.items)
