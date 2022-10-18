@@ -35,7 +35,7 @@
         <v-col cols="10">
           <v-text-field class="ml-11" placeholder="댓글을 남겨보세요!" filled rounded dense hide-details v-model="content"
             @keyup.enter="insertComment()"></v-text-field>
-        </v-col>
+      
         <v-spacer></v-spacer>
         <div style="margin-right: 80px">
           <v-btn rounded color="orange" text @click="insertComment()">
@@ -48,7 +48,12 @@
 </template>
 <script>
 export default {
+  props: {
+    onerId: String,
+    boardType: String
+  },
   data() {
+
     return {
       dialog: false,
       boardId: this.$route.query.boardId,
@@ -150,13 +155,15 @@ export default {
         this.content = '';
         vm.getBoard()
         const noticeContent = {
-          myId: this.$store.state.id,
-          targetId: this.items.memberId,
-          contentType: 1,
-          boardId: this.$route.query.boardId,
+          myId: this.$store.state.id, //글작성 아이디
+          targetId: this.onerId, //알림 받을 아이디
+          contentType: 1, //댓글:1 게시글:2
+          postId: this.$route.query.boardId,
           moimId: this.$route.query.moimId,
+          boardType : this.boardType,
+          noticeType:1 //sns:1 moim:2 class:3
         }
-        this.stompClient.send("/app/NoticeMoim", JSON.stringify(noticeContent), res => {
+        this.stompClient.send("/app/Notice", JSON.stringify(noticeContent), res => {
           console.log(res)
         });
       })

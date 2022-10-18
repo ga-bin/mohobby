@@ -18,6 +18,7 @@ import SockJS from "sockjs-client";
 const serverURL = "http://localhost:8088/java/sock";
 let socket = new SockJS(serverURL);
 let stompClient=Stomp.over(socket);
+
 Vue.prototype.stompClient=stompClient;
 moment.locale("ko");
 

@@ -74,8 +74,12 @@ public interface MoimMapper {
 	//소모임 단건조회
 	public MoimVO getMoimInfo(int moimId);
 	
+	//소모임 대표 조회
+	public MoimVO getMoimInfo(int moimId);
+
 	//소모임 N빵 전체 리스트 조회
 	public List<MoimDutchVO> getAllDuchList(int moimId);
+
 
 	//소모임 전체 멤버 리스트 조회
 	public List<MoimVO> getAllMemberList(int moimId);
