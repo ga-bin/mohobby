@@ -213,6 +213,8 @@ and moim_id = #{moimId}
 select count(*)
 from moim_member
 where moim_id = #{moimId}
+</select>
+
 <!-- 소모임 단건조회 -->
 <select id="getMoimInfo" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
 select MOIM_IMG,MOIM_NAME
@@ -227,8 +229,9 @@ select * from moim_dutch where moim_id = #{moimId}
 
 
 <!-- 소모임 단건조회 -->
-<select id="getMoimInfo" parameterType="Int" resultType="com.yedam.mohobby.service.moim.MoimVO">
+<!-- <select id="getMoimInfo" parameterType="Int" resultType="com.yedam.mohobby.service.moim.MoimVO">
 select MOIM_IMG,MOIM_NAME
+</select> -->
 
 <!-- 소모임 전체 멤버 리스트 조회 -->
 <select id="getAllMemberList" parameterType="int" resultType="com.yedam.mohobby.service.moim.MoimVO">

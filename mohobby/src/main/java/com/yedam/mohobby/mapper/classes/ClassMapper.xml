@@ -144,8 +144,8 @@
 		from class_board b,
 		member m
 		where b.member_id = m.member_id(+)
-		and board_type=#{boardType}
-		and class_id=#{classId}
+		and board_type = #{boardType}
+		and class_id = #{classId}
 		order by write_date desc
 	</select>
 	

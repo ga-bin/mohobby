@@ -51,7 +51,7 @@
     <v-progress-linear :value="knowledge" color="#AAABB7" height="20" readonly>
       <strong style="font-size: 0.9em;">전체 진도율 {{ Math.ceil(knowledge) }}%</strong>
     </v-progress-linear>
-    <v-bottom-navigation :value="value" color="primary" horizontal class="bottom-nav">
+    <v-bottom-navigation color="primary" horizontal class="bottom-nav">
       <v-row>
         <div class="d-flex justify-start align-center">
           <v-btn>
@@ -63,23 +63,25 @@
       </v-row>
       <v-row>
         <div>
-          <v-btn @click.stop="questForm">
-            <span class="bottom-nav-text">질문하기</span>
-
-            <v-icon color="white">mdi-chat-question</v-icon>
-          </v-btn>
-
-          <v-btn @click.stop="noteForm">
-            <span class="bottom-nav-text">학습노트</span>
-
-            <v-icon color="white">mdi-notebook-edit</v-icon>
-          </v-btn>
-
+          <v-tabs class="d-flex justify-center align-center" v-model="tab" background-color="transparent">
+            <v-tab key="2">
+              <v-btn @click="questForm">
+                <span class="bottom-nav-text-2">질문하기</span>
+    
+                <v-icon color="white" class="bottom-nav-text-2">mdi-chat-question</v-icon>
+              </v-btn>
+            </v-tab>
+            <v-tab key="3">
+              <v-btn @click="noteForm">
+                <span class="bottom-nav-text-2">학습노트</span>
+                <v-icon color="white" class="bottom-nav-text-2">mdi-notebook-edit</v-icon>
+              </v-btn>
+            </v-tab>
+          </v-tabs>
         </div>
       </v-row>
-      <div class="d-flex justify-end align-center">
+      <div class="d-flex justify-center align-center">
         <v-btn>
-
           <span class="bottom-nav-text" style="margin-right: 20px; font-size: 1.1em;">다음학습</span>
           <v-icon color="white">mdi-chevron-right</v-icon>
         </v-btn>
@@ -89,13 +91,13 @@
     </v-bottom-navigation>
     <v-bottom-sheet v-model="sheet">
       <v-sheet class="text-center" height="300px">
-        <div class="d-flex justify-end align-center">
-          <span class="mt-6 mr-3">{{ currentTime | runtime }}</span>
+        <div class="d-flex justify-center align-center">
+          <span class="mt-2 mr-3">{{ currentTime | runtime }}</span>
 
-          <v-btn class="mt-6" text color="success" @click="console.log()">
+          <v-btn class="mt-2" text color="success" @click="clickSubmit">
             {{ form.submit }}
           </v-btn>
-          <v-btn class="mt-6" text color="error" @click="sheet = false">
+          <v-btn class="mt-2" text color="error" @click="sheet = false">
             취소
           </v-btn>
         </div>
@@ -112,29 +114,73 @@
 
       </v-sheet>
     </v-bottom-sheet>
-    <v-card>
-      <v-system-bar></v-system-bar>
-      <v-toolbar flat>
-        <v-toolbar-title>My Document</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <div>
-          <v-switch v-model="sticky" label="Sticky Banner" hide-details></v-switch>
-        </div>
-      </v-toolbar>
-      <v-banner single-line :sticky="sticky">
-        We can't save your edits while you are in offline mode.
-
-        <template v-slot:actions>
-          <v-btn text color="deep-purple accent-4">
-            Get Online
-          </v-btn>
-        </template>
-      </v-banner>
-      <v-card-text class="grey lighten-4">
-        <v-sheet max-width="800" height="auto" class="mx-auto">
-        </v-sheet>
-      </v-card-text>
-    </v-card>
+      
+      <v-tabs-items v-model="tab" style="padding: 20px 0px">
+        <v-tab-item key="2">
+          <!-- qna 내역 존재 -->
+          <div v-if="questList.length != 0">
+            <div>
+              <v-card class="d-flex justify-end align-center" flat tile>
+                <!-- 작성하기 버튼 -->
+                <div class="text-center mb-3" style="padding-right: 20px;">
+                  <v-btn
+                    outlined
+                    color="#2b2b2b"
+                  >
+                    작성하기
+                  </v-btn>
+                </div>
+              </v-card>
+            </div>
+            <!-- 질문 게시글 목록 -->
+            <div style="padding: 5px 20px" v-for="(rv,i) in questList" :key="i">
+              <v-card class="mx-auto" outlined>
+                <v-card-text>
+                  <v-row>
+                    <v-chip
+                      class="mt-2 ml-2"
+                      @click="moveTime(rv.title)"
+                      color="#AAABB7"
+                      dark
+                    >
+                      #{{ rv.title | runtime }}
+                    </v-chip>
+                    <v-col>
+                      <span 
+                        class="nickname"
+                        @click="$router.push({ path: '/snsUserFeed?memId='+rv.memberId}).catch(()=>{$router.go(0)})"
+                      >
+                        {{ rv.nickname }}
+                      </span>
+                      <span style="font-size: 1em; color: gray; padding-left: 7px;">{{ replaceDate(rv.writeDate) }}</span>
+                      <div style="font-size: 1.3em; padding-top: 14px">{{ rv.content }}</div>
+                    </v-col>
+                    <!-- 수정 / 삭제 -->
+                    <div style="padding: 12px 17px 0px 0px;">
+                      <v-row v-if="rv.memberId == $store.state.id">
+                        <div class="modBtn" @click="clickUpdate(i)">수정</div>
+                        <div class="delBtn" @click="clickDelete(i)">삭제</div>
+                      </v-row>
+                    </div>
+                  </v-row>
+                  <!--댓글-->
+                  
+                
+                </v-card-text>
+              </v-card>
+            </div>
+          </div>
+          <div v-if="questList.length == 0">
+            <v-card flat justify="center" align="center" style="padding-top: 50px">
+              <h1>🙇</h1>
+              <h1>등록된 질문이 없습니다</h1>
+            </v-card>
+          </div>
+        </v-tab-item>
+        <v-tab-item key="3">
+3번
+        </v-tab-item>
+      </v-tabs-items>
 
 
 
@@ -155,7 +201,9 @@ export default {
   },
   data() {
     return {
+      tab: '2',
       classInfo: {},
+      questList: [],
       panel: [],
       items: [
         {
@@ -324,38 +372,21 @@ export default {
             html: 'HD 1080P',
           },
         ],
-        controls: [
-          {
-            position: 'right',
-            html: 'Control',
-            tooltip: 'Control Tooltip',
-            click: function () {
-              console.log('You clicked on the custom control');
-              console.log(document.querySelector(".art-video").currentTime);
-            },
-          },
-        ],
+        // controls: [
+        //   {
+        //     position: 'right',
+        //     html: 'Control',
+        //     tooltip: 'Control Tooltip',
+        //     click: function () {
+        //       console.log('You clicked on the custom control');
+        //       console.log(document.querySelector(".art-video").currentTime);
+        //       this.option.quality.pop();
+        //       console.log(this.option.quality);
+        //     },
+        //   },
+        // ],
         highlight: [
-          {
-            time: 15,
-            text: 'One more chance',
-          },
-          {
-            time: 30,
-            text: '谁でもいいはずなのに',
-          },
-          {
-            time: 45,
-            text: '夏の想い出がまわる',
-          },
-          {
-            time: 60,
-            text: 'こんなとこにあるはずもないのに',
-          },
-          {
-            time: 75,
-            text: '终わり',
-          },
+
         ],
         icons: {
           loading: '',
@@ -378,6 +409,7 @@ export default {
 
       },
       currentTime: 0,
+      noteList: [],
 
     };
   },
@@ -385,34 +417,132 @@ export default {
     Artplayer,
   },
   methods: {
-    initInfo() {
-      this.axios.get('/class/detail/'+this.classId)
+    getQuestList() {
+      this.axios("/class/board", {
+        params: {
+          classId: this.currId,
+          boardType: 2
+        }
+      })
+      .then(res => {
+        console.log(res.data);
+        if (res.data.length > 0) {
+          this.questList = res.data;
+        }
+      })
+      .catch(err => console.log(err));
     },
-    getInstance(art) {
-      console.log(art);
+    getNoteList() {
+      this.axios("/class/board", {
+        params: {
+          classId: this.currId,
+          boardType: 3
+        }
+      })
+      .then(res => {
+        if(res.data.length != 0) {
+          this.noteList = res.data;
+        }
+      })
+      .catch(err => console.log(err));
     },
+    getControls() {},
     changePanelHeader() {
       console.log(event.currentTarget.style);
     },
+    getInstance(art) {
+      console.log(art);
+      console.log(art.playing);
+      console.log(art.getControls());
+    },
     questForm() {
-      document.querySelector(".art-video").pause();
+      if (!this.$store.state.id) {
+          this.$swal('로그인 후 이용하세요!', '', 'info');
+          return;
+      }
+      //document.querySelector(".art-video").pause();
       this.currentTime = document.querySelector(".art-video").currentTime;
       this.form.type = 2;
       this.form.submit = '질문등록';
-      this.sheet = true;
+      //this.sheet = true;
     },
     noteForm() {
-      document.querySelector(".art-video").pause();
+      if (!this.$store.state.id) {
+          this.$swal('로그인 후 이용하세요!', '', 'info');
+          return;
+      }
+      //document.querySelector(".art-video").pause();
       this.currentTime = document.querySelector(".art-video").currentTime;
       this.form.type = 3;
       this.form.submit = '노트작성';
-      this.sheet = true;
+      //this.sheet = true;
     },
+    clickSubmit() {
+      if(this.newContent == '') {
+        this.$swal('내용을 입력하세요!', '', 'info');
+        return;
+      }
+
+      if(this.form.type == 2) {
+        this.insertQuest();
+      } else if(this.form.type == 3) {
+        this.insertNote();
+      }
+    },
+    insertQuest() {
+      this.axios('/class/board', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        data: JSON.stringify({
+            memberId: this.$store.state.id,
+            classId: this.currId,
+            boardType: 2,
+            title: Math.ceil(document.querySelector(".art-video").currentTime),
+            content: this.newContent,
+            nickname: this.$store.state.user.nickName,
+        })
+      }).then( res => {
+        if(res.status == 200) {
+          this.sheet = false;
+          this.newContent = '';
+        }
+      }).catch( err => console.log(err) )
+    },
+    insertNote() {
+      this.axios('/class/board', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        data: JSON.stringify({
+            memberId: this.$store.state.id,
+            classId: this.currId,
+            boardType: 3,
+            title: Math.ceil(document.querySelector(".art-video").currentTime),
+            content: this.newContent,
+            nickname: this.$store.state.user.nickName,
+        })
+      }).then( res => {
+        if(res.status == 200) {
+          this.sheet = false;
+          this.newContent = '';
+        }
+      }).catch( err => console.log(err) )
+    },
+    replaceDate(date) {
+      return this.$moment(date).fromNow();
+    },
+    moveTime(time) {
+      document.querySelector(".art-video").currentTime = time;
+    }
   },
   watch: {
-
   },
   created() {
+    this.getNoteList();
+    this.getQuestList();
   }
 };
 </script>
@@ -474,5 +604,31 @@ export default {
 
 .bottom-nav-text {
   color: white;
+}
+
+.bottom-nav-text-2 {
+  color: white;
+  padding-bottom: 20%;
+}
+.modBtn, .delBtn {
+  margin-right: 10px;
+  padding: 0px 5px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.modBtn {
+  border: 1px solid #229c6e;
+  color: #229c6e;
+}
+
+.delBtn {
+  border: 1px solid #7a2a1c;
+  color: #7a2a1c;
+}
+
+.nickname {
+  font-size: 1.2em;
+  cursor: pointer;
+  font-weight: bold;
 }
 </style>
