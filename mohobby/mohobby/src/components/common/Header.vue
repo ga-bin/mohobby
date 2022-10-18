@@ -226,7 +226,7 @@ export default {
                 ++vm.noticeCount
               }
             }
-          );
+        });
           console.log("소켓 연결 성공", frame);
         },
         (error) => {
