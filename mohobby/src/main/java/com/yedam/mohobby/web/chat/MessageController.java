@@ -115,6 +115,6 @@ public class MessageController {
 		}
 		System.out.println(noticeVO);
 		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
-		nService.insertNotice(noticeVO);
+		//nService.insertNotice(noticeVO);
 	}
 }

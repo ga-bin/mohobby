@@ -1,6 +1,5 @@
 <template>
-    <div id="classInfoInput">
-        <h1>상세내용입니다</h1>
+    <div id="classInfoInput" v-html="content">
 
     </div>
 </template>
@@ -13,6 +12,7 @@ export default {
     data() {
         return {
             path: '',
+            content: '<span>상세내용입니다<span>',
         }
     },
     props: {
@@ -26,14 +26,13 @@ export default {
     },
     methods: {
         readInfo() {
-            let content = "";
 
             this.axios.get('/readClassInfo', {
                 params: {
                     classId: this.classId
                 }
             }).then(res => {
-                document.querySelector("#classInfoInput").innerHTML = res.data;
+                this.content = res.data;
             }).catch(err => {
                 console.log(err);
             }).finally(() => {
