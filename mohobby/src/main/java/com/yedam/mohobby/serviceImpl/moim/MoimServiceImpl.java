@@ -11,6 +11,7 @@ import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
+import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
@@ -150,12 +151,6 @@ public class MoimServiceImpl implements MoimService{
 	 public int moimUserUpdate(MemberVO vo) {
 	    return mapper.moimUserUpdate(vo);
 	 }
-	 
-	 //소모임 투표 디테일 리스트
-	 @Override
-	 public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId) {
-		 return mapper.moimVoteAllList(moimId, voteId);
-	 }
  
 
 	//소모임 단건조회
@@ -191,8 +186,9 @@ public class MoimServiceImpl implements MoimService{
 
 	//소모임 멤버 검색 조회
 	@Override
-	public List<MoimVO> getSearchMember(int moimId) {
-		return mapper.getSearchMember(moimId);
+	public List<MoimMemberVO> getSearchMember(String memberId, int moimId) {
+		
+		return mapper.getSearchMember(memberId, moimId);
 	}
 	
 	

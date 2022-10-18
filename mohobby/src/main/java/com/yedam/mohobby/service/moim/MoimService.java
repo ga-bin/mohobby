@@ -79,6 +79,6 @@ public interface MoimService {
 	public List<MoimVO> getAllMemberList(int moimId);
 
 	//소모임 멤버 검색 조회
-	public List<MoimVO> getSearchMember(int moimId);
+	public List<MoimMemberVO> getSearchMember(String memberId, int moimId);
 }
 
