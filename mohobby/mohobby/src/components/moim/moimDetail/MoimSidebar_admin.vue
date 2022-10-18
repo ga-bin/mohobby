@@ -11,7 +11,7 @@
       <div class="right">
         <v-btn text @click="invite()">
           <v-icon small color="white">mdi-plus-circle-outline</v-icon>
-          <div style="color:white">초대하기</div>
+          <div style="color: white">초대하기</div>
         </v-btn>
       </div>
     </div>
@@ -19,55 +19,80 @@
     <v-divider></v-divider>
 
     <v-list>
-      <v-list-group v-for="link in links" :key="link.text" :prepend-icon="link.icon" no-action>
+      <v-list-group
+        v-for="link in links"
+        :key="link.text"
+        :prepend-icon="link.icon"
+        no-action
+      >
         <template v-slot:activator>
           <v-list-item-content>
             <v-list-item-title v-text="link.text"></v-list-item-title>
           </v-list-item-content>
         </template>
 
-        <v-list v-for="subheader in link.subheaders" :key="subheader.text" shaped subheader>
-          <v-subheader v-if="subheader.text != ''">{{ subheader.text }}</v-subheader>
+        <v-list
+          v-for="subheader in link.subheaders"
+          :key="subheader.text"
+          shaped
+          subheader
+        >
+          <v-subheader v-if="subheader.text != ''">{{
+            subheader.text
+          }}</v-subheader>
           <v-list-item-group color="primary">
-            <v-list-item v-for="child in subheader.items" :key="child.text" @click="$router.push({ path: child.route })"
-              link>
+            <v-list-item
+              v-for="child in subheader.items"
+              :key="child.text"
+              @click="$router.push({ path: child.route })"
+              link
+            >
               <v-list-item-content style="padding-left: 55px">
                 <v-list-item-title v-text="child.text"></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-dialog v-model="dialog" max-width="500">
               <template v-slot:activator="{ on, attrs }">
-                <v-list-item link style="padding-left: 71px" v-bind="attrs" v-on="on">
+                <v-list-item
+                  link
+                  style="padding-left: 71px"
+                  v-bind="attrs"
+                  v-on="on"
+                >
                   삭제하기
                 </v-list-item>
               </template>
               <v-card>
-                <v-card-title class="text-h5 red darken-2 font-weight-bold white--text">
+                <v-card-title
+                  class="text-h5 red darken-2 font-weight-bold white--text"
+                >
                   소모임 삭제하기
                 </v-card-title>
 
                 <v-card-text class="pa-5">
-                  소모임을 삭제하시면 해당 소모임관 관련된 모든 게시물, 사진, 일정, 투표, N빵 등의 모든 내용이 사라집니다.
-                  그래도 정말 삭제하시겠습니까?
+                  소모임을 삭제하시면 해당 소모임관 관련된 모든 게시물, 사진,
+                  일정, 투표, N빵 등의 모든 내용이 사라집니다. 그래도 정말
+                  삭제하시겠습니까?
                 </v-card-text>
 
                 <v-divider></v-divider>
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn @click="dialog = false">
-                    취소
-                  </v-btn>
-                  <v-btn color="error" @click="dialog = false">
-                    삭제
-                  </v-btn>
+                  <v-btn @click="dialog = false"> 취소 </v-btn>
+                  <v-btn color="error" @click="dialog = false"> 삭제 </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
           </v-list-item-group>
         </v-list>
       </v-list-group>
-      <v-list-item v-for="link in items" :key="link.text" @click="$router.push({ name: link.route })" link>
+      <v-list-item
+        v-for="link in items"
+        :key="link.text"
+        @click="$router.push({ name: link.route })"
+        link
+      >
         <v-list-item-icon>
           <v-icon>{{ link.icon }}</v-icon>
         </v-list-item-icon>
@@ -83,9 +108,9 @@
 export default {
   data() {
     return {
-      memberId : this.$store.state.id,
-      profileImg : this.$store.state.user.profileImg,
-      dialog : false,
+      memberId: "",
+      profileImg: "comfuck.jpg",
+      dialog: false,
       links: [
         {
           icon: "mdi-plus-box",
@@ -97,9 +122,9 @@ export default {
                 { text: "소모임 기본설정", route: "moimSetting" },
                 { text: "소모임 가입설정", route: "registerSetting" },
                 { text: "소모임 가입신청자", route: "moimJoin" },
-              ]
-            }
-          ]
+              ],
+            },
+          ],
         },
       ],
       items: [
@@ -108,7 +133,8 @@ export default {
         { icon: "mdi-clipboard-check", text: "공지사항", route: "moimNotice" },
         { icon: "mdi-calendar-text", text: "일정", route: "moimSchedule" },
         { icon: "mdi-chart-gantt", text: "투표", route: "moimVote" },
-        { icon: "mdi-chart-pie", text: "N빵", route: "moimNbbang" },]
+        { icon: "mdi-chart-pie", text: "N빵", route: "moimNbbang" },
+      ],
     };
   },
   created() {
@@ -116,17 +142,20 @@ export default {
   },
   methods: {
     invite() {
-      this.$router.push({ name: 'moiminvite' })
+      this.$router.push({ name: "moiminvite" });
     },
     setMemberInfo() {
-      if (this.memberId == "") {
+      this.memberId = this.$store.state.id;
+      if (!this.memberId) {
         this.memberId = "비회원";
         this.profileImg = "comfuck.jpg";
         return;
       } else if (this.memberId == "admin") {
         this.profileImg = "female.png";
+      } else if (this.memberId != "" && this.memberId != "admin") {
+        this.profileImg = this.$store.state.user.profileImg;
       }
-    }, 
+    },
   },
 };
 </script>

@@ -54,8 +54,7 @@ public class MessageController {
 //		for (int i = 0; i < sendNotice.getMemberId().size(); i++) {
 //			sendTemplate.convertAndSend("/queue/" + sendNotice.getMemberId().get(i), revNotice);
 //		}
-//	}
-
+//}
 	@MessageMapping("/chatNotice")
 	public void chatNotice(ContentVO content) {
 		sendTemplate.convertAndSend("/" + content.getMemberId(), content);
@@ -64,44 +63,58 @@ public class MessageController {
 	// 알림
 	@MessageMapping("Notice")
 	public void NoticeSns(ResNoticeVO resNotice) {
+		System.out.println("222222222222222222222222222222");
+		System.out.println(resNotice);
+		System.out.println("222222222222222222222222222222");
 		NoticeVO noticeVO = new NoticeVO();
-		//sns 알림
-		if (resNotice.getBoardType() == 0) {
+		resNotice.setNoticeId(nService.getNoticeId());
+		noticeVO.setBoardType(resNotice.getBoardType());
+		noticeVO.setMoimId(resNotice.getMoimId());
+		noticeVO.setPostId(resNotice.getPostId());
+		noticeVO.setNoticeType(resNotice.getNoticeType());
+		noticeVO.setContentType(resNotice.getContentType());
+		// sns 알림
+		if (resNotice.getNoticeType() == 0) {
 			resNotice.setProfileImge(mService.getMember(resNotice.getMyId()).getProfileImg());
 			resNotice.setNickname(mService.getMember(resNotice.getMyId()).getNickName());
 
+			// db에 담을정보
 			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setNoticeAvatar(resNotice.getProfileImge());
-			noticeVO.setNoticeTitle(resNotice.getNickname());
-
+		noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
+			noticeVO.setTitle(resNotice.getNickname());
+			// sns - 좋아요 클릭시
 			if (resNotice.getContentType() == 0) {
 				if (resNotice.getLikeStatus() == 0) {
-					noticeVO.setNoticeSubtitle("좋아요를 눌렀습니다.");
+					noticeVO.setSubtitle("좋아요를 눌렀습니다.");
 				} else if (resNotice.getLikeStatus() == 1) {
-					noticeVO.setNoticeSubtitle("좋아요를 취소했습니다.");
+					noticeVO.setSubtitle("좋아요를 취소했습니다.");
 				}
+				// sns - 댓글 등록시
 			} else if (resNotice.getContentType() == 1) {
-				noticeVO.setNoticeSubtitle("댓글을 남기셨습니다.");
+				noticeVO.setSubtitle("댓글을 남기셨습니다.");
 			}
 		}
-		//소모임 알림
-		else if (resNotice.getBoardType()==1) {
-			resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMyId()).getMoimImg());
-			resNotice.setNickname(moService.getMoimInfo(resNotice.getMyId()).getMoimName());
-			
+		// 소모임 알림
+		else if (resNotice.getNoticeType() == 1) {
+			resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMoimId()).getMoimImg());
+			resNotice.setNickname(moService.getMoimInfo(resNotice.getMoimId()).getMoimName());
+																
+			// db에 담을정보
 			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setNoticeAvatar(resNotice.getProfileImge());
-			noticeVO.setNoticeTitle(resNotice.getNickname());
+			noticeVO.setAvatar("require(`@/assets/image/moim/" + resNotice.getProfileImge()+"`)");
+			noticeVO.setTitle(resNotice.getNickname());
+			// 소모임 - 댓글
+			if (resNotice.getContentType() == 0) {
+				noticeVO.setSubtitle("댓글을 남기셨습니다.");
+			}
+			// 소모임 - 게시글 등록시
+			else if (resNotice.getContentType() == 1) {
+				noticeVO.setSubtitle("새로운 게시글이 등록되었습니다.");
+			}
+		} else if (resNotice.getBoardType() == 2) {
 		}
-		else if(resNotice.getBoardType()==2) {
-			
-			
-			
-		}
-
+		System.out.println(noticeVO);
 		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
 		//nService.insertNotice(noticeVO);
 	}
-	// 소모임알리
-
 }

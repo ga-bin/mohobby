@@ -10,6 +10,7 @@ import com.yedam.mohobby.mapper.moim.MoimMapper;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
+import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
@@ -22,6 +23,12 @@ public class MoimServiceImpl implements MoimService{
 	@Autowired
 	MoimMapper mapper;
 
+	// 소모임 단건조회
+	@Override
+	public MoimVO getMoimOneInfo(int moimId) {
+		return mapper.getMoimOneInfo(moimId);
+	}
+	
 	//소모임 등록
 	@Override
 	public void moimInsert(MoimVO moimVO) {
@@ -149,10 +156,11 @@ public class MoimServiceImpl implements MoimService{
 	 public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId) {
 		 return mapper.moimVoteAllList(moimId, voteId);
 	 }
+ 
 
-	//소모임 대표 이미지 조회
+	//소모임 단건조회
 	@Override
-	public MoimVO getMoimInfo(String moimId) {
+	public MoimVO getMoimInfo(int moimId) {
 		return mapper.getMoimInfo(moimId);
 	}
 	
@@ -163,5 +171,30 @@ public class MoimServiceImpl implements MoimService{
 		return mapper.moimCommentDelete(commId);
 	}
 
+	// 소모임 가입 회원 수 조회하는 로직
+	@Override
+	public int moimMemberCount(int moimId) {
+		return mapper.moimMemberCount(moimId);
+	}
+
+	//N빵 전체 리스트 조회
+	@Override
+	public List<MoimDutchVO> getAllDuchList(int moimId) {
+		return mapper.getAllDuchList(moimId);
+	}
+
+	//소모임 전체 멤버 리스트 조회
+	@Override
+	public List<MoimVO> getAllMemberList(int moimId) {
+		return mapper.getAllMemberList(moimId);
+	}
+
+	//소모임 멤버 검색 조회
+	@Override
+	public List<MoimVO> getSearchMember(int moimId) {
+		return mapper.getSearchMember(moimId);
+	}
+	
+	
 }
 

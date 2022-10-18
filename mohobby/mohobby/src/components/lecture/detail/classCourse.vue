@@ -25,6 +25,7 @@
               v-for="(child,j) in item.content"
               :key="j"
               link
+              @click.stop="pushCheck(child)"
             >
               <div style="font-weight: bold; color:#AAABB7; padding-right: 30px;">{{ j+1 | idx }}</div>
               <div v-if="child.preview == 1" style="margin-right:20px; padding:3px 7px; background-color: #dfeff1; color:#188ba7; border-radius: 5px; font-size: 0.9em;">{{ '미리보기' }}</div>
@@ -58,21 +59,25 @@ export default {
               title: '코딩배우기',
               runtime: '142',
               preview: 1,
+              currId: 1,
             },
             {
               title: '얏호',
               runtime: '1680',
               preview: 1,
+              currId: 1,
             },
             {
               title: '코딩이 뭘까?',
               runtime: '239',
               preview: 1,
+              currId: 1,
             },
             {
               title: '프로그래밍 혁명에 참여하는 방법',
               runtime: '237',
               preview: 1,
+              currId: 1,
             },
           ],
         },
@@ -83,6 +88,7 @@ export default {
               title: '코딩배우기',
               runtime: '142',
               preview: 1,
+              currId: 1,
             },
             {
               title: '얏호',
@@ -179,6 +185,13 @@ export default {
       ],
     }
   },
+  methods: {
+    pushCheck(item) {
+      if(item.preview == 1) {
+        this.$router.push({ path: '/learn/'+item.currId, }).catch(()=>{$router.go(0)})
+      }
+    }
+  }
 }
 </script>
 

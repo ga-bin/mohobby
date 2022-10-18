@@ -12,7 +12,12 @@
     <v-divider></v-divider>
 
     <v-list>
-      <v-list-item v-for="link in links" :key="link.text" @click="$router.push({ path: link.route })" link>
+      <v-list-item
+        v-for="link in links"
+        :key="link.text"
+        @click="$router.push({ path: link.route })"
+        link
+      >
         <v-list-item-icon>
           <v-icon>{{ link.icon }}</v-icon>
         </v-list-item-icon>
@@ -28,31 +33,29 @@
 export default {
   data() {
     return {
-     links: [
+      memberId: "admin",
+      profileImg: "female.png",
+      links: [
         { icon: "mdi-microsoft-windows", text: "sns관리", route: "/adminsns" },
         { icon: "mdi-account", text: "강의 관리", route: "/adminclass" },
-        { icon: "mdi-clipboard-list-outline", text: "소모임 관리", route: "/adminmoim" },
-        { icon: "mdi-clipboard-list", text: "챌린지 관리", route: "/adminchallenge" },
+        {
+          icon: "mdi-clipboard-list-outline",
+          text: "소모임 관리",
+          route: "/adminmoim",
+        },
+        {
+          icon: "mdi-clipboard-list",
+          text: "챌린지 관리",
+          route: "/adminchallenge",
+        },
         { icon: "mdi-alert-octagon", text: "유저 관리", route: "/adminuser" },
       ],
-      memberId : this.$store.state.id,
-      profileImg : this.$store.state.user.profileImg,
+      memberId: this.$store.state.id,
+      profileImg: this.$store.state.user.profileImg,
     };
   },
-   created() {
-    this.setMemberInfo();
-  },
-   methods: {
-    setMemberInfo() {
-      if (this.memberId == "") {
-        this.memberId = "비회원";
-        this.profileImg = "comfuck.jpg";
-        return;
-      } else if (this.memberId == "admin") {
-        this.profileImg = "female.png";
-      }
-    },
-   }
+  created() {},
+  methods: {},
 };
 </script>
 <style scoped>
@@ -60,8 +63,7 @@ export default {
   background-color: #2ac187;
 }
 
-.text-xs-center  {
+.text-xs-center {
   text-align: center;
 }
-
 </style>

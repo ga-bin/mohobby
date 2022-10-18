@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service;
 public interface NoticeService {
 	public List<NoticeVO> getAllNotice(String memberId);
 	public int insertNotice(NoticeVO notice);
+	public int delectNotice(int noticeId);
+	public int getNoticeId();
 }

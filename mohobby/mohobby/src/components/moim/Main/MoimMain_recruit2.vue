@@ -1,43 +1,45 @@
 <template>
   <div class="container">
-    <div class="box">
+    <div class="box1">
       <h3>인기있는 소모임을 확인하세요!</h3>
     </div>
-    <div class="box">
+    <div class="box1">
       <h3 style="visibility: hidden">.</h3>
     </div>
-    <div class="box" @click="box(idx)" v-for="(item,idx) in items" :key="item.moimId">
+    <div
+      class="box"
+      @click="box(idx)"
+      v-for="(item, idx) in items"
+      :key="item.moimId"
+    >
       <v-card class="mx-3" max-width="550" outlined>
         <v-list-item three-line>
-          <div style="display:none">
-            {{item.moimId}}
+          <div style="display: none">
+            {{ item.moimId }}
           </div>
           <v-list-item-content>
             <div class="text-overline mb-4">
-              {{item.moimName}}
+              {{ item.moimName }}
             </div>
-            <v-list-item-subtitle>{{item.moimInfo}}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ item.moimInfo }}</v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-avatar tile size="80">
             <img :src="item.moimImg" />
           </v-list-item-avatar>
         </v-list-item>
         <v-card-actions>
-          <span class="people">
-            {{item.regCnt}}명 참여중
-          </span>
+          <span class="people"> {{ item.regCnt }}명 참여중 </span>
           <v-spacer></v-spacer>
           <v-chip outlined rounded text>
-            {{item.moimRegion}}
+            {{ item.moimRegion }}
           </v-chip>
           <v-chip outlined rounded text>
-            {{item.moimCatg}}
+            {{ item.moimCatg }}
           </v-chip>
         </v-card-actions>
       </v-card>
     </div>
-    <div class="moreMoim">
-    </div>
+    <div class="moreMoim"></div>
   </div>
 </template>
 
@@ -48,12 +50,15 @@ export default {
       items: [],
     };
   },
-  created(){
-    this.getList()
+  created() {
+    this.getList();
   },
   methods: {
     box(idx) {
-      this.$router.push({ path : 'moimDetail' , query : { moimId : this.items[idx].moimId }})
+      this.$router.push({
+        name: "moimBoard",
+        params: { moimId: this.items[idx].moimId, boardType: 1 },
+      });
     },
     getList() {
       this.axios
@@ -66,8 +71,8 @@ export default {
           console.log(error);
         });
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -81,6 +86,12 @@ export default {
   width: 50%;
   margin-bottom: 15px;
   cursor: pointer;
+}
+
+.box1 {
+  float: left;
+  width: 50%;
+  margin-bottom: 15px;
 
 }
 

@@ -10,7 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NoticeVO {
 	private String memberId;
-	private String noticeAvatar;
-	private String noticeTitle;
-	private String noticeSubtitle;
+	private String Avatar;
+	private String Title;
+	private String Subtitle;
+	private int postId;
+	private int moimId;
+	private int boardType;
+	private int contentType; //0: 댓글 1:좋아요
+	private int noticeType;//0:sns, 1:소모임, 2:강의
+	private int noticeId;
 }

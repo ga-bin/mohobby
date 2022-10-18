@@ -53,7 +53,4 @@ public interface ClassService {
     //에디터 이미지 저장
     public void uploadClassImage(ClassImageVO vo);
 
-    //이미지 파일 이름 변경
-    public void changeImageName(ClassImageVO req); 
-
 }

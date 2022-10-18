@@ -36,6 +36,5 @@ public class MypageMoimServiceImpl implements MypageMoimService {
 		return mapper.getMoim(mypageMoimVO);
 	}
 
-	
 
 }
