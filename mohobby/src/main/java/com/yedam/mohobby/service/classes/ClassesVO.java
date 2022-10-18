@@ -24,8 +24,8 @@ public class ClassesVO {
 								// 대구:031, 우체국:071, K뱅크:089
 	private String address;   //주소
 	private String addressDetail; // 상세주소
-	private Date startDate; // 시작일자
-	private Date endDate; // 종료일자
+	private String startDate; // 시작일자
+	private String endDate; // 종료일자
 	private int auditStatus; // 승인상태 0:심사대기, 1:심사중, 2:승인, 3:미승인
 	private String auditReturn; // 반려사유
 	private int profileYn; //0: 공개 1:비공개

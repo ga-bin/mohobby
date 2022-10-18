@@ -21,4 +21,7 @@ public interface AdminUserMapper {
 	
 	// 신고된 유저 정보 업데이트
 	public void updateFlagUser(FlaggingVO flaggingVO);
+
+	//신고하기
+	public void insertFlagging(FlaggingVO flaggingVO);
 }

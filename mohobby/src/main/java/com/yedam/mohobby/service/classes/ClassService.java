@@ -38,7 +38,7 @@ public interface ClassService {
     //찜삭제
     public void deleteJjim(JjimVO jjim);
     
-    //챕터조회
+    // 강의 챕터 조회
     public List<ClassChapterVO> getChapterList(int classId);
     
     //html저장

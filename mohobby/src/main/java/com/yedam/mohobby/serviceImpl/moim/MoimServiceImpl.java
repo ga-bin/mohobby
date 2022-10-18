@@ -152,16 +152,16 @@ public class MoimServiceImpl implements MoimService{
 	 }
 	 
 	 //소모임 투표 디테일 리스트
-	 @Override
-	 public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId) {
-		 return mapper.moimVoteAllList(moimId, voteId);
-	 }
+//	 @Override
+//	 public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId) {
+//		 return mapper.moimVoteAllList(moimId, voteId);
+//	 }
  
 
 	//소모임 단건조회
 	@Override
 	public MoimVO getMoimInfo(int moimId) {
-		return mapper.getMoimInfo(moimId);
+		return mapper.getMoimOneInfo(moimId);
 	}
 	
 	//소모임 게시글 댓글 삭제
