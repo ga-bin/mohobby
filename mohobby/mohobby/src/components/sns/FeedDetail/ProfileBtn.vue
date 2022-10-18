@@ -1,7 +1,7 @@
 <template>
     <div class="profile-bio">
     
-        <ul v-if='this.sessionId != "" && this.sessionId == this.postId'>
+        <ul v-if='memberId != "" && memberId == getUserId'>
             <button class="btn profile-edit-btn">Edit Profile</button>
         </ul>
         
@@ -16,22 +16,23 @@
 export default {
     name: "ProfileBtn",
     props: {
-        postid:String,
+        userId:String,
     },
     data() {
         return {
             memberId : this.$store.state.id,
+            getUserId : "",
         }
     },
     created(){
-        console.log(this.$store.state.id);
+        this.getUserId = this.userId;
     },
     methods: {
         //팔로우
         follow(){
             this.axios.post('/sns/cmt', {
                 followerId : this.memberId,
-                followingId : this.postid,
+                followingId : this.getUserId,
             }).then(res => {
                 console.log("팔로우 성공! "+res);
             }).catch(err => {
@@ -40,9 +41,8 @@ export default {
         },
         //언팔로우
         unfollow(){
-            this.axios.delete('/sns/cmt/', + this.memberId, this.postid, {
-
-            }).then(res => {
+            this.axios.delete('/sns/cmt/', + this.memberId, this.getUserId,
+            ).then(res => {
                 console.log("언팔로우 성공! "+res);
             }).catch(err => {
                 console.log(err)

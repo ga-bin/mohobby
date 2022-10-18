@@ -4,11 +4,11 @@
         <!-- 모달 시작 -->
         <div>
             <v-row justify="center">
-                <v-dialog v-model="dialog" persistent max-width="300px">
+                <v-dialog v-model="dialog" scrollable max-width="350px">
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="#2ac187" dark v-bind="attrs" v-on="on" v-model="catgName">컬렉션 만들기</v-btn>
+                    <v-btn color="#2ac187" dark v-bind="attrs" v-on="on">컬렉션 만들기</v-btn>
             </template>
-            <v-card>
+            <v-card class="mx-auto">
                 <v-card-title>
                     <span class="text-h8">컬렉션 만들기</span>
                 </v-card-title>
@@ -16,8 +16,9 @@
                         <v-container>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field label="*컬렉션이름을 입력해주세요!" required />
-                                </v-col>
+                                    <v-text-field  v-model="catgName" label="*컬렉션이름을 입력해주세요!" required />
+                                    <!-- @change="inputE()" -->
+                                  </v-col>
                             </v-row>
                             </v-container>
                         </v-card-text>
@@ -32,13 +33,16 @@
         </div>
         <!-- 모달 끝 -->
         <!-- 컬렉션 시작 -->
-        <div class="container">
+        <div class="container" v-for="(collection,i) in collections" :key="i">
             <div class="content">
                 <div class="content-overlay"></div>
-                <img class="content-image" src="https://images.unsplash.com/photo-1433360405326-e50f909805b3?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max&s=359e8e12304ffa04a38627a157fc3362">
+                <!-- 북마크 저장시 저장 포스트의 첫번째 썸네일을 부모컴포넌트로 보내서 그걸 전달받기<img v-if="v-if='tnPostId != "" && thumbnail != ""'(전달받은 썸네일 있으면)" class="content-image" :src="require(`@/assets/image/sns/${img.postId}/${img.fileName}`)">  -->
+                <!-- 없으면 디폴트 이미지 -->
+                <img class="content-image" :src="require(`@/assets/image/sns/1/0.png`)">
                 <div class="content-details fadeIn-bottom">
-                <h3 class="content-title">컬렉션이름</h3>
-                <p class="content-text">This is a short description</p>
+                <v-btn color="#2ac187" v-if='collection.catgName!= "default"' class="text--white" @click="swal(collection.memberId,collection.catgId)">삭제</v-btn>
+                <h3 class="content-title">{{collection.catgName}}</h3>
+                <!-- <p class="content-text">This is a short description</p> -->
                 </div>
             </div>
         </div>
@@ -50,23 +54,34 @@
         name: "Collection",
         data() {
             return {
-                collectons:[],
+                collections:[],
                 dialog: false,
                 catgName: "",
                 memberId : this.$store.state.id,
+                tnPostId:Number,
+                thumbnail:"",
+                dummy:"",//해당 유저에게 생성된 컬렉션이 없을 시 자동생성되도록 도와주는 더미
             }
         },
         setup() {
             
         },
         created() {
-            this.getCollectionList();
+            this.getCollectionList(this.memberId);
         },
         mounted() {
         
         },
         unmounted() {
         
+        },
+        watch: {
+          // inputE(val) { //입력한 값 받아와서
+          //   if (!val) { //입력한 값이 없으면 return
+          //       return
+          //   }
+          //   this.createCollection() //있으면
+          // },
         },
         methods: {
             //컬렉션리스트
@@ -76,31 +91,86 @@
                         memberId: memberId,
                     }
                 }).then(res => {
-                    this.collections = res.data;
-                    console.log("컬렉션리스트 호출 성공!");
+                    if(res.data.length == 0){//리스트 불러올 데이터가 없으면 디폴트 컬렉션 생성
+                      this.createDefaultCollection(memberId);
+                    }else{
+                      this.collections = res.data;//or not 생성되어있는 리스트 호출
+                      console.log("컬렉션리스트 호출 성공!");
+                    }
+
                 }).catch(err => {
                     alert(err);
                 });
+            },
+            //디폴트 컬렉션 생성
+            createDefaultCollection(memberId){
+              const thumbnail = '기도.png'//*************기본 사진 바꿀것
+              this.axios.post('/sns/collection', {
+                  memberId : memberId,
+                  catgName : 'default',
+                  thumbnail : thumbnail,
+              }).then(res => {
+                  console.log("디폴트컬렉션생성 성공!"+res);
+                  this.getCollectionList(memberId);
+              }).catch(err => {
+                  alert(err);
+              });
             },
             //컬렉션생성
             createCollection(memberId){
-                if (this.catgName == "" || this.catgName == undefined){
-                    this.$swal('컬렉션 이름을 입력해주세요🙏')
-                    return;
-                }
-                this.dialog = false;
-                this.axios.post('/sns/collection', {
-                    memberId : memberId,
-                    catgName : this.catgName,
-                }).then(res => {
-                    console.log("컬렉션생성 성공!"+res);
-                    this.getCollectionList(memberId);
-                }).catch(err => {
-                    alert(err);
+              //해당 유저 아이디에 생성된 컬렉션이 없으면 기본으로 한개 생성할 것
+              if (this.catgName == "" || this.catgName == undefined){
+                  this.$swal('컬렉션 이름을 입력해주세요🙏')
+                  return;
+              }
+              if(this.catgName.length>11){
+                this.$swal('이름은 10글자 이내로 입력해주세요🙏')
+                  return;
+              }
+              const thumbnail = '기도.png'//*************기본 사진 바꿀것
+              this.dialog = false;
+              this.axios.post('/sns/collection', {
+                  memberId : memberId,
+                  catgName : this.catgName,
+                  thumbnail : thumbnail,
+              }).then(res => { 
+                  console.log("컬렉션생성 성공!"+res);
+                  this.getCollectionList(memberId);
+              }).catch(err => {
+                  alert(err);
+              });
+            },
+            //컬렉션 삭제
+            deleteClctn(memberId,catgId) {
+              this.swal();
+              this.axios
+                .delete("/sns/collection/" + catgId)
+                .then((res) => {
+                  console.log("컬렉션삭제 성공! " + res);
+                  this.getCollectionList(memberId);
+                })
+                .catch((err) => {
+                  alert(err);
                 });
             },
-
-        },
+            swal(memberId,catgId) {
+              this.$swal({
+                title: "정말 삭제할까요?",
+                text: "삭제된 컬렉션은 복구가 불가능합니다.🙏",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#2ac187",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "취소",
+                confirmButtonText: "네, 삭제할게요!",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.deleteClctn(memberId,catgId);
+                  this.$swal("삭제 완료!", "게시글이 삭제되었습니다.", "success");
+                }
+              });
+          },
+       },
     };
 </script>
     

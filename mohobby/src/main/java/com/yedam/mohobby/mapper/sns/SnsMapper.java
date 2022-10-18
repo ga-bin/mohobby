@@ -119,7 +119,7 @@ public interface SnsMapper {
     //컬렉션 삭제(안의 게시물도 전부 삭제되도록)
     public int deleteBookmarkCtg(int catgId);
     //컬렉션 목록
-    public List<SnsBookmarkVO> getBookmarkCtgs(int catgId);
+    public List<SnsBookmarkVO> getBookmarkCtgs(String memberId);
     
     //북마크 등록
     public int addBookmark(SnsBookmarkVO bmkVO);

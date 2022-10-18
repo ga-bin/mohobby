@@ -1,36 +1,23 @@
 <template>
-
     <div class="container">
-
+    <!-- 피드 갤러리 -->
     <div class="gallery">
-
-        <div class="gallery-item" tabindex="0" v-for="(feed,i) in feeds" :key="i">
-
-        <v-img :src="require(`@/assets/image/sns/${feed.thumbnail}`)" class="gallery-image" alt="thumbnail_img" />
-
-        <div class="gallery-item-info">
-
-            <ul>
-            <li class="gallery-item-likes"><span class="visually-hidden"><v-icon>mdi-heart-outline</v-icon></span><i class="fas fa-heart" aria-hidden="true"></i>{{ feed.likes }}</li>
-            <li class="gallery-item-comments"><span class="visually-hidden"><v-icon>mdi-chat-outline</v-icon></span><i class="fas fa-comment" aria-hidden="true"></i>{{ feed.cmts }}</li>
-            </ul>
-
+        <div @click.stop="goFeedDetail(feed.postId)" class="gallery-item" tabindex="0" v-for="(feed,i) in feeds" :key="i">
+            <v-img :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)" class="gallery-image" alt="thumbnail_img" />
+            <div class="gallery-item-info">
+                <ul>
+                <li class="gallery-item-likes"><span class="visually-hidden"><v-icon>mdi-heart-outline</v-icon></span><i class="fas fa-heart" aria-hidden="true"></i>{{ feed.likes }}</li>
+                <li class="gallery-item-comments"><span class="visually-hidden"><v-icon>mdi-chat-outline</v-icon></span><i class="fas fa-comment" aria-hidden="true"></i>{{ feed.cmts }}</li>
+                </ul>
+            </div>
         </div>
-
-        </div>
-
+        <!-- 더미사진 -->
         <div class="gallery-item" tabindex="0">
-
-        <img src="https://images.unsplash.com/photo-1423012373122-fff0a5d28cc9?w=500&h=500&fit=crop" class="gallery-image" alt="">
-
-        <div class="gallery-item-type">
-
-            <span class="visually-hidden">Video</span><i class="fas fa-video" aria-hidden="true"></i>
-
+            <img src="https://images.unsplash.com/photo-1423012373122-fff0a5d28cc9?w=500&h=500&fit=crop" class="gallery-image" alt="">
+            <div class="gallery-item-type">
+                <span class="visually-hidden">Video</span><i class="fas fa-video" aria-hidden="true"></i>
+            </div>
         </div>
-
-        </div>
-
     </div>
     <!-- End of gallery -->
 
@@ -42,25 +29,50 @@
 <script>
 export default {
     name: "Feeds",
+    props:{
+        userId:String,
+    },
     data(){
         return{
             feeds:[],
-            memberId:"user1",
+            getUserId:"", //부모에서 받은 userId바인딩
         }
     },
     created() {
-        this.loadUserFeedList();
+        this.getUserId = this.userId;
+        this.loadUserFeedList(this.getUserId);
     },
     methods: {
-        loadUserFeedList() {
-            this.axios('sns/user/user_feeds/' + this.memberId)
+        loadUserFeedList(getUserId) {
+            this.axios('sns/user/user_feeds/' + getUserId)
             .then(res => {
               this.feeds = res.data;
-              console.log(this.feeds);
             }).catch(err => {
               console.log(err);
             });  
-          }
+          },
+        //피드 디테일로 이동
+        goFeedDetail(postId) {
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            console.log(1)
+            this.$router.push({ name: 'snsFeedDetail', query: {postId : postId} });
+        },
 
     },
 

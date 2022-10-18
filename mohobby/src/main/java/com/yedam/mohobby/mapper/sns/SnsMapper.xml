@@ -266,7 +266,7 @@
 			검색
 			
 	-->
-	<!-- 유저전체검색 -->
+	<!-- 유저전체 -->
 	<select id="getUsers" resultType="com.yedam.mohobby.service.user.MemberVO">
 		SELECT member_id, profile_img, nickname
 		FROM member
@@ -279,11 +279,11 @@
 			<if test='member_id != null and memberId != ""'>
 				WHERE member_id like LOWER('%' || #{ memberId } || '%')
 			</if>
-			<if test='nickname != null and nickname != ""'>
-				AND nickname LIKE LOWER('%' || #{ nickname } || '%')
-			</if>
 		</where>
 	</select>
+<!-- 		<if test='nickname != null and nickname != ""'>
+				AND nickname LIKE LOWER('%' || #{ nickname } || '%')
+			</if> -->
 	<!-- 유저단건조회 -->
 <!-- <select id="selectOneUser" resultType="com.yedam.mohobby.service.user.MemberVO">
 		SELECT member_id, profile_img, nickname
@@ -477,18 +477,20 @@
 	-->
 	<!-- 컬렉션생성 -->
 	<insert id="createBookmarkCtg" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
-		<selectKey keyProperty="catg_id" resultType="Integer" order="BEFORE">
+		<selectKey keyProperty="catgId" resultType="Integer" order="BEFORE">
 	        SELECT NVL(MAX(CATG_ID), 0)+1 FROM sns_bookmark_catg
 	    </selectKey>
 			INSERT INTO sns_bookmark_catg (
 			 							CATG_ID,
 			 							MEMBER_ID,
-			 							CATG_NAME
+			 							CATG_NAME,
+										THUMBNAIL
 	    					  		   )
 	    					   VALUES (
 	    					  			#{ catgId },
 	    					  			#{ memberId },
-	    					  			#{ catgName }
+	    					  			#{ catgName },
+	    					  			#{ thumbnail }
 	    					  		   )
 	</insert>
 	<!-- 컬렉션수정(이름) -->
@@ -502,9 +504,10 @@
 		WHERE CATG_ID = #{ catgId }
 	</delete>
 	<!-- 컬렉션리스트 -->
-	<select id="getBookmarkCtgs" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
+	<select id="getBookmarkCtgs" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
 		SELECT * FROM sns_bookmark_catg
 		WHERE MEMBER_ID = #{ memberId }
+		ORDER BY catg_id DESC
 	</select>
 
 	<!-- 
@@ -534,10 +537,11 @@
 		WHERE CATG_ID = #{ catgId }
 	</select>
 	<!-- 전체 북마크 -->
-	<select id="getAllBookmarks" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
+	<select id="getAllBookmarks" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
 		SELECT c.catg_id, c.member_id, b.post_id  
 		FROM sns_bookmark_catg c, sns_bookmark b
 		WHERE c.catg_id = b.catg_id
+		AND c.member_id = #{ memberId }
 	</select>
 	
 	<!-- 

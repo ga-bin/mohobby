@@ -99,7 +99,7 @@
     },
     methods: {
       getFeedDetail(postId) {
-        this.$router.push({ name: 'snsFeedDetail', query: {id : postId} });
+        this.$router.push({ name: 'snsFeedDetail', query: {postId : postId} });
       },
       getHotLecturerList() {
         //hotLectureList조회

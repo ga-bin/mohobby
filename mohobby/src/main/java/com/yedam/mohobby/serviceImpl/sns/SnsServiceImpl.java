@@ -310,8 +310,8 @@ public class SnsServiceImpl implements SnsService{
     }
     //컬렉션 목록
     @Override
-    public List<SnsBookmarkVO> getBookmarkCtgs(int catgId) {
-        return mapper.getBookmarkCtgs(catgId);
+    public List<SnsBookmarkVO> getBookmarkCtgs(String memberId) {
+        return mapper.getBookmarkCtgs(memberId);
     }
     
     //북마크 등록
