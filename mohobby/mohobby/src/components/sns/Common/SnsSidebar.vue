@@ -82,7 +82,7 @@ export default {
         ] },
         { icon: "mdi-format-list-bulleted", text: "저장한 게시글 관리", subheaders: [
           { text: "북마크 찜꽁빵꽁", items: [
-            { text: "저장게시글", route: "" },
+            { text: "저장게시글", route: "/snsBookmark" },
           ] },
         ]},
       ],

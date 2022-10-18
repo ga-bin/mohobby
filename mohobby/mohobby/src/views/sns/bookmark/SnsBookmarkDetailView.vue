@@ -1,78 +1,37 @@
 <template>
-  <div id="app">
-    <v-app id="inspire">
-      <v-card
-        flat
-        tile
-      >
-        <v-toolbar
-          color="gray"
-          dark
-        >
-          <v-app-bar-nav-icon></v-app-bar-nav-icon>
-    
-          <v-toolbar-title>Cats</v-toolbar-title>
-    
-          <v-spacer></v-spacer>
-    
-          <v-btn icon>
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>
-        </v-toolbar>
-    
-        <v-container
-          v-for="type in types"
-          :key="type"
-          class="grey lighten-4"
-          fluid
-        >
-          <v-subheader>{{ type }}</v-subheader>
-    
-          <v-row>
-            <v-spacer></v-spacer>
-            <v-col
-              v-for="card in cards"
-              :key="card"
-              cols="12"
-              sm="6"
-              md="4"
-            >
-              <v-card>
-              <v-img
-                :src="`https://picsum.photos/200/300?image=${getImage()}`"
-                height="300px"
-              >
-                <span
-                  class="text-h5 white--text pl-4 pt-4 d-inline-block"
-                  v-text="card"
-                ></span>
-              </v-img>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
-  </v-app>
+<div class="container">
+
+<h1 class="heading">Image Gallery with CSS Grid <span>& Flexbox Fallback</span></h1>
+
+<div class="gallery">
+
+  <div class="gallery-item">
+    <img class="gallery-image" src="https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=500&h=500&fit=crop" alt="person writing in a notebook beside by an iPad, laptop, printed photos, spectacles, and a cup of coffee on a saucer">
+  </div>
+
+  <div class="gallery-item">
+    <img class="gallery-image" src="https://images.unsplash.com/photo-1515260268569-9271009adfdb?w=500&h=500&fit=crop" alt="sunset behind San Francisco city skyline">
+  </div>
+
+  <div class="gallery-item">
+    <img class="gallery-image" src="https://images.unsplash.com/photo-1506045412240-22980140a405?w=500&h=500&fit=crop" alt="people holding umbrellas on a busy street at night lit by street lights and illuminated signs in Tokyo, Japan">
+  </div>
+
+  <div class="gallery-item">
+    <img class="gallery-image" src="https://images.unsplash.com/photo-1514041181368-bca62cceffcd?w=500&h=500&fit=crop" alt="car interior from central back seat position showing driver and blurred view through windscreen of a busy road at night">
+  </div>
+
+  <div class="gallery-item">
+    <img class="gallery-image" src="https://images.unsplash.com/photo-1445810694374-0a94739e4a03?w=500&h=500&fit=crop" alt="back view of woman wearing a backpack and beanie waiting to cross the road on a busy street at night in New York City, USA">
+  </div>
+
+  <div class="gallery-item">
+    <img class="gallery-image" src="https://images.unsplash.com/photo-1486334803289-1623f249dd1e?w=500&h=500&fit=crop" alt="man wearing a black jacket, white shirt, blue jeans, and brown boots, playing a white electric guitar while sitting on an amp">
+  </div>
+
 </div>
-  <!-- <div id="app">
-  <v-app id="inspire">
-    <div class="d-flex flex-column justify-space-between align-center">
-      <v-slider
-        v-model="width"
-        class="align-self-stretch"
-        min="200"
-        max="500"
-        step="1"
-      ></v-slider>
-  
-      <v-img
-        :aspect-ratio="16/9"
-        :width="width"
-        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-      ></v-img>
-    </div>
-  </v-app>
-</div> -->
+
+</div>
 </template>
 <script>
   import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
@@ -81,24 +40,109 @@
     components: { SnsSidebar },
 
     data: () => ({
-      types: ['2022.01.02', '2022.01.01'],
-      cards: ['', '', '']
     }),
 
     methods: {
-      getImage () {
-        const min = 550
-        const max = 560
-
-        return Math.floor(Math.random() * (max - min + 1)) + min
-      },
     }
   }
   </script>
   
-  <style>
-    #app{
-      margin: 2% 10%;
-      box-sizing: border-box;
-    }
+  <style scoped>
+  /*
+
+All grid code is placed in a 'supports' rule (feature query) at the bottom of the CSS (Line 77). 
+        
+The 'supports' rule will only run if your browser supports CSS grid.
+
+Flexbox is used as a fallback so that browsers which don't support grid will still recieve an identical layout.
+
+*/
+
+@import url(https://fonts.googleapis.com/css?family=Montserrat:500);
+
+:root {
+	/* Base font size */
+	font-size: 10px;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	min-height: 100vh;
+	background-color: #fafafa;
+}
+
+.container {
+	max-width: 100rem;
+	margin: 0 auto;
+	padding: 0 2rem 2rem;
+}
+
+.heading {
+	font-family: "Montserrat", Arial, sans-serif;
+	font-size: 4rem;
+	font-weight: 500;
+	line-height: 1.5;
+	text-align: center;
+	padding: 3.5rem 0;
+	color: #1a1a1a;
+}
+
+.heading span {
+	display: block;
+}
+
+.gallery {
+	display: flex;
+	flex-wrap: wrap;
+	/* Compensate for excess margin on outer gallery flex items */
+	margin: -1rem -1rem;
+}
+
+.gallery-item {
+	/* Minimum width of 24rem and grow to fit available space */
+	flex: 1 0 24rem;
+	/* Margin value should be half of grid-gap value as margins on flex items don't collapse */
+	margin: 1rem;
+	box-shadow: 0.3rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+	overflow: hidden;
+}
+
+.gallery-image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 400ms ease-out;
+}
+
+.gallery-image:hover {
+	transform: scale(1.15);
+}
+
+/*
+
+The following rule will only run if your browser supports CSS grid.
+
+Remove or comment-out the code block below to see how the browser will fall-back to flexbox styling. 
+
+*/
+
+@supports (display: grid) {
+	.gallery {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+		grid-gap: 2rem;
+	}
+
+	.gallery,
+	.gallery-item {
+		margin: 0;
+	}
+}
+
   </style>

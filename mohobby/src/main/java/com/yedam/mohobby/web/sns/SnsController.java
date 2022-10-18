@@ -329,7 +329,7 @@ public class SnsController {
     }
     //컬렉션리스트 호출
     @GetMapping("/collection/{memberId}")
-    public List<SnsBookmarkVO> getCollectionList(@PathVariable int memberId){
+    public List<SnsBookmarkVO> getCollectionList(@PathVariable String memberId){
         return service.getBookmarkCtgs(memberId);
     }
     

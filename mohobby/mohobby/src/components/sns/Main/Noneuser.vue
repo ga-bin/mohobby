@@ -51,9 +51,7 @@ export default {
       },
       //디테일피드 테스트버튼
       getFeedDetail(postId) {
-        this.$router.push({ name: 'snsFeedDetail',
-                            query: {id : postId} 
-                          });
+        this.$router.push({ name: 'snsFeedDetail', query: {postId : postId} });
       },
       //infinite scroll
       handleScroll() {

@@ -143,7 +143,6 @@ export default {
             //검색
             data: [],
             word: "",
-            //moim
             role : 0,
             noneuser : false,
             hashtags: [],
@@ -151,17 +150,28 @@ export default {
         }
     },
     watch: {
-        userInput(val) {
-            if (!val) {
+        userInput(val) { //입력한 값 받아와서
+            if (!val) { //입력한 값이 없으면 return
                 return
             }
-            this.fetchEntriesDebounced()
+            this.fetchEntriesDebounced() //있으면
         },
     },
     created() {
         this.getHotHashtags();
     },
     methods: {
+        //검색창 입력값 들어오면 실행 일정시간동안 변화 없으면 알아서 닫히게
+        fetchEntriesDebounced() {
+        // cancel pending call
+        clearTimeout(this._timerId)
+
+        // delay new call 500ms
+        this._timerId = setTimeout(() => {
+            // maybe : this.fetch_data()
+            this.people = this.itemData ? this.itemData : []
+            }, 500)
+        },
         //top6해시태그
         getHotHashtags() {
             this.axios('/sns/main/hashtag').then(res => {
@@ -199,17 +209,7 @@ export default {
         join() {
             this.$router.push({ path: 'login' })
         },
-        //
-        fetchEntriesDebounced() {
-            // cancel pending call
-            clearTimeout(this._timerId)
 
-            // delay new call 500ms
-            this._timerId = setTimeout(() => {
-                // maybe : this.fetch_data()
-                this.people = this.itemData ? this.itemData : []
-            }, 500)
-        },
         goRegForm() {
             this.$router.push({ name: "snsFeedRegister" });
         },

@@ -32,24 +32,18 @@
         </div>
       </v-card-actions>
     </div>
+    <!-- 본 댓글 입력창 끝 -->
+    <!-- 댓글리스트 -->
     <div>
-      <!-- 댓글리스트 -->
       <div class="profile" v-for="cmt in comments" :key="cmt.commId">
         <div v-if="cmt.parentCommId != ''" style="width: 35px"></div>
         <v-avatar class="ml-10 my-5 mr-4" color="grey darken-1" size="30">
           <v-img
             aspect-ratio="30"
             :src="require(`@/assets/image/user/${cmt.profileImg}`)"
-            alt="profile_img"
-            @click="
-              $router
-                .push({ path: '/snsUserFeed?memId=' + cmt.memberId })
-                .catch(() => {
-                  $router.go(0);
-                })
-            "
-            style="cursor: pointer"
-          />
+            alt="profile_img" 
+            @click="$router.push({ path: '/snsUserFeed?memId=' + cmt.memberId }).catch(() => {$router.go(0);})"
+            style="cursor: pointer"/>
         </v-avatar>
         <input type="hidden" class="cmtId" value="cmt.commId" />
         <div class="user text-overline">
@@ -68,8 +62,7 @@
               class="mr-3"
               v-if="cmt.memberId == memberId"
               @click="editCmt(cmt.commId)"
-              >저장</v-btn
-            >
+              >저장</v-btn>
             <v-btn
               x-small
               outlined
@@ -77,8 +70,7 @@
               class="mr-3"
               v-if="cmt.commId != editForm"
               @click="showRegReCmt(cmt.commId, cmt.memberId)"
-              >답장</v-btn
-            >
+              >답장</v-btn>
             <v-btn
               x-small
               outlined
@@ -86,42 +78,29 @@
               class="mr-3"
               v-if="cmt.memberId == memberId"
               @click="showEditForm(cmt.commId)"
-              >수정</v-btn
-            >
+              >수정</v-btn>
             <v-btn
               x-small
               outlined
               color="error"
               v-if="cmt.memberId == memberId"
-              @click="deleteCmt(cmt.commId, cmt.targetId)"
-              >삭제</v-btn
-            >
+              @click="deleteCmt(cmt.commId, cmt.targetId)">
+              삭제</v-btn>
           </div>
+          <!-- 댓글 버튼 끝 -->
           <!-- 대댓 유저소환 -->
           <v-card-actions>
             <div class="content">
               <div v-if="cmt.parentCommId != ''">
-                <span
-                  class="member_id"
-                  @click="
-                    $router
-                      .push({
-                        path: '/snsUserFeed?memId=' + cmt.parentMemberId,
-                      })
-                      .catch(() => {
-                        $router.go(0);
-                      })
-                  "
-                  ><strong>@{{ cmt.parentMemberId }}</strong></span
-                >{{ cmt.content }}
-              </div>
-              <div
-                v-if="
-                  cmt.parentCommId == '' && cmt.commId != editForm && !formValue
-                "
-              >
+                <span class="member_id" 
+                      @click="$router.push({path: '/snsUserFeed?memId=' + cmt.parentMemberId,}).catch(() => {$router.go(0);})">
+                <strong>@{{ cmt.parentMemberId }}</strong></span>
                 {{ cmt.content }}
               </div>
+              <div v-if="cmt.parentCommId == '' && cmt.commId != editForm && !formValue">
+                {{ cmt.content }}
+              </div>
+              <!-- 유저소환 끝 -->
               <!-- 댓글 수정창 -->
               <div
                 v-if="

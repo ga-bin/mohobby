@@ -21,7 +21,7 @@
             multiple
             @change="onImageChange"
             name="fileList"
-            
+            accept="image/*"
           />
       <!-- 파일이름, 개수 -->
       <div v-for="(list,i) in fileList"
@@ -52,7 +52,9 @@
         v-model="content"
       ></v-textarea>
     </v-container>
+    <!-- 유저소환 -->
 
+    
     <!-- 해시태그 -->
     <!-- <input type="hidden" v-model="getHashtag" :hashtag="getHashtag"  name="hashtag"> -->
     <v-container fluid>

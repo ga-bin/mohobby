@@ -219,11 +219,10 @@
           },
           //내 피드로 이동
           goMyFeed(member){
-            if (member == undefined) {
-                member = 'user11'
-                this.$router.push({ name: 'snsUserFeed', query: {memId : member} });
+            if (member == undefined || member == null || member =="") {
+                return;
             }
-            this.$router.push({ name: 'snsUserFeed', query: {memId : member} });
+            this.$router.push({ name: 'snsUserFeed', query: {userId : member} });
           },
           //검색창
           fetchEntriesDebounced() {
