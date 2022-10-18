@@ -230,7 +230,7 @@ export default {
       regionId: "",
       gender: "",
       checkCert: false,
-      profileImg: "",
+      profileImg: "comfuck.jpg",
       intro: "",
       keyword: "",
       regionName: "",
@@ -240,7 +240,7 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    console.log(this.memberId);
+    this.profileImg = "comfuck.jpg";
     this.setMemberInfo();
     this.getMemberPickKeyword();
     this.getAllRegion();

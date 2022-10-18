@@ -47,10 +47,10 @@ const routes = [
     name: "login",
     component: () => import("./../views/user/LoginView"),
   },
-    {
-    path: "/follow",
-    name: "follow",
-    component: () => import("./../components/user/FollowModal"),
+  {
+    path: "/flagging",
+    name: "login",
+    component: () => import("./../components/user/FlaggingModal"),
   },
   {
     path: "/register",

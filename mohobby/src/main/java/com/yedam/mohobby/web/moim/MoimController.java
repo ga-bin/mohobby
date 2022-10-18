@@ -264,5 +264,11 @@ public class MoimController {
 //			return "fail";
 //		}
 //	}
+	
+	// 소모임 가입 회원 수 조회하는 로직
+	@GetMapping("/moimMemberCount/{moimId}")
+	public int moimMemberCount(@PathVariable int moimId) {
+		return service.moimMemberCount(moimId);
+	}
 }
 

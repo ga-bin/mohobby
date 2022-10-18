@@ -170,5 +170,11 @@ public class MoimServiceImpl implements MoimService{
 		return mapper.moimCommentDelete(commId);
 	}
 
+	// 소모임 가입 회원 수 조회하는 로직
+	@Override
+	public int moimMemberCount(int moimId) {
+		return mapper.moimMemberCount(moimId);
+	}
+
 }
 

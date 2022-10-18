@@ -2,7 +2,7 @@
 <template>
   <div>
     <!-- 권한에 따라 컴포넌트 다르게 보여주기 -->
-    <MoimSidebar :moimInfo="moimInfo"/>
+    <MoimSidebar :moimId="Id"/>
     <!-- <MoimSidebar_admin></MoimSidebar_admin> -->
     
     <div v-if="moim == 0">

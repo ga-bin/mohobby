@@ -67,7 +67,7 @@
       </div> -->
 
       <!-- 설정 되어있는 모하비 회원 -->
-      <div class="right" v-if="right == 0 && member == 1">
+      <!-- <div class="right" v-if="right == 0 && member == 1">
         <div class="text-center">
           <v-dialog v-model="dialog" width="500">
             <template v-slot:activator="{ on, attrs }">
@@ -87,7 +87,6 @@
               </v-card-text>
 
               <v-divider></v-divider>
-
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" text @click="goMain()"> 가입 </v-btn>
@@ -104,11 +103,11 @@
             </v-card>
           </v-dialog>
         </div>
-      </div>
-      <div class="right" v-if="memberId != '비회원'">
-        <v-btn text @click="invite()">
+      </div> -->
+   <div class="right" v-if="memberId != '비회원'">
+        <v-btn text @click="moimFlagging">
           <v-icon small color="white">mdi-plus-circle-outline</v-icon>
-          <div style="color: white" @click="flagging">신고하기</div>
+          <div style="color: white">신고하기</div>
         </v-btn>
       </div>
     </div>
@@ -136,7 +135,7 @@
 <script>
 export default {
   props: {
-    moimInfo: Object,
+    moimId: Number
   },
   data() {
     return {
@@ -155,13 +154,15 @@ export default {
         { icon: "mdi-chart-pie", text: "N빵", route: "moimNbbang" },
       ],
       memberInfo: [],
+      moimMemberCount : 0,
     };
   },
   created() {
     this.setMemberInfo();
     this.getMemberInfo();
+    this.getMoimOneInfo();
+    this.getMoimMemberCount();
   },
-  mounted() {},
   methods: {
     setMemberInfo() {
       this.memberId = this.$store.state.id;
@@ -173,7 +174,7 @@ export default {
         this.profileImg = "female.png";
       } else if (this.memberId != "" && this.memberId != "admin") {
         this.profileImg = this.$store.state.user.profileImg;
-      }
+      } 
     },
     getMemberInfo() {
       const vm = this;
@@ -190,6 +191,35 @@ export default {
           console.log(error);
         });
     },
+    getMoimOneInfo() {
+      const vm = this;
+       this.axios({
+        url: "http://localhost:8088/java/moimOneInfo/" + this.moimId,
+        method: "get",
+      })
+        .then(function (response) {
+          console.log(response.data);
+          vm.moimInfo = response.data;
+          console.log(vm.moimInfo);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },  
+    getMoimMemberCount() {
+      const vm = this;
+      this.axios({
+        url: "http://localhost:8088/java/moimMemberCount/" + this.moimId,
+        method: "get",
+      })
+        .then(function (response) {
+          console.log(response.data);
+          vm.moimMemberCount = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
     goMypage() {
       //this.$route.push(name:"my")
     },
@@ -198,6 +228,9 @@ export default {
     },
     checkForJoin() {
       const vm = this;
+      console.log(this.moimInfo.maxAge);
+      console.log(this.moimInfo.maxAge);
+      console.log(this.moimInfo.gender);
       if (this.memberId == "비회원") {
         this.$swal
           .fire({
@@ -217,12 +250,41 @@ export default {
               );
             }
           });
-      } else if (
-        this.moimInfo.maxAge != null ||
-        this.moimInfo.minAge != null ||
-        this.moimInfo.gender != null
+      // 모임 정원 수 초과 여부 검사
+      } else if (this.moimInfo.maxPeople <= this.moimMemberCount) {
+        this.$swal.fire({
+          icon: 'error',
+          title: '모임의 정원 수가 다차서 가입할 수 없습니다.',
+        })
+      // 모임 가입조건 없는 경우
+      } else if (this.moimInfo.maxAge == 0 &&
+        this.moimInfo.minAge == 0 &&
+        this.moimInfo.gender == 0) {
+          this.$swal.fire({
+            title: '모임에 가입하시겠습니까?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '가입하기',
+            cancelButtonText: '취소하기'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$swal.fire(
+                vm.insertMoim(),
+                '가입이 완료되었습니다.'
+              )
+            }
+          })
+        }
+        // 모입 가입조건 있는 경우
+        else if (
+        this.moimInfo.maxAge != 0 ||
+        this.moimInfo.minAge != 0 ||
+        this.moimInfo.gender != 0
       ) {
-        if (this.memberInfo.gender == null || this.memberInfo.birth == null) {
+        // 회원 정보 설정이 안되있는 경우
+        if (this.memberInfo.gender == 0 || this.memberInfo.birth == null) {
           this.$swal
             .fire({
               title: "회원정보 설정이 먼저 필요합니다.",
@@ -234,15 +296,29 @@ export default {
               cancelButtonText: "취소",
             })
             .then((result) => {
+              if (result.isConfirmed) {
               vm.$router.push("/mypageprofile");
-              // if (result.isConfirmed) {
-              //   this.$swal.fire("회원정보 수정 화면으로 이동"),
-              //     vm.$router.push("/mypageprofile");
-              // }
+              }
             });
+          // 회원 정보 설정이 되어 있는데, 모임 조건과 일치하지 않는 경우
+        } else if(this.memberInfo.gender != this.moimInfo.gender || 
+           this.memberInfo.birth > this.moimInfo.maxAge || this.memberInfo.birth < this.moimInfo.minAge
+        ) {
+        this.$swal.fire({
+          icon: 'error',
+          title: '모임의 가입 기준에 충족하지 않아 가입할 수 없습니다.',
+        })
         }
       }
     },
+    // 모임 가입하기 로직(axios만들자)
+    insertMoim() {
+
+    },
+    // 모임 신고하기
+    moimFlagging() {
+      
+    }
   },
 };
 </script>

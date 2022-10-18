@@ -62,46 +62,46 @@ public class MessageController {
 	}
 
 	// 알림
-	@MessageMapping("Notice")
-	public void NoticeSns(ResNoticeVO resNotice) {
-		NoticeVO noticeVO = new NoticeVO();
-		//sns 알림
-		if (resNotice.getBoardType() == 0) {
-			resNotice.setProfileImge(mService.getMember(resNotice.getMyId()).getProfileImg());
-			resNotice.setNickname(mService.getMember(resNotice.getMyId()).getNickName());
-
-			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setNoticeAvatar(resNotice.getProfileImge());
-			noticeVO.setNoticeTitle(resNotice.getNickname());
-
-			if (resNotice.getContentType() == 0) {
-				if (resNotice.getLikeStatus() == 0) {
-					noticeVO.setNoticeSubtitle("좋아요를 눌렀습니다.");
-				} else if (resNotice.getLikeStatus() == 1) {
-					noticeVO.setNoticeSubtitle("좋아요를 취소했습니다.");
-				}
-			} else if (resNotice.getContentType() == 1) {
-				noticeVO.setNoticeSubtitle("댓글을 남기셨습니다.");
-			}
-		}
-		//소모임 알림
-		else if (resNotice.getBoardType()==1) {
-			resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMyId()).getMoimImg());
-			resNotice.setNickname(moService.getMoimInfo(resNotice.getMyId()).getMoimName());
-			
-			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setNoticeAvatar(resNotice.getProfileImge());
-			noticeVO.setNoticeTitle(resNotice.getNickname());
-		}
-		else if(resNotice.getBoardType()==2) {
-			
-			
-			
-		}
-
-		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
-		nService.insertNotice(noticeVO);
-	}
+//	@MessageMapping("Notice")
+//	public void NoticeSns(ResNoticeVO resNotice) {
+//		NoticeVO noticeVO = new NoticeVO();
+//		//sns 알림
+//		if (resNotice.getBoardType() == 0) {
+//			resNotice.setProfileImge(mService.getMember(resNotice.getMyId()).getProfileImg());
+//			resNotice.setNickname(mService.getMember(resNotice.getMyId()).getNickName());
+//
+//			noticeVO.setMemberId(resNotice.getTargetId());
+//			noticeVO.setNoticeAvatar(resNotice.getProfileImge());
+//			noticeVO.setNoticeTitle(resNotice.getNickname());
+//
+//			if (resNotice.getContentType() == 0) {
+//				if (resNotice.getLikeStatus() == 0) {
+//					noticeVO.setNoticeSubtitle("좋아요를 눌렀습니다.");
+//				} else if (resNotice.getLikeStatus() == 1) {
+//					noticeVO.setNoticeSubtitle("좋아요를 취소했습니다.");
+//				}
+//			} else if (resNotice.getContentType() == 1) {
+//				noticeVO.setNoticeSubtitle("댓글을 남기셨습니다.");
+//			}
+//		}
+//		//소모임 알림
+//		else if (resNotice.getBoardType()==1) {
+//			resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMyId()).getMoimImg());
+//			resNotice.setNickname(moService.getMoimInfo(resNotice.getMyId()).getMoimName());
+//			
+//			noticeVO.setMemberId(resNotice.getTargetId());
+//			noticeVO.setNoticeAvatar(resNotice.getProfileImge());
+//			noticeVO.setNoticeTitle(resNotice.getNickname());
+//		}
+//		else if(resNotice.getBoardType()==2) {
+//			
+//			
+//			
+//		}
+//
+//		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
+//		nService.insertNotice(noticeVO);
+//	}
 	// 소모임알리
 
 }

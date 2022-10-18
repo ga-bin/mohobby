@@ -75,5 +75,7 @@ public interface MoimMapper {
 	//소모임 투표 디테일 리스트
 	public List<MoimVoteListVO> moimVoteAllList(@Param("moimId")int moimId, @Param("voteId")int voteId);
 	//public int moimCommentDelete(@Param("commId")int commId);
-
+	
+	// 소모임 가입 회원 수 조회하는 로직
+	public int moimMemberCount(int moimId);
 }
