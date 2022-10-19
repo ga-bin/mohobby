@@ -40,7 +40,7 @@
   <script>
     import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
     export default {
-      name: "",
+      name: "BookmarkCollection",
       components: { SnsSidebar },
       data() {
         return {
