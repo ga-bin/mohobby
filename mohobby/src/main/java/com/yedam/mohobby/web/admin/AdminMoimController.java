@@ -3,6 +3,7 @@ package com.yedam.mohobby.web.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,13 +17,14 @@ import com.yedam.mohobby.service.admin.FlaggingVO;
  * @title 관리자 sns
  */
 @RestController
+@CrossOrigin(origins = "*")
 public class AdminMoimController {
 	
 	@Autowired
 	AdminMoimService service;
 	
 	/**
-	 * 
+	 * @title 신고된 소모임 목록
 	 * @return List<FlaggingVO>
 	 */
 	@GetMapping("/adminflagmoim")
@@ -34,8 +36,9 @@ public class AdminMoimController {
 	 * 
 	 * @param flaggingVO
 	 */
-	@PutMapping("/adminflagmoim")
-	public void updateflagMoim(FlaggingVO flaggingVO) {
-		service.updateflagMoim(flaggingVO);
+	@PutMapping("/updateflagmoim")
+	public void updateFlagMoim(FlaggingVO flaggingVO) {
+		service.updateFlagMoim(flaggingVO);
 	}
+	
 }

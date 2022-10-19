@@ -20,7 +20,7 @@ where rownum <![CDATA[<=]]> 10
 select c.class_id, a.keyword_name, c.class_name, c.start_date, c.class_price
 from class c join keyword a
 on c.keyword_id = a.keyword_id
-where start_date > sysdate
+where start_date > current_date
 </select>
 
 <!-- 챌린지 실시간 인증샷 조회 -->

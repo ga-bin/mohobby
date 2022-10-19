@@ -1,13 +1,13 @@
 package com.yedam.mohobby.web.admin;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.admin.AdminUserService;
@@ -19,6 +19,7 @@ import com.yedam.mohobby.service.admin.FlaggingVO;
  * @title 관리자 user
  */
 @RestController
+@CrossOrigin(origins = "*")
 public class AdminUserController {
 
 	@Autowired
@@ -44,5 +45,11 @@ public class AdminUserController {
 	@PutMapping("/adminFlagUser")
 	public void updateFlagUser(FlaggingVO flaggingVO) {
 		service.updateFlagUser(flaggingVO);
+	}
+	
+	// 신고하기
+	@PostMapping("/flagging")
+	public void insertFlagging(@RequestBody FlaggingVO flaggingVO) {
+		service.insertFlagging(flaggingVO);
 	}
 }

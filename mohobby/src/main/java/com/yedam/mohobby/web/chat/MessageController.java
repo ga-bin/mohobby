@@ -2,16 +2,18 @@ package com.yedam.mohobby.web.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
+import com.yedam.mohobby.service.chat.ChatListContentRcdVO;
+import com.yedam.mohobby.service.chat.ChatListContentResVO;
 import com.yedam.mohobby.service.chat.ContentVO;
 import com.yedam.mohobby.service.notice.NoticeService;
 import com.yedam.mohobby.service.notice.NoticeVO;
 import com.yedam.mohobby.service.notice.ResNoticeVO;
 import com.yedam.mohobby.service.user.MemberService;
-import com.yedam.mohobby.service.chat.RevNoticeVO;
 import com.yedam.mohobby.service.moim.MoimService;
 
 @Controller
@@ -45,16 +47,16 @@ public class MessageController {
 		sendTemplate.convertAndSend("/topic/room/" + RoomNo, RoomNo);
 	}
 
-//	@MessageMapping("/sendNotice")
-//	public void sendNotice(SendNoticeVO sendNotice) {
-//		RevNoticeVO revNotice = new RevNoticeVO();
-//		revNotice.setContent(sendNotice.getContent());
-//		revNotice.setRoomNo(sendNotice.getRoomNo());
-//		revNotice.setMsgTime(sendNotice.getMsgTime());
-//		for (int i = 0; i < sendNotice.getMemberId().size(); i++) {
-//			sendTemplate.convertAndSend("/queue/" + sendNotice.getMemberId().get(i), revNotice);
-//		}
-//}
+	@MessageMapping("/sendNotice")
+	public void sendNotice(ChatListContentRcdVO rcd) {
+		ChatListContentResVO res = new ChatListContentResVO();
+		res.setContent(rcd.getContent());
+		res.setRoomNo(rcd.getRoomNo());
+		res.setMsgTime(rcd.getMsgTime());
+		for (int i = 0; i < rcd.getMemberId().size(); i++) {
+			sendTemplate.convertAndSend("/queue/" + rcd.getMemberId().get(i), rcd);
+		}
+}
 	@MessageMapping("/chatNotice")
 	public void chatNotice(ContentVO content) {
 		sendTemplate.convertAndSend("/" + content.getMemberId(), content);

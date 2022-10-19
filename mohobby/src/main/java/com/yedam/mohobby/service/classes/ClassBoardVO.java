@@ -16,4 +16,5 @@ public class ClassBoardVO {
     private String profileImg;  //프로필이미지
     private String nickname;  //닉네임
     private int secret; //0:공개, 1:비공개
+    private int commentTotal;   //코멘트 토탈
 }

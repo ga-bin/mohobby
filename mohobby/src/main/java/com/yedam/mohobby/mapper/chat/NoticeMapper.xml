@@ -13,25 +13,25 @@
 	<insert id="insertNotice"
 		parameterType="com.yedam.mohobby.service.notice.NoticeVO">
 		insert into notice(MEMBER_ID,
-		AVATAR,
-		TITLE,
-		SUBTITLE,
-		NOTICE_ID,
-		NOTICE_TYPE,
-		BOARD_TYPE,
-		MOIM_ID,
-		POST_ID,
-		CONTENT_TYPE)
-		values(#{memberId},
-		#{Avatar},
-		#{Title},
-		#{Subtitle},
-		notice_seq.nextval,
-		#{noticeType},
-		#{boardType},
-		#{moimId},
-		#{postId},
-		#{contentType}
+							AVATAR,
+							TITLE,
+							SUBTITLE,
+							NOTICE_ID,
+							NOTICE_TYPE,
+							BOARD_TYPE,
+							MOIM_ID,
+							POST_ID,
+							CONTENT_TYPE)
+		values(				#{memberId},
+							#{Avatar},
+							#{Title},
+							#{Subtitle},
+							notice_seq.nextval,
+							#{noticeType},
+							#{boardType},
+							#{moimId},
+							#{postId},
+							#{contentType}
 		)
 	</insert>
 	<!-- 알림 삭제 -->

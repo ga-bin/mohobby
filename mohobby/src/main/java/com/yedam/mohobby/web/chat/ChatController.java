@@ -27,11 +27,18 @@ import com.yedam.mohobby.service.notice.NoticeService;
 public class ChatController {
 	@Autowired
 	ChatService cService;
+	
 	AES256Util aes = new AES256Util();
 	
 	@Autowired
 	NoticeService nService;
 
+	@GetMapping("/getSnsChatRoomNo")
+	public CreateRoomVO getSnsChatRoomNo(CreateRoomVO createRoom) {
+		cService.getSnsChatRoomNo(createRoom);
+		return createRoom;
+	}
+	
 	@GetMapping("/getChatList/{roomNo}")
 	public List<ChatVO> getChat(@PathVariable String roomNo) {
 		return cService.getChat(roomNo);
@@ -51,11 +58,6 @@ public class ChatController {
 	public int insertMessage(@RequestBody ChatVO2 chat) throws Exception {
 		chat.setContent(aes.encrypt(chat.getContent()));
 		return cService.insertMessage(chat);
-	}
-
-	@PostMapping("/CreateRoom")
-	public int CreateRoom(@RequestBody CreateRoomVO cr) {
-		return cService.CreateRoom(cr);
 	}
 
 	// 대화상대아이디 가져오기

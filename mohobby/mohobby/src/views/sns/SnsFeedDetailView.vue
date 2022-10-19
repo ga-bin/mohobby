@@ -43,14 +43,23 @@
         <v-row>
           <v-col cols="4">
             <div class="d-flex justify-start">
-              <v-btn v-if="items.likeStatus === 1" icon text @click="like(memberId, items.postId)">
+              <v-btn
+                v-if="items.likeStatus === 1"
+                icon
+                text
+                @click="like(memberId, items.postId)"
+              >
                 <v-icon color="red lighten-2">mdi-heart</v-icon>
               </v-btn>
               <v-btn v-else icon text @click="like(memberId, items.postId)">
                 <v-icon>mdi-heart-outline</v-icon></v-btn
               >{{ items.likes }} <v-icon>mdi-chat-outline</v-icon
               >{{ items.cmts }}
-              <v-icon @click="send">mdi-send</v-icon>
+              <v-icon
+                v-if="this.$store.state.id != items.memberId"
+                @click="send"
+                >mdi-send</v-icon
+              >
             </div>
           </v-col>
           <v-col cols="8">
@@ -127,7 +136,10 @@
             <v-card-actions>
               <!-- 북마크 컬렉션 지정 저장, 취소버튼 -->
               <v-row class="ma-4 justify-space-around">
-                <v-btn text @click="bookmark(selectedCollection,memberId, items.postId)">
+                <v-btn
+                  text
+                  @click="bookmark(selectedCollection, memberId, items.postId)"
+                >
                   저장
                 </v-btn>
                 <v-btn text @click="dialog2 = false"> 취소 </v-btn>
@@ -240,7 +252,7 @@ export default {
       feeds: [], //해시태그 검색 정보 저장
       targetType: 2,
       memberId: this.$store.state.id, //세션아이디
-      writer:this.$route.query.writer,//글쓴이 아이디
+      writer: this.$route.query.writer, //글쓴이 아이디
       postId: this.$route.query.postId,
       show: true,
       targetId: "",
@@ -298,7 +310,7 @@ export default {
       })
         .then((res) => {
           this.getBookmarkStatus(postId);
-          console.log()
+          console.log();
           this.items = res.data;
           if (this.items.hashtag != null) {
             let str = this.items.hashtag; //%%,%%,%% 형태
@@ -308,7 +320,7 @@ export default {
           console.log("상세페이지 접근 성공!");
         })
         .catch((err) => {
-          alert("게시글호출 실패"+ err);
+          alert("게시글호출 실패" + err);
         });
     },
     //북마크상태조회
@@ -320,10 +332,10 @@ export default {
       })
         .then((res) => {
           console.log("북마크상태 조회 성공!");
-            this.mark = res.data;
+          this.mark = res.data;
         })
         .catch((err) => {
-          alert("게시글호출 실패"+ err);
+          alert("게시글호출 실패" + err);
         });
     },
     //DOT LIST
@@ -409,7 +421,22 @@ export default {
 
     //채팅방 이동
     send() {
-      this.$router.push({ name: "chat", params: { roomId: this.roomId } });
+      let vm = this;
+      this.axios
+        .get("/getSnsChatRoomNo", {
+          params: { myId: this.$store.state.id, targetId: this.items.memberId },
+        })
+        .then(function (res) {
+          console.log(res.data.vroomNo);
+
+          vm.$router.push({
+            name: "chat",
+            params: { getRoomId: res.data.vroomNo },
+          });
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     },
 
     //좋아요
@@ -430,8 +457,10 @@ export default {
           console.log(res);
         }
       );
+
       //멤버검증
-      if (memberId === null || memberId === "") { //유저일때만 좋아요가 가능하도록
+      if (memberId === null || memberId === "") {
+        //유저일때만 좋아요가 가능하도록
         this.$swal("로그인부터 부탁드립니다🙏");
         return;
       } else {
@@ -446,12 +475,12 @@ export default {
               //좋아요 상태가 0이면 개수++,상태를 1로
               ++this.items.likes;
               this.items.likeStatus = 1;
-              console.log("좋아요 완료")
+              console.log("좋아요 완료");
             } else if (this.items.likes > 0) {
               //좋상이 1이고 좋개가 0이 아니면 개수--,상태를 0으로
               --this.items.likes;
               this.items.likeStatus = 0;
-              console.log("좋아요 취소")
+              console.log("좋아요 취소");
             }
           })
           .catch((err) => {
@@ -501,7 +530,7 @@ export default {
           console.log("컬렉션리스트 호출 성공!");
         })
         .catch((err) => {
-          alert("컬렉션호출 실패"+ err);
+          alert("컬렉션호출 실패" + err);
         });
     },
     //컬렉션생성

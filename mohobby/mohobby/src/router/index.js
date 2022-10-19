@@ -48,9 +48,14 @@ const routes = [
     component: () => import("./../views/user/LoginView"),
   },
   {
-    path: "/flagging",
-    name: "login",
-    component: () => import("./../components/user/FlaggingModal"),
+    path: "/moimFlagging",
+    name: "moimFlagging",
+    component: () => import("./../components/user/moimFlaggingModal"),
+  },
+  {
+    path: "/userFlagging",
+    name: "userFlagging",
+    component: () => import("./../components/user/userFlaggingModal"),
   },
   {
     path: "/register",
@@ -131,6 +136,11 @@ const routes = [
     name: "snsBookmarkDetail",
     component: () => import("@/views/sns/bookmark/SnsBookmarkDetailView"),
   },
+  {
+    path: "/classOfflineDetail",
+    name: "classOfflineDetail",
+    component: () => import("./../views/lecture/list/classOfflineDetail"),
+  },
   // lecture
   {
     path: "/class",
@@ -145,12 +155,14 @@ const routes = [
           {
             path: "OpenBankingTest",
             name: "OpenBankingTest",
-            component: () => import("./../components/lecture/test/OpenBankingTest"),
+            component: () =>
+              import("./../components/lecture/test/OpenBankingTest"),
           },
           {
             path: "QuillEditorTest",
             name: "QuillEditorTest",
-            component: () => import("./../components/lecture/test/QuillEditorTest"),
+            component: () =>
+              import("./../components/lecture/test/QuillEditorTest"),
           },
           {
             path: "iamportTest",
@@ -160,7 +172,8 @@ const routes = [
           {
             path: "AccountRealNameTest",
             name: "AccountRealNameTest",
-            component: () => import("./../components/lecture/test/AccountRealNameTest"),
+            component: () =>
+              import("./../components/lecture/test/AccountRealNameTest"),
           },
           {
             path: "AttdQRTest",
@@ -170,7 +183,8 @@ const routes = [
           {
             path: "KakaoMapTest",
             name: "KakaoMapTest",
-            component: () => import("./../components/lecture/test/KakaoMapTest"),
+            component: () =>
+              import("./../components/lecture/test/KakaoMapTest"),
           },
           {
             path: "VideoTest",
@@ -200,7 +214,8 @@ const routes = [
           {
             path: "course",
             name: "classCourse",
-            component: () => import("./../components/lecture/detail/classCourse"),
+            component: () =>
+              import("./../components/lecture/detail/classCourse"),
             props: true,
           },
           {
@@ -212,7 +227,8 @@ const routes = [
           {
             path: "review",
             name: "classReview",
-            component: () => import("./../components/lecture/detail/classReview"),
+            component: () =>
+              import("./../components/lecture/detail/classReview"),
             props: true,
           },
         ],
