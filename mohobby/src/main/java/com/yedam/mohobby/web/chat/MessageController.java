@@ -47,27 +47,20 @@ public class MessageController {
 		sendTemplate.convertAndSend("/topic/room/" + RoomNo, RoomNo);
 	}
 
-	@MessageMapping("/sendNotice")
-	public void sendNotice(ChatListContentRcdVO rcd) {
-		ChatListContentResVO res = new ChatListContentResVO();
-		res.setContent(rcd.getContent());
-		res.setRoomNo(rcd.getRoomNo());
-		res.setMsgTime(rcd.getMsgTime());
-		for (int i = 0; i < rcd.getMemberId().size(); i++) {
-			sendTemplate.convertAndSend("/queue/" + rcd.getMemberId().get(i), rcd);
-		}
-}
-	@MessageMapping("/chatNotice")
-	public void chatNotice(ContentVO content) {
-		sendTemplate.convertAndSend("/" + content.getMemberId(), content);
-	}
+//	@MessageMapping("/sendNotice")
+//	public void sendNotice(ChatListContentRcdVO rcd) {
+//		ChatListContentResVO res = new ChatListContentResVO();
+//		res.setContent(rcd.getContent());
+//		res.setRoomNo(rcd.getRoomNo());
+//		res.setMsgTime(rcd.getMsgTime());
+//		for (int i = 0; i < rcd.getMemberId().size(); i++) {
+//
+//			sendTemplate.convertAndSend("/queue/" + rcd.getMemberId().get(i) + "/notice", rcd);
+//		}
 
 	// 알림
 	@MessageMapping("Notice")
 	public void NoticeSns(ResNoticeVO resNotice) {
-		System.out.println("222222222222222222222222222222");
-		System.out.println(resNotice);
-		System.out.println("222222222222222222222222222222");
 		NoticeVO noticeVO = new NoticeVO();
 		resNotice.setNoticeId(nService.getNoticeId());
 		noticeVO.setBoardType(resNotice.getBoardType());
@@ -82,7 +75,7 @@ public class MessageController {
 
 			// db에 담을정보
 			noticeVO.setMemberId(resNotice.getTargetId());
-		noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
+			noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
 			noticeVO.setTitle(resNotice.getNickname());
 			// sns - 좋아요 클릭시
 			if (resNotice.getContentType() == 0) {
@@ -117,6 +110,6 @@ public class MessageController {
 		}
 		System.out.println(noticeVO);
 		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
-		//nService.insertNotice(noticeVO);
+		nService.insertNotice(noticeVO);
 	}
 }
