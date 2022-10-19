@@ -42,6 +42,7 @@
             <v-icon>mdi-send</v-icon>
           </v-btn>
         </div>
+        </v-col>
       </v-card-actions>
     </div>
   </div>

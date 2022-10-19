@@ -79,9 +79,6 @@ public interface MoimMapper {
 	// 소모임 가입 회원 수 조회하는 로직
 	public int moimMemberCount(int moimId);
 
-	//소모임 대표 조회
-	public MoimVO getMoimInfo(int moimId);
-
 	//소모임 N빵 전체 리스트 조회
 	public List<MoimDutchVO> getAllDuchList(int moimId);
 
