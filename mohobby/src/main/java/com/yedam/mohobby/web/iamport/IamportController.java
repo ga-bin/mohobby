@@ -20,6 +20,12 @@ import com.google.gson.JsonParser;
 import com.yedam.mohobby.service.iamport.GetCertInfoResponseVO;
 import com.yedam.mohobby.service.iamport.GetTokenRequestVO;
 
+/**
+ * 
+ * @author 최은경
+ * 아임포트 결제, 본인인증
+ *
+ */
 @RestController
 @RequestMapping("/iamport")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})

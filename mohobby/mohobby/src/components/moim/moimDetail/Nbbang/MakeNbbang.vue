@@ -10,6 +10,7 @@
                         <v-text-field outlined placeholder="금액을 입력해주세요" v-model="price" prefix="₩">
                         </v-text-field>
                     </v-col>
+        
                     <v-col cols="12" sm="6" md="4">
                         <v-avatar class="mb-4" color="grey darken-1" size="64">
                             <v-img aspect-ratio="30" :src=src></v-img>

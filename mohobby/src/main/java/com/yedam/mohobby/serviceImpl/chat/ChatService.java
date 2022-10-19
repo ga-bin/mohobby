@@ -36,10 +36,6 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 		return mapper.getChat(roomNo);
 	}
 
-	@Override
-	public int CreateRoom(CreateRoomVO cr) {
-		return mapper.createRoom(cr);
-	}
 
 	@Override
 	public List<String> getTargetId(ChatUserVO chatUser) {
@@ -58,6 +54,11 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 	@Override
 	public int updateCheckTime(ChatUserVO chatUser) {
 		return mapper.updateCheckTime(chatUser);
-	} 
+	}
+
+	@Override
+	public void getSnsChatRoomNo(CreateRoomVO createRoom) {
+		mapper.getSnsChatRoomNo(createRoom);
+	}
 	
 }

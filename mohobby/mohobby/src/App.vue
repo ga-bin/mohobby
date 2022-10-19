@@ -29,23 +29,10 @@ export default {
     //   this.$store.commit("setUserData", null);
     //   this.$router.push("/");
     // },
-    SocketConnect() {
-   this.stompClient.connect(
-        {},
-        (frame) => {
-          this.stompClient.subscribe("/queue/" + this.$store.state.id, function (res) {
-        console.log(res)
-        ++vm.messages})
-          console.log("소켓 연결 성공", frame);
-        },
-        (error) => {
-          console.log("소켓 연결 실패", error);
-        }
-      );
-    },
+ 
   },
   created() {
-    this.SocketConnect();
+  
   }
 };
 </script>

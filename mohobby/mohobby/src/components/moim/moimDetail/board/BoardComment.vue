@@ -35,13 +35,14 @@
         <v-col cols="10">
           <v-text-field class="ml-11" placeholder="댓글을 남겨보세요!" filled rounded dense hide-details v-model="content"
             @keyup.enter="insertComment()"></v-text-field>
-      
+      </v-col>
         <v-spacer></v-spacer>
         <div style="margin-right: 80px">
           <v-btn rounded color="orange" text @click="insertComment()">
             <v-icon>mdi-send</v-icon>
           </v-btn>
         </div>
+        </v-col>
       </v-card-actions>
     </div>
   </div>
