@@ -2,13 +2,12 @@ package com.yedam.mohobby.web.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
-import com.yedam.mohobby.service.chat.ChatListContentRcdVO;
 import com.yedam.mohobby.service.chat.ChatListContentResVO;
+import com.yedam.mohobby.service.chat.ChatService;
 import com.yedam.mohobby.service.chat.ContentVO;
 import com.yedam.mohobby.service.notice.NoticeService;
 import com.yedam.mohobby.service.notice.NoticeVO;
@@ -29,6 +28,9 @@ public class MessageController {
 	MoimService moService;
 
 	@Autowired
+	ChatService cService;
+
+	@Autowired
 	SimpMessageSendingOperations sendTemplate;
 
 	@MessageMapping("/getSubscribeInfo")
@@ -40,6 +42,15 @@ public class MessageController {
 	public void send(ContentVO content) {
 		System.out.println(content);
 		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
+		ChatListContentResVO res = new ChatListContentResVO();
+		if (cService.getCheckIn(content.getRoomNo()) == 1) {
+			res.setContent(content.getContent());
+			res.setRoomNo(content.getRoomNo());
+			res.setMsgTime(content.getHour());
+			for (int i = 0; i < content.getMemberIds().size(); i++) {
+				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i), content);
+			}
+		}
 	}
 
 	@MessageMapping("/getSubscribeId")
@@ -93,10 +104,10 @@ public class MessageController {
 		else if (resNotice.getNoticeType() == 1) {
 			resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMoimId()).getMoimImg());
 			resNotice.setNickname(moService.getMoimInfo(resNotice.getMoimId()).getMoimName());
-																
+
 			// db에 담을정보
 			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setAvatar("require(`@/assets/image/moim/" + resNotice.getProfileImge()+"`)");
+			noticeVO.setAvatar("require(`@/assets/image/moim/" + resNotice.getProfileImge() + "`)");
 			noticeVO.setTitle(resNotice.getNickname());
 			// 소모임 - 댓글
 			if (resNotice.getContentType() == 0) {

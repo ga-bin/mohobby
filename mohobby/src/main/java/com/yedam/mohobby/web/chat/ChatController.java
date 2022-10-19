@@ -2,6 +2,7 @@ package com.yedam.mohobby.web.chat;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -76,8 +77,22 @@ public class ChatController {
 	public int updateCheckTime(@RequestBody ChatUserVO chatUser) {
 		return cService.updateCheckTime(chatUser);
 	}
+	// 알림 삭제
 	@DeleteMapping("/deleteNotice")
 	public int deleteNotice(@RequestParam int noticeId) {
 		return nService.delectNotice(noticeId);
+	}
+	@GetMapping("/updateCheckIn")
+	public int updateCheckIn(@RequestParam int roomId) {
+		return cService.updateCheckIn(roomId);
+	}
+	@GetMapping("/updateCheckOut")
+	public int updateCheckOut(@RequestParam int roomId) {
+		return cService.updateCheckIn(roomId);
+	}
+	@GetMapping("/updateCheckInOut")
+	public int updateCheckInOut(@RequestParam int preRoomId,@RequestParam int currentRoomId) {
+		
+		return cService.updateCheckInOut(preRoomId,currentRoomId);
 	}
 }

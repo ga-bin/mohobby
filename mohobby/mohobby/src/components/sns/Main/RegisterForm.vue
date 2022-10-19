@@ -149,7 +149,7 @@ data() {
   colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange'],
   editing: null,
   editingIndex: -1,
-  items: [
+  items: [ //임의로 바인딩해놓은 추천 해시태그
     { header: 'Select an option or create one' },
     {
       text: '오운완',
@@ -189,6 +189,8 @@ created() {
  
 },
 watch: {
+
+  //해시태그 색상변경
   model (val, prev) {
     if (val.length === prev.length) return
 
@@ -208,6 +210,8 @@ watch: {
   }
 },
 methods: {
+
+
     //해시태그수정
     edit (index, item) {
       if (!this.editing) {
@@ -218,8 +222,10 @@ methods: {
         this.editingIndex = -1
       }
     },
+
+
     //이미지 미리보기
-    onImageChange(file) {	// v-file-input @OnChange
+    onImageChange(file) {   // v-file-input @OnChange
       if (!file) return;
       
       file.forEach((getFile) => { //파일등 정보 forEach문으로 빼오기 
@@ -232,20 +238,25 @@ methods: {
         fileReader.readAsDataURL(getFile); //바이너리 파일을 Base64 Encode 문자열로 반환 Ex.) data:image/jpeg; base64, ….
       });
     },
+
+
     //게시글 등록
     //미리보기에서 사진 삭제돼야함 ->
     //첫번째 사진을 썸네일로
     uploadImage() {
+      let self = this;
       this.model.forEach((hashtag) => {
         console.log("hashtag.text" + hashtag.text);
         this.getHashtag.push(hashtag.text);
       });
+
+
       //hashtag배열 스트링화
       const hashtags = this.getHashtag.join();
       console.log("hashtags" + hashtags);
       feedInsert.hashtag.value = hashtags;
 
-      const formData = new FormData(feedInsert);	// 파일을 전송할때는 FormData 형식으로 전송
+      const formData = new FormData(feedInsert);   // 파일을 전송할때는 FormData 형식으로 전송
       console.log(feedInsert);
       console.log(document.getElementsByName("memberId")); //아이디 확인 완.
 
@@ -256,14 +267,12 @@ methods: {
         })
         .then(function (res) {
             console.log("게시글저장 성공!");
-            // this.goUserFeed(this.memberId);
+            console.log(this.$store.state.id);
+            self.$router.push({ path: '/snsUserFeed', query: {userId : self.$store.state.id} });
         })
         .catch(function (error) {
           console.log(error);
         })
-    },
-    goUserFeed(memberId) {
-        this.$router.push({ path: '/snsUserFeed', query: {userId : memberId} });
     },
 
   }

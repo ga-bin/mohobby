@@ -16,14 +16,14 @@ import com.yedam.mohobby.service.user.MemberVO;
  */
 @Service
 public interface SnsService {
-	/*
+   /*
      * 게시물
      */
     
-	//게시물 등록 전 포스트아이디 가져오기
-	public int getPostId();
-	//게시물 등록
-	public boolean regFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList);
+   //게시물 등록 전 포스트아이디 가져오기
+   public int getPostId();
+   //게시물 등록
+   public boolean regFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList);
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
     //피드 삭제
@@ -121,25 +121,25 @@ public interface SnsService {
     //북마크 등록
     public int addBookmark(SnsBookmarkVO bmkVO);
     //북마크 삭제
-    public int deleteBookmark(int postId);
+    public int deleteBookmark(int postId, String memberId);
     //북마크 여부조회
     public int isBookmark(int postId, String memberId);
     //북마크 조회
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회
-	public List<SnsBookmarkVO> getAllBookmarks();
-	
-	/*
-	 * 검색기록
-	 */
-	//검색기록 등록
-	public int addHistory(SnsSearchHistoryVO historyVO);
-	//검색기록 리스트
-	public List<SnsSearchHistoryVO> getHistoryList(String memberId);
-	//검색기록 삭제
-	public int deleteHistory(int searchId);
-	
-//	test
+   public List<SnsBookmarkVO> getAllBookmarks();
+   
+   /*
+    * 검색기록
+    */
+   //검색기록 등록
+   public int addHistory(SnsSearchHistoryVO historyVO);
+   //검색기록 리스트
+   public List<SnsSearchHistoryVO> getHistoryList(String memberId);
+   //검색기록 삭제
+   public int deleteHistory(int searchId);
+   
+//   test
 
 //    // [DBMapper.xml 쿼리에서 선언한 변수 개수 및 타입에 맞게 파라미터 선언]
 //   public int saveImage(Insert_DB_Image_Model userImage); // 리턴값으로 int 사용 [상태값 확인 성공, 실패 여부]

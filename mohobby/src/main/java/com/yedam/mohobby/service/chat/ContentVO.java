@@ -1,6 +1,7 @@
 package com.yedam.mohobby.service.chat;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentVO {
-	private String roomNo;
+	private int roomNo;
 	private String content;
 	private String memberId;
+	private List<String> memberIds;
 	private String hour;
 }

@@ -45,6 +45,7 @@ public class SnsServiceImpl implements SnsService{
     @Override
     public boolean regFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
        System.out.println("filesize : " + fileList.size());
+       snspostVO.setPostId(getPostId());
        try {
           MultipartFile getFirstFile = fileList.get(0);
           String getFirstFileName = getFirstFile.getOriginalFilename();
@@ -64,7 +65,6 @@ public class SnsServiceImpl implements SnsService{
          snsVo.setHashtag(snspostVO.getHashtag());
          snsVo.setThumbnail(getFirstFileName);
          
-         snspostVO.setPostId(mapper.getPostId());
          mapper.insertFeed(snsVo);
           
          //hashtag 등록 및 업데이트
@@ -327,8 +327,8 @@ public class SnsServiceImpl implements SnsService{
     }
     //북마크 삭제
     @Override
-    public int deleteBookmark(int postId) {
-        return mapper.deleteBookmark(postId);
+    public int deleteBookmark(int postId, String memberId) {
+        return mapper.deleteBookmark(postId, memberId);
     }
     //북마크 여부조회
     @Override

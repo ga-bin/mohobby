@@ -76,50 +76,31 @@
 <script>
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
-const serverURL = "http://localhost:8088/java/sock";
+
 export default {
   name: "App",
   data() {
     return {
-      scrollInvoked: 0,
       subTitle: "", //수정중
       memberId: this.$store.state.id, //세션 로그인값
       messages: [], //메세지 내역
       message: "",
-      roomId: this.$route.params.vroomNo, //방번호
+      roomId: this.$route.params.getRoomId, //방번호
       roomList: [], //방목록정보
       stompClient: "", //소켓서버
       hour: "", //메세지시간
       subscribeRoot: "", //구독정보
       targetId: [], //상대방 정보
       createAt: "", //작성시간
-      data: {
-        memberId: this.targetId,
-        roomNo: this.roomId,
-        content: this.message,
-        msgTime: this.createAt,
-      },
     };
   },
-  watch: {
-    messages() {
-      // 화면에 추가된 후 동작하도록
-      this.$nextTick(() => {
-        let messages = this.$refs.messages;
-
-        messages.scrollTo({ top: messages.scrollHeight, behavior: 'smooth' });
-      });
-    },
-  },
   created() {
-    this.connect();
-    this.getRoom();
-    this.sortRoom();
+    this.connect()
+    this.getRoom()
+    this.sortRoom()
+    this.updateCheckIn(this.$route.params.getRoomId)
   },
   methods: {
-    onScroll() {
-      this.scrollInvoked++;
-    },
     //채팅내역 정렬
     sortRoom() {
       this.roomList.sort(function (a, b) {
@@ -150,20 +131,14 @@ export default {
     },
     //소켓서버에 채팅전송
     send() {
-
       this.todate();
       if (this.message !== "") {
         const msg = {
           roomNo: this.roomId,
           content: this.message,
-          memberId: this.memberId,
+          memberId: this.memberId, 
+          memberIds: this.targetId,
           hour: this.createAt,
-        };
-        const noticeContent = {
-          memberId: this.targetId,
-          roomNo: this.roomId,
-          content: this.message,
-          msgTime: this.createAt,
         };
         this.axios
           .post("/InsertMessage/", {
@@ -176,28 +151,40 @@ export default {
           })
           .catch(function (error) {
             console.log(error);
-            console.log("!!!!!!!!!!!!!!");
           });
         //현재 대화방에 채팅보내기
         this.stompClient.send("/app/send", JSON.stringify(msg), (res) => {
           console.log(res);
         });
-        //목록에 대화 보내기
-        this.stompClient.send(
-          "/app/sendNotice",
-          JSON.stringify(noticeContent),
-          (res) => {
-            console.log(res);
-          }
-        );
       }
       this.message = "";
     },
+    CheckIn(roomId){      this.axios
+        .get("/updateCheckIn", {
+          params: { roomNo: roomId,
+          checkIn : 1},
+        })
+    },
+    CheckOut(roomId){ this.axios
+        .get("/updateCheckOut", {
+          params: { roomNo: roomId,
+          checkIn : 0},
+        })
+      },
+        CheckInOut(preRoomId,curentRoomId){this.axios
+          .get("/updateCheckInOut", {
+          params: { preRoomId: preRoomId,
+            currentRoomId:curentRoomId}
+          ,
+        })
+        },
     // 채팅방에 채팅내역 출력
     openRoom(roomNo) {
       var vm = this;
-      this.roomId = roomNo;
-
+      if(this.roomId !=roomNo){
+        CheckInOut(this.roomId,roomNo)
+      this.roomId = roomNo
+    }
       this.messages = [];
       this.targetId = [];
       //안읽은 메세지수 추출
@@ -347,7 +334,7 @@ export default {
               for (let i = 0; i < vm.roomList.length; i++) {
                 if (vm.roomList[i].roomNo == changeContent.roomNo) {
                   vm.roomList[i].content = changeContent.content;
-                  vm.roomList[i].msgTime = changeContent.msgTime;
+                  vm.roomList[i].hour = changeContent.msgTime;
                   ++vm.roomList[i].nonReadChat;
                   vm.sortRoom();
                 } else console.log("안되나요");
