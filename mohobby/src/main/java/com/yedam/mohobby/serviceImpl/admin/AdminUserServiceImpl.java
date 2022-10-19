@@ -39,4 +39,9 @@ public class AdminUserServiceImpl implements AdminUserService {
 	public void updateFlagUser(FlaggingVO flaggingVO) {
 		mapper.updateFlagUser(flaggingVO);
 	}
+	
+	// 신고하기
+	public void insertFlagging(FlaggingVO flaggingVO) {
+		mapper.insertFlagging(flaggingVO);
+	}
 }

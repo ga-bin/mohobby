@@ -162,7 +162,7 @@ public class MoimServiceImpl implements MoimService {
 	// 소모임 단건조회
 	@Override
 	public MoimVO getMoimInfo(int moimId) {
-		return mapper.getMoimInfo(moimId);
+		return mapper.getMoimOneInfo(moimId);
 	}
 
 	// 소모임 게시글 댓글 삭제

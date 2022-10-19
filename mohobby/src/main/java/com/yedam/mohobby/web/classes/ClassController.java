@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.classes.ClassBoardVO;
+import com.yedam.mohobby.service.classes.ClassChapterVO;
 import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
@@ -149,6 +150,11 @@ public class ClassController {
 	    classService.deleteJjim(jjim);
 	}
 	
+	// 강의챕터조회
+	@GetMapping("/class/chapterList")
+	 public List<ClassChapterVO> getChapterList(@RequestParam int classId) {
+        return classService.getChapterList(classId);
+    }
 
 }
 

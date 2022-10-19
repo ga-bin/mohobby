@@ -73,8 +73,6 @@ public interface MoimMapper {
 	//소모임 등록 권한 업데이트
 	public int moimUserUpdate(MemberVO vo);
 	
-	//소모임 단건조회
-	public MoimVO getMoimInfo(int moimId);
 	
 	// 소모임 가입 회원 수 조회하는 로직
 	public int moimMemberCount(int moimId);
