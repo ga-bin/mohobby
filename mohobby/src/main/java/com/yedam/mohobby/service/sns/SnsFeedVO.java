@@ -18,4 +18,5 @@ public class SnsFeedVO {
         private String profileImg; //프로필이미지
         private String intro; //회원설명
         private String nickName; //닉네임
+        private int BookmarkStatus; //북마크상태
 }

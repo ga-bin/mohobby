@@ -1,137 +1,290 @@
-<!-- 인기강사TOP20피드 -->
 <template>
-    <div id="container" class="mx auto">
-      <v-container fluid>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-row text-center>
-            <v-col v-for="item in items" :key="item.postId" cols="2">
-              <div @click="getFeedDetail(item.postId)" style="width:200px;">
-                <v-hover v-slot="{ hover }">
-                  <v-card
-                    class="mx-auto"
-                    color="grey lighten-4"
-                    max-width="250"
-                  >
-                  <v-img
-                    style="display:flex;"
-                    :aspect-ratio="4/3"
-                    :src="require(`@/assets/image/sns/${item.thumbnail}`)"
-                  >
-                    <v-expand-transition>
-                      <div
-                        v-if="hover"
-                        class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal text-small white--text"
-                        style="height: 100%;"
-                      >
-                      <div>
-                        <v-icon color="white">mdi-heart</v-icon> {{ item.likes }}
-                        <v-icon color="white">mdi-chat</v-icon> {{ item.cmts }}
-                      </div>
-                      </div>
-                    </v-expand-transition>
-                  </v-img>
-                  <v-card-text
-                    class="pt-5"
-                    style="position: relative;"
-                  >
-                  <v-btn
-                    absolute
-                    color="red"
-                    class="white--text"
-                    fab
-                    small
-                    right
-                    top
-                    @click="search()"
-                  >
-                    <v-icon small>mdi-heart</v-icon>
-                  </v-btn>
-                  <!-- 좋아요 후 색상 -->
-                  <!-- <v-btn
-                    absolute
-                    color="white"
-                    class="#2ac187--text"
-                    fab
-                    small
-                    right
-                    top
-                  >
-                    <v-icon small>mdi-heart</v-icon>
-                  </v-btn> -->
-                  <div class="font-weight-light text-h7 mb-1">
-                    <!-- 20자 이내 -->
-                    {{ item.content }}..
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-hover>
+  
+  <div class="cards-container" >
+    <!-- FIRST CARD -->
+    <div class="card card-first" v-for="(info,i) in listInfo" :key="i">
+      <div class="card-header-wrapper">
+          <h2 class="card-title"></h2>
+          <h4 class="card-subtitle">{{info.memberId}}</h4>
+          <div class="card-avatar-wrapper" @click="getFeedDetail(info.memberId, info.postId)" style="width:200px;">
+              <img class="card-avatar" :src="require(`@/assets/image/user/${info.profileImg}`)" alt="프로필사진">
           </div>
-      </v-col>
-    </v-row>
-    </v-card-actions>
-    </v-container>
+      </div>
+      <div class="card-photo-wrapper">
+          <img class="card-photo" :src="require(`@/assets/image/sns/${info.postId}/${info.thumbnail}`)" alt="썸네일">
+      </div>
+      <p class="card-text">{{ info.content }}</p>
+      <div class="card-like" height="32" width="32">
+          <div style="width:130px;"><v-icon color="#2ac187">mdi-heart</v-icon> {{ info.likes }} likes</div>       
+      </div>
+      <button class="card-button">More</button>
     </div>
+  </div>
 </template>
 <script>
-
-  export default {
-    name: "HotLecturer",
-    props:{
+export default {
+  name: "HotLecturer",
+  props:{
       items : []
-    },
-    data() {
-      return {
-        // items: [],
-      };
-    },
-    setup() {
-      
-    },
-    created() {
-      this.getHotLecturerList();
-    },
-    mounted() {
-      
-    },
-    unmounted() {
-  
-    },
-    methods: {
-      getFeedDetail(postId) {
-        this.$router.push({ name: 'snsFeedDetail', query: {postId : postId} });
+  },
+  data() {
+    return {
+      listInfo: [],
+      memberId: this.$store.state.id, //세션아이디
+    };
+  },
+  setup() {
+    
+  },
+  created() {
+    this.getHotLecturerList();
+    console.log(this.memberId);
+  },
+  mounted() {
+
+  },
+  unmounted() {
+
+  },
+  methods: {
+    getFeedDetail(memberId, postId) {
+        this.$router.push({ path: '/snsFeedDetail', query: {writer : memberId, postId : postId} });
       },
       getHotLecturerList() {
         //hotLectureList조회
-        this.axios('/sns/main/top20LecturerFeeds').then(res => {
+        this.axios('/sns/main/top20LecturerFeeds')
+        .then(res => {
             console.log(res);
-            this.items = res.data;
+            this.listInfo = res.data;
             console.log("getHotLecturerList받아오기 성공")
           }).catch(err =>{
             console.log(err);
           });
       },
-      // feedDetail(postId){
-      //   this.$router.push( '/snsFeedDetail?postId='+ postId)
-      feedDetail(){
-      this.$router.push( '/snsFeedDetail');
-      }
-    }
-  };
-  </script>
-  <style scoped>
-  #container{
-      box-sizing: border-box;
-      margin:0 auto;
-      width: 80%;
-    }
-  .v-card--reveal {
-    align-items: center;
-    bottom: 0;
-    justify-content: center;
-    opacity: .5;
-    position: absolute;
-    width: 100%;
-  }
-  </style>
-  
+  },
+};
+</script>
+
+<style scoped>
+/*
+  Copyright (c) 2020 - present, DITDOT Ltd.
+  https://www.ditdot.hr/en
+*/
+
+html {
+font-size: 12px;
+font-size: clamp(11px, 3vw, 14px);
+/* define flexible rem size */
+font-family: Roboto, Arial, sans-serif;
+line-height: 1.4;
+}
+
+body {
+background-color: #EEF3F6;
+color: #222;
+margin: 0;
+}
+
+/* MAIN GRID */
+
+.cards-container {
+max-width: 1400px;
+margin: 2rem auto;
+width: 95%;
+display: grid;
+/* set display to grid to create the outer grid */
+grid-template-columns: repeat(3, [col-start] fit-content(9rem));
+/* create 4 explicit column tracks */
+grid-auto-rows: fit-content(12rem) minmax(10rem, 14rem) auto auto;
+/* create 4 implicit row tracks */
+gap: 0.5rem;
+/* create the gap between grid columns and rows */
+justify-content: center;
+}
+
+/* SUBGRID */
+
+.card {
+grid-column: span 3;
+/* every card spans across 3 columns of the main grid */
+grid-row: span 4;
+/* every card spans across 4 rows of the main grid */
+display: grid;
+/* set display to grid in order to create a subgrid */
+grid-template-columns: subgrid [card-start][button-start][col][card-end button-end];
+/* create subgrid for columns to use grid column tracks of the parent and name the column lines*/
+grid-template-rows:subgrid [title-start][title-end photo-start] [photo-end text-start] [text-end button-start] [button-end];
+/* create subgrid for rows to use row column tracks of the parent and name the row lines*/
+row-gap: 0;
+/* override the inherited row gap */
+background-color: #fbfbfb;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+margin: 0 0.5rem 1rem 0.5rem;
+padding: 1rem;
+/*padding influences the sizing of rows and columns*/
+}
+
+/* SUBGRID IN SUBGRID */
+
+.card-header-wrapper {
+grid-column: card;
+/* use named tracks to place elements inside the subgrid */
+grid-row: title;
+display: grid;
+/* make it grid container to create another subgrid inside */
+grid-template-columns: subgrid;
+/* create subgrid for columns to use grid column tracks of the parent */
+grid-template-rows: fit-content(6rem) fit-content(6rem);
+/* create two independent rows */
+grid-template-areas: "subtitle subtitle avatar" "title title title";
+/* create named grid areas to place the header elements*/
+align-items: end;
+font-family: "Open Sans", Arial, sans-serif;
+}
+
+/* CARD DETAILS */
+
+.card-title {
+  grid-area: title;
+/* place card title in the named grid area*/
+font-size: 1.25rem;
+}
+
+.card-subtitle {
+grid-area: subtitle;
+font-weight: normal;
+margin: 0;
+/* margin-top:100px; */
+}
+
+.card-avatar-wrapper {
+/* width: 60px; */
+grid-area: avatar;
+align-self: end;
+justify-self: end;
+}
+
+.card-avatar {
+object-fit: cover;
+width: 3.5rem;
+height: 3.5rem;
+border-radius: 50%;
+float:right;
+}
+
+.card-photo-wrapper {
+grid-column: card;
+grid-row: photo;
+margin-bottom: 0.5rem;
+}
+
+.card-photo {
+object-fit: cover;
+width: 100%;
+height: 100%;
+}
+
+.card-text {
+grid-column: col-start / span 3;
+/* use main grid line names*/
+grid-row: text;
+margin-bottom: 2rem;
+/* width: 200px; */
+height:70px;
+/* 특정 단위로 텍스트를 자르기 위한 구문 */
+white-space: normal;
+display: -webkit-box;
+-webkit-line-clamp: 3; /* 텍스트를 자를 때 원하는 단위 ex) 3줄 */
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+.card-like {
+grid-column: 1/2;
+grid-row: button;
+width: 2rem;
+height: 2rem;
+align-self: end;
+cursor: pointer;
+}
+
+.card-button {
+grid-area: button;
+min-width: 4rem;
+height: 1.5rem;
+background-color: #2ac187;
+border: none;
+border-radius: 2rem;
+padding: 0 0.1rem;
+color: white;
+font-size: 0.5rem;
+text-transform: uppercase;
+letter-spacing: 0.09rem;
+cursor: pointer;
+justify-self: end;
+overflow: hidden;
+text-overflow: ellipsis;
+max-width: 8rem;
+margin-bottom:10px;
+}
+
+p.caption {
+text-align: center;
+font-size: 13px;
+padding-bottom: 30px;
+}
+
+p.caption a {
+color: #2ac187;
+}
+
+/* browsers without support for the subgrid feature */
+
+@supports not (grid-template-columns: subgrid) {
+.card {
+  grid-template-columns: repeat(3, [col-start] fit-content(9rem));
+  grid-template-rows: 9rem 15rem auto auto;
+}
+
+.card-header-wrapper, .card-photo-wrapper, .card-text {
+  grid-column: 1/-1;
+  grid-row: span 1;
+}
+
+.card-text {
+  margin-bottom: 0;
+}
+
+.card-button {
+  grid-column: 3/-1;
+  align-self: end;
+}
+
+}
+
+@media screen and (min-width: 480px) {
+html {
+  font-size: clamp(11px, 2vw, 14px);
+}
+
+.cards-container {
+  grid-template-columns: repeat(6, [col-start] fit-content(9rem));
+}
+
+}
+
+@media screen and (min-width: 1024px) {
+html {
+  font-size: clamp(11px, 1vw, 14px);
+}
+
+.cards-container {
+  grid-template-columns: repeat(12, [col-start] fit-content(9rem));
+}
+
+}
+
+/*
+This example is not supported in Internet Explorer
+*/
+</style>

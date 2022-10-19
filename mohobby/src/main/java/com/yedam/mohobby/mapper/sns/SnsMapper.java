@@ -125,6 +125,8 @@ public interface SnsMapper {
     public int addBookmark(SnsBookmarkVO bmkVO);
     //북마크 삭제
     public int deleteBookmark(int postId);
+    //북마크 여부조회
+    public int isBookmark(@Param("postId")int postId, @Param("memberId") String memberId);
     //북마크 조회
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회

@@ -59,7 +59,7 @@ export default {
       links: [
         { icon: "mdi-account", text: "내 피드", subheaders: [
           { text:"", items: [
-            { text: "내 피드로 이동", route: "/snsUserFeed" },
+            { text: "내 피드로 이동", route: "/sns/userFeed" },
             ]},
           ]},
         { icon: "mdi-ab-testing", text: "내 피드관리", subheaders: [
@@ -67,9 +67,9 @@ export default {
             { text: "프로필 설정", route: "snsmain" },
             ]},
             { text:"프로필 노출 설정", items: [
-            { text: "내 강의 관리", route: "/management/snsLecture" }, 
-            { text: "내 모임 관리", route: "/management/snsMoim" }, 
-            { text: "내 챌린지 관리", route: "/management/test/iamportTest" }, 
+            // { text: "내 강의 관리", route: "/management/snsLecture" }, 
+            // { text: "내 모임 관리", route: "/management/snsMoim" }, 
+            // { text: "내 챌린지 관리", route: "/management/test/iamportTest" }, 
           ]},
         ]},
         { icon: "mdi-crown", text: "팔로우 관리", subheaders: [

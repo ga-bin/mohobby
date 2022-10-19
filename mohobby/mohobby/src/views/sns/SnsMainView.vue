@@ -239,24 +239,4 @@
     };
   </script>
   
-  <style scoped>
-      * {
-        list-style:none;
-      }
-      
-      #container {
-        width : 80%;
-        list-style:none;
-        margin: 0 auto;
-      }
-  
-      #searchbar{
-          width:80%;
-          margin: 0 auto;
-      }
-  
-      label {
-          margin-right: 3px;
-      }
-
-  </style>
+  <style scoped lang="css" src="@/assets/css/sns/SnsMain.css" />

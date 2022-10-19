@@ -93,7 +93,7 @@
             <div class="content">
               <div v-if="cmt.parentCommId != ''">
                 <span class="member_id" 
-                      @click="$router.push({path: '/snsUserFeed?memId=' + cmt.parentMemberId,}).catch(() => {$router.go(0);})">
+                      @click="$router.push({path: '/snsUserFeed?userId=' + cmt.parentMemberId,}).catch(() => {$router.go(0);})">
                 <strong>@{{ cmt.parentMemberId }}</strong></span>
                 {{ cmt.content }}
               </div>
@@ -184,7 +184,7 @@ export default {
     },
     //댓글리스트upload
     getCmtList() {
-      this.axios("/sns/cmt/" + this.postid, {})
+      this.axios("/sns/cmt/" + this.postid)
         .then((res) => {
           console.log(res.data);
           this.comments = res.data;
@@ -375,51 +375,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-.profile {
-  position: relative;
-  display: flex;
-  margin-left: 30px;
-  width: 90%;
-}
-
-.profile::after {
-  content: "";
-  position: absolute;
-  left: 30px;
-  height: 1px;
-  width: 100%;
-}
-
-.cmt_box {
-  border-bottom: 1px solid rgba(184, 189, 190, 0.8);
-}
-
-.user {
-  margin-top: 20px;
-}
-
-.date {
-  position: absolute;
-  right: 0;
-}
-
-.btn {
-  position: absolute;
-  right: 0;
-}
-
-v-avatar {
-  cursor: pointer;
-}
-
-.member_id {
-  color: #2ac187;
-  font-weight: 300;
-  cursor: pointer;
-}
-
-.user {
-  cursor: pointer;
-}
-</style>
+<style scoped lang="css" src="@/assets/css/sns/CmtReg.css" />
