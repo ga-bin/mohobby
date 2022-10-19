@@ -20,6 +20,8 @@ let socket = new SockJS(serverURL);
 let stompClient=Stomp.over(socket);
 
 Vue.prototype.stompClient=stompClient;
+
+
 moment.locale("ko");
 
 Vue.use(VueSweetalert2);

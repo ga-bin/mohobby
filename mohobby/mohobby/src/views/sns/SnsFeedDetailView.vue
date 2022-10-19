@@ -43,14 +43,14 @@
         <v-row>
           <v-col cols="4">
             <div class="d-flex justify-start">
-              <v-btn v-if="items.likeStatus === 1" icon text @click="like()">
+              <v-btn v-if="items.likeStatus === 1" icon text @click="like(memberId, items.postId)">
                 <v-icon color="red lighten-2">mdi-heart</v-icon>
               </v-btn>
-              <v-btn v-else icon text @click="like()">
+              <v-btn v-else icon text @click="like(memberId, items.postId)">
                 <v-icon>mdi-heart-outline</v-icon></v-btn
               >{{ items.likes }} <v-icon>mdi-chat-outline</v-icon
               >{{ items.cmts }}
-              <v-icon @click="send">mdi-send</v-icon>
+              <v-icon v-if="this.$store.state.id!=items.memberId" @click="send">mdi-send</v-icon>
             </div>
           </v-col>
           <v-col cols="8">
@@ -105,7 +105,7 @@
             <v-card-text>
               <!-- 컬렉션 선택 select_box -->
               <v-select
-                @click="getCollectionList(items.memberId)"
+                @click="getCollectionList(memberId)"
                 :items="select"
                 item-text="catgName"
                 item-value="catgId"
@@ -127,7 +127,7 @@
             <v-card-actions>
               <!-- 북마크 컬렉션 지정 저장, 취소버튼 -->
               <v-row class="ma-4 justify-space-around">
-                <v-btn text @click="bookmark(selectedCollection, items.postId)">
+                <v-btn text @click="bookmark(selectedCollection,memberId, items.postId)">
                   저장
                 </v-btn>
                 <v-btn text @click="dialog2 = false"> 취소 </v-btn>
@@ -161,7 +161,7 @@
                 <v-btn
                   color="blue darken-1"
                   text
-                  @click="createCollection(memId)"
+                  @click="createCollection(memberId)"
                 >
                   저장
                 </v-btn>
@@ -239,8 +239,9 @@ export default {
       hashtags: [], //해시태그 배열 split 후 저장
       feeds: [], //해시태그 검색 정보 저장
       targetType: 2,
-      memId: this.$store.state.id,
-      postId: Number,
+      memberId: this.$store.state.id, //세션아이디
+      writer:this.$route.query.writer,//글쓴이 아이디
+      postId: this.$route.query.postId,
       show: true,
       targetId: "",
       colors: ["teal", "orange", "green", "purple", "indigo", "cyan"], //tag color
@@ -268,20 +269,18 @@ export default {
   },
   setup() {},
   created() {
-    this.postId = this.$route.query.postId; //라우터로 넘어온 postId
-    this.showDetail();
-    this.detailImg();
-    this.getCollectionList(this.memId);
+    this.showDetail(this.postId, this.writer);
+    this.detailImg(this.postId);
+    this.getCollectionList(this.memberId);
+    console.log(this.writer); //값 못받아옴
+    console.log(this.memberId);
+    console.log(this.postId);
   },
   mounted() {},
   unmounted() {},
   methods: {
-    detailImg() {
-      this.axios("/sns/user/feed_detail_img/" + this.postId, {
-        params: {
-          memberId: this.memId,
-        },
-      })
+    detailImg(postId) {
+      this.axios("/sns/user/feed_detail_img/" + postId)
         .then((res) => {
           this.imgs = res.data;
           console.log("이미지 로딩 성공!");
@@ -291,10 +290,10 @@ export default {
         });
     },
     //게시글 상세 로드
-    showDetail() {
-      this.axios("/sns/user/feed_detail/" + this.postId, {
+    showDetail(postId, writer) {
+      this.axios("/sns/user/feed_detail/" + postId, {
         params: {
-          memberId: this.memId,
+          memberId: writer,
         },
       })
         .then((res) => {
@@ -307,7 +306,7 @@ export default {
           console.log("상세페이지 접근 성공!");
         })
         .catch((err) => {
-          console.log(err);
+          alert("게시글호출 실패"+ err);
         });
     },
     //DOT LIST
@@ -391,14 +390,23 @@ export default {
       });
     },
 
-    //채팅방 이동
-    send() {
-      this.$router.push({ name: "chat", params: { roomId: this.roomId } });
+        //채팅방 이동
+        send() {
+      let vm =this
+      this.axios.get("/getSnsChatRoomNo",{
+        params:{myId : this.$store.state.id,
+                targetId:this.items.memberId}})
+      .then(function(res){
+        console.log(res.data.vroomNo)
+ 
+        vm.$router.push({ name: "chat", params: { getRoomId: res.data.vroomNo } });}
+        )
+        .catch(function(err){console.log(err)})
     },
 
     //좋아요
-    like() {
-      //좋아요 알림
+    like(memberId, postId) {
+      //좋아요 
       const noticeContent = {
         myId: this.$store.state.id,
         targetId: this.items.memberId,
@@ -414,26 +422,29 @@ export default {
           console.log(res);
         }
       );
+
       //멤버검증
-      if (this.memId === null || this.memId === "") {
+      if (memberId === null || memberId === "") { //유저일때만 좋아요가 가능하도록
         this.$swal("로그인부터 부탁드립니다🙏");
         return;
       } else {
         //DB Jjim insert
         this.axios
           .post("/sns/like", {
-            targetId: this.postId,
-            memberId: this.memId,
+            targetId: postId,
+            memberId: memberId,
           })
           .then((res) => {
             if (this.items.likeStatus == 0) {
               //좋아요 상태가 0이면 개수++,상태를 1로
               ++this.items.likes;
               this.items.likeStatus = 1;
+              console.log("좋아요 완료")
             } else if (this.items.likes > 0) {
               //좋상이 1이고 좋개가 0이 아니면 개수--,상태를 0으로
               --this.items.likes;
               this.items.likeStatus = 0;
+              console.log("좋아요 취소")
             }
           })
           .catch((err) => {
@@ -442,8 +453,8 @@ export default {
       }
     },
     //북마크
-    bookmark(selectedCollection, postId) {
-      if (this.memId === null || this.memId === "") {
+    bookmark(selectedCollection, memberId, postId) {
+      if (memberId === null || memberId === "") {
         this.$swal("로그인부터 부탁드립니다🙏");
         return;
       } else {
@@ -477,17 +488,13 @@ export default {
     },
     //컬렉션 리스트 호출
     getCollectionList(memberId) {
-      this.axios("/sns/collection/" + memberId, {
-        params: {
-          memberId: memberId,
-        },
-      })
+      this.axios("/sns/collection/" + memberId)
         .then((res) => {
           this.select = res.data;
           console.log("컬렉션리스트 호출 성공!");
         })
         .catch((err) => {
-          alert(err);
+          alert("컬렉션호출 실패"+ err);
         });
     },
     //컬렉션생성
@@ -506,11 +513,11 @@ export default {
         .post("/sns/collection", {
           memberId: memberId,
           catgName: this.catgName,
-          thumbnail: "기도.jpg",
+          thumbnail: "",
         })
         .then((res) => {
-          console.log(thumbnailImg);
-          console.log("컬렉션생성 성공!" + res);
+          // console.log(thumbnailImg);
+          console.log(res);
           this.dialog3 = !this.dialog3;
           this.getCollectionList(memberId);
         })
@@ -541,9 +548,9 @@ export default {
         this.touch = false;
       }
     },
-    //내 피드로 이동
-    goMyFeed(member) {
-      this.$router.push({ name: "snsUserFeed", query: { memId: member } });
+    //유저 피드로 이동
+    goMyFeed(userId) {
+      this.$router.push({ name: "snsUserFeed", query: { userId: userId } });
     },
   },
 };
@@ -566,60 +573,4 @@ export default {
 */
 </script>
 
-<style scoped>
-#container {
-  margin: 0 auto;
-  width: 30%;
-}
-
-#mdi-dots-vertical {
-  float: right;
-}
-
-#image_box {
-  width: 550px;
-  height: 500px;
-}
-
-.box {
-  display: inline-block;
-}
-
-#like_box {
-  width: 550;
-  margin: 0 auto;
-}
-
-#content_box {
-  padding: 0 20px;
-}
-
-#hashtag {
-  color: navy;
-  cursor: pointer;
-}
-
-div.user.text-overline {
-  display: inline-block;
-}
-
-#hashtagGroup {
-  margin-left: 10px;
-}
-
-.container {
-  width: 85%;
-  margin-top: 30px;
-}
-
-.user {
-  display: inline-block;
-  margin-left: 5px;
-  margin-top: 40px;
-}
-
-.flex {
-  display: flex;
-  height: 150px;
-}
-</style>
+<style scoped lang="css" src="@/assets/css/sns/FeedDetail.css" />
