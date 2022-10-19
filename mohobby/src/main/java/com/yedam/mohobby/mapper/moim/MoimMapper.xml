@@ -144,15 +144,6 @@ and b.member_role = 0
 and b.member_id = #{memberId}
 </select>
 
-<!-- 내가 운영중인 소모임 리스트 조회 -->
-<select id="operateMoim" resultType="com.yedam.mohobby.service.moim.MoimVO">
-select a.moim_id, a.moim_img, a.moim_name
-from moim a, moim_member b 
-where a.moim_id = b.moim_id
-and b.memeber_role = 3
-and b.member_id = #{memberId}
-</select>
-
 <!-- 내가 참여중인 소모임 없음 -->
 <select id="noneMoim" resultType="Integer">
 	select count(moim_name)
@@ -162,52 +153,11 @@ and b.member_id = #{memberId}
 	and b.member_id = #{memberId}
 </select>
 
-<!-- 소모임 게시글 댓글 수정 -->
-<update id="moimCommentUpdate" parameterType="com.yedam.mohobby.service.moim.MoimCommentVO">
-update comments
-set
-content = #{content},
-write_date = current_date
-where
-comm_id = #{commId}
-</update>
 
 <!-- 소모임 게시글 댓글 삭제 -->
 <delete id="moimCommentDelete" parameterType="integer">
 delete from comments where comm_id = #{commId}
 </delete>
-
-<!-- 소모임 생성 유저 권한 업데이트 -->
-<update id="moimUserUpdate" parameterType="com.yedam.mohobby.service.admin.MemberVO">
-DECLARE
-v_member VARCHAR2(100) := #{memberId};
-v_temp varchar2(100);
-BEGIN
-select role
-into v_temp
-from member
-where member_id=v_member;
-if v_temp =0 then
-update member set role=2 where member_id= v_member;
-elsif v_temp=1 then
-update member set role=3 where member_id= v_member;
-end if;
-update moim_member
-set
-member_role = 2
-where 
-member_id = v_member;
-end;
-</update>
-
-<!-- 소모임 투표 게시글 리스트 조회 -->
-<select id="moimVoteAllList" resultType="com.yedam.mohobby.service.moim.MoimVoteListVO">
-select a.start_date, a.topic, a.moim_id, b.content, b.cnt
-from moim_vote a, moim_vote_item b
-where a.vote_id = b.vote_id
-and a.vote_id = #{voteId}
-and moim_id = #{moimId}
-</select>
 
 <!-- 소모임 가입 회원 수 조회하는 로직 -->
 <select id="moimMemberCount" parameterType="integer" resultType="integer">
@@ -216,12 +166,6 @@ from moim_member
 where moim_id = #{moimId}
 </select>
 
-<!-- 소모임 단건조회 -->
-<select id="getMoimInfo" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
-select MOIM_IMG,MOIM_NAME
-from moim
-where moim_id=#{moimId}
-</select>
 
 <!-- 소모임 N빵 전체 리스트 조회 -->
 <select id="getAllDuchList" parameterType="int" resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
@@ -229,24 +173,6 @@ select * from moim_dutch where moim_id = #{moimId}
 </select>
 
 
-<!-- 소모임 단건조회 -->
-<!-- <select id="getMoimInfo" parameterType="Int" resultType="com.yedam.mohobby.service.moim.MoimVO">
-select MOIM_IMG,MOIM_NAME
-</select>
-<!-- 소모임 전체 멤버 리스트 조회 -->
-<select id="getAllMemberList" parameterType="int" resultType="com.yedam.mohobby.service.moim.MoimVO">
-select member_id 
-from moim_member
-where moim_id = #{moimId}
-</select>
-
-<!-- 소모임 멤버 단건 검색 조회 -->
-<select id="getSearchMember" resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
-select member_id
-from moim_member
-where moim_id = #{moimId}
-and member_id like '%'||#{memberId}||'%'
-</select>
 
 	<!-- 내가 운영중인 소모임 리스트 조회 -->
 	<select id="operateMoim"
@@ -258,14 +184,6 @@ and member_id like '%'||#{memberId}||'%'
 		and b.member_id = #{memberId}
 	</select>
 
-	<!-- 내가 참여중인 소모임 없음 -->
-	<select id="noneMoim" resultType="Integer">
-		select count(moim_name)
-		from moim a, moim_member b
-		where a.moim_id = b.moim_id
-		and b.member_role = 0
-		and b.member_id = #{memberId}
-	</select>
 
 	<!-- 소모임 게시글 댓글 수정 -->
 	<update id="moimCommentUpdate"
@@ -277,12 +195,7 @@ and member_id like '%'||#{memberId}||'%'
 		where
 		comm_id = #{commId}
 	</update>
-
-	<!-- 소모임 게시글 댓글 삭제 -->
-	<delete id="moimCommentDelete" parameterType="integer">
-		delete from comments where comm_id = #{commId}
-	</delete>
-
+	
 	<!-- 소모임 생성 유저 권한 업데이트 -->
 	<update id="moimUserUpdate"
 		parameterType="com.yedam.mohobby.service.admin.MemberVO">
@@ -307,25 +220,12 @@ and member_id like '%'||#{memberId}||'%'
 		end;
 	</update>
 
-	<!-- 소모임 가입 회원 수 조회하는 로직 -->
-	<select id="moimMemberCount" parameterType="integer"
-		resultType="integer">
-		select count(*)
-		from moim_member
-		where moim_id = #{moimId}
-	</select>
 	<!-- 소모임 단건조회 -->
 	<select id="getMoimInfo" parameterType="String"
 		resultType="com.yedam.mohobby.service.moim.MoimVO">
 		select MOIM_IMG,MOIM_NAME
 		from moim
 		where moim_id=#{moimId}
-	</select>
-
-	<!-- 소모임 N빵 전체 리스트 조회 -->
-	<select id="getAllDuchList" parameterType="int"
-		resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
-		select * from moim_dutch where moim_id = #{moimId}
 	</select>
 
 	<!-- 소모임 전체 멤버 리스트 조회 -->
@@ -339,7 +239,7 @@ and member_id like '%'||#{memberId}||'%'
 	<!-- 소모임 멤버 단건 검색 조회 -->
 	<select id="getSearchMember" parameterType="int"
 		resultType="com.yedam.mohobby.service.moim.MoimVO">
-		select member_id r
+		select member_id
 		from moim
 		where member_id like '%'||#{memberId}||'%'
 	</select>

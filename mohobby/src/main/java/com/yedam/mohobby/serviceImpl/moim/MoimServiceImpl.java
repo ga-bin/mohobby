@@ -218,6 +218,12 @@ public class MoimServiceImpl implements MoimService {
 	@Override
 	public List<MoimVoteItemVO> votereulst(int voteId) {
 		return mapper.votereulst(voteId);
+	}
+
+	@Override
+	public List<MoimVO> getSearchMember(int moimId) {
+		// TODO Auto-generated method stub
+		return null;
 	} 
 	
 	
