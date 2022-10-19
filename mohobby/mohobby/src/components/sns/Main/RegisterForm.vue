@@ -245,7 +245,6 @@ methods: {
       console.log("hashtags" + hashtags);
       feedInsert.hashtag.value = hashtags;
 
-      let self = this;
       const formData = new FormData(feedInsert);	// 파일을 전송할때는 FormData 형식으로 전송
       console.log(feedInsert);
       console.log(document.getElementsByName("memberId")); //아이디 확인 완.
@@ -256,12 +255,15 @@ methods: {
           },
         })
         .then(function (res) {
-            console.log("게시글저장 성공!"+res);
-            self.$router.push({ name: 'snsUserFeed', query: {memId : self.$store.state.id} });
+            console.log("게시글저장 성공!");
+            // this.goUserFeed(this.memberId);
         })
         .catch(function (error) {
           console.log(error);
         })
+    },
+    goUserFeed(memberId) {
+        this.$router.push({ path: '/snsUserFeed', query: {userId : memberId} });
     },
 
   }

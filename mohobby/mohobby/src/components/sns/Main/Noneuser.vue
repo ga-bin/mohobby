@@ -4,7 +4,7 @@
     <v-container fluid>
       <v-row dense>
         <v-col v-for="feed in feeds" :key="feed.title" :cols="2">
-          <v-card @click="getFeedDetail(feed.postId)">
+          <v-card @click="goFeedDetail(feed.postId, feed.memberId)">
             <v-img 
              :aspect-ratio="4/3"
              :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)"
@@ -50,8 +50,9 @@ export default {
           });
       },
       //디테일피드 테스트버튼
-      getFeedDetail(postId) {
-        this.$router.push({ name: 'snsFeedDetail', query: {postId : postId} });
+      goFeedDetail(postId, memberId) {
+        console.log(memberId);
+        this.$router.push({ path: "/snsFeedDetail", query: {postId : postId, writer : memberId} });
       },
       //infinite scroll
       handleScroll() {

@@ -104,7 +104,7 @@ public interface SnsService {
     public int updateReCmt(CommentsVO commentsVO);
     
     /*
-     * 북마크
+     * 북마크컬렉션
      */
     //컬렉션 등록
     public int createBookmarkCtg(SnsBookmarkVO bmkCtgVO);
@@ -115,10 +115,15 @@ public interface SnsService {
     //컬렉션 목록
     public List<SnsBookmarkVO> getBookmarkCtgs(String memberId);
     
+    /*
+     * 북마크
+     */
     //북마크 등록
     public int addBookmark(SnsBookmarkVO bmkVO);
     //북마크 삭제
     public int deleteBookmark(int postId);
+    //북마크 여부조회
+    public int isBookmark(int postId, String memberId);
     //북마크 조회
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회

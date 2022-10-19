@@ -64,8 +64,14 @@ public class SnsServiceImpl implements SnsService{
          snsVo.setHashtag(snspostVO.getHashtag());
          snsVo.setThumbnail(getFirstFileName);
          
+         snspostVO.setPostId(mapper.getPostId());
          mapper.insertFeed(snsVo);
           
+         //hashtag 등록 및 업데이트
+         HashtagVO hashtagVO = new HashtagVO();
+         mapper.updateHashtag(snspostVO.getPostId());
+         
+         
           //경로찾기
           String path = this.getClass().getResource("/").getPath();
           path = path.substring(0, path.lastIndexOf("mohobby"));
@@ -323,6 +329,11 @@ public class SnsServiceImpl implements SnsService{
     @Override
     public int deleteBookmark(int postId) {
         return mapper.deleteBookmark(postId);
+    }
+    //북마크 여부조회
+    @Override
+    public int isBookmark(int postId, String memberId) {
+        return mapper.isBookmark(postId, memberId);
     }
     //북마크 조회
     @Override

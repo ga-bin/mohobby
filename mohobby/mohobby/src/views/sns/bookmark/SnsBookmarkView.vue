@@ -5,30 +5,8 @@
     import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
     import Collection from "@/components/sns/Bookmark/Collection.vue";
     export default {
-      name: "BookMarkMain",
+      name: "BookmarkMain",
       components: { SnsSidebar, Collection },
-      data() {
-        return {
-        }
-      },
-      setup() {
-        
-      },
-      created() {
-    
-      },
-      mounted() {
-    
-      },
-      unmounted() {
-    
-      },
-      methods: {
-    
-      },
     };
 </script>
-  
-<style scoped>
-</style>
   

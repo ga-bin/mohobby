@@ -1,295 +1,276 @@
 <template>
-    <v-card
-      class="mx-auto"
-      max-width="80%"
-      outlined
-    >
-      <v-container fluid>
-        <!-- 파일등록부 -->
-        <v-file-input
-              class="mx-auto" 
-              label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)"
-              type="file"
-              filled
-              prepend-icon="mdi-camera"
-              counter
-              show-size
-              dense
-              multiple
-              @change="onImageChange"
-              
-            />
-        <!-- 파일이름, 개수 -->
-        <div v-for="(list,i) in fileList"
-        :key="i">
-          {{list.name}}
-        </div>
-
-        <!-- 이미지 미리보기 -->
-        <div style="display:inline-flex; margin-left: 10px;">
-          <v-img v-for="(item,i) in uploadimageurl" 
-                :key="i" 
-                :src="item.url"
-                aspect-ratio="4/3"
-                height="150px" 
-                width="200px"
-                lazy-src
-                error 
-                style="margin-right: 10px;"
-          />
-        </div>
-
-        <!-- 내용 -->
-        <v-textarea
-          name="content"
-          auto-grow
-          placeholder="내용을 입력해주세요!"
-          value=""
-          v-model="content"
-        ></v-textarea>
-      </v-container>
-
-      <!-- 해시태그 -->
-      <v-container fluid>
-            <v-combobox
-              v-model="model"
-              :filter="filter"
-              :hide-no-data="!search"
-              :items="items"
-              :search-input.sync="search"
-              hide-selected
-              label="Search for an option"
-              multiple
-              small-chips
-              solo
-            >
-          <template v-slot:no-data>
-            <v-list-item>
-              <span class="subheading">Create</span>
-              <v-chip
-                :color="`${colors[nonce - 1]} lighten-3`"
-                label
-                small
-              >
-                {{ search }}
-              </v-chip>
-            </v-list-item>
-          </template>
-          <template v-slot:selection="{ attrs, item, parent, selected }">
-            <v-chip
-              v-if="item === Object(item)"
-              v-bind="attrs"
-              :color="`${item.color} lighten-3`"
-              :input-value="selected"
-              label
-              small
-            >
-              <span class="pr-2">
-                {{ item.text }}
-              </span>
-              <v-icon
-                small
-                @click="parent.selectItem(item)"
-              >
-                $delete
-              </v-icon>
-            </v-chip>
-          </template>
-          <template v-slot:item="{ index, item }">
-            <v-text-field
-              v-if="editing === item"
-              v-model="editing.text"
-              autofocus
-              flat
-              background-color="transparent"
-              hide-details
-              solo
-              @keyup.enter="edit(index, item)"
-            ></v-text-field>
-            <v-chip
-              v-else
-              :color="`${item.color} lighten-3`"
-              dark
-              label
-              small
-            >
-              {{ item.text }}
-            </v-chip>
-            <v-spacer></v-spacer>
-            <v-list-item-action @click.stop>
-              <v-btn
-                icon
-                @click.stop.prevent="edit(index, item)"
-              >
-                <v-icon>{{ editing !== item ? 'mdi-pencil' : 'mdi-check' }}</v-icon>
-              </v-btn>
-            </v-list-item-action>
-          </template>
-        </v-combobox>
-      </v-container>
-        <v-btn @click="uploadImage">uploadImage</v-btn>
-        <p>{{menu5}}</p>
-  </v-card>
+  <div class="cards-container" >
+    <!-- FIRST CARD -->
+    <div class="card card-first" v-for="item in items" :key="item.postId">
+      <div class="card-header-wrapper">
+          <h2 class="card-title">{{item.memberId}}</h2>
+          <h4 class="card-subtitle">Great turbulent clouds</h4>
+          <div class="card-avatar-wrapper" @click="getFeedDetail(item.postId)" style="width:200px;">
+              <img class="card-avatar" :src="require(`@/assets/image/sns/${item.thumbnail}`)" alt="프로필사진">
+          </div>
+      </div>
+      <div class="card-photo-wrapper">
+          <img class="card-photo" :src="require(`@/assets/image/sns/${item.thumbnail}`)" alt="프로필사진">
+      </div>
+      <p class="card-text">{{ item.content }}</p>
+      <svg class="card-like" height="32" width="32" style="enable-background:new 0 0 32 32;" version="1.1"
+          viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M340.8 98.4c50.7 0 91.9 41.3 91.9 92.3 0 26.2-10.9 49.8-28.3 66.6L256 407.1 105 254.6c-15.8-16.6-25.6-39.1-25.6-63.9 0-51 41.1-92.3 91.9-92.3 38.2 0 70.9 23.4 84.8 56.8 13.7-33.3 46.5-56.8 84.7-56.8m0-15.4C307 83 276 98.8 256 124.8c-20-26-51-41.8-84.8-41.8C112.1 83 64 131.3 64 190.7c0 27.9 10.6 54.4 29.9 74.6L245.1 418l10.9 11 10.9-11 148.3-149.8c21-20.3 32.8-47.9 32.8-77.5C448 131.3 399.9 83 340.8 83z" />
+      </svg>
+      <button class="card-button">More</button>
+    </div>
+  </div>
 </template>
-
 <script>
-
 export default {
-  props : {
-    menu5 : String
-  } ,
+  name: "HotLecturer",
+  props:{
+      items : []
+  },
   data() {
     return {
-    //해시태그
-    activator: null,
-    attach: null,
-    colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange'],
-    editing: null,
-    editingIndex: -1,
-    items: [
-      { header: 'Select an option or create one' },
-      {
-        text: '오운완',
-        color: 'blue',
-      },
-      {
-        text: '오수완',
-        color: 'red',
-      },
-    ],
-    nonce: 1,
-    menu: false,
-    model: [
-      {
-        text: '취미',
-        color: 'blue',
-      },
-    ],
-    x: 0,
-    search: null,
-    y: 0,
-    //이미지Data
-    uploadimageurl: [], //미리보기 이미지url
-    imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
-    fileList : [],
-    file : {},
-    postId : "1",
-    memberId : "user1",
-    formData : {},
-    //sns글등록Data
-    memberId : this.$store.state.id,
-    content: "",
-    hashtag:[],//내가 추가한 해시태그
+      sampleData: "",
     };
   },
-  created() {
-   
+  setup() {
+    
   },
-  watch: {
-    model (val, prev) {
-      if (val.length === prev.length) return
+  created() {
+    this.getHotLecturerList();
+  },
+  mounted() {
 
-      this.model = val.map(v => {
-        if (typeof v === 'string') {
-          v = {
-            text: v,
-            color: this.colors[this.nonce - 1],
-          }
+  },
+  unmounted() {
 
-          this.items.push(v)
-
-          this.nonce++
-        }
-
-        return v
-      })
-    },
   },
   methods: {
-    //해시태그
-    edit (index, item) {
-      if (!this.editing) {
-        this.editing = item
-        this.editingIndex = index
-      } else {
-        this.editing = null
-        this.editingIndex = -1
-      }
-    },
-    //게시글 미리보기
-    onImageChange(file) {	// v-file-input 변경시
-      if (!file) {
-        console.log("file" + file);
-        return;
-      }
-      const formData = new FormData();	// 파일을 전송할때는 FormData 형식으로 전송
-      file.forEach((item) => {
-        console.log("item.name" + item.name);//name:파일명, size:바이트(인듯),type:image/png
-        formData.append('fileList', item);	// formData의 key: 'filelist', value: 이미지
-        this.formData = formData;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          console.log({url: e.target.result});
-          this.uploadimageurl.push({url: e.target.result});
-          // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
-        };
-        reader.readAsDataURL(item);
-      });
-    },
-    //게시글 등록
-    uploadImage() {
-    //hashtag가져오기
-      this.model.forEach((hashtag) => {
-      console.log(hashtag.text);
-      this.hashtag.push(hashtag.text);
-    });
-    //hashtag배열 스트링화
-    const hashtags = this.hashtag.join(', ');
-    console.log(hashtags);
-    
-      const vm = this;
-      this.axios.post('/sns/myfeed/post', { // 게시글 저장
-          memberId: this.memberId,
-          content: this.content,
-          hashtag: hashtags,
-        })
-        .then(function (res) {
-            console.log("게시글저장 성공!"+res);
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .finally(function (ros) {
-          this.axios({
-            url: "/sns/myfeed/media",	// 이미지 저장
-            method: "POST",
-            headers: {'Content-Type': 'multipart/form-data' },	// 이걸 써줘야 formdata 형식 전송가능
-            data: vm.formData
-          }).then(res => {
-            console.log("res.data.message" + res.data.message);
-            this.imagecnt = file.length;	// 이미지 개수 저장
-            console.log("이미지 몇개?"+this.imagecnt)
-          }).catch(err => {
-            alert(err);
+    getFeedDetail(postId) {
+        this.$router.push({ path: '/snsFeedDetail', query: {postId : postId} });
+      },
+      getHotLecturerList() {
+        //hotLectureList조회
+        this.axios('/sns/main/top20LecturerFeeds').then(res => {
+            console.log(res);
+            this.items = res.data;
+            console.log("getHotLecturerList받아오기 성공")
+          }).catch(err =>{
+            console.log(err);
           });
-          console.log("게시글등록 완료!"+ros)
-        })
-    },
-
+      },
   },
 };
 </script>
-<style scoped>
-  #att_zone {
-    width: 660px;
-    min-height: 150px;
-    padding: 10px;
-    border: 1px dotted #00f;
-  }
 
-  #att_zone:empty:before {
-    content: attr(data-placeholder);
-    color: #999;
-    font-size: .9em;
-  }
+<style scoped>
+/*
+  Copyright (c) 2020 - present, DITDOT Ltd.
+  https://www.ditdot.hr/en
+*/
+
+html {
+font-size: 12px;
+font-size: clamp(11px, 3vw, 14px);
+/* define flexible rem size */
+font-family: Roboto, Arial, sans-serif;
+line-height: 1.4;
+}
+
+body {
+background-color: #EEF3F6;
+color: #222;
+margin: 0;
+}
+
+/* MAIN GRID */
+
+.cards-container {
+max-width: 1400px;
+margin: 2rem auto;
+width: 95%;
+display: grid;
+/* set display to grid to create the outer grid */
+grid-template-columns: repeat(3, [col-start] fit-content(9rem));
+/* create 4 explicit column tracks */
+grid-auto-rows: fit-content(12rem) minmax(10rem, 14rem) auto auto;
+/* create 4 implicit row tracks */
+gap: 0.5rem;
+/* create the gap between grid columns and rows */
+justify-content: center;
+}
+
+/* SUBGRID */
+
+.card {
+grid-column: span 3;
+/* every card spans across 3 columns of the main grid */
+grid-row: span 4;
+/* every card spans across 4 rows of the main grid */
+display: grid;
+/* set display to grid in order to create a subgrid */
+grid-template-columns: subgrid [card-start][button-start][col][card-end button-end];
+/* create subgrid for columns to use grid column tracks of the parent and name the column lines*/
+grid-template-rows: subgrid [title-start][title-end photo-start] [photo-end text-start] [text-end button-start] [button-end];
+/* create subgrid for rows to use row column tracks of the parent and name the row lines*/
+row-gap: 0;
+/* override the inherited row gap */
+background-color: #fff;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+margin: 0 0.5rem 1rem 0.5rem;
+padding: 1rem;
+/*padding influences the sizing of rows and columns*/
+}
+
+/* SUBGRID IN SUBGRID */
+
+.card-header-wrapper {
+grid-column: card;
+/* use named tracks to place elements inside the subgrid */
+grid-row: title;
+display: grid;
+/* make it grid container to create another subgrid inside */
+grid-template-columns: subgrid;
+/* create subgrid for columns to use grid column tracks of the parent */
+grid-template-rows: fit-content(6rem) fit-content(6rem);
+/* create two independent rows */
+grid-template-areas: "subtitle subtitle avatar" "title title title";
+/* create named grid areas to place the header elements*/
+align-items: end;
+font-family: "Open Sans", Arial, sans-serif;
+}
+
+/* CARD DETAILS */
+
+.card-title {
+grid-area: title;
+/* place card title in the named grid area*/
+font-size: 1.25rem;
+}
+
+.card-subtitle {
+grid-area: subtitle;
+font-weight: normal;
+margin: 0;
+}
+
+.card-avatar-wrapper {
+grid-area: avatar;
+align-self: start;
+justify-self: end;
+}
+
+.card-avatar {
+object-fit: cover;
+width: 3.5rem;
+height: 3.5rem;
+border-radius: 50%;
+}
+
+.card-photo-wrapper {
+grid-column: card;
+grid-row: photo;
+margin-bottom: 0.5rem;
+}
+
+.card-photo {
+object-fit: cover;
+width: 100%;
+height: 100%;
+}
+
+.card-text {
+grid-column: col-start / span 3;
+/* use main grid line names*/
+grid-row: text;
+margin-bottom: 2rem;
+}
+
+.card-like {
+grid-column: 1/2;
+grid-row: button;
+width: 2.5rem;
+height: 2.5rem;
+align-self: end;
+cursor: pointer;
+}
+
+.card-button {
+grid-area: button;
+min-width: 4rem;
+height: 3rem;
+background-color: #66A9D6;
+border: none;
+border-radius: 0.25rem;
+padding: 0 0.75rem;
+color: white;
+font-size: 0.9rem;
+text-transform: uppercase;
+letter-spacing: 0.09rem;
+cursor: pointer;
+justify-self: end;
+overflow: hidden;
+text-overflow: ellipsis;
+max-width: 8rem;
+}
+
+p.caption {
+text-align: center;
+font-size: 13px;
+padding-bottom: 30px;
+}
+
+p.caption a {
+color: #0086B3;
+}
+
+/* browsers without support for the subgrid feature */
+
+@supports not (grid-template-columns: subgrid) {
+.card {
+  grid-template-columns: repeat(3, [col-start] fit-content(9rem));
+  grid-template-rows: 9rem 15rem auto auto;
+}
+
+.card-header-wrapper, .card-photo-wrapper, .card-text {
+  grid-column: 1/-1;
+  grid-row: span 1;
+}
+
+.card-text {
+  margin-bottom: 0;
+}
+
+.card-button {
+  grid-column: 3/-1;
+  align-self: end;
+}
+
+}
+
+@media screen and (min-width: 480px) {
+html {
+  font-size: clamp(11px, 2vw, 14px);
+}
+
+.cards-container {
+  grid-template-columns: repeat(6, [col-start] fit-content(9rem));
+}
+
+}
+
+@media screen and (min-width: 1024px) {
+html {
+  font-size: clamp(11px, 1vw, 14px);
+}
+
+.cards-container {
+  grid-template-columns: repeat(12, [col-start] fit-content(9rem));
+}
+
+}
+
+/*
+This example is not supported in Internet Explorer
+*/
 </style>

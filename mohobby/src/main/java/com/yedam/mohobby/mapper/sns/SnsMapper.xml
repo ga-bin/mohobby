@@ -79,14 +79,15 @@
    </delete>
    <!-- 유저x- 인기강사피드조회 top20 -->
    <select id="hotLecturerList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-      SELECT post_id, member_id, content, thumbnail, likes, cmts
+      SELECT post_id, profile_img, member_id, content, thumbnail, likes, cmts
       FROM (
             SELECT s.post_id
-            ,s.member_id
-            ,s.content
-            ,s.thumbnail
-            ,s.likes
-            ,s.cmts
+	              ,s.member_id
+	              ,m.profile_img
+	              ,s.content
+	              ,s.thumbnail
+	              ,s.likes
+	              ,s.cmts
             FROM sns_post s JOIN member m
             ON(s.member_id = m.member_id)
             WHERE m.role = 1
@@ -151,21 +152,27 @@
       WHERE member_id = #{ memberId }
    </select>
    <!-- 피드상세조회 -->
-   <select id="getFeedDetail" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
+   <select id="getFeedDetail" parameterType="com.yedam.mohobby.service.sns.SnsFeedVO" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
 		SELECT mem.profile_img, mem.role, k.*
 		FROM member mem,
-		    (SELECT nvl2(m.target_id, 1, 0) like_status, c.*
-		    FROM sns_post c,
-		        (SELECT * FROM jjim 
-		        WHERE target_type = 2 
-		        AND member_id = 
-		        <if test="memberId == null"> null</if>
-		        <if test="memberId != null">
-		        #{ memberId }
-		        </if>) m,
-		        (SELECT COUNT(*)JJIM, target_id FROM jjim WHERE target_type = 2 GROUP BY target_id) x
-		    WHERE c.post_id = m.target_id(+)
-		    AND c.post_id = x.target_id(+)) k
+			(
+			 SELECT nvl2(m.target_id, 1, 0) like_status, c.*
+		     FROM sns_post c,(	
+		    					SELECT * FROM jjim 
+						        WHERE target_type = 2 
+						        AND member_id = 
+						        <if test="memberId == null"> null</if>
+						        <if test="memberId != null">#{ memberId }</if>
+						      ) m,
+					   		  (
+						   		 SELECT COUNT(*)JJIM, target_id 
+						   		 FROM jjim 
+						   		 WHERE target_type = 2 
+						   		 GROUP BY target_id
+					   		   ) x
+		     WHERE c.post_id = m.target_id(+)
+		     AND c.post_id = x.target_id(+)
+			) k
 		WHERE mem.member_id = k.member_id
 		AND post_id = #{ postId }
 		ORDER BY post_id
@@ -483,14 +490,12 @@
 			INSERT INTO sns_bookmark_catg (
 			 							CATG_ID,
 			 							MEMBER_ID,
-			 							CATG_NAME,
-										THUMBNAIL
+			 							CATG_NAME
 	    					  		   )
 	    					   VALUES (
 	    					  			#{ catgId },
 	    					  			#{ memberId },
-	    					  			#{ catgName },
-	    					  			#{ thumbnail }
+	    					  			#{ catgName }
 	    					  		   )
 	</insert>
 	<!-- 컬렉션수정(이름) -->
@@ -531,10 +536,24 @@
 		DELETE FROM sns_bookmark
 		WHERE POST_ID = #{ postId }
 	</delete>
+	<!-- 북마크여부조회 -->
+	<select id="isBookmark" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkVO" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
+	    SELECT COUNT(catg_id) AS bookStatus
+	    FROM sns_bookmark_catg
+	    WHERE catg_id in(
+                        SELECT catg_id
+                        FROM sns_bookmark
+                        WHERE post_id=#{postId}
+	                     )
+	    AND member_id=#{memberId}
+	</select>
 	<!-- 북마크조회 -->
 	<select id="getBookmarks" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
-		SELECT * FROM sns_bookmark
-		WHERE CATG_ID = #{ catgId }
+		SELECT b.catg_id, b.post_id, b.thumbnail, s.member_id
+		FROM sns_bookmark b, sns_post s
+		WHERE b.post_id = s.post_id 
+		AND catg_id = #{ catgId }
+		ORDER BY post_id DESC
 	</select>
 	<!-- 전체 북마크 -->
 	<select id="getAllBookmarks" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">

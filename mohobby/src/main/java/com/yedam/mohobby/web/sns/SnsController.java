@@ -47,12 +47,12 @@ public class SnsController {
     @PostMapping(value = "/myfeed", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public String insertFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
        System.out.println(snspostVO); //******해시태그에 값이 들어오지 않음. - 수정중
-       snspostVO.setPostId(service.getPostId());
+       
        
        System.out.println("snspostVO: " + snspostVO);
        System.out.println("snsmediaVO: " + snsmediaVO);
        System.out.println(fileList);
-          service.regFeed(snspostVO, snsmediaVO, fileList);
+       service.regFeed(snspostVO, snsmediaVO, fileList);
         return "success";
     }
     
@@ -74,6 +74,7 @@ public class SnsController {
     @DeleteMapping("/myfeed/{postId}")
     public String deleteFeed(@PathVariable("postId") int postId){
         try {
+            //file.delete로 파일 삭제할 수 있음 **********찾아볼 것
             service.deleteFeed(postId);
             System.out.println("글 삭제 완료");
             return "success";
@@ -84,11 +85,13 @@ public class SnsController {
         }
     }
    //인기강사피드조회 - 테스트완료
+    //more기능 rownum가져오기(넘길 파라미너 : 마지막 번호)
     @GetMapping("/main/top20LecturerFeeds")
     public List<SnsPostVO> hotLecturerList() {
         return service.hotLecturerList();
     }
    //전체피드조회 - 테스트완료
+    //페이징처리할것 ************* 페이징을 안할거면 최대 보낼 페이지 지정해서 걸어주기
     @GetMapping("/main/allFeeds")
     public List<SnsPostVO> allList() {
         return service.allList();
@@ -301,10 +304,9 @@ public class SnsController {
           }
     }
     //컬렉션이름수정
-    @PutMapping("/collection/{catgId}")
-    public String updateReCmt(@PathVariable int catgId, @RequestBody SnsBookmarkVO bmCtgVO) {
+    @PutMapping("/collection")
+    public String updateReCmt(@RequestBody SnsBookmarkVO bmCtgVO) {
         try {
-          bmCtgVO.setCatgId(catgId);
           service.updateBookmarkCtgName(bmCtgVO);
           System.out.println("컬렉션수정 완료");
           return "success";
@@ -330,6 +332,7 @@ public class SnsController {
     //컬렉션리스트 호출
     @GetMapping("/collection/{memberId}")
     public List<SnsBookmarkVO> getCollectionList(@PathVariable String memberId){
+        System.out.println(memberId);
         return service.getBookmarkCtgs(memberId);
     }
     
@@ -358,6 +361,19 @@ public class SnsController {
          System.out.println("북마크삭제 실패");
          return "fail";
       }
+    }
+    //북마크상태조회
+    @GetMapping("/collection/bookmark/isBookmark/{postId}")
+    public int isBookmark(@PathVariable int postId, @RequestParam String memberId) {
+        try {
+            service.isBookmark(postId, memberId);
+            System.out.println("북마크상태조회 완료");
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("북마크상태조회 실패");
+            return 0;
+        }
     }
     //컬렉션별 북마크 조회
     @GetMapping("/collection/bookmark/{catgId}")

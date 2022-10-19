@@ -41,7 +41,7 @@ export default {
         },
         //언팔로우
         unfollow(){
-            this.axios.delete('/sns/cmt/', + this.memberId, this.getUserId,
+            this.axios.delete('/sns/cmt/' + this.memberId + '/' + this.getUserId,
             ).then(res => {
                 console.log("언팔로우 성공! "+res);
             }).catch(err => {
