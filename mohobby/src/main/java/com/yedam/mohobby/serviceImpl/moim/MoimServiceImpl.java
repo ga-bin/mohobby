@@ -145,11 +145,18 @@ public class MoimServiceImpl implements MoimService {
 		return mapper.moimMainTop(memberId);
 	}
 
-	// 소모임 등록 권한 업데이트
-	@Override
-	public int moimUserUpdate(MemberVO vo) {
-		return mapper.moimUserUpdate(vo);
-	}
+	 //소모임 등록 권한 업데이트
+	 @Override
+	 public int moimUserUpdate(MemberVO vo) {
+	    return mapper.moimUserUpdate(vo);
+	 }
+	 
+	 //소모임 투표 디테일 리스트
+//	 @Override
+//	 public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId) {
+//		 return mapper.moimVoteAllList(moimId, voteId);
+//	 }
+ 
 
 	// 소모임 단건조회
 	@Override

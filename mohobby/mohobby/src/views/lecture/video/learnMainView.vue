@@ -51,7 +51,7 @@
     <v-progress-linear :value="knowledge" color="#AAABB7" height="20" readonly>
       <strong style="font-size: 0.9em;">전체 진도율 {{ Math.ceil(knowledge) }}%</strong>
     </v-progress-linear>
-    <v-bottom-navigation :value="value" color="primary" horizontal class="bottom-nav">
+    <v-bottom-navigation color="primary" horizontal class="bottom-nav">
       <v-row>
         <div class="d-flex justify-start align-center">
           <v-btn>
@@ -63,23 +63,25 @@
       </v-row>
       <v-row>
         <div>
-          <v-btn @click.stop="questForm">
-            <span class="bottom-nav-text">질문하기</span>
-
-            <v-icon color="white">mdi-chat-question</v-icon>
-          </v-btn>
-
-          <v-btn @click.stop="noteForm">
-            <span class="bottom-nav-text">학습노트</span>
-
-            <v-icon color="white">mdi-notebook-edit</v-icon>
-          </v-btn>
-
+          <v-tabs class="d-flex justify-center align-center" v-model="tab" background-color="transparent">
+            <v-tab key="2">
+              <v-btn @click="questForm">
+                <span class="bottom-nav-text-2">질문하기</span>
+    
+                <v-icon color="white" class="bottom-nav-text-2">mdi-chat-question</v-icon>
+              </v-btn>
+            </v-tab>
+            <v-tab key="3">
+              <v-btn @click="noteForm">
+                <span class="bottom-nav-text-2">학습노트</span>
+                <v-icon color="white" class="bottom-nav-text-2">mdi-notebook-edit</v-icon>
+              </v-btn>
+            </v-tab>
+          </v-tabs>
         </div>
       </v-row>
-      <div class="d-flex justify-end align-center">
+      <div class="d-flex justify-center align-center">
         <v-btn>
-
           <span class="bottom-nav-text" style="margin-right: 20px; font-size: 1.1em;">다음학습</span>
           <v-icon color="white">mdi-chevron-right</v-icon>
         </v-btn>
@@ -89,13 +91,13 @@
     </v-bottom-navigation>
     <v-bottom-sheet v-model="sheet">
       <v-sheet class="text-center" height="300px">
-        <div class="d-flex justify-end align-center">
-          <span class="mt-6 mr-3">{{ currentTime | runtime }}</span>
+        <div class="d-flex justify-center align-center">
+          <span class="mt-2 mr-3">{{ currentTime | runtime }}</span>
 
-          <v-btn class="mt-6" text color="success" @click="console.log()">
+          <v-btn class="mt-2" text color="success" @click="clickSubmit">
             {{ form.submit }}
           </v-btn>
-          <v-btn class="mt-6" text color="error" @click="sheet = false">
+          <v-btn class="mt-2" text color="error" @click="sheet = false">
             취소
           </v-btn>
         </div>
@@ -112,29 +114,140 @@
 
       </v-sheet>
     </v-bottom-sheet>
-    <v-card>
-      <v-system-bar></v-system-bar>
-      <v-toolbar flat>
-        <v-toolbar-title>My Document</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <div>
-          <v-switch v-model="sticky" label="Sticky Banner" hide-details></v-switch>
-        </div>
-      </v-toolbar>
-      <v-banner single-line :sticky="sticky">
-        We can't save your edits while you are in offline mode.
-
-        <template v-slot:actions>
-          <v-btn text color="deep-purple accent-4">
-            Get Online
-          </v-btn>
-        </template>
-      </v-banner>
-      <v-card-text class="grey lighten-4">
-        <v-sheet max-width="800" height="auto" class="mx-auto">
-        </v-sheet>
-      </v-card-text>
-    </v-card>
+      
+      <v-tabs-items v-model="tab" style="padding: 20px 0px">
+        <v-tab-item key="2">
+          <!-- 질문 내역 존재 -->
+          <div v-if="questList.length != 0">
+            <div>
+              <v-card class="d-flex justify-end align-center" flat tile>
+                <!-- 작성하기 버튼 -->
+                <div class="text-center mb-3" style="padding-right: 20px;">
+                  <v-btn
+                    outlined
+                    color="#2b2b2b"
+                    @click="clickWriteBtn"
+                  >
+                    질문 작성하기
+                  </v-btn>
+                </div>
+                <v-card tile flat>
+                  <!-- 정렬 방식 -->
+                  <v-select :items="listFilter" item-text="title" item-value="value"
+                    :menu-props="{ bottom: true, offsetY: true }" attach style="width: 160px;" v-model="defaultFilter" />
+                </v-card>
+              </v-card>
+            </div>
+            <!-- 질문 게시글 목록 -->
+            <div style="padding: 5px 20px" v-for="(rv,i) in questList" :key="i">
+              <v-card class="mx-auto" outlined>
+                <v-card-text>
+                  <v-row>
+                    <v-chip
+                      class="mt-2 ml-2"
+                      @click="moveTime(rv.title)"
+                      color="#AAABB7"
+                      dark
+                    >
+                      #{{ rv.title | runtime }}
+                    </v-chip>
+                    <v-col>
+                      <span 
+                        class="nickname"
+                        @click="$router.push({ path: '/snsUserFeed?memId='+rv.memberId}).catch(()=>{$router.go(0)})"
+                      >
+                        {{ rv.nickname }}
+                      </span>
+                      <span style="font-size: 1em; color: gray; padding-left: 7px;">{{ replaceDate(rv.writeDate) }}</span>
+                      <div style="font-size: 1.3em; color: #2b2b2b; padding-top: 14px">{{ rv.content }}</div>
+                    </v-col>
+                    <!-- 수정 / 삭제 -->
+                    <div style="padding: 20px 17px 0px 0px;">
+                      <v-row v-if="rv.memberId == $store.state.id">
+                        <div class="modBtn" @click="clickUpdateBtn(i)">수정</div>
+                        <div class="delBtn" @click="clickDelete(i)">삭제</div>
+                      </v-row>
+                    </div>
+                  </v-row>
+                  <!--댓글-->
+                  <v-divider class="mt-5 mb-5" inset></v-divider>
+                  <details>
+                    <summary style="font-size: 1.2em;">댓글({{ rv.commentTotal }})</summary>
+                    <div v-if="rv.commentTotal > 0" class="output ql-snow">
+                      ㅇㅇ
+                    </div>
+                  </details>
+                
+                </v-card-text>
+              </v-card>
+            </div>
+          </div>
+          <div v-if="questList.length == 0">
+            <v-card flat justify="center" align="center" style="padding-top: 50px">
+              <h1>🙇</h1>
+              <h1>등록된 질문이 없습니다</h1>
+            </v-card>
+          </div>
+        </v-tab-item>
+        <v-tab-item key="3">
+          <!-- 노트 내역 존재 -->
+          <div v-if="questList.length != 0">
+            <div>
+              <v-card class="d-flex justify-end align-center" flat tile>
+                <!-- 작성하기 버튼 -->
+                <div class="text-center mb-3" style="padding-right: 20px;">
+                  <v-btn
+                    outlined
+                    color="#2b2b2b"
+                    @click="sheet = true"
+                  >
+                    노트 작성하기
+                  </v-btn>
+                </div>
+                <v-card tile flat>
+                  <!-- 정렬 방식 -->
+                  <v-select :items="listFilter" item-text="title" item-value="value"
+                    :menu-props="{ bottom: true, offsetY: true }" attach style="width: 160px;" v-model="defaultFilter" />
+                </v-card>
+              </v-card>
+            </div>
+            <!-- 노트 게시글 목록 -->
+            <div style="padding: 5px 20px" v-for="(rv,i) in noteList" :key="i">
+              <v-card class="mx-auto" outlined>
+                <v-card-text>
+                  <v-row>
+                    <v-chip
+                      class="mt-2 ml-2"
+                      @click="moveTime(rv.title)"
+                      color="#AAABB7"
+                      dark
+                    >
+                      #{{ rv.title | runtime }}
+                    </v-chip>
+                    <v-col>
+                      <span style="font-size: 1em; color: gray;">{{ replaceDate(rv.writeDate) }}</span>
+                      <div style="font-size: 1.3em; color: #2b2b2b; padding-top: 14px">{{ rv.content }}</div>
+                    </v-col>
+                    <!-- 수정 / 삭제 -->
+                    <div style="padding: 20px 17px 0px 0px;">
+                      <v-row v-if="rv.memberId == $store.state.id">
+                        <div class="modBtn" @click="clickUpdateBtn(i)">수정</div>
+                        <div class="delBtn" @click="clickDelete(i)">삭제</div>
+                      </v-row>
+                    </div>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+            </div>
+          </div>
+          <div v-if="questList.length == 0">
+            <v-card flat justify="center" align="center" style="padding-top: 50px">
+              <h1>🙇</h1>
+              <h1>작성한 학습노트가 없습니다</h1>
+            </v-card>
+          </div>
+        </v-tab-item>
+      </v-tabs-items>
 
 
 
@@ -155,7 +268,20 @@ export default {
   },
   data() {
     return {
+      defaultFilter: 0,
+      listFilter: [
+        {
+          title: '최신순',
+          value: 0,
+        },
+        {
+          title: '댓글순',
+          value: 1,
+        },
+      ],
+      tab: '2',
       classInfo: {},
+      questList: [],
       panel: [],
       items: [
         {
@@ -324,38 +450,21 @@ export default {
             html: 'HD 1080P',
           },
         ],
-        controls: [
-          {
-            position: 'right',
-            html: 'Control',
-            tooltip: 'Control Tooltip',
-            click: function () {
-              console.log('You clicked on the custom control');
-              console.log(document.querySelector(".art-video").currentTime);
-            },
-          },
-        ],
+        // controls: [
+        //   {
+        //     position: 'right',
+        //     html: 'Control',
+        //     tooltip: 'Control Tooltip',
+        //     click: function () {
+        //       console.log('You clicked on the custom control');
+        //       console.log(document.querySelector(".art-video").currentTime);
+        //       this.option.quality.pop();
+        //       console.log(this.option.quality);
+        //     },
+        //   },
+        // ],
         highlight: [
-          {
-            time: 15,
-            text: 'One more chance',
-          },
-          {
-            time: 30,
-            text: '谁でもいいはずなのに',
-          },
-          {
-            time: 45,
-            text: '夏の想い出がまわる',
-          },
-          {
-            time: 60,
-            text: 'こんなとこにあるはずもないのに',
-          },
-          {
-            time: 75,
-            text: '终わり',
-          },
+
         ],
         icons: {
           loading: '',
@@ -373,11 +482,13 @@ export default {
       sheet: false,
       newContent: '',
       form: {
-        type: 3, //2:질문, 3:노트
-        submit: '노트작성',
+        type: 2, //2:질문, 3:노트
+        submit: '질문등록',
 
       },
       currentTime: 0,
+      noteList: [],
+      updateObj: {},
 
     };
   },
@@ -385,34 +496,236 @@ export default {
     Artplayer,
   },
   methods: {
-    initInfo() {
-      this.axios.get('/class/detail/'+this.classId)
+    getQuestList() {
+      this.axios("/class/board", {
+        params: {
+          classId: this.currId,
+          boardType: 2
+        }
+      })
+      .then(res => {
+        console.log(res.data);
+        if (res.data.length > 0) {
+          this.questList = res.data;
+        }
+      })
+      .catch(err => console.log(err));
     },
-    getInstance(art) {
-      console.log(art);
+    getNoteList() {
+      this.axios("/class/board", {
+        params: {
+          classId: this.currId,
+          boardType: 3
+        }
+      })
+      .then(res => {
+        if(res.data.length != 0) {
+          this.noteList = res.data;
+        }
+      })
+      .catch(err => console.log(err));
     },
+    getControls() {},
     changePanelHeader() {
       console.log(event.currentTarget.style);
     },
+    getInstance(art) {
+      console.log(art);
+      console.log(art.playing);
+      console.log(art.getControls());
+    },
     questForm() {
-      document.querySelector(".art-video").pause();
+      if (!this.$store.state.id) {
+          this.$swal('로그인 후 이용하세요!', '', 'info');
+          return;
+      }
+      //document.querySelector(".art-video").pause();
       this.currentTime = document.querySelector(".art-video").currentTime;
       this.form.type = 2;
       this.form.submit = '질문등록';
-      this.sheet = true;
+      //this.sheet = true;
     },
     noteForm() {
-      document.querySelector(".art-video").pause();
+      if (!this.$store.state.id) {
+          this.$swal('로그인 후 이용하세요!', '', 'info');
+          return;
+      }
+      //document.querySelector(".art-video").pause();
       this.currentTime = document.querySelector(".art-video").currentTime;
       this.form.type = 3;
       this.form.submit = '노트작성';
-      this.sheet = true;
+      //this.sheet = true;
     },
+    clickSubmit() {
+      if(this.form.submit.includes('수정')) {
+        this.updateContent(this.updateObj);
+      } else {
+        this.insertContent();
+      }
+    },
+    updateContent(obj) {
+      if(this.newContent == obj.content) {
+        this.$swal('변경된 내용이 없습니다!', '', 'info');
+      } else {
+        this.axios.put('/class/board', {
+            boardId: obj.boardId,
+            title: obj.title,
+            content: this.newContent,
+            boardType: obj.boardType,
+        }).then( res => {
+          if(res.status == 200) {
+            obj.content = this.newContent;
+            this.sheet = false;
+          }
+        }).catch( err => console.log(err) )
+      }
+    },
+    insertContent() {
+      if(this.newContent == '') {
+        this.$swal('내용을 입력하세요!', '', 'info');
+        return;
+      }
+
+      if(this.form.type == 2) {
+        this.insertQuest();
+      } else if(this.form.type == 3) {
+        this.insertNote();
+      }
+    },
+    insertQuest() {
+      this.axios('/class/board', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        data: JSON.stringify({
+            memberId: this.$store.state.id,
+            classId: this.currId,
+            boardType: 2,
+            title: Math.ceil(document.querySelector(".art-video").currentTime),
+            content: this.newContent,
+            nickname: this.$store.state.user.nickName,
+        })
+      }).then( res => {
+        if(res.status == 200) {
+          this.sheet = false;
+          this.newContent = '';
+          this.questList.unshift(res.data);
+        }
+      }).catch( err => console.log(err) )
+    },
+    insertNote() {
+      this.axios('/class/board', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+        },
+        data: JSON.stringify({
+            memberId: this.$store.state.id,
+            classId: this.currId,
+            boardType: 3,
+            title: Math.ceil(document.querySelector(".art-video").currentTime),
+            content: this.newContent,
+            nickname: this.$store.state.user.nickName,
+        })
+      }).then( res => {
+        if(res.status == 200) {
+          this.sheet = false;
+          this.newContent = '';
+          this.noteList.unshift(res.data);
+        }
+      }).catch( err => console.log(err) )
+    },
+    replaceDate(date) {
+      return this.$moment(date).fromNow();
+    },
+    moveTime(time) {
+      document.querySelector(".art-video").currentTime = time;
+    },
+    clickUpdateBtn(idx) {
+      if(this.form.type == 2) {
+        this.newContent = this.questList[idx].content;
+        this.currentTime = this.questList[idx].title;
+        this.form.submit = '질문수정';
+        this.updateObj = this.questList[idx];
+        this.sheet = true;
+      } else if(this.form.type == 3) {
+        this.newContent = this.noteList[idx].content;
+        this.currentTime = this.noteList[idx].title;
+        this.form.submit = '노트수정';
+        this.updateObj = this.noteList[idx];
+        this.sheet = true;
+      }
+    },
+    clickDelete(idx) {
+      this.$swal({
+        title: '정말 삭제할까요?',
+        text: "삭제를 원하지 않으면 취소버튼을 눌러주세요!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ac187',
+        cancelButtonColor: '#d33',
+        cancelButtonText: '취소',
+        confirmButtonText: '네, 삭제할게요!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deleteContent(idx);
+        }
+      })
+    },
+    deleteContent(idx) {
+      let obj = {};
+      if(this.form.type == 2){
+        obj = this.questList[idx];
+      } else if(this.form.type == 3) {
+        obj = this.noteList[idx];
+      }
+
+      this.axios.delete('/class/board', {
+        params: {
+          boardId: obj.boardId,
+        },
+      }).then( res => {
+        if(res.status == 200) {
+          this.$swal(
+            '삭제 완료!',
+            '작성한 QnA를 삭제하였습니다.',
+            'success'
+          );
+          this.sheet = false;
+          if(this.form.type == 2){
+            this.questList.splice(idx, 1);
+          } else if(this.form.type == 3) {
+            this.noteList.splice(idx, 1);
+          }
+        }
+      })
+      
+    },
+    clickWriteBtn() {
+      this.currentTime = document.querySelector(".art-video").currentTime;
+      this.sheet = true;
+    }
   },
   watch: {
-
+    sheet: function() {
+      if(this.sheet == true) {
+        document.querySelector(".art-video").pause();
+      }
+      if(this.sheet == false) {
+        this.newContent = '';
+        this.currentTime = document.querySelector(".art-video").currentTime;
+        if(this.form.type == 2) {
+          this.form.submit = '질문등록';
+        } else if(this.form.type == 3) {
+          this.form.submit = '노트작성';
+        }
+      }
+    },
   },
   created() {
+    this.getNoteList();
+    this.getQuestList();
   }
 };
 </script>
@@ -427,6 +740,9 @@ export default {
 }
 </style>
 <style scoped>
+* {
+  word-break: keep-all;
+}
 .currName {
   color: #f3f3f3;
   padding-left: 15px;
@@ -474,5 +790,31 @@ export default {
 
 .bottom-nav-text {
   color: white;
+}
+
+.bottom-nav-text-2 {
+  color: white;
+  padding-bottom: 20%;
+}
+.modBtn, .delBtn {
+  margin-right: 10px;
+  padding: 0px 5px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.modBtn {
+  border: 1px solid #229c6e;
+  color: #229c6e;
+}
+
+.delBtn {
+  border: 1px solid #7a2a1c;
+  color: #7a2a1c;
+}
+
+.nickname {
+  font-size: 1.2em;
+  cursor: pointer;
+  font-weight: bold;
 }
 </style>

@@ -2,163 +2,250 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.moim.MoimMapper">
 
-	<!-- 소모임 단건 조회 -->
-	<select id="getMoimOneInfo" parameterType="Integer"
-		resultType="com.yedam.mohobby.service.moim.MoimVO">
-		select *
-		from moim
-		where moim_id=#{moimId}
-	</select>
 
-	<!-- 소모임 등록 -->
-	<insert id="moimInsert"
-		parameterType="com.yedam.mohobby.service.moim.MoimVO">
-		<selectKey keyProperty="moimId" resultType="Integer"
-			order="BEFORE">
-			SELECT NVL(MAX(moim_id), 0)+1 FROM moim
-		</selectKey>
-		INSERT INTO moim (
-		moim_id,
-		moim_img,
-		moim_name,
-		moim_info,
-		moim_catg,
-		moim_region,
-		max_people
-		)
-		VALUES
-		(
-		#{moimId},
-		#{moimImg},
-		#{moimName},
-		#{moimInfo},
-		#{moimCatg},
-		#{moimRegion},
-		#{maxPeople}
-		)
-	</insert>
-	<!-- 소모임 모집 전체 조회(6개씩) -->
-	<select id="moimrecruitMember"
-		resultType="com.yedam.mohobby.service.moim.MoimVO">
-		select * from moim <![CDATA[where rownum <= 6]]>
-	</select>
+<!-- 소모임 단건 조회 -->
+<select id="getMoimOneInfo" parameterType="Integer" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select *
+from moim
+where moim_id=#{moimId}
+</select>
 
-	<!-- 인기소모임 조회 -->
-	<select id="moimPopularSelect"
-		resultType="com.yedam.mohobby.service.moim.MoimVO">
-		SELECT * FROM moim <![CDATA[where rownum <= 6]]>
-		ORDER BY reg_cnt DESC
-	</select>
+<!-- 소모임 등록 -->
+<insert id="moimInsert" parameterType="com.yedam.mohobby.service.moim.MoimVO">
+<selectKey keyProperty="moimId" resultType="Integer" order="BEFORE">
+   SELECT NVL(MAX(moim_id), 0)+1 FROM moim
+</selectKey>
+	INSERT INTO moim (
+	            moim_id,
+	            moim_img,
+	            moim_name,
+	            moim_info,
+	            moim_catg,
+	            moim_region,
+	            max_people
+	            )
+	         VALUES
+	            (
+	            #{moimId},
+	            #{moimImg},
+	            #{moimName},
+	            #{moimInfo},
+	            #{moimCatg},
+	            #{moimRegion},
+	            #{maxPeople}
+	            )
+</insert>
+<!-- 소모임 모집 전체 조회(6개씩) -->
+<select id="moimrecruitMember" resultType="com.yedam.mohobby.service.moim.MoimVO">
+   select * from moim <![CDATA[where rownum <= 6]]>
+</select>
 
-	<!-- 소모임 중첩 검색 -->
-	<select id="moimAllSearch" parameterType="hashMap"
-		resultType="com.yedam.mohobby.service.moim.MoimVO">
-		select * from moim
-		where 1=1
-		<if test="moimName != null and moimName != ''">
-			and moim_name like '%'||#{moimName}||'%'
-		</if>
-		<if test="moimCatg != null and moimCatg != ''">
-			and moim_catg in(select SUB_KEYWORD_NAME
-			from sub_keyword
-			where keyword_id = (select keyword_id from keyword where keyword_name like
-			#{moimCatg}))
-		</if>
-		and <![CDATA[rownum <= 6]]>
-		ORDER BY moim_id
-	</select>
+<!-- 인기소모임 조회 -->
+<select id="moimPopularSelect" resultType="com.yedam.mohobby.service.moim.MoimVO">
+   SELECT * FROM moim <![CDATA[where rownum <= 6]]> ORDER BY reg_cnt DESC
+</select>
 
-	<!-- 소모임 게시판 전체 조회 -->
-	<select id="moimAllBoard" parameterType="hashMap"
-		resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+<!-- 소모임 중첩 검색 -->
+<select id="moimAllSearch" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimVO">
+	select * from moim
+	where 1=1
+	<if test ="moimName != null and moimName != ''">
+          and moim_name like '%'||#{moimName}||'%'
+    </if>
+    <if test="moimCatg != null and moimCatg != ''">
+          and moim_catg in(select SUB_KEYWORD_NAME
+		  from sub_keyword 
+		  where keyword_id = (select keyword_id from keyword where keyword_name like #{moimCatg}))
+    </if>
+    and <![CDATA[rownum <= 6]]> ORDER BY moim_id
+</select>
 
-		select b.*, nvl(c.cnt, 0)cnt
-		from moim_board b,
-		(select count(*)cnt, target_id from comments
-		where target_id in (
-		select board_id from moim_board)
-		and target_type=3
-		group by target_id)c
-		where b.board_id = c.target_id(+)
-		and moim_id = #{moimId}
-		and board_type = #{boardType}
+<!-- 소모임 게시판 전체 조회 -->
+<select id="moimAllBoard" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+	
+	select b.*, nvl(c.cnt, 0)cnt
+	from moim_board b,
+	(select count(*)cnt, target_id from comments
+	where target_id in (
+	select board_id from moim_board)
+	and target_type=3
+	group by target_id)c
+	where b.board_id = c.target_id(+)
+	and moim_id = #{moimId}
+	and board_type = #{boardType}
 
-	</select>
+</select>
 
-	<!-- 모임명 중복체크 -->
-	<select id="moimIdCheck" resultType="Integer">
-		SELECT COUNT(*) FROM moim WHERE moim_name = #{moimName}
-	</select>
+<!-- 모임명 중복체크 -->
+<select id="moimIdCheck" resultType="Integer">
+	SELECT COUNT(*) FROM moim WHERE moim_name = #{moimName}
+</select>
 
-	<!-- 소모임 공지사항 전체 리스트 조회 -->
-	<select id="moimNoticeBaord" parameterType="hashMap"
-		resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
-		select b.*, nvl(c.cnt, 0)cnt
-		from moim_board b,
-		(select count(*)cnt, target_id from comments
-		where target_id in (
-		select board_id from moim_board)
-		and target_type=3
-		group by target_id)c
-		where b.board_id = c.target_id(+)
-		and moim_id = #{moimId}
-		and board_type = #{boardType}
-	</select>
+<!-- 소모임 공지사항 전체 리스트 조회 -->
+<select id="moimNoticeBaord" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+	select b.*, nvl(c.cnt, 0)cnt
+	from moim_board b,
+	(select count(*)cnt, target_id from comments
+	where target_id in (
+	select board_id from moim_board)
+	and target_type=3
+	group by target_id)c
+	where b.board_id = c.target_id(+)
+	and moim_id = #{moimId}
+	and board_type = #{boardType}
+</select>
 
-	<!-- 소모임 게시글내 댓글 전체 조회 -->
-	<select id="moimCommentAllList" parameterType="hashMap"
-		resultType="com.yedam.mohobby.service.moim.MoimCommentVO">
-		select c.comm_id, c.member_id as comment_writer, c.parent_comm_id,
-		c.target_id, c.content,
-		c.write_date as comment_date , m.board_id, m.board_type, m.moim_id
-		from comments c ,moim_board m
-		where c.target_id = m.board_id
-		and c.target_type = 3
-		and m.moim_id = #{moimId}
-		and m.board_type = #{boardType}
-		and m.board_id = #{boardId}
-	</select>
+<!-- 소모임 게시글내 댓글 전체 조회 -->
+<select id="moimCommentAllList" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimCommentVO"> 
+	select c.comm_id, c.member_id as comment_writer, c.parent_comm_id, c.target_id, c.content, 
+	        c.write_date as comment_date , m.board_id, m.board_type, m.moim_id
+	from comments c ,moim_board m
+	where c.target_id = m.board_id
+	and c.target_type = 3
+	and m.moim_id = #{moimId}
+	and m.board_type = #{boardType}
+	and m.board_id = #{boardId}
+</select>
 
-	<!-- 소모임 게시글 단건조회 -->
-	<select id="moimOneBoard" parameterType="hashMap"
-		resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
-		select * from moim_board
-		where board_id = #{boardId}
-		and board_type = #{boardType}
-		and moim_id = #{moimId}
-	</select>
+<!-- 소모임 게시글 단건조회 -->
+<select id="moimOneBoard" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+	select * from moim_board
+	where board_id = #{boardId}
+	and board_type = #{boardType}
+	and moim_id = #{moimId}
+</select>
 
-	<!-- 소모임 게시글 댓글 등록 -->
-	<insert id="moimCommentInsert"
-		parameterType="com.yedam.mohobby.service.communal.CommentsVO">
-		<selectKey keyProperty="commId" resultType="Integer"
-			order="BEFORE">
-			SELECT NVL(MAX(comm_id), 0)+1 FROM comments
-		</selectKey>
-		INSERT INTO comments ( comm_id,
-		member_id,
-		target_id,
-		target_type,
-		content,
-		write_date
-		)
-		VALUES(#{commId},
-		#{memberId},
-		#{targetId},
-		3,
-		#{content},
-		current_date)
-	</insert>
+<!-- 소모임 게시글 댓글 등록 -->
+<insert id="moimCommentInsert" parameterType="com.yedam.mohobby.service.communal.CommentsVO">
+<selectKey keyProperty="commId" resultType="Integer" order="BEFORE">
+   SELECT NVL(MAX(comm_id), 0)+1 FROM comments
+</selectKey>
+	INSERT INTO comments ( comm_id,
+						   member_id,
+						   target_id,
+						   target_type,
+						   content,
+						   write_date
+						)
+	VALUES(#{commId},
+		   #{memberId}, 
+		   #{targetId}, 
+		   3, 
+		   #{content}, 
+		   sysdate)
+</insert>
 
-	<!-- 참여중인 소모임 리스트 조회 -->
-	<select id="joinMoim"
-		resultType="com.yedam.mohobby.service.moim.MoimVO">
-		select a.moim_id, a.moim_img, a.moim_name
-		from moim a, moim_member b
-		where a.moim_id = b.moim_id
-		and b.member_role = 0
-		and b.member_id = #{memberId}
-	</select>
+<!-- 참여중인 소모임 리스트 조회 -->
+<select id="joinMoim" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select a.moim_id, a.moim_img, a.moim_name
+from moim a, moim_member b 
+where a.moim_id = b.moim_id
+and b.member_role = 0
+and b.member_id = #{memberId}
+</select>
+
+<!-- 내가 운영중인 소모임 리스트 조회 -->
+<select id="operateMoim" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select a.moim_id, a.moim_img, a.moim_name
+from moim a, moim_member b 
+where a.moim_id = b.moim_id
+and b.memeber_role = 3
+and b.member_id = #{memberId}
+</select>
+
+<!-- 내가 참여중인 소모임 없음 -->
+<select id="noneMoim" resultType="Integer">
+	select count(moim_name)
+	from moim a, moim_member b 
+	where a.moim_id = b.moim_id
+	and b.member_role = 0
+	and b.member_id = #{memberId}
+</select>
+
+<!-- 소모임 게시글 댓글 수정 -->
+<update id="moimCommentUpdate" parameterType="com.yedam.mohobby.service.moim.MoimCommentVO">
+update comments
+set
+content = #{content},
+write_date = current_date
+where
+comm_id = #{commId}
+</update>
+
+<!-- 소모임 게시글 댓글 삭제 -->
+<delete id="moimCommentDelete" parameterType="integer">
+delete from comments where comm_id = #{commId}
+</delete>
+
+<!-- 소모임 생성 유저 권한 업데이트 -->
+<update id="moimUserUpdate" parameterType="com.yedam.mohobby.service.admin.MemberVO">
+DECLARE
+v_member VARCHAR2(100) := #{memberId};
+v_temp varchar2(100);
+BEGIN
+select role
+into v_temp
+from member
+where member_id=v_member;
+if v_temp =0 then
+update member set role=2 where member_id= v_member;
+elsif v_temp=1 then
+update member set role=3 where member_id= v_member;
+end if;
+update moim_member
+set
+member_role = 2
+where 
+member_id = v_member;
+end;
+</update>
+
+<!-- 소모임 투표 게시글 리스트 조회 -->
+<select id="moimVoteAllList" resultType="com.yedam.mohobby.service.moim.MoimVoteListVO">
+select a.start_date, a.topic, a.moim_id, b.content, b.cnt
+from moim_vote a, moim_vote_item b
+where a.vote_id = b.vote_id
+and a.vote_id = #{voteId}
+and moim_id = #{moimId}
+</select>
+
+<!-- 소모임 가입 회원 수 조회하는 로직 -->
+<select id="moimMemberCount" parameterType="integer" resultType="integer">
+select count(*)
+from moim_member
+where moim_id = #{moimId}
+</select>
+
+<!-- 소모임 단건조회 -->
+<select id="getMoimInfo" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select MOIM_IMG,MOIM_NAME
+from moim
+where moim_id=#{moimId}
+</select>
+
+<!-- 소모임 N빵 전체 리스트 조회 -->
+<select id="getAllDuchList" parameterType="int" resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
+select * from moim_dutch where moim_id = #{moimId}
+</select>
+
+
+<!-- 소모임 단건조회 -->
+<!-- <select id="getMoimInfo" parameterType="Int" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select MOIM_IMG,MOIM_NAME
+</select>
+<!-- 소모임 전체 멤버 리스트 조회 -->
+<select id="getAllMemberList" parameterType="int" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select member_id 
+from moim
+where moim_id = #{moimId}
+</select>
+
+<!-- 소모임 멤버 단건 검색 조회 -->
+<select id="getSearchMember" parameterType="int" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select member_id r
+from moim
+where member_id like '%'||#{memberId}||'%'
+</select>
 
 	<!-- 내가 운영중인 소모임 리스트 조회 -->
 	<select id="operateMoim"
