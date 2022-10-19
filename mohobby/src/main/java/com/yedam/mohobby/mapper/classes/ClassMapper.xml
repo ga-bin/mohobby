@@ -140,12 +140,15 @@
 	
 	<!-- 강의게시글조회 -->
 	<select id="getClassBoardList" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassBoardVO" >
-		select b.*, m.profile_img, m.nickname
-		from class_board b,
-		member m
-		where b.member_id = m.member_id(+)
-		and board_type=#{boardType}
-		and class_id=#{classId}
+		select b.*, m.profile_img, m.nickname, nvl(c.cnt, 0)comment_total
+		from class_board b, member m,
+		(select count(*) cnt, target_id from comments
+		where target_type = 1
+		group by target_id)c
+		where b.member_id = m.member_id(+) 
+		and b.board_id = c.target_id(+)
+		and board_type = #{boardType}
+		and class_id = #{classId}
 		order by write_date desc
 	</select>
 	

@@ -26,6 +26,12 @@ import com.yedam.mohobby.service.classes.ClassService;
 import com.yedam.mohobby.service.classes.ClassesVO;
 import com.yedam.mohobby.service.communal.JjimVO;
 
+/**
+ * 
+ * @author 최은경
+ * 강의 서비스 관련 컨트롤러
+ *
+ */
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
 public class ClassController {
@@ -44,7 +50,7 @@ public class ClassController {
 		classService.saveClassInfo(req);
 	}
 	
-	//html 파일 경로 가져오기
+	//html 파일 불러오기
 	@GetMapping("/readClassInfo")
 	public String readClassInfo(@RequestParam int classId) {
 	    return classService.readClassInfo(classId);
@@ -107,16 +113,10 @@ public class ClassController {
 		return classService.getClassReview(classId);
 	}
 	
-	//강의후기리스트
+	//강의게시글리스트
 	@GetMapping("/class/board")
 	public @ResponseBody List<ClassBoardVO> getClassReviewList(@RequestParam int classId, @RequestParam int boardType) {
 		return classService.getClassBoardList(classId, boardType);
-	}
-	
-	//강의qna리스트
-	@GetMapping("/class/qna/{classId}")
-	public @ResponseBody List<ClassBoardVO> getClassQnaList(@PathVariable int classId) {
-		return classService.getClassBoardList(classId, 1);
 	}
 	
 	//강의게시글등록
