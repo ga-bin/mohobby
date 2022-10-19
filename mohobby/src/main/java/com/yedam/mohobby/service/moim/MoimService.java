@@ -3,6 +3,7 @@ package com.yedam.mohobby.service.moim;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
@@ -80,5 +81,19 @@ public interface MoimService {
 
 	//소모임 멤버 검색 조회
 	public List<MoimMemberVO> getSearchMember(String memberId, int moimId);
+	public List<MoimVO> getSearchMember(int moimId);
+	
+	//소모임 투표 디테일 리스트
+	public List<MoimVoteListVO> moimVoteAllList(int moimId);
+
+	//소모임 투표 아이템 리스트
+	public List<MoimVoteListVO> moimVoteItemlist(int moimId);
+	
+	//소모임 투표 아이템 선택 리스트
+	public List<MoimVoteListVO> voteItemSelect(int moimId, String memberId);
+	
+	//소모임 투표 결과
+	public List<MoimVoteItemVO> votereulst(@Param("voteId")int voteId);
+	
 }
 

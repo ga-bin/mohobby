@@ -6,4 +6,5 @@ import lombok.Data;
 public class CreateRoomVO {
 	private String myId;
 	private String targetId;
+	private int vRoomNo;
 }

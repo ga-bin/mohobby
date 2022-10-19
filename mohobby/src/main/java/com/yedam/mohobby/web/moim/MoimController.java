@@ -2,6 +2,7 @@ package com.yedam.mohobby.web.moim;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
+import com.yedam.mohobby.service.moim.MoimVoteItemVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
 import com.yedam.mohobby.service.user.MemberVO;
 
@@ -275,6 +277,31 @@ public class MoimController {
 	public int moimMemberCount(@PathVariable int moimId) {
 		return service.moimMemberCount(moimId);
 	}
-
+	
+	//소모임 투표 게시글 리스트 조회
+	@GetMapping("/voteList")
+	public List<MoimVoteListVO> moimVoteList(@RequestParam ("moimId") int moimId){
+		return service.moimVoteAllList(moimId);
+	}
+	
+	//소모임 투표 아이템 리스트 조회
+	@GetMapping("/voteItemList")
+	public List<MoimVoteListVO> moimVoteItemList(@RequestParam ("moimId") int moimId) {
+		System.out.println(moimId);
+		return service.moimVoteItemlist(moimId);		
+	}
+	
+	@GetMapping("/voteItemSelect")
+	public List<MoimVoteListVO> moimVoteItemSelect(@RequestParam ("moimId") int moimId, @RequestParam ("memberId") String memberId) {
+		System.out.println(moimId);
+		return service.voteItemSelect(moimId, memberId);		
+	}
+	
+	//소모임 투표 결과
+	@GetMapping("/voteResult") 
+	public List<MoimVoteItemVO> votereulst(@Param("voteId")int voteId) {
+		return service.votereulst(voteId);
+	}
+	
 }
 
