@@ -5,7 +5,11 @@ import createPersistedState from "vuex-persistedstate";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    plugins : [createPersistedState()],
+    plugins: [
+        createPersistedState({
+          storage: window.sessionStorage, // store를 session storage 에 유지
+        }),
+    ],
     modules : {
         
     },
