@@ -18,6 +18,7 @@ import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
+import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
@@ -267,8 +268,8 @@ public class MoimController {
 	
 	//소모임 멤버 검색 조회(단건 조회)
 	@GetMapping("/oneMemberSearch")
-	public List<MoimVO> getMoimMemberSearch(@RequestParam ("moimId")int moimId ){
-		return service.getSearchMember(moimId);
+	public List<MoimMemberVO> getMoimMemberSearch(@RequestParam ("memberId")String memberId, @RequestParam("moimId")int moimId ){
+		return service.getSearchMember(memberId, moimId);
 	}
 	
 	// 소모임 가입 회원 수 조회하는 로직

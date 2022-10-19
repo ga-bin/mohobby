@@ -80,6 +80,7 @@ public interface MoimService {
 	public List<MoimVO> getAllMemberList(int moimId);
 
 	//소모임 멤버 검색 조회
+	public List<MoimMemberVO> getSearchMember(String memberId, int moimId);
 	public List<MoimVO> getSearchMember(int moimId);
 	
 	//소모임 투표 디테일 리스트
