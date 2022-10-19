@@ -12,4 +12,5 @@ public class ClassCurriculumVO {
     private int videoLength; //영상 길이
     private String fileUrl; //교안 파일 경로
     private String fileExtension; //파일 확장자
+    private int viewProgress;	//커리큘럼 진행율
 }
