@@ -10,8 +10,14 @@ where flag_code like 'mo%'
 </select>
 
 <!-- 신고된 소모임 정보 update -->
-<update id="updateflagMoim" parameterType="com.yedam.mohobby.service.admin.FlaggingVO">
+<update id="updateFlagMoim" parameterType="com.yedam.mohobby.service.admin.FlaggingVO">
 update flagging set admin_confirm = #{adminConfirm}, flag_result = #{flagResult}
 where flagId = #{flagId}
 </update>
+
+<!-- 신고하기(소모임, 유저 공통) -->
+<insert id="insertFlag">
+insert into flagging (flag_id, flag_from, flag_to, flag_code, flag_reason, admin_confirm, flag_result) 
+values (flag_id_seq.nextval, #{flagFrom}, #{flagTo}, #{flagCode}, #{flagReason}, 0, 0)
+</insert>
 </mapper>

@@ -1,20 +1,24 @@
 <template>
     <main>
         <AdminSidebar></AdminSidebar>
+        <div style="margin-left: 60px; width: 1000px">
+        <br>
         <h3>신고된 소모임</h3>
+        <br>
         <v-row> 
         <v-col lg="12">
             <v-data-table
                 :headers="headers"
-                :items="flags"
+                :items="moimFlagList"
                 :items-per-page="5"
                 class="elevation-1">
             <template v-slot:item.action>
-                <v-btn color="success">View</v-btn>
+                <v-btn color="success" @click="showFlaggedMoim($event)">상세보기</v-btn>
             </template>
             </v-data-table>
         </v-col>
     </v-row>
+    </div>
     </main>
 </template>
 <script>
@@ -31,111 +35,64 @@ export default {
             sortable: false,
             value: 'flag_id',
           },
-          { text: '신고자', value: 'flag_from' },
-          { text: '신고소모임', value: 'flag_to' },
-          { text: '신고코드', value: 'flag_code' },
-          { text: '신고이유', value: 'flag_reason' },
+          { text: '신고자', value: 'flagFrom' },
+          { text: '신고소모임', value: 'flagTo' },
+          { text: '신고코드', value: 'flagCode' },
+          { text: '신고이유', value: 'flagReason' },
           { text: '상세보기', value: 'action' },
-          { text: '관리자 승인여부', value: 'admin_confirm' },
-          { text: '신고결과', value: 'flag_result' },
+          { text: '관리자 승인여부', value: 'adminConfirm' },
+          { text: '신고결과', value: 'flagResult' },
         ],
-        flags: [
-          {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '부적절한 게시물의 업로드가 잦습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-            {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '부적절한 게시물의 업로드가 잦습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-             {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '부적절한 게시물의 업로드가 잦습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-             {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '부적절한 게시물의 업로드가 잦습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-            {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '부적절한 게시물의 업로드가 잦습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-            iron: '0%',
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-            iron: '2%',
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-            iron: '45%',
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-            iron: '22%',
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-            iron: '6%',
-          },
-        ],
+        moimFlagList : [],
     }
 },
     beforeCreate() {},
-    created() {},
+    created() {
+      this.getFlagedMoim();
+    },
     beforeMount() {},
     mounted() {},
     beforeUpdate() {},
     updated() {},
     beforeUnmount() {},
     unmounted() {},
-    methods: {}
+    methods: {
+      getFlagedMoim() {
+        const vm = this;
+          this.axios({
+            url: "http://localhost:8088/java/adminflagmoim",
+            method: "get",
+          })
+            .then(function (response) {
+              console.log(response);
+              for (let i = 0; i < response.data.length; i++) {
+                if(response.data[i].adminConfirm == 0) {
+                  response.data[i].adminConfirm = "미승인";
+                } else if(response.data[i].adminConfirm == 1){
+                  response.data[i].adminConfirm = "승인";
+                }
+                if(response.data[i].flagResult == 0) {
+                  response.data[i].flagResult = "통과";
+                } else if(response.data[i].flagResult == 1) {
+                  response.data[i].flagResult = "패널티";
+                }
+              }
+              vm.moimFlagList = response.data;
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+      },
+      showFlaggedMoim(event) {
+        // console.log(this.items[idx].flagTo);
+        // console.log(this.items[idx].flagTo);
+        // console.log(this.items[idx].flagTo);
+        // console.log(this.items[idx].flagTo);
+      //   this.$router.push({
+      //   name: "moimBoard",
+      //   params: { moimId: this.items[idx].flagTo, boardType: 1 },
+      // });
+      }
+    }
 }
 </script>
