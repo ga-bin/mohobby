@@ -14,7 +14,7 @@
 
                     <!-- 멤버 검색 -->
                     <div>
-                        <v-text-field outlined label="아이디를 검색하세요!" @keydown.enter="serchMember()" append-icon="mdi-magnify"></v-text-field>
+                        <v-text-field outlined label="아이디를 검색하세요!" v-model="memberId" id="searchBar" @keydown.enter="serchMember()" append-icon="mdi-magnify"></v-text-field>
                     </div>
                     <v-row>
                         <v-col cols="12" sm="6" md="2">
@@ -27,25 +27,39 @@
                         </v-col>
                         <v-col cols="12" sm="6" md="6" class="mt-5">
                             <v-spacer></v-spacer>
-                            <div class="select"><v-icon size="36" color="grey">mdi-check-circle</v-icon></div>
+                            <div class="select">
+                                <v-checkbox
+                                color="primary"
+                                value="members"
+                                hide-details
+                                ></v-checkbox>
+                            </div>
                         </v-col>
                     </v-row>
                     <hr class="mt-5 mb-5">
-                    <v-row>
-                    <v-col cols="12" sm="6" md="2">
+                    <!-- 멤버 전체 조회 -->
+                    <h4 v-if="members.length==0">일치하는 결과가 없습니다.</h4>
+                    <v-row  v-for="(member, idx) in members">
+                        <v-col cols="12" sm="6" md="2">
                             <v-avatar class="mb-4" color="grey darken-1" size="64">
                                 <v-img aspect-ratio="30" :src=src></v-img>
                             </v-avatar>
                         </v-col>
-
-                        <!-- 멤버 전체 조회 -->
                         <v-col cols="12" sm="6" md="4" class="mt-5" id="check">
-                            <div v-if="members !== null" v-for="member in members">{{member.memberId}}</div>
-                            <div v-if="search !== null" v-for="members in search">{{members.memberId}}</div>
+                            <div>{{member.memberId}}</div>
                         </v-col>
+                        
                         <v-col cols="12" sm="6" md="6" class="mt-5">
                             <v-spacer></v-spacer>
-                            <div class="select"><v-icon size="36" color="green">mdi-check-circle</v-icon></div>
+                            <div class="select">
+                                <v-checkbox
+                                    v-model="selectmembers"
+                                    color="light-green"
+                                    :value="member.memberId"
+                                    hide-details
+                                    @change="check($event)"
+                                    ></v-checkbox>
+                            </div>
                         </v-col>
                     </v-row>
 
@@ -67,13 +81,17 @@ export default {
     data() {
         return {
             members : [],
-            search : [],
+            selectmembers : [],
             moimId : this.$route.params.moimId, 
+            memberId : '',
             dialog: false,
             src: "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg"
         }
     },
     methods:{
+        check(e){
+            console.log(e)
+        },
         selectMember() {
             this.axios.get("/moimMemberList", {
                 params : {
@@ -82,42 +100,47 @@ export default {
             })
             .then((resp)=> {
                 console.log(resp)
-                this.items = resp.data;
+                this.members = resp.data;
             })
             .catch((err) => {
                 console.log(err)
             })
-            },
+        },
         serchMember(){
+            console.log("멤버아이디 : "+this.memberId)
             this.axios.get("/oneMemberSearch", {
                 params : {
+                    memberId : this.memberId,
                     moimId : this.moimId
                 }
             }).then((resp)=> {
-                console.log(this.search)
+                console.log(this.memsbers)
                 console.log(resp)
-                this.search = resp.data;
-                if(resp.data[0] == null) {
-                    document.querySelector("#check").style.display  = "block"
-                    document.querySelector("#check").innerText = "일치하는 검색결과가 없습니다.";
-                    this.items = resp.data;
-                } else {
-                    document.querySelector("#check").style.display  = "none"
-                    document.querySelector("#check").innerText = "";
-                }
-
+                this.members = resp.data;
+                document.querySelector("#searchBar").value = ''
             }).catch((err)=>{
                 console.log(err)
             })
         },
         insertMember(){
-
+            this.axios.post("/",{
+                data : {
+                    
+                }
+            })
         }
     },
+    created(){
+        this.selectMember()
+    }
 }
 </script>
 <style scoped>
 .select {
     float : right
+}
+
+h4 {
+ text-align: center;
 }
 </style>

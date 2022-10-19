@@ -15,4 +15,7 @@ public class MoimVoteListVO {
 	private Date endDate; //종료일
 	private String topic; //투표주제
 	private int moimId; // 소모임 아이디
+	private int commentCnt; //댓글수
+	private String voteUser; //투표자
+	private int itemSelect; //아이템 선택	
 }

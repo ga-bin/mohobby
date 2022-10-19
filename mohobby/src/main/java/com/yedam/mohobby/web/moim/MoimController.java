@@ -2,6 +2,7 @@ package com.yedam.mohobby.web.moim;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +20,7 @@ import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
+import com.yedam.mohobby.service.moim.MoimVoteItemVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
 import com.yedam.mohobby.service.user.MemberVO;
 
@@ -269,22 +271,36 @@ public class MoimController {
 		return service.getSearchMember(moimId);
 	}
 	
-//	@DeleteMapping("/boardDeleteComm")
-//	public String deleteMoimBaordComment(@RequestParam ("commId") int commId) {
-//		try {
-//			service.moimCommentDelete(commId);
-//			return "success";
-//		} catch (Exception e) {
-//			System.out.println("댓글 삭제 실패 : " + e.getMessage());
-//			return "fail";
-//		}
-//	}
-	
 	// 소모임 가입 회원 수 조회하는 로직
 	@GetMapping("/moimMemberCount/{moimId}")
 	public int moimMemberCount(@PathVariable int moimId) {
 		return service.moimMemberCount(moimId);
 	}
-
+	
+	//소모임 투표 게시글 리스트 조회
+	@GetMapping("/voteList")
+	public List<MoimVoteListVO> moimVoteList(@RequestParam ("moimId") int moimId){
+		return service.moimVoteAllList(moimId);
+	}
+	
+	//소모임 투표 아이템 리스트 조회
+	@GetMapping("/voteItemList")
+	public List<MoimVoteListVO> moimVoteItemList(@RequestParam ("moimId") int moimId) {
+		System.out.println(moimId);
+		return service.moimVoteItemlist(moimId);		
+	}
+	
+	@GetMapping("/voteItemSelect")
+	public List<MoimVoteListVO> moimVoteItemSelect(@RequestParam ("moimId") int moimId, @RequestParam ("memberId") String memberId) {
+		System.out.println(moimId);
+		return service.voteItemSelect(moimId, memberId);		
+	}
+	
+	//소모임 투표 결과
+	@GetMapping("/voteResult") 
+	public List<MoimVoteItemVO> votereulst(@Param("voteId")int voteId) {
+		return service.votereulst(voteId);
+	}
+	
 }
 
