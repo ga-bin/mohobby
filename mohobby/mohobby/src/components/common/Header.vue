@@ -231,8 +231,7 @@ export default {
                 }
               }
             }
-        });
-          console.log("소켓 연결 성공", frame);
+          );
         },
         (error) => {
           console.log("소켓 연결 실패", error);
@@ -265,7 +264,7 @@ export default {
           console.log(err);
         });
       if (item.noticeType == 0) {
-        this.$router.push("/snsFeedDetail?postId=" + item.postId);
+        this.$router.push("/snsFeedDetail?id=" + item.postId);
       } else if (item.boardType == 1) {
         this.$router.push(
           "/moimDetail/" +
