@@ -48,9 +48,14 @@ const routes = [
     component: () => import("./../views/user/LoginView"),
   },
   {
-    path: "/flagging",
-    name: "login",
-    component: () => import("./../components/user/FlaggingModal"),
+    path: "/moimFlagging",
+    name: "moimFlagging",
+    component: () => import("./../components/user/moimFlaggingModal"),
+  },
+  {
+    path: "/userFlagging",
+    name: "userFlagging",
+    component: () => import("./../components/user/userFlaggingModal"),
   },
   {
     path: "/register",

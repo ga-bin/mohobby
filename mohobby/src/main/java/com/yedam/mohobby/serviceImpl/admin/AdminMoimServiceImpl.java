@@ -15,13 +15,15 @@ public class AdminMoimServiceImpl implements AdminMoimService {
 	@Autowired
 	AdminMoimMapper mapper;
 
+	// 신고된 소모임 목록 
 	@Override
 	public List<FlaggingVO> flagMoimList() {
 		return mapper.flagMoimList();
 	}
 
 	@Override
-	public void updateflagMoim(FlaggingVO flaggingVO) {
-		mapper.updateflagMoim(flaggingVO);
+	public void updateFlagMoim(FlaggingVO flaggingVO) {
+		mapper.updateFlagMoim(flaggingVO);
 	}
+
 }

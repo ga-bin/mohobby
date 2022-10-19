@@ -13,5 +13,6 @@ public interface AdminMoimMapper {
 	public List<FlaggingVO> flagMoimList();
 	
 	// 신고된 소모임 정보 update
-	public void updateflagMoim(FlaggingVO flaggingVO);
+	public void updateFlagMoim(FlaggingVO flaggingVO);
+	
 }

@@ -3,6 +3,7 @@ package com.yedam.mohobby.web.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,6 +19,7 @@ import com.yedam.mohobby.service.admin.FlaggingVO;
  * @title 관리자 user
  */
 @RestController
+@CrossOrigin(origins = "*")
 public class AdminUserController {
 
 	@Autowired
