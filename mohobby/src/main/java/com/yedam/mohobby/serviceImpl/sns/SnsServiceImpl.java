@@ -220,6 +220,14 @@ public class SnsServiceImpl implements SnsService{
    public List<SnsFollowVO> getFollowerList(String followingId) {
       return mapper.getFollowerList(followingId);
    }
+   //필로우 상태 조회
+   @Override
+   public int followCheck(String myId, String targetId) {
+       return mapper.followCheck(myId, targetId);
+   }
+   
+   
+   
    //유저전체
    @Override
    public List<MemberVO> getUsers() {
@@ -246,6 +254,7 @@ public class SnsServiceImpl implements SnsService{
         return mapper.selectHashtagForMain();
     }
    
+    
     /*
      * 좋아요
      */
@@ -363,4 +372,5 @@ public class SnsServiceImpl implements SnsService{
     public int deleteHistory(int searchId) {
         return mapper.deleteHistory(searchId);
     }
+
 }

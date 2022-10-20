@@ -68,17 +68,9 @@ public class SnsController {
     }
    //피드 삭제 - 테스트완료
     @DeleteMapping("/myfeed/{postId}")
-    public String deleteFeed(@PathVariable("postId") int postId){
-        try {
+    public int deleteFeed(@PathVariable("postId") int postId){
             //file.delete로 파일 삭제할 수 있음 **********찾아볼 것
-            service.deleteFeed(postId);
-            System.out.println("글 삭제 완료");
-            return "success";
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("글 삭제 실패");
-            return "fail";
-        }
+          return service.deleteFeed(postId);
     }
    //인기강사피드조회 - 테스트완료
     //more기능 rownum가져오기(넘길 파라미너 : 마지막 번호)
@@ -185,6 +177,12 @@ public class SnsController {
     @GetMapping("/follow/search/following/{followerId}")
     public List<SnsFollowVO> getFollowingList(@PathVariable String followerId){
         return service.getFollowingList(followerId);
+    }
+    
+   //followCheck
+    @GetMapping("/follow/check")
+    public int followCheck(@RequestParam String myId, @RequestParam String targetId) {
+        return service.followCheck(myId, targetId);
     }
     
    //팔로워 조회 - 테스트완료

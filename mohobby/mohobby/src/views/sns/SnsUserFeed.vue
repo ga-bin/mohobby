@@ -13,9 +13,8 @@
           <!-- 내 게시물 정보(닉네임, 개시물, 팔로워, 팔로잉 개수) -->
           <div class="profile-user-settings">
             <h1 class="profile-user-name">{{ infoes.memberId }}</h1>
-            <button class="btn profile-settings-btn" aria-label="profile settings"><v-icon>mdi-check-decagram</v-icon><i class="fas fa-cog" aria-hidden="true"></i></button>
-          </div>
-  
+            <button class="btn profile-settings-btn" aria-label="profile settings"><v-icon color="blue">mdi-check-decagram</v-icon><i class="fas fa-cog" aria-hidden="true"></i></button>
+          </div>  
           <div class="profile-stats">
             <ul>
               <li><span class="profile-real-name">{{ infoes.nickname }}</span></li>
@@ -23,10 +22,10 @@
             <ul>
               <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
               <li>
-                <FollowModal :text="followertext" :dataList="follower"></FollowModal>
+                <FollowModal :text="followingtext" :dataList="following"></FollowModal>
               </li>
               <li>
-                <FollowModal :text="followingtext" :dataList="following"></FollowModal>
+                <FollowModal :text="followertext" :dataList="follower"></FollowModal>
               </li>
             </ul>
             <!-- 내 게시물 정보 끝 -->
@@ -65,8 +64,8 @@
             // userId: this.$store.state.id, //임시(로그인유저프로필)
             follower : [],
             following : [],
-            followertext : "follower",
-            followingtext : "following",
+            followertext : "following",
+            followingtext : "follower",
         }
     },
     setup() {},
@@ -99,7 +98,7 @@
 
         /*
         * Kim ga bin
-        * MyPage
+        * MyPage followingList 확인하기
         */
         // 팔로잉 목록 불러오기
         getFollowing(userId) {

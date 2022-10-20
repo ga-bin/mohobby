@@ -64,6 +64,8 @@ public interface SnsService {
     public List<SnsFollowVO> getFollowingList(String followerId);
     //팔로워 조회
     public List<SnsFollowVO> getFollowerList(String followingId);
+    //필로우 상태 조회
+    public int followCheck(String myId, String targetId);
     
     //유저전체
     public List<MemberVO> getUsers();

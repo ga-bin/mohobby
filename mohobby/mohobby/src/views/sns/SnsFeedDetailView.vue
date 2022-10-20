@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <!-- 썸네일 -->
+        <!-- 이미지 -->
         <v-row>
           <v-col cols="12" id="image_box">
             <v-carousel ref="myCarousel" hide-delimiters :touchless="true">
@@ -31,10 +31,7 @@
                 :key="i"
                 :aspect-ratio="4 / 3"
                 :width="width"
-                :src="
-                  require(`@/assets/image/sns/${img.postId}/${img.fileName}`)
-                "
-              />
+                :src="require(`@/assets/image/sns/${img.postId}/${img.fileName}`)"/>
             </v-carousel>
           </v-col>
         </v-row>
@@ -42,34 +39,27 @@
         <!-- 좋아요, 댓글, 메세지 -->
         <v-row>
           <v-col cols="4">
-            <div class="d-flex justify-start">
-              <v-btn
-                v-if="items.likeStatus === 1"
-                icon
-                text
-                @click="like(memberId, items.postId)"
-              >
+            <div class="d-flex justify-start ma-2">
+              <v-btn class="mr-2" v-if="items.likeStatus === 1" icon text @click="like(memberId, items.postId)">
                 <v-icon color="red lighten-2">mdi-heart</v-icon>
               </v-btn>
               <v-btn v-else icon text @click="like(memberId, items.postId)">
-                <v-icon>mdi-heart-outline</v-icon></v-btn
-              >{{ items.likes }} <v-icon>mdi-chat-outline</v-icon
-              >{{ items.cmts }}
-              <v-icon
-                v-if="this.$store.state.id != items.memberId"
-                @click="send"
-                >mdi-send</v-icon
-              >
+                <v-icon>mdi-heart-outline</v-icon>
+              </v-btn>
+              <span class="mr-2 mt-1">{{ items.likes }}</span>
+              <v-icon class="mr-2">mdi-chat-outline</v-icon>
+              <span class="mr-2 mt-1">{{ items.cmts }}</span>
+              <v-icon v-if="this.$store.state.id != items.memberId" @click="send" color="#2ac187">mdi-send</v-icon>
             </div>
           </v-col>
           <v-col cols="8">
             <!-- 북마크아이콘 -->
-            <div class="d-flex justify-end">
-              <v-btn v-if="mark" @click="dialog2 = true" icon class="ma-2" dark>
-                <v-icon color="grey">mdi-bookmark-outline</v-icon>
+            <div class="d-flex justify-end ma-2">
+              <v-btn v-if="mark === 1" @click="bookmarkDel(items.postId, memberId)" icon>
+                <v-icon color="#2ac187">mdi-bookmark</v-icon>
               </v-btn>
-              <v-btn icon v-else @click="bookmarkDel(items.postId)">
-                <v-icon color="grey">mdi-bookmark</v-icon>
+              <v-btn v-else @click="markLogin(memberId)" icon>
+                <v-icon color="#2ac187">mdi-bookmark-outline</v-icon>
               </v-btn>
               <!-- 북마크아이콘 끝 -->
 
@@ -86,10 +76,7 @@
                 </template>
                 <v-list>
                   <v-list-item v-for="(list, i) in lists" :key="i">
-                    <v-list-item-title
-                      style="cursor: pointer"
-                      @click="listBtn(i)"
-                    >
+                    <v-list-item-title style="cursor: pointer" @click="listBtn(i)">
                       {{ list.title }}
                     </v-list-item-title>
                   </v-list-item>
@@ -115,21 +102,10 @@
               <!-- 컬렉션 선택 select_box -->
               <v-select
                 @click="getCollectionList(memberId)"
-                :items="select"
-                item-text="catgName"
-                item-value="catgId"
-                label="저장할 컬렉션을 선택하세요"
-                v-model="selectedCollection"
-              />
+                :items="select" item-text="catgName" item-value="catgId" label="저장할 컬렉션을 선택하세요" v-model="selectedCollection" />
             </v-card-text>
             <v-row class="ma-4 justify-space-around">
-              <v-btn
-                color="white"
-                dense
-                rounded
-                dark
-                @click="dialog3 = !dialog3"
-              >
+              <v-btn color="white" dense rounded dark @click="dialog3 = !dialog3">
                 <v-icon color="#2ac187">mdi-plus</v-icon>
               </v-btn>
             </v-row>
@@ -138,7 +114,7 @@
               <v-row class="ma-4 justify-space-around">
                 <v-btn
                   text
-                  @click="bookmark(selectedCollection, memberId, items.postId)"
+                  @click="bookmark(selectedCollection, items.postId)"
                 >
                   저장
                 </v-btn>
@@ -158,11 +134,7 @@
               <v-container>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field
-                      v-model="catgName"
-                      label="*컬렉션이름을 입력해주세요!"
-                      required
-                    />
+                    <v-text-field v-model="catgName" label="*컬렉션이름을 입력해주세요!" required />
                     <!-- @change="inputE()" -->
                   </v-col>
                 </v-row>
@@ -170,11 +142,7 @@
             </v-card-text>
             <v-card-actions class="mx-auto">
               <v-row class="ma-4 justify-space-around">
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="createCollection(memberId)"
-                >
+                <v-btn color="blue darken-1" text @click="createCollection(memberId)">
                   저장
                 </v-btn>
                 <v-btn color="primary" text @click="dialog3 = false">
@@ -203,16 +171,10 @@
           해시태그
 
          -->
-        <v-chip-group id="hashtagGroup">
+        <v-chip-group id="hashtagGroup" class="ml-8">
           <v-chip
-            v-for="hashtag in hashtags"
-            :key="hashtag"
-            :color="`${colors[nonce - 1]} lighten-3`"
-            @click="search($event)"
-            dark
-            label
-            small
-          >
+            v-for="hashtag in hashtags" :key="hashtag" :color="`${colors[nonce - 1]} lighten-3`"
+            @click="search($event)" dark label small>
             #{{ hashtag }}
           </v-chip>
         </v-chip-group>
@@ -267,7 +229,7 @@ export default {
       //북마크
       catgName: "", //카테고리이름
       thumbnail: "", //썸네일
-      mark: "", //북마크 아이콘
+      mark: 0, //북마크 아이콘
       dialog: false, //
       dialog2: false,
       dialog3: false,
@@ -280,27 +242,33 @@ export default {
     };
   },
   setup() {},
+
   created() {
-    this.showDetail(this.postId, this.writer);
-    this.detailImg(this.postId);
-    this.getCollectionList(this.memberId);
-    console.log(this.writer); //값 못받아옴
+    this.showDetail(this.postId, this.writer); //게시글 상세 로드
+    this.detailImg(this.postId); //게시글 이미지 로드
+    console.log(this.writer);
     console.log(this.memberId);
     console.log(this.postId);
   },
-  mounted() {},
-  unmounted() {},
+
   methods: {
-    detailImg(postId) {
-      this.axios("/sns/user/feed_detail_img/" + postId)
-        .then((res) => {
-          this.imgs = res.data;
-          console.log("이미지 로딩 성공!");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+
+  confirmMember(memberId){  
+    if(memberId){
+      console.log("true");
+      return true;
+    }
+    else{
+      console.log("false");
+      return false;
+    }
+},
+
+/*
+    
+    게시글
+
+*/
     //게시글 상세 로드
     showDetail(postId, writer) {
       this.axios("/sns/user/feed_detail/" + postId, {
@@ -309,9 +277,14 @@ export default {
         },
       })
         .then((res) => {
-          this.getBookmarkStatus(postId);
+          if(this.confirmMember(this.memberId) == true ){
+            console.log("로그인세션을 확인합니다");
+            this.getBookmarkStatus(postId);
+            this.getCollectionList(this.memberId);
+          }
           console.log();
           this.items = res.data;
+          console.log(this.items.likeStatus);
           if (this.items.hashtag != null) {
             let str = this.items.hashtag; //%%,%%,%% 형태
             let hashtag = str.split(","); //해시태그 자르기
@@ -323,21 +296,62 @@ export default {
           alert("게시글호출 실패" + err);
         });
     },
-    //북마크상태조회
-    getBookmarkStatus(postId) {
-      this.axios("sns/collection/bookmark/isBookmark/" + postId, {
-        params: {
-          memberId: this.memberId,
-        },
-      })
+
+
+    //게시글 이미지 로드
+    detailImg(postId) {
+      this.axios("/sns/user/feed_detail_img/" + postId)
         .then((res) => {
-          console.log("북마크상태 조회 성공!");
-          this.mark = res.data;
+          this.imgs = res.data;
+          console.log("이미지 로딩 성공!");
         })
         .catch((err) => {
-          alert("게시글호출 실패" + err);
+          console.log(err);
         });
     },
+
+
+    //게시글 수정*******************************
+
+
+    //게시글 삭제 검증
+    feedSwal(postId) {
+      this.$swal({
+        title: "정말 삭제할까요?",
+        text: "삭제된 게시글은 복구가 불가합니다🙏",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2ac187",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "취소",
+        confirmButtonText: "네, 삭제할게요!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.deletePost(postId);
+          this.$swal("삭제 완료!", "게시글이 삭제되었습니다.", "success");
+        }
+      });
+    },
+
+
+    //게시글 삭제
+    deletePost(postId) {
+      this.axios
+        .delete("/sns/myfeed/" + postId)
+        .then((res) => {
+          console.log("댓글 삭제 성공! " + res);
+          this.goMyFeed(this.items.memberId);
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    },
+
+
+    //게시글 공유
+    sharePost() {},
+
+
     //DOT LIST
     listBtn(i) {
       if (i == 0) {
@@ -356,40 +370,8 @@ export default {
         this.sharePost();
       }
     },
-    //게시글 수정*******************************
 
-    //게시글 삭제
-    deletePost(postId) {
-      this.axios
-        .delete("/sns/myfeed/" + postId)
-        .then((res) => {
-          console.log("댓글 삭제 성공! " + res);
-          this.goMyFeed(this.items.memberId);
-        })
-        .catch((err) => {
-          alert(err);
-        });
-    },
-    //게시글 공유
-    sharePost() {},
-    //게시글 삭제
-    feedSwal(postId) {
-      this.$swal({
-        title: "정말 삭제할까요?",
-        text: "삭제된 게시글은 복구가 불가합니다🙏",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#2ac187",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "취소",
-        confirmButtonText: "네, 삭제할게요!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.deletePost(postId);
-          this.$swal("삭제 완료!", "게시글이 삭제되었습니다.", "success");
-        }
-      });
-    },
+    
     //해시태그 클릭 검색
     search(e) {
       let getHashtag = e.target.innerText; //선택한 해시태그
@@ -410,6 +392,7 @@ export default {
         });
     },
 
+
     //검색페이지 이동
     goSearch(feeds, show) {
       console.log("main->searchPage실행" + feeds);
@@ -418,6 +401,7 @@ export default {
         params: { hashtagResult: feeds, showing: show },
       });
     },
+
 
     //채팅방 이동
     send() {
@@ -459,14 +443,13 @@ export default {
           console.log(res);
         }
       );
-
-      //멤버검증
+      //좋아요 유저검증
       if (memberId === null || memberId === "") {
         //유저일때만 좋아요가 가능하도록
         this.$swal("로그인부터 부탁드립니다🙏");
         return;
       } else {
-        //DB Jjim insert
+        //상태값에따라 좋아요 or 취소처리
         this.axios
           .post("/sns/like", {
             targetId: postId,
@@ -488,53 +471,111 @@ export default {
           .catch((err) => {
             console.log(err);
           });
+       }
+    },
+
+
+    /*
+
+      북마크
+    
+      */
+
+
+    //북마크 전 로그인검증
+    markLogin(memberId){
+      if(this.confirmMember(memberId) == true){
+        this.dialog2 = true
+      }else{
+        this.loginConfirm();
       }
     },
+    
+
+    loginConfirm(){
+      this.$swal({
+        title: "로그인부터 부탁드립니다🙏",
+        text: "로그인화면으로 이동할까요?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2ac187",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "취소",
+        confirmButtonText: "네, 이동할래요!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$router.push({ path: "login" });
+        }
+      });
+    },
+
+    //북마크상태조회
+    getBookmarkStatus(postId) {
+      this.axios("sns/collection/bookmark/isBookmark/" + postId, {
+        params: {
+          memberId: this.memberId,
+        },
+      })
+        .then((res) => {
+          console.log("북마크상태 조회 성공!");
+          console.log("북마크상태: "+res.data);
+          this.mark = res.data; //변수에 0(북마크X), 1(북마크O)이 담김
+          console.log("북마크 상태"+this.mark);
+          
+        })
+        .catch((err) => {
+          alert("게시글호출 실패" + err);
+        });
+    },
+
+
     //북마크
-    bookmark(selectedCollection, memberId, postId) {
-      if (memberId === null || memberId === "") {
-        this.$swal("로그인부터 부탁드립니다🙏");
-        return;
-      } else {
-        //카테고리 아이디 선택한값 받아오기
+    bookmark(selectedCollection, postId) {
         this.axios
           .post("/sns/collection/bookmark", {
             catgId: selectedCollection,
             postId: postId,
+            thumbnail: this.items.thumbnail,
           })
           .then((res) => {
-            this.mark = !this.mark;
-            this.dialog2 = !this.dialog2;
+            this.getBookmarkStatus(postId);
+            this.dialog2 = false;
             console.log("북마크 성공!");
           })
           .catch((err) => {
             console.log(err);
           });
-      }
     },
-    //북마크 삭제
-    bookmarkDel(postId) {
-      this.axios
-        .delete("/sns/collection/bookmark/" + postId)
-        .then((res) => {
-          this.mark = !this.mark;
-          console.log("북마크 삭제 성공! " + res);
-        })
-        .catch((err) => {
-          alert(err);
-        });
-    },
+
+
     //컬렉션 리스트 호출
     getCollectionList(memberId) {
       this.axios("/sns/collection/" + memberId)
         .then((res) => {
           this.select = res.data;
+          console.log(this.select);
           console.log("컬렉션리스트 호출 성공!");
         })
         .catch((err) => {
           alert("컬렉션호출 실패" + err);
         });
     },
+
+
+    //북마크 삭제
+    bookmarkDel(postId, memberId) {
+      this.axios
+        .delete("/sns/collection/bookmark/" + postId + '/' + memberId)
+        .then((res) => {
+          this.getBookmarkStatus(postId);
+          console.log("북마크 삭제 성공! " + res);
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    },
+
+
     //컬렉션생성
     createCollection(memberId) {
       if (this.catgName == "" || this.catgName == undefined) {
@@ -563,6 +604,8 @@ export default {
           alert(err);
         });
     },
+
+
     //사진 넘기기
     logic(e) {
       let currentMove = this.touch ? e.touches[0].clientX : e.clientX;
@@ -586,6 +629,8 @@ export default {
         this.touch = false;
       }
     },
+
+
     //유저 피드로 이동
     goMyFeed(userId) {
       this.$router.push({ name: "snsUserFeed", query: { userId: userId } });
