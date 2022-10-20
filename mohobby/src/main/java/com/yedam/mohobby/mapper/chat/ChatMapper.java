@@ -26,11 +26,11 @@ public int updateCheckTime(ChatUserVO chatUser);
 //sns 채팅방 생성및 조회
 public void getSnsChatRoomNo(CreateRoomVO createRoom);
 //체크인
-public int updateCheckIn(int roomId);
+public int updateCheckIn(@Param("roomId") int roomId,@Param("memberId") String memberId);
 //체크아웃
-public int updateCheckOut(int roomId);
+public int updateCheckOut(@Param("roomId") int roomId,@Param("memberId") String memberId);
 //체크인아웃
-public int updateCheckInOut(@Param("preRoomId") int preRoomId,@Param("currentRoomId")int currentRoomId);
+public int updateCheckInOut(@Param("preRoomId") int preRoomId,@Param("currentRoomId")int currentRoomId,@Param("memberId") String memberId);
 //체크인 여부 조회
-public int getCheckIn(@Param("roomId")int roomId);
+public int getCheckIn(@Param("roomId")int roomId,@Param("memberId") String memberId);
 }

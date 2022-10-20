@@ -2,21 +2,24 @@
 <template>
   <div>
     <v-container fluid>
-      <v-row dense>
-        <v-col v-for="feed in feeds" :key="feed.title" :cols="2">
-          <v-card @click="goFeedDetail(feed.postId, feed.memberId)">
-            <v-img 
-             :aspect-ratio="4/3"
-             :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)"
-              class="white--text align-end"
-              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="150px"
-              width="180px"
-            >
-              <v-icon color="red">mdi-heart</v-icon>{{feed.likes}} 
-              <v-icon color="#ededed">mdi-chat-outline</v-icon>{{feed.cmts}}
+      <v-row>
+        <v-col v-for="(feed,i) in feeds" :key="i" class="d-flex child-flex" cols="3">
+          <div @click="goFeedDetail(feed.postId, feed.memberId)"> 
+            <v-img
+                   :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)"
+                  class="white--text align-end rounded-sm" aspect-ratio="1.2"
+               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)">
+              <div class="ml-6 mb-5">
+                <v-icon color="#ededed">mdi-heart</v-icon><span>{{feed.likes}}</span> 
+                <v-icon class="ml-2" color="#ededed">mdi-chat-outline</v-icon><span>{{feed.cmts}}</span>
+              </div>
+              <template v-slot:placeholder>
+                <v-row class="fill-height ma-0" align="center" justify="center">
+                  <v-progress-circular indeterminate color="grey lighten-5" />
+                </v-row>
+              </template>
             </v-img>
-          </v-card>
+          </div>
         </v-col>
       </v-row>
     </v-container>
@@ -68,9 +71,3 @@ export default {
 };
 
 </script>
-
-<style>
-  .v-container {
-    margin : 0px;
-  }
-</style>

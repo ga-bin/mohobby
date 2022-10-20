@@ -41,15 +41,27 @@ public class MessageController {
 	@MessageMapping("/send")
 	public void send(ContentVO content) {
 		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		
 		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
 		ChatListContentResVO res = new ChatListContentResVO();
-		if (cService.getCheckIn(content.getRoomNo()) == 1) {
-			res.setContent(content.getContent());
+		for (int i = 0; i < content.getMemberIds().size(); i++) {
+			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0)
+				res.setContent(content.getContent());
 			res.setRoomNo(content.getRoomNo());
 			res.setMsgTime(content.getHour());
-			for (int i = 0; i < content.getMemberIds().size(); i++) {
-				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i), content);
-			}
+			sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i), content);
 		}
 	}
 
@@ -57,17 +69,6 @@ public class MessageController {
 	public void rev(String RoomNo) {
 		sendTemplate.convertAndSend("/topic/room/" + RoomNo, RoomNo);
 	}
-
-//	@MessageMapping("/sendNotice")
-//	public void sendNotice(ChatListContentRcdVO rcd) {
-//		ChatListContentResVO res = new ChatListContentResVO();
-//		res.setContent(rcd.getContent());
-//		res.setRoomNo(rcd.getRoomNo());
-//		res.setMsgTime(rcd.getMsgTime());
-//		for (int i = 0; i < rcd.getMemberId().size(); i++) {
-//
-//			sendTemplate.convertAndSend("/queue/" + rcd.getMemberId().get(i) + "/notice", rcd);
-//		}
 
 	// 알림
 	@MessageMapping("Notice")

@@ -49,7 +49,7 @@
               <span class="mr-2 mt-1">{{ items.likes }}</span>
               <v-icon class="mr-2">mdi-chat-outline</v-icon>
               <span class="mr-2 mt-1">{{ items.cmts }}</span>
-              <v-icon v-if="this.$store.state.id != items.memberId" @click="send" color="#2ac187">mdi-send</v-icon>
+              <v-icon v-if="memberId != items.memberId&&confirmMember(this.$store.state.id)" @click="send" color="#2ac187">mdi-send</v-icon>
             </div>
           </v-col>
           <v-col cols="8">

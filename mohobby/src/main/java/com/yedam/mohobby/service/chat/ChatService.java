@@ -19,12 +19,12 @@ public int updateCheckTime(ChatUserVO chatUser);
 //sns 채팅방 생성및 조회
 public void getSnsChatRoomNo(CreateRoomVO createRoom);
 //체크인
-public int updateCheckIn(int roomId);
+public int updateCheckIn(int roomId,String memberId);
 //체크아웃
-public int updateCheckOut(int roomId);
+public int updateCheckOut(int roomId,String memberId);
 //체크인아웃
-public int updateCheckInOut(int preRoomId,int currentRoomId);
+public int updateCheckInOut(int preRoomId,int currentRoomId,String memberId);
 //체크인 여부 조회
-public int getCheckIn(int roomId);
+public int getCheckIn(int roomId, String memberId);
 }
 
