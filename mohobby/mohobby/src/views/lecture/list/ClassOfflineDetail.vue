@@ -51,10 +51,16 @@
           justify="center"
           align="center"
         >
-          <v-card-text>
+          <v-card-text v-if="(this.classInfo.classType = 0)">
             <v-icon size="90" color="#2b2b2b"> mdi-youtube </v-icon>
             <h2>
               {{ "총 " + classInfo.currTotal + "회 영상" }}
+            </h2>
+          </v-card-text>
+          <v-card-text v-if="(this.classInfo.classType = 1)">
+            <v-icon size="90" color="#2b2b2b"> mdi-timer-outline </v-icon>
+            <h2>
+              {{ "주 " + chapterCount + "  회 X  " + weeks + "주" }}
             </h2>
           </v-card-text>
         </v-card>
@@ -66,11 +72,19 @@
           justify="center"
           align="center"
         >
-          <v-card-text>
+          <v-card-text
+            v-if="
+              classInfo.startDate == undefined && classInfo.endDate == undefined
+            "
+          >
             <v-icon size="90" color="#2b2b2b"> mdi-restore </v-icon>
             <h2>
               {{ "평생 시청" }}
             </h2>
+          </v-card-text>
+          <v-card-text v-else>
+            <v-icon size="90" color="#2b2b2b"> mdi-calendar </v-icon>
+            <h2>{{ classInfo.startDate }} ~ {{ classInfo.endDate }}</h2>
           </v-card-text>
         </v-card>
         <v-divider vertical></v-divider>
@@ -151,6 +165,8 @@ export default {
         { index: 3, name: "QnA", route: "/class/" + this.classId + "/qna" },
         { index: 4, name: "후기", route: "/class/" + this.classId + "/review" },
       ],
+      weeks: "",
+      chapterCount: "",
     };
   },
   created() {
@@ -166,6 +182,10 @@ export default {
         })
         .then((res) => {
           this.classInfo = res.data;
+          console.log(res.data);
+          this.calDate();
+          this.calRound();
+          this.inputTap();
         });
     },
     clickHeart: function () {
@@ -196,16 +216,43 @@ export default {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
-          data: JSON.stringify({
-            targetId: this.classId,
-            targetType: 1,
-            memberId: this.$store.state.id,
-          }),
         }).catch((error) => {
           console.log(error);
         });
 
         this.classInfo.jjim = 0;
+      }
+    },
+    calDate() {
+      this.classInfo.startDate = this.classInfo.startDate.split(" ")[0];
+      this.classInfo.endDate = this.classInfo.endDate.split(" ")[0];
+      this.weeks = Math.round(
+        (Date.parse(this.classInfo.endDate) -
+          Date.parse(this.classInfo.startDate)) /
+          (1000 * 60 * 60 * 24 * 7)
+      );
+    },
+    calRound() {
+      this.axios("/class/chapterList?classId=" + this.classId, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      })
+        .then((res) => {
+          this.chapterCount = res.data.length / this.weeks;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    inputTap() {
+      if (this.classInfo.classType == 1) {
+        this.tabs.push({
+          index: 5,
+          name: "위치",
+          route: "/class/" + this.classId + "/location",
+        });
       }
     },
   },

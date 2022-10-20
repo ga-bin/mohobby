@@ -212,6 +212,7 @@
                       type="text"
                       label="휴대전화"
                       v-model="phoneNum"
+                      oninput="javascript: if (this.value.length > 13) this.value = this.value.slice(0, 13);"
                       @input="inputPhoneNumber()"
                       :messages="'-를 제외하고 입력해주세요'"
                     ></v-text-field>
@@ -634,6 +635,7 @@ export default {
           console.log("키워드 삭제 실패");
         });
     },
+    // 이미지 미리보기
     onImageChange(file) {
       // v-file-input 변경시
       if (!file) {
