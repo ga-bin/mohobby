@@ -22,7 +22,9 @@ export default {
   },
   setup() {},
   created() {},
-  mounted: function () {},
+  mounted: function () {
+    console.log("this is Quill instance:", this.editor);
+  },
   unmounted() {},
   methods: {},
   computed: {},
