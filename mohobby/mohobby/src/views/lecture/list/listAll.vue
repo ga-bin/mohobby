@@ -61,7 +61,7 @@
                         height="250"
                         width="365"
                         :src="require(`@/assets/image/class/thumb/${item.classId}/1.jpg`)"
-                        @click.stop="$router.push({ path: '/class/'+item.classId+'/info', }).catch(()=>{$router.go(0)})"
+                        @click.stop="goDetail(item)"
                         style="padding-top: 6px"
                     >
                 
@@ -81,7 +81,7 @@
                         style="font-size: 1.1em; padding: 5px 2px; word-break: keep-all; width: 360px "
                     >
                         <span 
-                            @click.stop="$router.push({ path: '/class/'+item.classId+'/info', }).catch(()=>{$router.go(0)})" 
+                            @click.stop="goDetail(item)" 
                             class="item-title"
                         >
                             {{ item.className }}
@@ -291,6 +291,13 @@ export default {
                 listSort.sort((a, b) => b.reviewTotal - a.reviewTotal);
             };
         },
+        goDetail: function(item) {
+            if(item.classType === 0) {
+                this.$router.push({ path: '/class/on/'+item.classId+'/info', }).catch(()=>{$router.go(0)});
+            } else if(item.classType === 1) {
+                this.$router.push({ path: '/class/off/'+item.classId+'/info', }).catch(()=>{$router.go(0)});
+            }
+        }
         
     },
     watch: {

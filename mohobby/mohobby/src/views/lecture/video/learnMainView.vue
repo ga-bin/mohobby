@@ -37,7 +37,21 @@
                   <v-list-item-content>
                     <h3 :class="child.currId == currId ? 'panel-list-item-title-2' : 'panel-list-item-title'">{{ child.partName }}</h3>
                   </v-list-item-content>
-                  <div :class="child.currId == currId ? 'panel-list-item-time-2' : 'panel-list-item-time'">{{ child.videoLength | runtime }}</div>
+                  <div 
+                    v-if="child.viewProgress < 100"
+                    :class="child.currId == currId ? 'panel-list-item-time-2' : 'panel-list-item-time'"
+                  >
+                    {{ child.videoLength | runtime }}
+                  </div>
+                  <div
+                    v-if="child.viewProgress >= 100"
+                  >
+                    <v-icon
+                      :class="child.currId == currId ? 'panel-list-item-time-2' : 'panel-list-item-time'"
+                    >
+                      mdi-check-circle
+                    </v-icon>
+                  </div>
                 </v-list-item>
               </v-list>
             </v-expansion-panel-content>
@@ -51,8 +65,11 @@
     </v-progress-linear>
     <v-bottom-navigation color="primary" horizontal class="bottom-nav">
       <v-row>
-        <div class="d-flex justify-start align-center">
-          <v-btn>
+        <div
+          v-if="currId != currList[0]"
+          class="d-flex justify-start align-center"
+        >
+          <v-btn @click.stop="$router.push({ path: '/learn/'+(Number(currId)-1), }).catch(()=>{$router.go(0)})">
             <v-icon color="white" style="margin-left: 15px;">mdi-chevron-left</v-icon>
             <span class="bottom-nav-text" style="margin-left: 20px; font-size: 1.1em;">이전학습</span>
 
@@ -78,8 +95,11 @@
           </v-tabs>
         </div>
       </v-row>
-      <div class="d-flex justify-center align-center">
-        <v-btn>
+      <div 
+        v-if="currId != currList[currList.length-1]"
+        class="d-flex justify-center align-center"
+      >
+        <v-btn @click.stop="$router.push({ path: '/learn/'+(Number(currId)+1), }).catch(()=>{$router.go(0)})">
           <span class="bottom-nav-text" style="margin-right: 20px; font-size: 1.1em;">다음학습</span>
           <v-icon color="white">mdi-chevron-right</v-icon>
         </v-btn>
@@ -188,6 +208,14 @@
               <h1>🙇</h1>
               <h1>등록된 질문이 없습니다</h1>
             </v-card>
+            <v-btn
+              outlined
+              color="#2b2b2b"
+              @click="clickWriteBtn"
+
+            >
+              질문 작성하기
+            </v-btn>
           </div>
         </v-tab-item>
         <v-tab-item key="3">
@@ -221,11 +249,7 @@
                       #{{ rv.title | runtime }}
                     </v-chip>
                     <v-col cols="11">
-                      <div style="font-size: 1.3em; 
-                                  color: #2b2b2b; 
-                                  padding-top: 14px; 
-                                  word-break: keep-all;
-                                  max-width: 1190px;"
+                      <div style="font-size: 1.3em; color: #2b2b2b; padding-top: 14px; word-break: keep-all; max-width: 1190px;"
                       >
                         {{ rv.content }}
                       </div>
@@ -283,9 +307,10 @@ export default {
       ],
       tab: '2',
       currInfo: {},
+      originProgress: '',
       questList: [],
-      panel: [],
-      items: [],
+      panel: '',
+      items: [],    //전체 커리큘럼
       drawer: false,
       option: {
         url: require('@/assets/video/class/curriculum/1.mp4'),
@@ -349,7 +374,7 @@ export default {
         margin: "0 auto",
         padding: "3% 0",
       },
-      knowledge: 82.65,
+      knowledge: '',
       sheet: false,
       newContent: '',
       form: {
@@ -362,6 +387,7 @@ export default {
       updateObj: {},
       progressInfo: {},
       chapName: '',
+      currList: [],
       // progressList: '',
     };
   },
@@ -373,13 +399,25 @@ export default {
       this.$router.push({ path: '/learn/'+item.currId, }).catch(()=>{$router.go(0)});
     },
     getCurrInfo() {
-      this.axios('/class/learn/'+this.currId)
+      this.axios('/class/learn/'+this.currId, {
+        params: {
+          memberId: this.$store.state.id,
+        }
+      })
       .then( res => {
         if(res.status == 200) {
           this.currInfo = res.data;
+          this.getOriginProgress();
           this.getChapList();
         }
       })
+    },
+    getOriginProgress() {
+      let total = this.currInfo.videoLength;
+      let prog = this.currInfo.viewProgress;
+
+      this.originProgress = total * (prog / 100);
+      console.log(this.originProgress);
     },
     getProgressInfo() {
       this.axios('/class/learn/progress/'+this.currId, {
@@ -389,6 +427,7 @@ export default {
       }).then(res => {
         if(res.status == 200) {
           this.progressInfo = res.data;
+          this.knowledge = res.data.totalViewProgress;
         }
       })
     },
@@ -617,26 +656,68 @@ export default {
           for(let i=0; i<this.items.length; i++) {
             for(let j=0; j<this.items[i].currList.length; j++) {
               if(this.items[i].currList[j].currId == this.currId) {
-                this.panel.push(i);
+                this.panel = i;
                 this.chapName = this.items[i].chapName;
               }
+              this.currList.push(this.items[i].currList[j].currId);
             }
-          }
+          };
         }
       })
     },
-    // getProgressList() {
-    //   this.axios('/class/learn/progress', {
-    //     params: {
-    //       classId: this.classId,
-    //       memberId: this.$store.state.id,
-    //     }
-    //   }).then(res => {
-    //     if(res.status == 200) {
-    //       this.progressList = res.data;
-    //     }
-    //   })
-    // }
+    timeUpdate(event) {
+      let length = this.currInfo.videoLength;
+      let time = Math.ceil(document.querySelector(".art-video").currentTime);
+      let origin = length * (this.currInfo.viewProgress/100);
+      let currLength = this.currList.length;
+      
+      if(time > origin) {
+        let diff = time - origin;
+        let diffPercent = diff / length * 100;
+        let totaldiffPercent = diffPercent / currLength;
+        this.knowledge = this.progressInfo.totalViewProgress + totaldiffPercent;
+      } else {
+        this.knowledge = this.progressInfo.totalViewProgress;
+      }
+    },
+    async onEnded(currentCurrId) {
+      let length = this.currInfo.videoLength;
+      let time = Math.round(document.querySelector(".art-video").currentTime);
+      let origin = length * (this.currInfo.viewProgress/100);
+
+
+      if(time > origin) {
+        //시청시간기록
+        let submit = Math.round(time / length * 100);
+
+        if(submit >= 100) {
+          submit = 100;
+        }
+
+        //axios
+        let res = await this.axios.put('/class/learn/update', {
+          memberId: this.$store.state.id,
+          currId: currentCurrId,
+          viewProgress: submit,
+        })
+
+
+        // .then(res => {
+          if(res.status == 200) {
+            //성공
+            for(let item in this.items) {
+              for(let child in item.currList) {
+                if(child.currId == this.currId) {
+                  child.viewProgress = submit;
+                }
+              } 
+            }
+          }
+        // }).catch(err => {
+        //   console.log(err);
+        // })
+      }
+    },
   },
   watch: {
     sheet: function() {
@@ -654,10 +735,10 @@ export default {
       }
     },
     $route: function(to, from, next) {
-      if(to.path != from.path) {
-        this.$router.go(0);
-      }
-    }
+      let fromId = from.path.split('/')[2];
+      this.onEnded(fromId);
+      this.$router.go(0);
+    },
   },
   created() {
     this.getCurrInfo();
@@ -666,11 +747,13 @@ export default {
     this.getProgressInfo();
   },
   beforeRouteLeave(to, from, next) {
-    //시간 기록하기
-
-
+    this.onEnded(from.path.split('/')[2]);
     next();
-  }
+  },
+  mounted () {
+    document.querySelector(".art-video").addEventListener('timeupdate', this.timeUpdate);
+    document.querySelector(".art-video").addEventListener('ended', this.onEnded(this.currId));
+  },
 };
 </script>
 <style>
