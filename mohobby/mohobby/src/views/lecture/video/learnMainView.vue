@@ -151,7 +151,7 @@
                     >
                       #{{ rv.title | runtime }}
                     </v-chip>
-                    <v-col>
+                    <v-col cols="11">
                       <span 
                         class="nickname"
                         @click="$router.push({ path: '/snsUserFeed?memId='+rv.memberId}).catch(()=>{$router.go(0)})"
@@ -159,16 +159,23 @@
                         {{ rv.nickname }}
                       </span>
                       <span style="font-size: 1em; color: gray; padding-left: 7px;">{{ replaceDate(rv.writeDate) }}</span>
-                      <div style="font-size: 1.3em; color: #2b2b2b; padding-top: 14px">{{ rv.content }}</div>
+                      <div style="font-size: 1.3em; 
+                                  color: #2b2b2b; 
+                                  padding-top: 14px; 
+                                  word-break: keep-all;"
+                      >
+                        {{ rv.content }}
+                      </div>
                     </v-col>
-                    <!-- 수정 / 삭제 -->
-                    <div style="padding: 20px 17px 0px 0px;">
-                      <v-row v-if="rv.memberId == $store.state.id">
-                        <div class="modBtn" @click="clickUpdateBtn(i)">수정</div>
-                        <div class="delBtn" @click="clickDelete(i)">삭제</div>
-                      </v-row>
-                    </div>
                   </v-row>
+                  <!-- 수정 / 삭제 -->
+                  <div style="padding-top: 20px;" >
+                    <v-row v-if="rv.memberId == $store.state.id" class="d-flex justify-end">
+                      <div class="modBtn" @click="clickUpdateBtn(i)">수정</div>
+                      <div class="delBtn" @click="clickDelete(i)">삭제</div>
+                    </v-row>
+                  </div>
+                    
                   <!--댓글-->
                   <v-divider class="mt-5 mb-5" inset></v-divider>
                   <details>
@@ -224,18 +231,24 @@
                     >
                       #{{ rv.title | runtime }}
                     </v-chip>
-                    <v-col>
-                      <span style="font-size: 1em; color: gray;">{{ replaceDate(rv.writeDate) }}</span>
-                      <div style="font-size: 1.3em; color: #2b2b2b; padding-top: 14px">{{ rv.content }}</div>
+                    <v-col cols="11">
+                      <div style="font-size: 1.3em; 
+                                  color: #2b2b2b; 
+                                  padding-top: 14px; 
+                                  word-break: keep-all;
+                                  max-width: 1190px;"
+                      >
+                        {{ rv.content }}
+                      </div>
                     </v-col>
-                    <!-- 수정 / 삭제 -->
-                    <div style="padding: 20px 17px 0px 0px;">
-                      <v-row v-if="rv.memberId == $store.state.id">
-                        <div class="modBtn" @click="clickUpdateBtn(i)">수정</div>
-                        <div class="delBtn" @click="clickDelete(i)">삭제</div>
-                      </v-row>
-                    </div>
                   </v-row>
+                  <!-- 수정 / 삭제 -->
+                  <div style="padding-top: 20px;">
+                    <v-row v-if="rv.memberId == $store.state.id" class="d-flex justify-end">
+                      <div class="modBtn" @click="clickUpdateBtn(i)">수정</div>
+                      <div class="delBtn" @click="clickDelete(i)">삭제</div>
+                    </v-row>
+                  </div>
                 </v-card-text>
               </v-card>
             </div>
@@ -489,13 +502,24 @@ export default {
       currentTime: 0,
       noteList: [],
       updateObj: {},
-
+      progressInfo: {},
     };
   },
   components: {
     Artplayer,
   },
   methods: {
+    getProgressInfo() {
+      this.axios('/class/learn/progress/'+this.currId, {
+        params: {
+          memberId: this.$store.state.id,
+        },
+      }).then(res => {
+        if(res.status == 200) {
+          this.progressInfo = res.data;
+        }
+      })
+    },
     getQuestList() {
       this.axios("/class/board", {
         params: {
@@ -525,14 +549,12 @@ export default {
       })
       .catch(err => console.log(err));
     },
-    getControls() {},
     changePanelHeader() {
       console.log(event.currentTarget.style);
     },
     getInstance(art) {
       console.log(art);
       console.log(art.playing);
-      console.log(art.getControls());
     },
     questForm() {
       if (!this.$store.state.id) {
@@ -705,7 +727,13 @@ export default {
     clickWriteBtn() {
       this.currentTime = document.querySelector(".art-video").currentTime;
       this.sheet = true;
-    }
+    },
+    unLoadEvent: function (event) {
+      if (this.isLeaveSite) return;
+      
+      event.preventDefault();
+      event.returnValue = '';
+    },
   },
   watch: {
     sheet: function() {
@@ -722,10 +750,29 @@ export default {
         }
       }
     },
+    $route: function(to, from) {
+      console.log('$route');
+      console.log('$route');
+      console.log('$route');
+      console.log(to);
+    }
   },
   created() {
     this.getNoteList();
     this.getQuestList();
+    this.getProgressInfo();
+  },
+  mounted() {
+    window.addEventListener('beforeunload', this.unLoadEvent);
+  },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.unLoadEvent);
+  },
+  beforeRouteLeave(to, from, next) {
+    //시간 기록하기
+
+
+    next();
   }
 };
 </script>
