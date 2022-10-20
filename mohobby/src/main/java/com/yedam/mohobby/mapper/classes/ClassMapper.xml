@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mohobby.mapper.classes.ClassMapper">
+
+	<resultMap id="currList" type="com.yedam.mohobby.service.classes.ClassChapterVO">
+		<result property="chapId" column="chap_id"/>
+		<result property="classId" column="class_id"/>
+		<result property="chapName" column="chap_name"/>
+		<collection column="{chapId=chap_id}" property="currList" javaType="java.util.ArrayList"
+					ofType="com.yedam.mohobby.service.classes.ClassCurriculumVO"
+					select="selectCurrInfoList"/>
+	</resultMap>
+	
+	<!-- 커리큘럼 조회 -->
+	<select id="selectCurrInfoList" parameterType="com.yedam.mohobby.service.classes.ClassChapterVO" resultType="com.yedam.mohobby.service.classes.ClassCurriculumVO">
+		select * from class_curriculum
+		where chap_id = #{chapId}
+		order by chap_id, curr_id
+	</select>
+	
+	<!-- 챕터와 커리큘럼 조회 -->
+	<select id="getChapterList" parameterType="com.yedam.mohobby.service.classes.ClassChapterVO" resultMap="currList">
+		select *
+		from class_chapter
+		where class_id = #{classId}
+	</select>
+
+
 	<insert id="insertClass" parameterType="com.yedam.mohobby.service.classes.ClassesVO">
 		<selectKey keyProperty="classId" resultType="java.lang.Integer" order="BEFORE">
 		select NVL(MAX(class_id), 0) + 1 from classes	
@@ -60,7 +85,8 @@
 		        select * 
 		        from jjim 
 		        where target_type = 1 
-		        and member_id = <if test="memberId == null">null</if> <if test="memberId != null">#{memberId}</if>
+		        and member_id = <if test="memberId == null">null</if> 
+		        				<if test="memberId != null">#{memberId}</if>
 		        ) m,
 		        (
 		        select count(*)jjim, target_id 
@@ -183,6 +209,32 @@
 						)
 	</insert>
 	
+	<!-- 커리큘럼 진행율 조회 -->
+	<select id="getCurrProgress" parameterType="com.yedam.mohobby.service.classes.ClassAttendanceVO" resultType="com.yedam.mohobby.service.classes.ClassAttendanceVO">
+	select  c.curr_id,
+	        c.view_progress,
+	        (select round(sum(view_progress)/count(curr_id))total_view_progres
+	        from
+	            (select c.curr_id, nvl(a.view_progress, 0) view_progress
+	            from class_curriculum c,
+	                (select *
+	                from class_attendance
+	                where member_id = #{memberId}) a
+	            where c.class_id = (select class_id from class_curriculum where curr_id = #{currId})
+	            and c.curr_id = a.curr_id(+)
+	            order by c.curr_id))total_view_progress
+	from class_attendance c
+	where member_id = #{memberId}
+	and curr_id = #{currId}	
+	</select>
+	
+	<!-- 강의 결제내역 단건조회 -->
+	<select id="getClassPayOne" parameterType="com.yedam.mohobby.service.classes.ClassPayVO" resultType="com.yedam.mohobby.service.classes.ClassPayVO">
+		select * from class_pay
+		where class_id = #{classId}
+		and member_id = #{memberId}
+	</select>
+	
 	<!-- 강의게시글수정 -->
 	<update id="updateClassBoard" parameterType="com.yedam.mohobby.service.classes.ClassBoardVO">
 		update class_board set
@@ -217,10 +269,4 @@
 		delete from jjim where target_id = #{targetId} and target_type = 1 and member_id = #{memberId}
 	</delete>
 	
-	<!-- 강의 챕터 조회 -->
-   	<select id="getChapterList" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassChapterVO">
-   	select chap_id, class_id, chap_name
-	from class_chapter
-	where class_id = #{classId}
-   	</select>
 </mapper>

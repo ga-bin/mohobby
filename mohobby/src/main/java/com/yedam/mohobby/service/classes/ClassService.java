@@ -38,8 +38,14 @@ public interface ClassService {
     //찜삭제
     public void deleteJjim(JjimVO jjim);
     
-    // 강의 챕터 조회
+    //강의 챕터 조회
     public List<ClassChapterVO> getChapterList(int classId);
+    
+    //강의 커리큘럼 진행율 조회
+    public ClassAttendanceVO getCurrProgress(ClassAttendanceVO vo);
+    
+    //강의 결제내역 단건조회
+    public ClassPayVO getClassPayOne(ClassPayVO vo);
     
     //html저장
     public void saveClassInfo(ClassInfoRequestVO req);

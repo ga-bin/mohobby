@@ -5,46 +5,47 @@ import createPersistedState from "vuex-persistedstate";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    plugins: [
-        createPersistedState({
-          storage: window.sessionStorage, // store를 session storage 에 유지
-        }),
-    ],
-    modules : {
-        
+  plugins: [
+    createPersistedState({
+      storage: window.sessionStorage, // store를 session storage 에 유지
+    }),
+  ],
+  modules: {},
+  state: {
+    isLogin: false,
+    id: "",
+    user: null,
+  },
+  getters: {
+    isLogin(state) {
+      return state.isLogin;
     },
-    state : {
-        isLogin : false,
-        id : "",
-        user:null,
+    getId(state) {
+      return state.id;
     },
-    getters : {
-        isLogin(state) {
-            return state.isLogin;
-        }, getId(state) {
-            return state.id;
-        },
+  },
+  mutations: {
+    setIsLoginTrue(state) {
+      state.isLogin = true;
     },
-    mutations : {
-        setIsLoginTrue(state) {
-            state.isLogin = true;
-        },
-        setIsLoginFalse(state) {
-            state.isLogin = false;
-        },
-        sedId(state, memberId) {
-            state.id = memberId;
-        },
-        setUserData(state, userData) {
-            state.user = userData;
-        },
-        logout(state){
-            state.id='';
-        }
+    setIsLoginFalse(state) {
+      state.isLogin = false;
     },
-    actions : { getUserData(context) {
-        axios.get("url").then((resp) => {
-            context.commit("setUserData", resp.data);
-        })
-    }},
-})
+    sedId(state, memberId) {
+      state.id = memberId;
+    },
+    setUserData(state, userData) {
+      state.user = userData;
+    },
+    logout(state) {
+      state.id = "";
+    },
+  },
+  actions: {
+    getUserData(context) {
+      axios.get("url").then((resp) => {
+        context.commit("setUserData", resp.data);
+      });
+    },
+  },
+});
