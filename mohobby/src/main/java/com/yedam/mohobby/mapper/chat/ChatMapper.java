@@ -23,6 +23,14 @@ public int insertMessage(ChatVO2 chat);
 
 public List<NonReadChatVO>getNonReadChat(ChatUserVO chatUser);
 public int updateCheckTime(ChatUserVO chatUser);
-
+//sns 채팅방 생성및 조회
 public void getSnsChatRoomNo(CreateRoomVO createRoom);
+//체크인
+public int updateCheckIn(int roomId);
+//체크아웃
+public int updateCheckOut(int roomId);
+//체크인아웃
+public int updateCheckInOut(@Param("preRoomId") int preRoomId,@Param("currentRoomId")int currentRoomId);
+//체크인 여부 조회
+public int getCheckIn(@Param("roomId")int roomId);
 }

@@ -53,6 +53,7 @@
             </v-col>
           </v-row>
           <hr class="mt-5 mb-5" />
+          
           <!-- 멤버 전체 조회 -->
           <h4 v-if="members.length == 0">일치하는 결과가 없습니다.</h4>
           <v-row v-for="(member, idx) in members">
@@ -69,11 +70,10 @@
               <v-spacer></v-spacer>
               <div class="select">
                 <v-checkbox
-                  v-model="selectmembers"
+                  v-model="select"
                   color="light-green"
                   :value="member.memberId"
                   hide-details
-                  @change="check($event)"
                 ></v-checkbox>
               </div>
             </v-col>
@@ -85,7 +85,7 @@
               outlined
               rounded
               text
-              @click="[(dialog = false), insertMember()]"
+              @click="[dialog = false, insertPrice(), insertMember()]"
             >
               등록
             </v-btn>
@@ -106,20 +106,33 @@
 </template>
 <script>
 export default {
+  props :['empty', 'price' ,'totalPrice'],
   data() {
     return {
-      members: [],
-      checked: [],
-      clacPrice: "",
-      moimId: this.$route.params.moimId,
-      memberId: "",
+      members: [], //멤버 전체 조회
+      select : [], //선택된 멤버 담는 배열
+      moimId: this.$route.params.moimId, 
+      memberId: "", 
       dialog: false,
+      newPrice: '', //상위 컴포넌트로 올릴 값 저장 변수
       src: "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
     };
   },
   methods: {
-    check(e) {
-      console.log(e);
+    
+    //상위 컴포넌트로 memberId 보내기
+    insertPrice(){
+            console.log('length:'+this.select.length)
+            this.totalPrice = this.price;
+            console.log('totalPrice:'+this.totalPrice)
+            if(this.select.length != 0){
+                this.newPrice = this.totalPrice / this.select.length;
+            }
+            // console.log('newPrice:' +this.newPrice);
+    },
+    insertMember() {
+      this.$emit('update:empty', this.select)
+      this.$emit('update:totalPrice', this.newPrice)
     },
     selectMember() {
       this.axios
@@ -143,10 +156,10 @@ export default {
           params: {
             memberId: this.memberId,
             moimId: this.moimId,
-          },
+          }, 
         })
         .then((resp) => {
-          console.log(this.memsbers);
+          // console.log(this.memsbers);
           console.log(resp);
           this.members = resp.data;
           document.querySelector("#searchBar").value = "";
@@ -154,23 +167,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    // // 멤버 배열에 저장후 db에 저장
-    // insertMember(){
-    //     for(let i in checked){
-    //         this.checked += checked.split(',')
-    //     }
-    //     console.log(this.checked);
-    //     this.axios.post("/",{
-    //         data : {
-    //             checked : this.checked
-    //         }
-    //     })
-    // },
-    insertMember() {
-      this.axios.post("/", {
-        data: {},
-      });
     },
   },
   created() {

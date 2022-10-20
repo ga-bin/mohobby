@@ -11,16 +11,13 @@ import moment from "moment";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 
 const serverURL = "http://localhost:8088/java/sock";
 let socket = new SockJS(serverURL);
 let stompClient=Stomp.over(socket);
-
-Vue.prototype.stompClient=stompClient;
-
+Vue.prototype.stompClient = stompClient;
 
 moment.locale("ko");
 

@@ -136,7 +136,7 @@
                               ></v-radio>
                             </v-radio-group>
                           </v-col>
-                          
+
                           <!-- 지역 입력 -->
                           <v-col>
                             <v-select
@@ -170,6 +170,7 @@
                             label="휴대전화"
                             v-model="phoneNum"
                             @input="inputPhoneNumber()"
+                            oninput="javascript: if (this.value.length > 13) this.value = this.value.slice(0, 13);"
                             :messages="'-를 제외하고 입력해주세요'"
                           ></v-text-field>
                           <!-- 본인인증버튼 -->
@@ -274,7 +275,7 @@ export default {
   },
   beforeCreate() {},
   created() {
-  this.getAllRegion();
+    this.getAllRegion();
   },
   beforeMount() {},
   mounted() {
@@ -308,21 +309,21 @@ export default {
   unmounted() {},
   methods: {
     getAllRegion() {
-        const vm = this;
-    this.axios({
-      url: "http://localhost:8088/java/regionAll",
-      method: "get",
-    })
-      .then(function (response) {
-        console.log(response);
-        if (response.data != "") {
-          console.log(response.data);
-          vm.regionList = response.data;
-        }
+      const vm = this;
+      this.axios({
+        url: "http://localhost:8088/java/regionAll",
+        method: "get",
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+        .then(function (response) {
+          console.log(response);
+          if (response.data != "") {
+            console.log(response.data);
+            vm.regionList = response.data;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     checkId() {
       for (let i = 0; i < this.allMember.length; i++) {

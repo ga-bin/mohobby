@@ -186,14 +186,13 @@ public class MoimServiceImpl implements MoimService {
 
 	// 소모임 전체 멤버 리스트 조회
 	@Override
-	public List<MoimVO> getAllMemberList(int moimId) {
+	public List<MoimMemberVO> getAllMemberList(int moimId) {
 		return mapper.getAllMemberList(moimId);
 	}
 
 	// 소모임 멤버 검색 조회
 	@Override
 	public List<MoimMemberVO> getSearchMember(String memberId, int moimId) {
-		
 		return mapper.getSearchMember(memberId, moimId);
 	}
 
@@ -202,30 +201,32 @@ public class MoimServiceImpl implements MoimService {
 	public List<MoimVoteListVO> moimVoteAllList(int moimId) {
 		return mapper.moimVoteAllList(moimId);
 	}
-	
+		   
 	//소모임 투표 아이템 리스트
 	@Override
 	public List<MoimVoteListVO> moimVoteItemlist(int moimId) {
-		return mapper.moimVoteItemlist(moimId);
+        return mapper.moimVoteItemlist(moimId);
 	}
-
+	
 	@Override
 	public List<MoimVoteListVO> voteItemSelect(int moimId, String memberId) {
-		// TODO Auto-generated method stub
 		return mapper.voteItemSelect(moimId, memberId);
 	}
-
+	
 	@Override
 	public List<MoimVoteItemVO> votereulst(int voteId) {
 		return mapper.votereulst(voteId);
 	}
-
+	
 	@Override
-	public List<MoimVO> getSearchMember(int moimId) {
-		// TODO Auto-generated method stub
-		return null;
-	} 
+	public List<MoimVoteListVO> vote(int voteId, String memberId, int itemSelect, int moimId) {
+		return mapper.vote(voteId, memberId, itemSelect, moimId);
+	}
 	
-	
+	@Override
+	public int UserSelectvote(MoimVoteListVO vo) {
+		return mapper.UserSelectvote(vo);
+	}
+
 
 }

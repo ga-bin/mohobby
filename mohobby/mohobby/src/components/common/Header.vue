@@ -71,8 +71,7 @@
   </v-app-bar>
 </template>
 <script>
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client";
+
 
 export default {
 
@@ -98,9 +97,7 @@ export default {
   mounted() {
     this.$store.watch(() => this.$store.getters.getId,
       n => {
-        console.log("watch걸리나요");
         this.noticeRes();
-        console.log("이거왜 안걸림")
         this.getAllNotice()
       }
     )
@@ -119,15 +116,12 @@ export default {
     },
     getAllNotice() {
       let vm = this
-      console.log("와치뒤에뒤에걸리나요")
       this.axios.get('/getAllNotice/', {
         params: {
           memberId: this.$store.state.id
         }
       }).then(res => {
-
         vm.noticeCount = res.data.length
-
         for (let i = 0; i < res.data.length; i++) {
           vm.items.push(res.data[i])
           vm.items.push({ divider: true, inset: true })
@@ -139,9 +133,6 @@ export default {
 
     //알림 처리
     noticeRes() {
-      // const serverURL = "http://localhost:8088/java/sock";
-      // let socket = new SockJS(serverURL);
-      // let stompClient = Stomp.over(socket);
       console.log("와치뒤에 걸리나요")
       let vm = this
       this.stompClient.connect(
@@ -166,6 +157,25 @@ export default {
                 //sns - 댓글 알림 처리
                 else if (resNotice.contentType == 1) {
                   vm.subtitle = "댓글을 남겼습니다."
+                }
+                vm.items.push({
+                  avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
+                  title: resNotice.nickname,
+                  subtitle: vm.subtitle,
+                  postId: resNotice.postId,
+                  noticeType: resNotice.noticeType,
+                  noticeId: resNotice.noticeId
+                })
+                vm.items.push({ divider: true, inset: true })
+                ++vm.noticeCount
+              }
+              //소모임 알림 처리
+              else if (resNotice.noticeType == 1) {
+                //소모임 댓글 알림 처리
+                if (resNotice.contentType == 0) {
+                  vm.subtitle = "댓글을 남기셨습니다."
+                }
+                else if (resNotice.contentType ========
                 }
                 vm.items.push({
                   avatar: require(`@/assets/image/user/${resNotice.profileImge}`),

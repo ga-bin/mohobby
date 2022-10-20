@@ -10,10 +10,10 @@
 -->
    <!-- 
    
-   		피드
-   		 
-   	-->
-   	   <!-- 새로운 postId 생성 -->
+         피드
+          
+      -->
+         <!-- 새로운 postId 생성 -->
        <select id="getPostId" resultType="Integer">
 		SELECT NVL(MAX(post_id),0)+1 FROM sns_post
 	   </select>
@@ -45,26 +45,26 @@
     
     
     <!-- 미디어등록 -->
-	<insert id="insertMedia" parameterType="com.yedam.mohobby.service.sns.SnsMediaVO">
+   <insert id="insertMedia" parameterType="com.yedam.mohobby.service.sns.SnsMediaVO">
       INSERT INTO sns_media (
-						      media_id,
-						      post_id,
-						      extension,
-						      path,
-						      file_name,
-						      file_real_name,
-						      dir_name
-						     )
-				      VALUES(
-						      media_id_seq.nextval,
-						      #{ postId },
-						      #{ extension },
-						      #{ path },
-						      #{ fileName },
-						      #{ fileRealName },
-						      #{ dirName }
-						     )
-						      
+                        media_id,
+                        post_id,
+                        extension,
+                        path,
+                        file_name,
+                        file_real_name,
+                        dir_name
+                       )
+                  VALUES(
+                        media_id_seq.nextval,
+                        #{ postId },
+                        #{ extension },
+                        #{ path },
+                        #{ fileName },
+                        #{ fileRealName },
+                        #{ dirName }
+                       )
+                        
    </insert>
    
    
@@ -230,23 +230,23 @@
    
    <!--
 
-			해시태그
+         해시태그
 
-   			게시글 테이블에 들어온 해시태그들(#사과,#바나나)을 특정 문자 기준으로 잘라서 별도의 해시태그 테이블에 넣는다 
-			   1. 이미 테이블에 존재하는 해시태그면 update 사용횟수
-			   2. 테이블에 존재하지 않는 해시태그면 insert 
+            게시글 테이블에 들어온 해시태그들(#사과,#바나나)을 특정 문자 기준으로 잘라서 별도의 해시태그 테이블에 넣는다 
+            1. 이미 테이블에 존재하는 해시태그면 update 사용횟수
+            2. 테이블에 존재하지 않는 해시태그면 insert 
    -->
    <!-- 조회수만업뎃 - 이미 등록되어있는 해시태그 -->
    <!-- hashVO, snsPostVO -->
    <update id="updateHashtag" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
-    	MERGE INTO hashtag h
-        USING (SELECT 					
+       MERGE INTO hashtag h
+        USING (SELECT                
        <![CDATA[REGEXP_SUBSTR(hashtag, '[^,]+', 1, Level) hashtag]]>
                 FROM sns_post
                 WHERE hashtag IS NOT NULL
                 AND post_id = #{ postId }
-       <![CDATA[CONNECT BY LEVEL <= REGEXP_COUNT(hashtag, '[^,]+')]]> 		
-                AND PRIOR post_id  = post_id 		
+       <![CDATA[CONNECT BY LEVEL <= REGEXP_COUNT(hashtag, '[^,]+')]]>       
+                AND PRIOR post_id  = post_id       
                 AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
                ) p
           ON  (h.hashtag = p.hashtag)
@@ -258,7 +258,7 @@
  
    <!-- 
    
-   		팔로우
+         팔로우
    
    -->
    <!-- 팔로우목록 -->
@@ -368,10 +368,10 @@
             AND PRIOR post_id  = post_id       
             AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL)
     <where>
-		<if test='hashtag != null and hashtag != ""'>
-			hashtag = #{ hashtag }
-		</if>
-	</where>
+      <if test='hashtag != null and hashtag != ""'>
+         hashtag = #{ hashtag }
+      </if>
+   </where>
    </select>
 
 
@@ -385,7 +385,7 @@
 
    <!-- 
    
-   		좋아요
+         좋아요
    
     -->
 
@@ -474,7 +474,7 @@
         DECLARE
             v_commId comments.comm_id%TYPE := #{ commId };
             v_target_id comments.target_id%TYPE := #{ targetId };
-		BEGIN
+      BEGIN
             DELETE FROM comments
              WHERE comm_id = v_commId;
             

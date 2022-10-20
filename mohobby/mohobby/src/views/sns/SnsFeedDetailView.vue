@@ -435,9 +435,11 @@ export default {
         noticeType: 0,
       };
       this.stompClient.send(
+     
         "/app/Notice",
         JSON.stringify(noticeContent),
         (res) => {
+          console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!"),
           console.log(res);
         }
       );

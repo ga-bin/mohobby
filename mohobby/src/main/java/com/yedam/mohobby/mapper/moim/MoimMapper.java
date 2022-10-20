@@ -73,30 +73,35 @@ public interface MoimMapper {
 	//소모임 등록 권한 업데이트
 	public int moimUserUpdate(MemberVO vo);
 	
-	
-	// 소모임 가입 회원 수 조회하는 로직
+	//소모임 가입 회원 수 조회하는 로직
 	public int moimMemberCount(int moimId);
 
 	//소모임 N빵 전체 리스트 조회
 	public List<MoimDutchVO> getAllDuchList(int moimId);
 
 	//소모임 전체 멤버 리스트 조회
-	public List<MoimVO> getAllMemberList(int moimId);
+	public List<MoimMemberVO> getAllMemberList(int moimId);
 	
 	//소모임 멤버 검색 조회
 	public List<MoimMemberVO> getSearchMember(@Param("memberId")String memberId, @Param("moimId")int moimId);
-
-	public List<MoimVO> getSearchMember(int moimId);
 	
 	//소모임 투표 디테일 리스트
 	public List<MoimVoteListVO> moimVoteAllList(@Param("moimId")int moimId);
-	
+		   
 	//소모임 투표 아이템 리스트
 	public List<MoimVoteListVO> moimVoteItemlist(@Param("moimId")int moimId);
-	
+		   
 	//소모임 투표
 	public List<MoimVoteListVO> voteItemSelect(@Param("moimId")int moimId, @Param("memberId")String memberId);
-	
+		   
 	//소모임 투표 결과
 	public List<MoimVoteItemVO> votereulst(@Param("voteId")int voteId);
+		   
+	//소모임 투표
+	public List<MoimVoteListVO> vote(@Param("voteId")int voteId, @Param("memberId")String memberId, @Param("itemSelect")int itemSelect, @Param("moimId")int moimId);
+		   
+	//소모임 투표 선택 
+	public int UserSelectvote(MoimVoteListVO vo);
+	
+	
 }

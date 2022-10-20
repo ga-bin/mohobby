@@ -22,10 +22,10 @@ import com.yedam.mohobby.service.user.MemberVO;
  */
 public interface SnsMapper {
     
-	/*
+   /*
      * 게시물
      */
-	public int getPostId();
+   public int getPostId();
     //게시물 등록
     public int insertFeed(SnsPostVO snsPostVO);
     //미디어 등록
@@ -132,9 +132,9 @@ public interface SnsMapper {
     //북마크 조회
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     //북마크 전체조회
-	public List<SnsBookmarkVO> getAllBookmarks();
-	
-	/*
+   public List<SnsBookmarkVO> getAllBookmarks();
+   
+   /*
      * 검색기록
      */
     //검색기록 등록
@@ -144,8 +144,8 @@ public interface SnsMapper {
     //검색기록 삭제
     public int deleteHistory(int searchId);
 
-	
-	
+   
+   
 
 
-}	
+}   

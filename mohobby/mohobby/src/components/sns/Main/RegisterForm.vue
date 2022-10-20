@@ -1,141 +1,121 @@
 <template>
-  <v-card
-  class="mx-auto"
-  max-width="80%"
-  outlined
-  >
-  <form id = "feedInsert" name="feedInsert">
-    <v-container fluid>
-      <input type="hidden" v-model="memberId" name="memberId"> 
-      <input type="hidden" v-model="hashtag" name="hashtag">
-      <!-- 파일등록부 -->
-      <v-file-input
-            class="mx-auto" 
-            label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)"
-            type="file"
-            filled
-            prepend-icon="mdi-camera"
-            counter
-            show-size
-            dense
-            multiple
-            @change="onImageChange"
-            name="fileList"
-            accept="image/png, image/jpeg, image/jpg"
-          />
-      <!-- 파일이름, 개수 -->
-      <div v-for="(list,i) in fileList"
-      :key="i">
-        {{list.name}}
-      </div>
-
-      <!-- 이미지 미리보기 -->
-      <div style="display:inline-flex; margin-left: 10px;">
-        <v-img v-for="(item,i) in uploadimageurl" 
-              :key="i" 
-              :src="item.url"
-              aspect-ratio="4/3"
-              height="150px" 
-              width="200px"
-              lazy-src
-              error 
-              style="margin-right: 10px;"
+  <v-card class="mx-auto" max-width="80%" outlined>
+    <form id="feedInsert" name="feedInsert">
+      <v-container fluid>
+        <input type="hidden" v-model="memberId" name="memberId" />
+        <input type="hidden" v-model="hashtag" name="hashtag" />
+        <!-- 파일등록부 -->
+        <v-file-input
+          class="mx-auto"
+          label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)"
+          type="file"
+          filled
+          prepend-icon="mdi-camera"
+          counter
+          show-size
+          dense
+          multiple
+          @change="onImageChange"
+          name="fileList"
+          accept="image/png, image/jpeg, image/jpg"
         />
-      </div>
+        <!-- 파일이름, 개수 -->
+        <div v-for="(list, i) in fileList" :key="i">
+          {{ list.name }}
+        </div>
 
-      <!-- 내용 -->
-      <v-textarea
-        name="content"
-        auto-grow
-        placeholder="내용을 입력해주세요!"
-        value=""
-        v-model="content"
-      ></v-textarea>
-    </v-container>
-    <!-- 유저소환 -->
+        <!-- 이미지 미리보기 -->
+        <div style="display: inline-flex; margin-left: 10px">
+          <v-img
+            v-for="(item, i) in uploadimageurl"
+            :key="i"
+            :src="item.url"
+            aspect-ratio="4/3"
+            height="150px"
+            width="200px"
+            lazy-src
+            error
+            style="margin-right: 10px"
+          />
+        </div>
 
-    
-    <!-- 해시태그 -->
-    <!-- <input type="hidden" v-model="getHashtag" :hashtag="getHashtag"  name="hashtag"> -->
-    <v-container fluid>
-          <v-combobox
-            v-model="model"
-            :hide-no-data="!search"
-            :items="items"
-            :search-input.sync="search"
-            hide-selected
-            label="Search for an option"
-            multiple
-            small-chips
-            solo
-          >
+        <!-- 내용 -->
+        <v-textarea
+          name="content"
+          auto-grow
+          placeholder="내용을 입력해주세요!"
+          value=""
+          v-model="content"
+        ></v-textarea>
+      </v-container>
+      <!-- 유저소환 -->
+
+      <!-- 해시태그 -->
+      <!-- <input type="hidden" v-model="getHashtag" :hashtag="getHashtag"  name="hashtag"> -->
+      <v-container fluid>
+        <v-combobox
+          v-model="model"
+          :hide-no-data="!search"
+          :items="items"
+          :search-input.sync="search"
+          hide-selected
+          label="Search for an option"
+          multiple
+          small-chips
+          solo
+        >
           <!-- :filter="filter" -->
-        <template v-slot:no-data>
-          <v-list-item>
-            <span class="subheading">Create</span>
+          <template v-slot:no-data>
+            <v-list-item>
+              <span class="subheading">Create</span>
+              <v-chip :color="`${colors[nonce - 1]} lighten-3`" label small>
+                {{ search }}
+              </v-chip>
+            </v-list-item>
+          </template>
+          <template v-slot:selection="{ attrs, item, parent, selected }">
             <v-chip
-              :color="`${colors[nonce - 1]} lighten-3`"
+              v-if="item === Object(item)"
+              v-bind="attrs"
+              :color="`${item.color} lighten-3`"
+              :input-value="selected"
               label
               small
             >
-              {{ search }}
+              <span class="pr-2">
+                {{ item.text }}
+              </span>
+              <v-icon small @click="parent.selectItem(item)"> $delete </v-icon>
             </v-chip>
-          </v-list-item>
-        </template>
-        <template v-slot:selection="{ attrs, item, parent, selected }">
-          <v-chip
-            v-if="item === Object(item)"
-            v-bind="attrs"
-            :color="`${item.color} lighten-3`"
-            :input-value="selected"
-            label
-            small
-          >
-            <span class="pr-2">
+          </template>
+          <template v-slot:item="{ index, item }">
+            <v-text-field
+              v-if="editing === item"
+              v-model="editing.text"
+              autofocus
+              flat
+              background-color="transparent"
+              hide-details
+              solo
+              @keyup.enter="edit(index, item)"
+            ></v-text-field>
+            <v-chip v-else :color="`${item.color} lighten-3`" dark label small>
               {{ item.text }}
-            </span>
-            <v-icon
-              small
-              @click="parent.selectItem(item)"
-            >
-              $delete
-            </v-icon>
-          </v-chip>
-        </template>
-        <template v-slot:item="{ index, item }">
-          <v-text-field
-            v-if="editing === item"
-            v-model="editing.text"
-            autofocus
-            flat
-            background-color="transparent"
-            hide-details
-            solo
-            @keyup.enter="edit(index, item)"
-          ></v-text-field>
-          <v-chip
-            v-else
-            :color="`${item.color} lighten-3`"
-            dark
-            label
-            small
-          >
-            {{ item.text }}
-          </v-chip>
-          <v-spacer></v-spacer>
-          <v-list-item-action @click.stop>
-            <v-btn
-              icon
-              @click.stop.prevent="edit(index, item)">
-              <v-icon>{{ editing !== item ? 'mdi-pencil' : 'mdi-check' }}</v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </template>
-      </v-combobox>
-    </v-container>
-  </form>
-      <v-btn @click="uploadImage">uploadImage</v-btn>
-</v-card>
+            </v-chip>
+            <v-spacer></v-spacer>
+            <v-list-item-action @click.stop>
+              <v-btn icon @click.stop.prevent="edit(index, item)">
+                <v-icon>{{
+                  editing !== item ? "mdi-pencil" : "mdi-check"
+                }}</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </template>
+        </v-combobox>
+      </v-container>
+    </form>
+    <v-btn @click="uploadImage">uploadImage</v-btn>
+  </v-card>
 </template>
 
 <script>
@@ -185,7 +165,7 @@ data() {
   };
 },
 created() {
- 
+
 },
 watch: {
 
@@ -226,8 +206,8 @@ methods: {
     //이미지 미리보기***********미리보기에서 사진 삭제돼야함
     onImageChange(file) {
       if (!file) return;
-      
-      file.forEach((getFile) => { 
+
+      file.forEach((getFile) => {
         const fileReader = new FileReader();
         console.log("item.name: " + getFile.name);
         fileReader.onload = (e) => {
@@ -239,7 +219,7 @@ methods: {
 
 
     //게시글 등록
-    
+
     //첫번째 사진을 썸네일로
     uploadImage() {
       let self = this;
@@ -247,12 +227,14 @@ methods: {
         console.log("push hashtag: " + hashtag.text);
         this.getHashtag.push(hashtag.text);
       });
+
+
       //hashtag배열 스트링화
       const hashtags = this.getHashtag.join();
       console.log("hashtags" + hashtags);
       feedInsert.hashtag.value = hashtags;
 
-      const formData = new FormData(feedInsert);	// 파일을 전송할때는 FormData 형식으로 전송
+      const formData = new FormData(feedInsert);   // 파일을 전송할때는 FormData 형식으로 전송
       console.log(feedInsert);
       console.log(document.getElementsByName("memberId")); //아이디 확인 완.
 
@@ -275,26 +257,25 @@ methods: {
 };
 </script>
 <style scoped>
-  #att_zone {
-    width: 660px;
-    min-height: 150px;
-    padding: 10px;
-    border: 1px dotted #00f;
-  }
+#att_zone {
+  width: 660px;
+  min-height: 150px;
+  padding: 10px;
+  border: 1px dotted #00f;
+}
 
-  #att_zone:empty:before {
-    content: attr(data-placeholder);
-    color: #999;
-    font-size: .9em;
-  }
-  .imagePreviewWrapper2 {
-    width: 250px;
-    height: 250px;
-    display: block;
-    cursor: pointer;
-    margin: 0 auto 30px;
-    background-size: cover;
-    background-position: center center;
-  }
-
+#att_zone:empty:before {
+  content: attr(data-placeholder);
+  color: #999;
+  font-size: 0.9em;
+}
+.imagePreviewWrapper2 {
+  width: 250px;
+  height: 250px;
+  display: block;
+  cursor: pointer;
+  margin: 0 auto 30px;
+  background-size: cover;
+  background-position: center center;
+}
 </style>

@@ -16,4 +16,5 @@ public class ClassAttendanceVO {
     private int recordType; //기록유형 0:출석, 1:조퇴, 2:외출, 3:결석
     private int lateCheck; //지각확인 0:정상, 1:지각
     private int viewProgress; //시청진행도
+    private int totalViewProgress; //강의 총 진행율
 }

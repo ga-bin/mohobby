@@ -55,10 +55,30 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 	public int updateCheckTime(ChatUserVO chatUser) {
 		return mapper.updateCheckTime(chatUser);
 	}
-
+//sns 채팅방 조회및 생성
 	@Override
 	public void getSnsChatRoomNo(CreateRoomVO createRoom) {
 		mapper.getSnsChatRoomNo(createRoom);
+	}
+//체크인
+	@Override
+	public int updateCheckIn(int roomId) {
+		return mapper.updateCheckIn(roomId);
+	}
+//체크아웃
+	@Override
+	public int updateCheckOut(int roomId) {
+		return mapper.updateCheckOut(roomId);
+	}
+//체크인아웃
+	@Override
+	public int updateCheckInOut(int preRoomId, int currentRoomId) {
+		return mapper.updateCheckInOut(preRoomId, currentRoomId);
+	}
+//체크인여부 조회
+	@Override
+	public int getCheckIn(int roomId) {
+		return mapper.getCheckIn(roomId);
 	}
 	
 }

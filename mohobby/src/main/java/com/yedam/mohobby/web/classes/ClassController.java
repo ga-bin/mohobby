@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
 import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
+import com.yedam.mohobby.service.classes.ClassPayVO;
 import com.yedam.mohobby.service.classes.ClassReviewVO;
 import com.yedam.mohobby.service.classes.ClassService;
 import com.yedam.mohobby.service.classes.ClassesVO;
@@ -136,6 +138,24 @@ public class ClassController {
 	@PutMapping("/class/board")
 	public void updateClassBoard(@RequestBody ClassBoardVO board) {
 	    classService.updateClassBoard(board);
+	}
+	
+	//강의 커리큘럼 진행율 조회
+	@GetMapping("/class/learn/progress/{currId}")
+	public @ResponseBody ClassAttendanceVO getCurrProgress(@PathVariable int currId, @RequestParam String memberId) {
+		ClassAttendanceVO vo = new ClassAttendanceVO();
+		vo.setCurrId(currId);
+		vo.setMemberId(memberId);
+		return classService.getCurrProgress(vo);
+	}
+	
+	//강의 결제내역 단건 조회
+	@GetMapping("/class/pay/{classId}")
+	public @ResponseBody ClassPayVO getClassPayOne(@PathVariable int classId, @RequestParam String memberId) {
+		ClassPayVO vo = new ClassPayVO();
+		vo.setClassId(classId);
+		vo.setMemberId(memberId);
+		return classService.getClassPayOne(vo);
 	}
 	
 	//찜 등록
