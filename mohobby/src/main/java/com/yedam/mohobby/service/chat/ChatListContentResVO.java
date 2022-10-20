@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ChatListContentResVO {
 	private String content;
-	private String roomNo;
+	private int roomNo;
 	private String msgTime;
 }

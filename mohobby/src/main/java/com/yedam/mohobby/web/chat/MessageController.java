@@ -2,13 +2,12 @@ package com.yedam.mohobby.web.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
-import com.yedam.mohobby.service.chat.ChatListContentRcdVO;
 import com.yedam.mohobby.service.chat.ChatListContentResVO;
+import com.yedam.mohobby.service.chat.ChatService;
 import com.yedam.mohobby.service.chat.ContentVO;
 import com.yedam.mohobby.service.notice.NoticeService;
 import com.yedam.mohobby.service.notice.NoticeVO;
@@ -29,6 +28,9 @@ public class MessageController {
 	MoimService moService;
 
 	@Autowired
+	ChatService cService;
+
+	@Autowired
 	SimpMessageSendingOperations sendTemplate;
 
 	@MessageMapping("/getSubscribeInfo")
@@ -40,6 +42,15 @@ public class MessageController {
 	public void send(ContentVO content) {
 		System.out.println(content);
 		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
+		ChatListContentResVO res = new ChatListContentResVO();
+		if (cService.getCheckIn(content.getRoomNo()) == 1) {
+			res.setContent(content.getContent());
+			res.setRoomNo(content.getRoomNo());
+			res.setMsgTime(content.getHour());
+			for (int i = 0; i < content.getMemberIds().size(); i++) {
+				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i), content);
+			}
+		}
 	}
 
 	@MessageMapping("/getSubscribeId")
@@ -47,27 +58,20 @@ public class MessageController {
 		sendTemplate.convertAndSend("/topic/room/" + RoomNo, RoomNo);
 	}
 
-	@MessageMapping("/sendNotice")
-	public void sendNotice(ChatListContentRcdVO rcd) {
-		ChatListContentResVO res = new ChatListContentResVO();
-		res.setContent(rcd.getContent());
-		res.setRoomNo(rcd.getRoomNo());
-		res.setMsgTime(rcd.getMsgTime());
-		for (int i = 0; i < rcd.getMemberId().size(); i++) {
-			sendTemplate.convertAndSend("/queue/" + rcd.getMemberId().get(i), rcd);
-		}
-}
-	@MessageMapping("/chatNotice")
-	public void chatNotice(ContentVO content) {
-		sendTemplate.convertAndSend("/" + content.getMemberId(), content);
-	}
+//	@MessageMapping("/sendNotice")
+//	public void sendNotice(ChatListContentRcdVO rcd) {
+//		ChatListContentResVO res = new ChatListContentResVO();
+//		res.setContent(rcd.getContent());
+//		res.setRoomNo(rcd.getRoomNo());
+//		res.setMsgTime(rcd.getMsgTime());
+//		for (int i = 0; i < rcd.getMemberId().size(); i++) {
+//
+//			sendTemplate.convertAndSend("/queue/" + rcd.getMemberId().get(i) + "/notice", rcd);
+//		}
 
 	// 알림
 	@MessageMapping("Notice")
 	public void NoticeSns(ResNoticeVO resNotice) {
-		System.out.println("222222222222222222222222222222");
-		System.out.println(resNotice);
-		System.out.println("222222222222222222222222222222");
 		NoticeVO noticeVO = new NoticeVO();
 		resNotice.setNoticeId(nService.getNoticeId());
 		noticeVO.setBoardType(resNotice.getBoardType());
@@ -82,7 +86,7 @@ public class MessageController {
 
 			// db에 담을정보
 			noticeVO.setMemberId(resNotice.getTargetId());
-		noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
+			noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
 			noticeVO.setTitle(resNotice.getNickname());
 			// sns - 좋아요 클릭시
 			if (resNotice.getContentType() == 0) {
@@ -100,10 +104,10 @@ public class MessageController {
 		else if (resNotice.getNoticeType() == 1) {
 			resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMoimId()).getMoimImg());
 			resNotice.setNickname(moService.getMoimInfo(resNotice.getMoimId()).getMoimName());
-																
+
 			// db에 담을정보
 			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setAvatar("require(`@/assets/image/moim/" + resNotice.getProfileImge()+"`)");
+			noticeVO.setAvatar("require(`@/assets/image/moim/" + resNotice.getProfileImge() + "`)");
 			noticeVO.setTitle(resNotice.getNickname());
 			// 소모임 - 댓글
 			if (resNotice.getContentType() == 0) {
@@ -117,6 +121,6 @@ public class MessageController {
 		}
 		System.out.println(noticeVO);
 		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
-		//nService.insertNotice(noticeVO);
+		nService.insertNotice(noticeVO);
 	}
 }

@@ -16,7 +16,8 @@ public class ChallengeVO {
     private String challInfo; //챌린지설명
     private int challPtp; //참여인원수
     private String imgUrl; //사진주소
-    private int reward; // 추가상금
-    private int sumFee; // 누적상금
-    private int payStatus; // 정산상태 0:정산전 1:정산중 2:정산완료
+    private int reward; // 추가상금1
+    private int sumFee; // 누적상금1
+    private int payStatus; // 정산상태 0:정산전 1:정산중 2:정산완료11,3,4
 }
+    

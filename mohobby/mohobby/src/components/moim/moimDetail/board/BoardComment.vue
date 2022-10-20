@@ -163,7 +163,7 @@ export default {
           boardType : this.boardType,
           noticeType:1 //sns:1 moim:2 class:3
         }
-        this.stompClient.send("/app/Notice", JSON.stringify(noticeContent), res => {
+        vm.stompClient.send("/app/Notice", JSON.stringify(noticeContent), res => {
           console.log(res)
         });
       })

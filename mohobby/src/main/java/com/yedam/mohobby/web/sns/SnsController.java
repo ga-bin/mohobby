@@ -48,10 +48,6 @@ public class SnsController {
     public String insertFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
        System.out.println(snspostVO); //******해시태그에 값이 들어오지 않음. - 수정중
        
-       
-       System.out.println("snspostVO: " + snspostVO);
-       System.out.println("snsmediaVO: " + snsmediaVO);
-       System.out.println(fileList);
        service.regFeed(snspostVO, snsmediaVO, fileList);
         return "success";
     }
@@ -350,10 +346,10 @@ public class SnsController {
       }
     }
     //북마크 삭제
-    @DeleteMapping("/collection/bookmark/{postId}")
-    public String deleteBookmark(@PathVariable int postId) {
+    @DeleteMapping("/collection/bookmark/{postId}/{memberId}")
+    public String deleteBookmark(@PathVariable int postId, @PathVariable String memberId) {
        try {
-         service.deleteBookmark(postId);
+         service.deleteBookmark(postId, memberId);
          System.out.println("북마크삭제 완료");
          return "success";
       } catch (Exception e) {
@@ -365,15 +361,7 @@ public class SnsController {
     //북마크상태조회
     @GetMapping("/collection/bookmark/isBookmark/{postId}")
     public int isBookmark(@PathVariable int postId, @RequestParam String memberId) {
-        try {
-            service.isBookmark(postId, memberId);
-            System.out.println("북마크상태조회 완료");
-            return 1;
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("북마크상태조회 실패");
-            return 0;
-        }
+           return service.isBookmark(postId, memberId);
     }
     //컬렉션별 북마크 조회
     @GetMapping("/collection/bookmark/{catgId}")
