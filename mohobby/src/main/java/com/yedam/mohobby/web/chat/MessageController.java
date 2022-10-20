@@ -40,28 +40,28 @@ public class MessageController {
 
 	@MessageMapping("/send")
 	public void send(ContentVO content) {
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		
+		NoticeVO noticeVO = new NoticeVO();
+		ResNoticeVO resNotice = new ResNoticeVO();
 		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
 		ChatListContentResVO res = new ChatListContentResVO();
 		for (int i = 0; i < content.getMemberIds().size(); i++) {
-			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0)
+			System.out.println(content.getMemberIds().get(i));
+			
+			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0) {
 				res.setContent(content.getContent());
-			res.setRoomNo(content.getRoomNo());
-			res.setMsgTime(content.getHour());
-			sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i), content);
+				res.setRoomNo(content.getRoomNo());
+				res.setMsgTime(content.getHour());
+				System.out.println(res);
+				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i)+ "/notice", content);
+			}
+			else {
+				resNotice.setProfileImge(mService.getMember(content.getMemberId()).getProfileImg());
+				resNotice.setNickname(mService.getMember(content.getMemberId()).getNickName());
+				noticeVO.setMemberId(content.getMemberIds().get(i));
+				noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
+				noticeVO.setTitle(resNotice.getNickname());
+				noticeVO.setNoticeId(4);
+			}
 		}
 	}
 

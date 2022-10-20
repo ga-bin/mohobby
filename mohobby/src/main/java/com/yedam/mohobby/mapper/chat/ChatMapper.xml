@@ -222,7 +222,7 @@
 						)
 		}
 	</update>
-	<select id="getCheckIn" parameterType="com.yedam.mohobby.service.chat.ChatUserVO" resultType="com.yedam.mohobby.service.chat.ChatUserVO">
+	<select id="getCheckIn" parameterType="com.yedam.mohobby.service.chat.ChatUserVO" resultType="Integer">
 	select check_in 
 	from room 
 	where room_no=#{roomId}
