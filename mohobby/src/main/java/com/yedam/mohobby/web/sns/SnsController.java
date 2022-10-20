@@ -48,10 +48,6 @@ public class SnsController {
     public String insertFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
        System.out.println(snspostVO); //******해시태그에 값이 들어오지 않음. - 수정중
        
-       
-       System.out.println("snspostVO: " + snspostVO);
-       System.out.println("snsmediaVO: " + snsmediaVO);
-       System.out.println(fileList);
        service.regFeed(snspostVO, snsmediaVO, fileList);
         return "success";
     }
@@ -72,17 +68,9 @@ public class SnsController {
     }
    //피드 삭제 - 테스트완료
     @DeleteMapping("/myfeed/{postId}")
-    public String deleteFeed(@PathVariable("postId") int postId){
-        try {
+    public int deleteFeed(@PathVariable("postId") int postId){
             //file.delete로 파일 삭제할 수 있음 **********찾아볼 것
-            service.deleteFeed(postId);
-            System.out.println("글 삭제 완료");
-            return "success";
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("글 삭제 실패");
-            return "fail";
-        }
+          return service.deleteFeed(postId);
     }
    //인기강사피드조회 - 테스트완료
     //more기능 rownum가져오기(넘길 파라미너 : 마지막 번호)
@@ -189,6 +177,12 @@ public class SnsController {
     @GetMapping("/follow/search/following/{followerId}")
     public List<SnsFollowVO> getFollowingList(@PathVariable String followerId){
         return service.getFollowingList(followerId);
+    }
+    
+   //followCheck
+    @GetMapping("/follow/check")
+    public int followCheck(@RequestParam String myId, @RequestParam String targetId) {
+        return service.followCheck(myId, targetId);
     }
     
    //팔로워 조회 - 테스트완료
@@ -350,10 +344,10 @@ public class SnsController {
       }
     }
     //북마크 삭제
-    @DeleteMapping("/collection/bookmark/{postId}")
-    public String deleteBookmark(@PathVariable int postId) {
+    @DeleteMapping("/collection/bookmark/{postId}/{memberId}")
+    public String deleteBookmark(@PathVariable int postId, @PathVariable String memberId) {
        try {
-         service.deleteBookmark(postId);
+         service.deleteBookmark(postId, memberId);
          System.out.println("북마크삭제 완료");
          return "success";
       } catch (Exception e) {
@@ -365,15 +359,7 @@ public class SnsController {
     //북마크상태조회
     @GetMapping("/collection/bookmark/isBookmark/{postId}")
     public int isBookmark(@PathVariable int postId, @RequestParam String memberId) {
-        try {
-            service.isBookmark(postId, memberId);
-            System.out.println("북마크상태조회 완료");
-            return 1;
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("북마크상태조회 실패");
-            return 0;
-        }
+           return service.isBookmark(postId, memberId);
     }
     //컬렉션별 북마크 조회
     @GetMapping("/collection/bookmark/{catgId}")

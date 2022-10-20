@@ -45,6 +45,7 @@ public class SnsServiceImpl implements SnsService{
     @Override
     public boolean regFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
        System.out.println("filesize : " + fileList.size());
+       snspostVO.setPostId(getPostId());
        try {
           MultipartFile getFirstFile = fileList.get(0);
           String getFirstFileName = getFirstFile.getOriginalFilename();
@@ -64,7 +65,6 @@ public class SnsServiceImpl implements SnsService{
          snsVo.setHashtag(snspostVO.getHashtag());
          snsVo.setThumbnail(getFirstFileName);
          
-         snspostVO.setPostId(mapper.getPostId());
          mapper.insertFeed(snsVo);
           
          //hashtag 등록 및 업데이트
@@ -220,6 +220,14 @@ public class SnsServiceImpl implements SnsService{
    public List<SnsFollowVO> getFollowerList(String followingId) {
       return mapper.getFollowerList(followingId);
    }
+   //필로우 상태 조회
+   @Override
+   public int followCheck(String myId, String targetId) {
+       return mapper.followCheck(myId, targetId);
+   }
+   
+   
+   
    //유저전체
    @Override
    public List<MemberVO> getUsers() {
@@ -246,6 +254,7 @@ public class SnsServiceImpl implements SnsService{
         return mapper.selectHashtagForMain();
     }
    
+    
     /*
      * 좋아요
      */
@@ -327,8 +336,8 @@ public class SnsServiceImpl implements SnsService{
     }
     //북마크 삭제
     @Override
-    public int deleteBookmark(int postId) {
-        return mapper.deleteBookmark(postId);
+    public int deleteBookmark(int postId, String memberId) {
+        return mapper.deleteBookmark(postId, memberId);
     }
     //북마크 여부조회
     @Override
@@ -363,4 +372,5 @@ public class SnsServiceImpl implements SnsService{
     public int deleteHistory(int searchId) {
         return mapper.deleteHistory(searchId);
     }
+
 }

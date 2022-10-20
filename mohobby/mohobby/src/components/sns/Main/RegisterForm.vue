@@ -21,7 +21,7 @@
             multiple
             @change="onImageChange"
             name="fileList"
-            accept="image/*"
+            accept="image/png, image/jpeg, image/jpg"
           />
       <!-- 파일이름, 개수 -->
       <div v-for="(list,i) in fileList"
@@ -60,7 +60,6 @@
     <v-container fluid>
           <v-combobox
             v-model="model"
-            
             :hide-no-data="!search"
             :items="items"
             :search-input.sync="search"
@@ -149,7 +148,7 @@ data() {
   colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange'],
   editing: null,
   editingIndex: -1,
-  items: [
+  items: [ //임의로 바인딩해놓은 추천 해시태그
     { header: 'Select an option or create one' },
     {
       text: '오운완',
@@ -189,6 +188,8 @@ created() {
  
 },
 watch: {
+
+  //해시태그 색상변경
   model (val, prev) {
     if (val.length === prev.length) return
 
@@ -196,7 +197,7 @@ watch: {
       if (typeof v === 'string') {
         v = {
           text: v,
-          color: this.colors[this.nonce - 1],
+\mb          color: this.colors[this.nonce - 1],
         }
 
         this.items.push(v)
@@ -207,7 +208,9 @@ watch: {
     })
   }
 },
+
 methods: {
+
     //해시태그수정
     edit (index, item) {
       if (!this.editing) {
@@ -218,26 +221,30 @@ methods: {
         this.editingIndex = -1
       }
     },
-    //이미지 미리보기
-    onImageChange(file) {	// v-file-input @OnChange
+
+
+    //이미지 미리보기***********미리보기에서 사진 삭제돼야함
+    onImageChange(file) {
       if (!file) return;
       
-      file.forEach((getFile) => { //파일등 정보 forEach문으로 빼오기 
-        console.log("item.name: " + getFile.name);//name:파일명, size:바이트(인듯),type:(image/)png
-        const fileReader = new FileReader(); //파일리더기 생성
-        fileReader.onload = (e) => { //파일 성공적으로 읽어오면 이벤트 실행
-          this.uploadimageurl.push({url: e.target.result}); // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
-          console.log({url: e.target.result});
+      file.forEach((getFile) => { 
+        const fileReader = new FileReader();
+        console.log("item.name: " + getFile.name);
+        fileReader.onload = (e) => {
+          this.uploadimageurl.push({url: e.target.result});
         };
-        fileReader.readAsDataURL(getFile); //바이너리 파일을 Base64 Encode 문자열로 반환 Ex.) data:image/jpeg; base64, ….
+        fileReader.readAsDataURL(getFile);
       });
     },
+
+
     //게시글 등록
-    //미리보기에서 사진 삭제돼야함 ->
+    
     //첫번째 사진을 썸네일로
     uploadImage() {
+      let self = this;
       this.model.forEach((hashtag) => {
-        console.log("hashtag.text" + hashtag.text);
+        console.log("push hashtag: " + hashtag.text);
         this.getHashtag.push(hashtag.text);
       });
       //hashtag배열 스트링화
@@ -256,14 +263,12 @@ methods: {
         })
         .then(function (res) {
             console.log("게시글저장 성공!");
-            // this.goUserFeed(this.memberId);
+            console.log(this.$store.state.id);
+            self.$router.push({ path: '/snsUserFeed', query: {userId : self.$store.state.id} });
         })
         .catch(function (error) {
           console.log(error);
         })
-    },
-    goUserFeed(memberId) {
-        this.$router.push({ path: '/snsUserFeed', query: {userId : memberId} });
     },
 
   }

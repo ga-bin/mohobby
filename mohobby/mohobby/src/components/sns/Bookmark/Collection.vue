@@ -49,7 +49,7 @@
                 <div class="content-overlay"></div>
                 <!-- 북마크 저장시 저장 포스트의 첫번째 썸네일을 부모컴포넌트로 보내서 그걸 전달받기<img v-if="v-if='tnPostId != "" && thumbnail != ""'(전달받은 썸네일 있으면)" class="content-image" :src="require(`@/assets/image/sns/${img.postId}/${img.fileName}`)">  -->
                 <!-- 없으면 디폴트 이미지 -->
-                <img  class="content-image" :src="require(`@/assets/image/sns/1/0.png`)"
+                <img  class="content-image" :src="require(`@/assets/image/sns/0.png`)"
                       @click="goBookmark(collection.catgId, collection.catgName)">
                 <!-- 관리버튼을 누르면 삭제버튼이 뜨도록 -->
                 <div v-if="management" class="content-details fadeIn-bottom">
@@ -240,6 +240,5 @@
     };
 </script>
 
-<style scoped lang="css" src="@/assets/css/sns/Collection.css">
-</style>
+<style scoped lang="css" src="@/assets/css/sns/Collection.css" />
     

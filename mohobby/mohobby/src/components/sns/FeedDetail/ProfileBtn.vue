@@ -1,12 +1,11 @@
 <template>
     <div class="profile-bio">
-    
         <ul v-if='memberId != "" && memberId == getUserId'>
             <button class="btn profile-edit-btn">Edit Profile</button>
-        </ul>
-        
+        </ul>     
         <ul v-else>
-            <button class="btn profile-edit-btn2">Follow</button>
+            <button v-if="followStatus == 0" @click="follow(memberId, getUserId)" class="btn profile-edit-btn2">Follow</button>
+            <button v-else style="background-color: #2ac187; color: white;" @click="unfollow(memberId, getUserId)" class="btn profile-edit-btn2">Unfollow</button>
             <button class="btn profile-edit-btn2" @click="send">Message</button>
         </ul>
     </div>
@@ -22,27 +21,50 @@ export default {
         return {
             memberId : this.$store.state.id,
             getUserId : "",
+            followStatus: Number,
         }
     },
     created(){
         this.getUserId = this.userId;
+        this.followCheck(this.memberId, this.getUserId) ;
     },
     methods: {
-        //팔로우
-        follow(){
-            this.axios.post('/sns/cmt', {
-                followerId : this.memberId,
-                followingId : this.getUserId,
+        //팔로우 상태 조회
+        followCheck(memberId, getUserId){
+            this.axios('/sns/follow/check', {
+                params: {
+                    myId: memberId,
+                    targetId: getUserId,
+                }
             }).then(res => {
+                this.followStatus = res.data;
+                console.log("팔로우상태: "+this.followStatus);
+            }).catch(err => {
+                alert(err);
+            });
+        },
+        //팔로우
+        follow(memberId, getUserId){
+            this.axios.post('/sns/follow', {
+                followerId : memberId, //로그인세션 아이디
+                followingId : getUserId, //피드주인 아이디
+            }).then(res => {
+                console.log("팔로우성공 전"+this.followStatus);
+                this.followStatus = 1;
+                console.log("팔로우성공 후"+this.followStatus);
                 console.log("팔로우 성공! "+res);
             }).catch(err => {
                 console.log(err)
             });
         },
+        
         //언팔로우
-        unfollow(){
-            this.axios.delete('/sns/cmt/' + this.memberId + '/' + this.getUserId,
+        unfollow(memberId, getUserId){
+            this.axios.delete('/sns/follow/' + memberId + '/' + getUserId,
             ).then(res => {
+                console.log("언팔로우성공 전"+this.followStatus);
+                this.followStatus = 0;
+                console.log("언팔로우성공 후"+this.followStatus);
                 console.log("언팔로우 성공! "+res);
             }).catch(err => {
                 console.log(err)
@@ -51,65 +73,5 @@ export default {
     }
 }
 </script>
-<style scoped>
-  .btn {
-      display: inline-block;
-      font: inherit;
-      background: none;
-      border: none;
-      color: inherit;
-      padding: 0;
-      cursor: pointer;
-  }
-  .profile-bio {
-      float: left;
-      width: calc(66.666% - 2rem);
-  }
-  .profile-edit-btn {
-      font-size: 1.4rem;
-      line-height: 1.8;
-      border: 0.1rem solid #dbdbdb;
-      border-radius: 0.3rem;
-      padding: 0 2.4rem;
-      margin-left: 2rem;
-  }
-  .profile-edit-btn2 {
-      font-size: 1.4rem;
-      line-height: 1.8;
-      border: 0.1rem solid #dbdbdb;
-      border-radius: 0.3rem;
-      padding: 0 2.4rem;
-      margin-left: 2rem;
-  }
-
-  .profile-edit-btn2:hover {
-    background-color: #2ac187;
-    box-shadow: 0 2px 4px 0 rgba(13, 164, 101, 0.5);
-    color: white;
-}
-
-.profile-edit-btn2:active {
-    outline: 0.5rem auto #2ac187;
-}
-.profile-bio {
-      font-size: 1.6rem;
-      font-weight: 400;
-      line-height: 1.5;
-      margin-top: 2.3rem;
-  }
-
-  .profile-edit-btn {
-      text-align:center;
-      font-weight: 600;
-      width: 600px;
-      margin: 20px 0;
-  }
-  .profile-edit-btn2 {
-      text-align:center;
-      font-weight: 600;
-      width: 300px;
-      margin: 20px 0 10px;
-      padding: 8px;
-  }
-  
+<style scoped lang="css" src="@/assets/css/sns/ProfileBtn.css">
 </style>
