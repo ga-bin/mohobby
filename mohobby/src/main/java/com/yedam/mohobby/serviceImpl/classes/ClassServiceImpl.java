@@ -1,6 +1,5 @@
 package com.yedam.mohobby.serviceImpl.classes;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,11 +19,13 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.yedam.mohobby.mapper.classes.ClassMapper;
+import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
 import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
+import com.yedam.mohobby.service.classes.ClassPayVO;
 import com.yedam.mohobby.service.classes.ClassReviewVO;
 import com.yedam.mohobby.service.classes.ClassService;
 import com.yedam.mohobby.service.classes.ClassesVO;
@@ -100,7 +101,21 @@ public class ClassServiceImpl implements ClassService {
     // 강의챕터조회
     @Override
     public List<ClassChapterVO> getChapterList(int classId) {
-        return classMapper.getChapterList(classId);
+    	ClassChapterVO vo = new ClassChapterVO();
+    	vo.setClassId(classId);
+    	System.out.println(vo);
+        return classMapper.getChapterList(vo);
+    }
+    
+    // 강의 커리큘럼 진행율 조회
+    @Override
+    public ClassAttendanceVO getCurrProgress(ClassAttendanceVO vo) {
+    	return classMapper.getCurrProgress(vo);
+    }
+    
+    // 강의 결제내역 단건조회
+    public ClassPayVO getClassPayOne(ClassPayVO vo) {
+    	return classMapper.getClassPayOne(vo);
     }
 
     // html 저장

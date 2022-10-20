@@ -262,7 +262,7 @@ public class MoimController {
 	
 	//소모임 전체 멤버 리스트 조회
 	@GetMapping("/moimMemberList")
-	public List<MoimVO> getMoimMemberList(@RequestParam ("moimId")int moimId ){
+	public List<MoimMemberVO> getMoimMemberList(@RequestParam ("moimId")int moimId ){
 		return service.getAllMemberList(moimId);
 	}
 	
@@ -284,24 +284,43 @@ public class MoimController {
 		return service.moimVoteAllList(moimId);
 	}
 	
-	//소모임 투표 아이템 리스트 조회
+	// 소모임 투표 아이템 리스트 조회
 	@GetMapping("/voteItemList")
-	public List<MoimVoteListVO> moimVoteItemList(@RequestParam ("moimId") int moimId) {
+	public List<MoimVoteListVO> moimVoteItemList(@RequestParam("moimId") int moimId) {
 		System.out.println(moimId);
-		return service.moimVoteItemlist(moimId);		
+		return service.moimVoteItemlist(moimId);
 	}
-	
+
+	// 소모임 투표 아이템 선택
 	@GetMapping("/voteItemSelect")
-	public List<MoimVoteListVO> moimVoteItemSelect(@RequestParam ("moimId") int moimId, @RequestParam ("memberId") String memberId) {
+	public List<MoimVoteListVO> moimVoteItemSelect(@RequestParam("moimId") int moimId,
+			@RequestParam("memberId") String memberId) {
 		System.out.println(moimId);
-		return service.voteItemSelect(moimId, memberId);		
+		return service.voteItemSelect(moimId, memberId);
 	}
-	
-	//소모임 투표 결과
-	@GetMapping("/voteResult") 
-	public List<MoimVoteItemVO> votereulst(@Param("voteId")int voteId) {
+
+	// 소모임 투표 결과
+	@GetMapping("/voteResult")
+	public List<MoimVoteItemVO> votereulst(@Param("voteId") int voteId) {
 		return service.votereulst(voteId);
 	}
-	
+
+	// 소모임 투표
+	@GetMapping("/vote")
+	public List<MoimVoteListVO> vote(@RequestParam("voteId") int voteId, @RequestParam("memberId") String memberId,
+			@RequestParam("itemSelect") int itemSelect, @RequestParam("moimId") int moimId) {
+		return service.vote(voteId, memberId, itemSelect, moimId);
+	}
+
+	// 소모임 유저 선택 투표
+	@PutMapping("/selectVote")
+	public int selectVote(@RequestBody MoimVoteListVO vo) {
+		try {
+			service.UserSelectvote(vo);
+			return 1;
+		} catch (Exception e) {
+			return 0;
+		}
+	}
 }
 

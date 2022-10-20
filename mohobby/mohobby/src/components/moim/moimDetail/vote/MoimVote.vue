@@ -9,7 +9,7 @@
       </div>
     </v-card-actions>
     <v-card class="mx-auto mb-8" max-width="800" outlined v-for="(item,idx) in items" :key="item.date">
-      <v-list-item three-line @click="">
+      <v-list-item three-line>
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
         <v-list-item-content>
           <div class="text-overline mt-6">
@@ -24,7 +24,7 @@
       </v-list-item>
       <div class="vote">
         <div class="voteContent">
-          <v-card v-if="result == false">
+          <v-card v-if="result == false && vote != item.voteId">
             <v-card-actions class="pl-6 pt-5">{{item.topic}}</v-card-actions>
             <v-row>
               <v-col class="pl-10" cols="12" sm="4" md="4">
@@ -35,23 +35,26 @@
               </v-col>
             </v-row>
           </v-card>
-          <v-card-text v-else class="text--primary" v-for="item in content" :key="item.radio">
-            <p>{{item.radio}}</p>
-            <v-progress-linear :value=item.no>
+          <v-card-text v-else class="text--primary" v-for="item in content" :key="item.itemID">
+            <p>{{item.content}}</p>
+            <v-progress-linear :value=item.cnt>
             </v-progress-linear>
           </v-card-text>
         </div>
       </div>
+      {{itemSelectList[idx]}}
       <div v-if="itemSelectList[idx]['memberId'] === null">
-      <v-card-actions class="mr-5" @click="">
+      <v-card-actions class="mr-5">
         <v-spacer></v-spacer>
-        <v-btn>투표하기 데이터 없음</v-btn>
+        <v-btn @click="insertSelect(item.voteId, itemSelectList[idx]['itemSelect'])">투표하기 데이터 없음</v-btn>
       </v-card-actions>
       </div>
-      <div v-else>
-        <v-card-actions class="mr-5" @click="updateSelect()">
+      <div v-else-if="itemSelectList[idx]['memberId'] === memberId">
+        <v-card-actions class="mr-5">
         <v-spacer></v-spacer>
-        <v-btn>투표하기 데이터 있음</v-btn>
+        <v-btn v-if="item.voteId != vote" @click="updateSelect(item.voteId, itemSelectList[idx]['itemSelect'])">투표하기 데이터 있음</v-btn>
+        <v-btn v-if="item.voteId != vote" @click="voteResult(item.voteId)">결과확인</v-btn>
+        <v-btn v-if="item.voteId == vote" @click="voteResult(item.voteId)">목록으로</v-btn>
       </v-card-actions>
       </div>
     </v-card>
@@ -67,24 +70,12 @@ export default {
     return {
       moimId : this.$route.params.moimId,
       result : false,
+      vote : '',
       items: [],
       itemsList : [],
       itemSelectList : [],
-      content: [
-                    {
-                    radio: "티라미수 케잌",
-                    no : 5
-                    },
-                    {
-                    radio: "크림치즈 라즈베리 쿠키",
-                    no : 1,
-                  }
-                    ,
-                    {
-                      radio: "잠봉뵈르 시오빵",
-                      no : 3
-                    },
-                    ],
+      content: [],
+      memberId : this.$store.state.id,
     };
   },
   methods: {
@@ -137,9 +128,78 @@ export default {
         console.log(err)
       })
     },
-    updateSelect() {
-      console.log("데이터있음 데이터")
-      this.result = !this.result
+    updateSelect(voteId, select) {
+      this.axios.put("/selectVote", {
+          voteId : voteId,
+          memberId : this.$store.state.id,
+          itemSelect : select,
+          moimId : this.moimId
+      })
+      .then((resp) => {
+        console.log(resp)
+        this.voteResult(voteId)
+        this.getvoteList()
+        this.getvoteItemList()
+        this.voteItemSelect()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+      if(voteId === this.vote) {
+      this.vote = -1
+      } else {
+      this.vote = voteId
+      }
+    },
+    insertSelect(voteId, select) {
+      if(select != 0) {
+      this.axios.get("/vote",{
+        params : {
+          voteId : voteId,
+          memberId : this.$store.state.id,
+          itemSelect : select,
+          moimId : this.moimId
+        }
+      })
+      .then((resp)=> {
+        console.log(resp)
+        this.voteResult(voteId)
+        this.getvoteList()
+        this.getvoteItemList()
+        this.voteItemSelect()
+      })
+      .catch((err)=> {
+        console.log(err)
+      })
+    } else {
+      this.$swal('투표항목을 선택해주세요')
+    }
+      
+    },
+    voteResult(voteId) {
+      this.axios.get("/voteResult", {
+       params : {
+        voteId : voteId
+       } 
+      })
+      .then((resp)=> {
+        console.log(resp)
+        this.content = resp.data
+        if(voteId === this.vote) {
+        this.vote = -1
+         } else {
+        this.vote = voteId
+         }
+      })
+      .catch((err)=> {
+        console.log(err)
+      })
+    },
+    getList() {
+    this.getvoteList()
+    this.getvoteItemList()
+    this.voteItemSelect()
     }
   },
   created() {

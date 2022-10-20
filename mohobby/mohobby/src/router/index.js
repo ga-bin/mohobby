@@ -41,6 +41,12 @@ const routes = [
     name: "main",
     component: () => import("./../views/main/MainView"),
   },
+  // test
+  {
+    path: "/imageload",
+    name: "imageload",
+    component: () => import("./../components/common/ImageUpload"),
+  },
   // user
   {
     path: "/login",
@@ -139,7 +145,12 @@ const routes = [
   {
     path: "/classOfflineDetail",
     name: "classOfflineDetail",
-    component: () => import("./../views/lecture/list/classOfflineDetail"),
+    component: () => import("./../views/lecture/list/ClassOfflineDetail"),
+  },
+  {
+    path: "/classInput",
+    name: "classInput",
+    component: () => import("./../views/lecture/ClassInputView"),
   },
   // lecture
   {

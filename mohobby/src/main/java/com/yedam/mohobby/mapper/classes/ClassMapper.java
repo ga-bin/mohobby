@@ -5,9 +5,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
+import com.yedam.mohobby.service.classes.ClassPayVO;
 import com.yedam.mohobby.service.classes.ClassReviewVO;
 import com.yedam.mohobby.service.classes.ClassesVO;
 import com.yedam.mohobby.service.communal.JjimVO;
@@ -45,5 +47,11 @@ public interface ClassMapper {
     public void deleteJjim(JjimVO jjim);
 
     //강의 챕터 조회
-    public List<ClassChapterVO> getChapterList(int classId);
+    public List<ClassChapterVO> getChapterList(ClassChapterVO vo);
+    
+    //강의 결제내역 단건조회
+    public ClassPayVO getClassPayOne(ClassPayVO vo);
+    
+    //강의 커리큘럼 진행율 조회
+    public ClassAttendanceVO getCurrProgress(ClassAttendanceVO vo);
 }
