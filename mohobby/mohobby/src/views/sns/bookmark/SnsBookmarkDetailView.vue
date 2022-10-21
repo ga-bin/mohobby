@@ -5,7 +5,7 @@
             <!-- <div v-if="isBookmark"> -->
                 <div class="gallery">
                     <div class="gallery-item" v-for="(bookmark, i) in bookmarks" :key="i">
-                        <img @click.stop="goFeedDetail(bookmark.postId, bookmark.memberId)" class="gallery-image" :src="require(`@/assets/image/sns/${bookmark.postId}/0.png`)">
+                        <img @click.stop="goFeedDetail(bookmark.postId, bookmark.memberId)" class="gallery-image" :src="require(`@/assets/image/sns/${bookmark.postId}/${bookmark.thumbnail}`)">
                     </div>
                 </div>
             <!-- </div> -->

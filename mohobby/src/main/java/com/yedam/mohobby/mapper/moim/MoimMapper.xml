@@ -18,7 +18,7 @@ where moim_id=#{moimId}
    INSERT INTO moim (
                moim_id,
                moim_img,
-               moim_name,c
+               moim_name,
                moim_info,
                moim_catg,
                moim_region,
@@ -337,7 +337,7 @@ select * from moim_dutch where moim_id = #{moimId}
 		set cnt = cnt-1
 		where item_id = v_preSelect;
 
-		END;
+		END
 	</update>
 
 	<!-- 투표 중복체크 -->

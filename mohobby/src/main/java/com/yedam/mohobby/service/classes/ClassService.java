@@ -39,13 +39,22 @@ public interface ClassService {
     public void deleteJjim(JjimVO jjim);
     
     //강의 챕터 조회
-    public List<ClassChapterVO> getChapterList(int classId);
+    public List<ClassChapterVO> getChapterList(int classId, String memberId);
     
     //강의 커리큘럼 진행율 조회
     public ClassAttendanceVO getCurrProgress(ClassAttendanceVO vo);
     
+    //강의 커리큘럼 단건 조회
+    public ClassCurriculumVO getCurrInfo(int currId, String memberId);
+    
+    //강이 커리큘럼 단건 업데이트
+    public void updateAttdInfo(ClassAttendanceVO vo);
+    
     //강의 결제내역 단건조회
     public ClassPayVO getClassPayOne(ClassPayVO vo);
+    
+    //강의 준비물 조회
+    public List<ClassNeedsVO> getClassNeedsInfo(int classId);
     
     //html저장
     public void saveClassInfo(ClassInfoRequestVO req);

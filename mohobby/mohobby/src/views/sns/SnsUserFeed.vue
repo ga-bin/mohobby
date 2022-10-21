@@ -1,7 +1,7 @@
 <template>
-    <div id="wrap_box">
+  <div id="wrap_box">
+      <SnsSidebar />
       <div class="container">
-  
         <div class="profile">
           <!-- 프로필이미지 -->
           <div class="profile-image">

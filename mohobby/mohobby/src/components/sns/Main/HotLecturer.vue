@@ -3,7 +3,7 @@
   <div class="cards-container" >
     <!-- FIRST CARD -->
     <div class="card card-first" v-for="(info,i) in listInfo" :key="i">
-      <div class="card-header-wrapper">
+      <div class="card-header-wrapper" @click="goMyFeed(info.memberId)">
           <h2 class="card-title"></h2>
           <h4 class="card-subtitle">{{info.memberId}}</h4>
           <div class="card-avatar-wrapper" style="width:200px;">
@@ -47,6 +47,7 @@ export default {
 
   },
   methods: {
+    //피드상세로 이동
     getFeedDetail(memberId, postId) {
         this.$router.push({ path: '/snsFeedDetail', query: {writer : memberId, postId : postId} });
       },
@@ -61,6 +62,10 @@ export default {
             console.log(err);
           });
       },
+    //유저피드로 이동
+    goMyFeed(userId) {
+      this.$router.push({ path: "/snsUserFeed", query: { userId: userId } });
+    },
   },
 };
 </script>

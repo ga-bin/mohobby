@@ -35,21 +35,5 @@ public class AdminUserController {
 	
 	// 각 달별로 탈퇴한 회원 수
 	
-	// 신고된 유저 목록
-	@GetMapping("/adiminFlagUser")
-	public List<FlaggingVO> flagUserList() {
-		return service.flagUserList();
-	}
 	
-	// 신고된 유저 정보 업데이트
-	@PutMapping("/adminFlagUser")
-	public void updateFlagUser(FlaggingVO flaggingVO) {
-		service.updateFlagUser(flaggingVO);
-	}
-	
-	// 신고하기
-	@PostMapping("/flagging")
-	public void insertFlagging(@RequestBody FlaggingVO flaggingVO) {
-		service.insertFlagging(flaggingVO);
-	}
 }

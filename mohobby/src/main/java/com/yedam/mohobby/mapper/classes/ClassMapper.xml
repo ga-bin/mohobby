@@ -24,6 +24,15 @@
 		from class_chapter
 		where class_id = #{classId}
 	</select>
+	
+	<!-- 커리큘럼 단건 조회 -->
+	<select id="getCurrInfo" parameterType="java.util.HashMap" resultType="com.yedam.mohobby.service.classes.ClassCurriculumVO">
+		select c.*, nvl(a.view_progress, 0) view_progress
+		from class_curriculum c,
+		    (select * from class_attendance where member_id = #{memberId}) a
+		where c.curr_id = a.curr_id(+)
+		and c.curr_id = #{currId}
+	</select>
 
 
 	<insert id="insertClass" parameterType="com.yedam.mohobby.service.classes.ClassesVO">
@@ -180,7 +189,10 @@
 	
 	<!-- 강의게시글등록 -->
 	<insert id="addClassBoard" parameterType="com.yedam.mohobby.service.classes.ClassBoardVO">
-		<selectKey keyColumn="boardId,writeDate" keyProperty="boardId,writeDate" resultType="com.yedam.mohobby.service.classes.ClassBoardVO" order="AFTER">
+		<selectKey keyColumn="boardId,writeDate" 
+					keyProperty="boardId,writeDate" 
+					resultType="com.yedam.mohobby.service.classes.ClassBoardVO" 
+					order="AFTER">
 		select board_id, write_date from class_board where board_id in (select NVL(MAX(board_id), 0) from class_board)
 		</selectKey>
 		insert into class_board(
@@ -210,29 +222,35 @@
 	</insert>
 	
 	<!-- 커리큘럼 진행율 조회 -->
-	<select id="getCurrProgress" parameterType="com.yedam.mohobby.service.classes.ClassAttendanceVO" resultType="com.yedam.mohobby.service.classes.ClassAttendanceVO">
-	select  c.curr_id,
-	        c.view_progress,
-	        (select round(sum(view_progress)/count(curr_id))total_view_progres
-	        from
-	            (select c.curr_id, nvl(a.view_progress, 0) view_progress
-	            from class_curriculum c,
-	                (select *
-	                from class_attendance
-	                where member_id = #{memberId}) a
-	            where c.class_id = (select class_id from class_curriculum where curr_id = #{currId})
-	            and c.curr_id = a.curr_id(+)
-	            order by c.curr_id))total_view_progress
-	from class_attendance c
-	where member_id = #{memberId}
-	and curr_id = #{currId}	
+	<select id="getCurrProgress"
+			parameterType="com.yedam.mohobby.service.classes.ClassAttendanceVO" 
+			statementType="CALLABLE">
+	{
+	call class_member_attendance_info(
+		#{currId,mode=INOUT,jdbcType=INTEGER},
+		#{memberId,mode=IN, jdbcType=VARCHAR},
+		#{viewProgress,mode=OUT,jdbcType=INTEGER},
+		#{totalViewProgress,mode=OUT,jdbcType=INTEGER}
+	)}
+	
 	</select>
+	
+	<!-- 커리큘럼 단건 진행율 업데이트 -->
+	<update id="updateAttdInfo" parameterType="com.yedam.mohobby.service.classes.ClassAttendanceVO">
+		update class_attendance set view_progress = #{viewProgress} where curr_id = #{currId}
+		and member_id = #{memberId}
+	</update>
 	
 	<!-- 강의 결제내역 단건조회 -->
 	<select id="getClassPayOne" parameterType="com.yedam.mohobby.service.classes.ClassPayVO" resultType="com.yedam.mohobby.service.classes.ClassPayVO">
 		select * from class_pay
 		where class_id = #{classId}
 		and member_id = #{memberId}
+	</select>
+	
+	<!-- 강의 준비물 조회 -->
+	<select id="getClassNeedsInfo" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassNeedsVO">
+		select * from class_needs where class_id = #{classId}
 	</select>
 	
 	<!-- 강의게시글수정 -->
