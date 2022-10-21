@@ -25,8 +25,7 @@ public class AdminFlagController {
 	AdminFlagService service;
 	
 	// 신고된 유저 목록
-		@GetMapping("/"
-				+ "")
+		@GetMapping("/admimflaguser")
 		public List<FlaggingVO> flagUserList() {
 			return service.flagUserList();
 		}
@@ -65,4 +64,6 @@ public class AdminFlagController {
 		public void updateMoimOpen(@RequestBody MoimVO moimVO) {
 			service.updateMoimOpen(moimVO);
 		}
+		
+		// 신고된 유저 block
 }

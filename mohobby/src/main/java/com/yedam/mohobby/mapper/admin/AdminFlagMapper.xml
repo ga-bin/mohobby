@@ -38,4 +38,6 @@ delete from flagging where flag_id = #{flagId}
 <update id="updateMoimOpen" parameterType="com.yedam.mohobby.service.moim.MoimVO">
 update moim set moim_open = #{moimOpen} where moim_id = #{moimId}
 </update>
+
+<!--  신고된 유저 block --> -->
 </mapper>

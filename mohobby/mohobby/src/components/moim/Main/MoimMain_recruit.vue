@@ -92,6 +92,7 @@ export default {
       items: [],
       moimRight: "2",
       noneuser: false,
+      moimOneInfo: [],
     };
   },
   created() {
@@ -151,11 +152,28 @@ export default {
     join() {
       this.$router.push({ path: "login" });
     },
-    box(idx) {
-      this.$router.push({
-        name: "moimBoard",
-        params: { moimId: this.items[idx].moimId, boardType: 1 },
-      });
+    async box(idx) {
+      await this.getOneMoim(idx);
+      if (this.moimOneInfo.moimOpen == 1) {
+        this.$swal.fire("관리자에 의해 접근 금지된 모임입니다.");
+      } else {
+        this.$router.push({
+          name: "moimBoard",
+          params: { moimId: this.items[idx].moimId, boardType: 1 },
+        });
+      }
+    },
+    // 접근 유효성 검사할때 사용할 모임 단건 조회
+    async getOneMoim(idx) {
+      const vm = this;
+      await this.axios
+        .get("/moimOneInfo/" + this.items[idx].moimId, {})
+        .then((resp) => {
+          vm.moimOneInfo = resp.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
 };
