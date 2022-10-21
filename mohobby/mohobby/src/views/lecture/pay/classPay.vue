@@ -167,7 +167,7 @@
                                     <h3>총 준비물 금액</h3>
                                 </v-col>
                                 <v-col class="d-flex justify-end">
-                                    <h3>{{ needsPickList.length == 0 ? 0 : needsPickPrice | comma | won }}</h3>
+                                    <h3>{{ needsPickList.length == 0 ? '없음' : (needsPickPrice | comma | won) }}</h3>
                                 </v-col>
                             </v-row>
                             <v-row>
@@ -201,19 +201,19 @@
                             <h2 class="pb-5">결제 방식</h2>
                         </div>
                         <v-row class="pb-10">
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payCard">
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('html5_inicis', 'card')">
                                 카드결제
                             </v-card>
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payNoBank">
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('html5_inicis', 'vbank')">
                                 무통장입금
                             </v-card>
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payKakao">
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('kakaopay', 'card')">
                                 카카오페이
                             </v-card>
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payNaver">
-                                네이버페이
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('smilepay', 'card')">
+                                스마일페이
                             </v-card>
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payToss">
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('tosspay', 'card')">
                                 토스페이
                             </v-card>
                         </v-row>
@@ -274,7 +274,7 @@ export default {
                 }
             })
         },
-        payCard() {
+        payBtn(pg, method) {
             let vm = this;
             let payName = this.classInfo.className;
             if(payName.length > 8) {
@@ -285,34 +285,108 @@ export default {
             }
 
             IMP.request_pay({
-                pg: "html5_inicis",
-                pay_method: "card",
+                pg: pg,
+                pay_method: method,
                 merchant_uid: "ORD" + new Date().toISOString().substring(0,10).replace(/-/g,'') + "-" + new Date().getTime(),
                 name: payName,
                 amount: 1000,
-                buyer_email: "gildong@gmail.com",
-                buyer_name: "홍길동",
-                buyer_tel: "010-4242-4242",
-                buyer_addr: "서울특별시 강남구 신사동",
-                buyer_postcode: "01181"
+                buyer_email: vm.$store.state.user.email,
+                buyer_name: vm.$store.state.user.userName,
+                buyer_tel: vm.$store.state.user.phoneNum,
+                buyer_addr: vm.dlvyInfo.addr,
+                buyer_postcode: vm.dlvyInfo.postcode
             }, rsp => {
                 console.log(rsp);
                 if (rsp.success) {
                     console.log("결제 성공");
+                    console.log(rsp);
+                    console.log(rsp.data);
                 }
                 else {
                     console.log("결제 실패");
+                    console.log(rsp);
+                    console.log(rsp.data);
                 }
             });
         },
-        payNoBank() {
-            alert('무통장');
-        },
-        payKakao() {
-            alert('카카오');
-        },
         payNaver() {
-            alert('네이버');
+            let vm = this;
+            let payName = this.classInfo.className;
+            if(payName.length > 8) {
+                payName = payName.substring(0, 8) + '...';
+            }
+            if(this.needsPickList.length != 0) {
+                payName += (' 외 ' + this.needsPickList.length + '건');
+            }
+
+            IMP.request_pay({
+                pg : 'naverpay',
+                merchant_uid: "ORD" + new Date().toISOString().substring(0,10).replace(/-/g,'') + "-" + new Date().getTime(), //상점에서 관리하는 주문 번호
+                name : payName,
+                amount : vm.totalPrice,
+                buyer_email : vm.$store.state.user.email,
+                buyer_name : vm.$store.state.user.userName,
+                buyer_tel : vm.$store.state.user.phoneNum,
+                buyer_addr : vm.dlvyInfo.addr,
+                buyer_postcode : vm.dlvyInfo.postcode,
+                naverUseCfm : vm.$moment().format('YYYYMMDD'), //이용완료일자 (네이버페이 계약시 필수 파라미터로 설정된 경우에만 설정합니다.)
+                naverPopupMode : true, //팝업모드 활성화
+                m_redirect_url : "", //예 : http://yourservice.com/payments/complete
+                naverPurchaserName: "구매자이름",
+                naverPurchaserBirthday: "20151201",
+                naverChainId: "sAMplEChAINid",
+                naverMerchantUserKey: "가맹점의 사용자 키",
+                naverProducts : [{
+                "categoryType": "BOOK",
+                        "categoryId": "GENERAL",
+                        "uid": "107922211",
+                        "name": "한국사",
+                        "payReferrer": "NAVER_BOOK",
+                        "sellerId": "sellerA",
+                        "count": 10
+                    },
+                    {
+                        "categoryType": "MUSIC",
+                        "categoryId": "CD",
+                        "uid": "299911002",
+                        "name": "러블리즈",
+                        "payReferrer": "NAVER_BOOK",
+                        "sellerId": "sellerB",
+                        "count": 1
+                    }]
+            }, function(rsp) { //팝업 방식으로 진행 또는 결제 프로세스 시작 전 오류가 발생할 경우 호출되는 callback
+                if ( rsp.success ) {
+                    //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
+                    jQuery.ajax({
+                        url: "/payments/complete", //cross-domain error가 발생하지 않도록 주의해주세요
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            imp_uid : rsp.imp_uid
+                            //기타 필요한 데이터가 있으면 추가 전달
+                        }
+                    }).done(function(data) {
+                        //[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
+                        if ( everythings_fine ) {
+                            var msg = '결제가 완료되었습니다.';
+                            msg += '\n고유ID : ' + rsp.imp_uid;
+                            msg += '\n상점 거래ID : ' + rsp.merchant_uid;
+                            msg += '\n결제 금액 : ' + rsp.paid_amount;
+                            msg += '카드 승인번호 : ' + rsp.apply_num;
+
+                            alert(msg);
+                        } else {
+                            //[3] 아직 제대로 결제가 되지 않았습니다.
+                            //[4] 결제된 금액이 요청한 금액과 달라 결제를 자동취소처리하였습니다.
+                        }
+                    });
+                } else {
+                    var msg = '결제에 실패하였습니다.';
+                    msg += '에러내용 : ' + rsp.error_msg;
+
+                    alert(msg);
+                }
+            });
         },
         payToss() {
             alert('카드결제');

@@ -104,7 +104,7 @@
           </v-dialog>
         </div>
       </div> -->
-   <div class="right" v-if="memberId != '비회원'">
+      <div class="right" v-if="memberId != '비회원'">
         <v-btn text @click="moimFlagging">
           <v-icon small color="white">mdi-plus-circle-outline</v-icon>
           <div style="color: white">신고하기</div>
@@ -135,7 +135,7 @@
 <script>
 export default {
   props: {
-    moimId: Number
+    moimId: Number,
   },
   data() {
     return {
@@ -154,7 +154,7 @@ export default {
         { icon: "mdi-chart-pie", text: "N빵", route: "moimNbbang" },
       ],
       memberInfo: [],
-      moimMemberCount : 0,
+      moimMemberCount: 0,
     };
   },
   created() {
@@ -164,7 +164,7 @@ export default {
     this.getMoimMemberCount();
   },
   methods: {
-    setMemberInfo() {
+    async setMemberInfo() {
       this.memberId = this.$store.state.id;
       if (!this.memberId) {
         this.memberId = "비회원";
@@ -173,16 +173,28 @@ export default {
       } else if (this.memberId == "admin") {
         this.profileImg = "female.png";
       } else if (this.memberId != "" && this.memberId != "admin") {
-        this.profileImg = this.$store.state.user.profileImg;
-      } 
+        await this.getMemberInfo();
+        console.log(this.memberInfo.profileImg);
+        console.log(this.memberInfo.profileImg);
+        console.log(this.memberInfo.profileImg);
+        console.log(this.memberInfo.profileImg);
+        console.log(this.memberInfo.profileImg);
+        console.log(this.memberInfo.profileImg);
+        this.profileImg = this.memberInfo.profileImg;
+      }
     },
-    getMemberInfo() {
+    async getMemberInfo() {
       const vm = this;
-      this.axios({
+      await this.axios({
         url: "http://localhost:8088/java/member/" + this.memberId,
         method: "get",
       })
         .then(function (response) {
+          console.log("여기서부터임");
+          console.log(response.data);
+          console.log(response.data);
+          console.log(response.data);
+          console.log(response.data);
           console.log(response.data);
           vm.memberInfo = response.data;
           console.log(vm.memberInfo);
@@ -193,7 +205,7 @@ export default {
     },
     getMoimOneInfo() {
       const vm = this;
-       this.axios({
+      this.axios({
         url: "http://localhost:8088/java/moimOneInfo/" + this.moimId,
         method: "get",
       })
@@ -205,7 +217,7 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    },  
+    },
     getMoimMemberCount() {
       const vm = this;
       this.axios({
@@ -250,35 +262,36 @@ export default {
               );
             }
           });
-      // 모임 정원 수 초과 여부 검사
+        // 모임 정원 수 초과 여부 검사
       } else if (this.moimInfo.maxPeople <= this.moimMemberCount) {
         this.$swal.fire({
-          icon: 'error',
-          title: '모임의 정원 수가 다차서 가입할 수 없습니다.',
-        })
-      // 모임 가입조건 없는 경우
-      } else if (this.moimInfo.maxAge == 0 &&
+          icon: "error",
+          title: "모임의 정원 수가 다차서 가입할 수 없습니다.",
+        });
+        // 모임 가입조건 없는 경우
+      } else if (
+        this.moimInfo.maxAge == 0 &&
         this.moimInfo.minAge == 0 &&
-        this.moimInfo.gender == 0) {
-          this.$swal.fire({
-            title: '모임에 가입하시겠습니까?',
-            icon: 'warning',
+        this.moimInfo.gender == 0
+      ) {
+        this.$swal
+          .fire({
+            title: "모임에 가입하시겠습니까?",
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: '가입하기',
-            cancelButtonText: '취소하기'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.$swal.fire(
-                vm.insertMoim(),
-                '가입이 완료되었습니다.'
-              )
-            }
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "가입하기",
+            cancelButtonText: "취소하기",
           })
-        }
-        // 모입 가입조건 있는 경우
-        else if (
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$swal.fire(vm.insertMoim(), "가입이 완료되었습니다.");
+            }
+          });
+      }
+      // 모입 가입조건 있는 경우
+      else if (
         this.moimInfo.maxAge != 0 ||
         this.moimInfo.minAge != 0 ||
         this.moimInfo.gender != 0
@@ -297,28 +310,26 @@ export default {
             })
             .then((result) => {
               if (result.isConfirmed) {
-              vm.$router.push("/mypageprofile");
+                vm.$router.push("/mypageprofile");
               }
             });
           // 회원 정보 설정이 되어 있는데, 모임 조건과 일치하지 않는 경우
-        } else if(this.memberInfo.gender != this.moimInfo.gender || 
-           this.memberInfo.birth > this.moimInfo.maxAge || this.memberInfo.birth < this.moimInfo.minAge
+        } else if (
+          this.memberInfo.gender != this.moimInfo.gender ||
+          this.memberInfo.birth > this.moimInfo.maxAge ||
+          this.memberInfo.birth < this.moimInfo.minAge
         ) {
-        this.$swal.fire({
-          icon: 'error',
-          title: '모임의 가입 기준에 충족하지 않아 가입할 수 없습니다.',
-        })
+          this.$swal.fire({
+            icon: "error",
+            title: "모임의 가입 기준에 충족하지 않아 가입할 수 없습니다.",
+          });
         }
       }
     },
     // 모임 가입하기 로직(axios만들자)
-    insertMoim() {
-
-    },
+    insertMoim() {},
     // 모임 신고하기
-    moimFlagging() {
-      
-    }
+    moimFlagging() {},
   },
 };
 </script>
