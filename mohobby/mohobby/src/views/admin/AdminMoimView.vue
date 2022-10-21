@@ -71,7 +71,7 @@ export default {
       },
       moimFlagList: [],
       moimOneInfo: [],
-      moimOpen : 0,
+      moimOpen: 0,
     };
   },
   beforeCreate() {},
@@ -84,8 +84,7 @@ export default {
   updated() {},
   beforeUnmount() {},
   unmounted() {},
-  computed: {
-  },
+  computed: {},
   watch: {},
 
   methods: {
@@ -133,9 +132,9 @@ export default {
           inputValidator: (value) => {
             return new Promise((resolve) => {
               if (value) {
-                if(value == 1) {
+                if (value == 1) {
                   this.moimOpen = 1;
-                } else if(value == 0) {
+                } else if (value == 0) {
                   this.moimOpen = 0;
                 }
                 this.axios({

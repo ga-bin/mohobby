@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
+import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimService;
@@ -320,6 +321,46 @@ public class MoimController {
 			return 1;
 		} catch (Exception e) {
 			return 0;
+		}
+	}
+	
+	// 소모임 투표 중복선택
+	@PostMapping("/selectCheck")
+	public String vote_check(@RequestBody MoimVoteListVO vo) {
+		String result = "";
+		System.out.println("memberId = "+ vo.getMemberId()+ "voteId = " + vo.getVoteId() + "ItemSelect =" + vo.getItemSelect() + "moimId = " + vo.getMoimId());
+		int count = service.voteCheck(vo);
+		if(count == 0) {
+			result="YES";
+		} else {
+			result="NO";
+		}
+		return result;
+	}
+	
+	//소모임 투표 선택 검사
+	@GetMapping("/selectCheckItem")
+	public List<MoimVoteListVO> getselectCheckItem(@Param("moimId")int moimId, @Param("memberId")String memberId){
+		return service.selectCheck(moimId, memberId);
+	}
+	
+	//n빵 등록
+	public String insertNbbang(@RequestBody MoimDutchVO dutchVO) {
+		try {
+			service.dutchInsert(dutchVO);
+			return "success";
+		} catch (Exception e) {
+			return "fail"+e;
+		}
+	}
+	
+	//n빵 참여자 등록
+	public String insertMemberNbbang(@RequestBody List<MoimDutchPtpVO> dutptpVO) {
+		try {
+			service.dutchMemberInsert(dutptpVO);
+			return "success";
+		} catch(Exception e) {
+			return "fail"+e;
 		}
 	}
 }

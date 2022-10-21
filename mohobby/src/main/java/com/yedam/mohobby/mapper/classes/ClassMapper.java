@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Param;
 import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
-import com.yedam.mohobby.service.classes.ClassCurriculumVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
 import com.yedam.mohobby.service.classes.ClassNeedsVO;
 import com.yedam.mohobby.service.classes.ClassPayVO;

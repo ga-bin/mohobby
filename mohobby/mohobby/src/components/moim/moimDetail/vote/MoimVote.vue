@@ -30,7 +30,7 @@
               <v-col class="pl-10" cols="12" sm="4" md="4">
                 <v-radio-group v-model="itemSelectList[idx]['itemSelect']">
                   <v-radio v-for="vote in itemsList" v-if="item.voteId === vote.voteId" :key="vote.itemId" :label="vote.content" :value="vote.itemId"
-                    hide-details />
+                    hide-details/>
                 </v-radio-group>
               </v-col>
             </v-row>
@@ -42,17 +42,16 @@
           </v-card-text>
         </div>
       </div>
-      {{itemSelectList[idx]}}
       <div v-if="itemSelectList[idx]['memberId'] === null">
       <v-card-actions class="mr-5">
         <v-spacer></v-spacer>
-        <v-btn @click="insertSelect(item.voteId, itemSelectList[idx]['itemSelect'])">투표하기 데이터 없음</v-btn>
+        <v-btn @click="insertSelect(item.voteId, itemSelectList[idx]['itemSelect'],idx)">투표하기 데이터 없음</v-btn>
       </v-card-actions>
       </div>
       <div v-else-if="itemSelectList[idx]['memberId'] === memberId">
         <v-card-actions class="mr-5">
         <v-spacer></v-spacer>
-        <v-btn v-if="item.voteId != vote" @click="updateSelect(item.voteId, itemSelectList[idx]['itemSelect'])">투표하기 데이터 있음</v-btn>
+        <v-btn v-if="item.voteId != vote" @click="selectCheck(item.voteId, itemSelectList[idx]['itemSelect'], selectItemList[idx]['itemSelect'])">투표하기 데이터 있음</v-btn>
         <v-btn v-if="item.voteId != vote" @click="voteResult(item.voteId)">결과확인</v-btn>
         <v-btn v-if="item.voteId == vote" @click="voteResult(item.voteId)">목록으로</v-btn>
       </v-card-actions>
@@ -64,7 +63,10 @@
 
 export default {
   created() {
-    console.log(this.radioGroup)
+    this.getvoteList()
+    this.getvoteItemList()
+    this.voteItemSelect()
+    this.selectCheckItem()
   },
   data() {
     return {
@@ -75,6 +77,7 @@ export default {
       itemsList : [],
       itemSelectList : [],
       content: [],
+      selectItemList : [],
       memberId : this.$store.state.id,
     };
   },
@@ -128,12 +131,15 @@ export default {
         console.log(err)
       })
     },
-    updateSelect(voteId, select) {
+    updateSelect(voteId, select, preSelect) {
+      console.log("select : " + select)
+      console.log("preSelect : " + preSelect)
       this.axios.put("/selectVote", {
           voteId : voteId,
           memberId : this.$store.state.id,
           itemSelect : select,
-          moimId : this.moimId
+          moimId : this.moimId,  
+          preSelect : preSelect      
       })
       .then((resp) => {
         console.log(resp)
@@ -145,12 +151,6 @@ export default {
       .catch((err) => {
         console.log(err)
       })
-
-      if(voteId === this.vote) {
-      this.vote = -1
-      } else {
-      this.vote = voteId
-      }
     },
     insertSelect(voteId, select) {
       if(select != 0) {
@@ -188,6 +188,7 @@ export default {
         this.content = resp.data
         if(voteId === this.vote) {
         this.vote = -1
+        this.selectCheckItem()
          } else {
         this.vote = voteId
          }
@@ -196,17 +197,44 @@ export default {
         console.log(err)
       })
     },
-    getList() {
-    this.getvoteList()
-    this.getvoteItemList()
-    this.voteItemSelect()
+    selectCheck(voteId, select, preSelect) {
+      this.axios.post("/selectCheck",  {
+          voteId : voteId,
+          memberId : this.$store.state.id,
+          itemSelect : select,
+          moimId : this.moimId
+      })
+      .then((resp) => {
+        console.log(resp)
+        if (resp.data === 'YES') {
+          this.updateSelect(voteId, select, preSelect)
+          this.getvoteList()
+          this.getvoteItemList()
+          this.voteItemSelect()
+        } else {
+          this.$swal('중복투표를 할 수 없습니다.')
+        }
+      })
+      .catch((err)=> {
+        console.log(err)
+      })
+    },
+    selectCheckItem() {
+      this.axios.get("selectCheckItem", {
+        params : {
+          memberId : this.$store.state.id,
+          moimId : this.moimId
+        }
+      })
+      .then((resp)=> {
+        console.log(resp)
+        this.selectItemList = resp.data
+      })
+      .catch((err)=> {
+        console.log(err)
+      })
     }
   },
-  created() {
-    this.getvoteList()
-    this.getvoteItemList()
-    this.voteItemSelect()
-  }
 }
 </script>
 
