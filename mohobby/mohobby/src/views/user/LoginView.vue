@@ -57,6 +57,19 @@
                               Sign Up
                             </v-btn>
                             <br />
+                            <span
+                              style="margin-left: 70px; font-weight: bold"
+                              @click="findMemberId()"
+                            >
+                              아이디찾기</span
+                            >
+                            <span
+                              style="margin-left: 70px; font-weight: bold"
+                              @click="findMemberPassword()"
+                            >
+                              비밀번호 찾기</span
+                            >
+                            <br />
                             <br />
                             <!-- <p style="text-align: center;"> -->
                             <a id="custom-login-btn" @click="kakaoLogin()">
@@ -229,9 +242,14 @@ export default {
         .then(function (response) {
           if (response.data != "" && response.data.memberId != "admin") {
             console.log("if문 안에" + response.data);
+            if (response.data.delDate != null) {
+              vm.$swal.fire("탈퇴한 회원입니다.");
+              return;
+            }
             // 유저 id, 유저 정보 넣기
             vm.$store.state.id = vm.memberId;
             vm.$store.commit("setUserData", response.data);
+            // 유효성 검사
             // 메인으로 이동(로그인성공)
             vm.$router.push("/");
           } else if (response.data != "" && response.data.memberId == "admin") {
@@ -264,6 +282,10 @@ export default {
           if (response.data !== "" && response.data.constructor === Object) {
             //this.$store.commit("setId", this.memberId);
             console.log(response.data);
+            if (response.data.delDate != null) {
+              vm.$swal.fire("탈퇴한 회원입니다.");
+              return;
+            }
             vm.$store.state.id = vm.memberId;
             vm.$store.commit("setIsLoginTrue");
             vm.$store.commit("setUserData", response.data);
@@ -278,7 +300,42 @@ export default {
             // vm.$router.push("/register");
           }
         })
-        .catch(function (error) {});
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    findMemberId() {
+      const vm = this;
+      this.$swal
+        .fire({
+          title: "가입 시 입력한 이메일을 입력하세요",
+          html: `<input type="text" id="email" class="swal2-input" placeholder="Username">`,
+          confirmButtonText: "제출",
+          cancelButtonText: "취소",
+          focusConfirm: false,
+          preConfirm: () => {
+            const email = this.$swal.getPopup().querySelector("#email").value;
+            if (!email) {
+              this.$swal.showValidationMessage(`이메일을 입력해 주세요`);
+            }
+            return { email: email };
+          },
+        })
+        .then((result) => {
+          vm.email = result.value.email;
+          this.axios({
+            url: "http://localhost:8088/java/memberEmail/" + vm.email,
+            method: "get",
+          })
+            .then(function (response) {
+              vm.$swal.fire(
+                "가입하신 아이디는" + response.data.memberId + "입니다."
+              );
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        });
     },
   },
 };

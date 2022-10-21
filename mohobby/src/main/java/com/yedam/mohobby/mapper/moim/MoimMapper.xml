@@ -311,79 +311,79 @@ select * from moim_dutch where moim_id = #{moimId}
       END;
    </select>
    
-	<!-- 유저선택 투표 -->
-	<update id="UserSelectvote"
-		parameterType="com.yedam.mohobby.service.moim.MoimVoteListVO">
-		DECLARE
-		v_voteId NUMBER := #{voteId};
-		v_memberId VARCHAR2(100) := #{memberId};
-		v_itemSelect NUMBER := #{itemSelect};
-		v_moimId NUMBER := #{moimId};
-		v_preSelect Number := #{preSelect};
-		BEGIN
+   <!-- 유저선택 투표 -->
+   <update id="UserSelectvote"
+      parameterType="com.yedam.mohobby.service.moim.MoimVoteListVO">
+      DECLARE
+      v_voteId NUMBER := #{voteId};
+      v_memberId VARCHAR2(100) := #{memberId};
+      v_itemSelect NUMBER := #{itemSelect};
+      v_moimId NUMBER := #{moimId};
+      v_preSelect Number := #{preSelect};
+      BEGIN
 
-		update moim_vote_ptp
-		set item_select = v_itemSelect
-		where vote_id =
-		v_voteId
-		and moim_id = v_moimId
-		and member_id = v_memberId;
+      update moim_vote_ptp
+      set item_select = v_itemSelect
+      where vote_id =
+      v_voteId
+      and moim_id = v_moimId
+      and member_id = v_memberId;
 
-		update moim_vote_item
-		set cnt = cnt+1
-		where item_id = v_itemSelect;
+      update moim_vote_item
+      set cnt = cnt+1
+      where item_id = v_itemSelect;
 
-		update
-		moim_vote_item
-		set cnt = cnt-1
-		where item_id = v_preSelect;
+      update
+      moim_vote_item
+      set cnt = cnt-1
+      where item_id = v_preSelect;
 
-		END;
-	</update>
+      END;
+   </update>
 
-	<!-- 투표 중복체크 -->
-	<select id="voteCheck" resultType="Integer">
-		select count(*) from
-		moim_vote_ptp
-		where member_id = #{memberId}
-		and moim_id = #{moimId}
-		and
-		item_select = #{itemSelect}
-		and vote_id = #{voteId}
-	</select>
-	<select id="selectCheck"
-		resultType="com.yedam.mohobby.service.moim.MoimVoteListVO">
-		select v.vote_id, nvl(p.item_select, 0)item_select
-		from moim_vote v,
-		(select * from moim_vote_ptp where member_id = #{memberId}) p
-		where v.vote_id = p.vote_id(+)
-		and v.moim_id = #{moimId}
-		order by v.vote_id
-	</select>
-   
-   <!-- 소모임 n빵 등록
+   <!-- 투표 중복체크 -->
+   <select id="voteCheck" resultType="Integer">
+      select count(*) from
+      moim_vote_ptp
+      where member_id = #{memberId}
+      and moim_id = #{moimId}
+      and
+      item_select = #{itemSelect}
+      and vote_id = #{voteId}
+   </select>
+   <select id="selectCheck"
+      resultType="com.yedam.mohobby.service.moim.MoimVoteListVO">
+      select v.vote_id, nvl(p.item_select, 0)item_select
+      from moim_vote v,
+      (select * from moim_vote_ptp where member_id = #{memberId}) p
+      where v.vote_id = p.vote_id(+)
+      and v.moim_id = #{moimId}
+      order by v.vote_id
+   </select>
+ 
+   <!-- 소모임 n빵 등록 -->
+   <insert id="dutchInsert">
    <selectKey resultType="Integer" keyProperty="duchId" order="BEFORE"> 
       SELECT NVL(MAX(dutch_id), 0)+1 FROM moim_dutch
    </selectKey>
-   <insert id="dutchInsert">
       INSERT INTO moim_dutch
       VALUES(#{dutch_id},
-         	 #{memberId},
-         	 #{totlaPrice},
-         	 #{title},
-         	 #{people} ,
-         	 #{0},
-         	 #{moimId},
-         	 current_date)
+             #{memberId},
+             #{totlaPrice},
+             #{title},
+             #{people} ,
+             #{0},
+             #{moimId},
+             current_date)
    </insert>
-   
-   소모임 n빵 참여자 등록
+ 
+   <!-- 소모임 n빵 참여자 등록 -->
    <insert id="dutchMemberInsert">
-      INSERT INTO shop_purchase
+      INSERT INTO moim_dutch_ptp
       <foreach collection="memberId" item="arr" 
          separator="UNION ALL">
          SELECT
-         (#{dutchId},
+         ((select MAX(dutch_id) from moim_dutch),
          #{memberId},
          #{moimId},
          #{calcPrice},
@@ -391,15 +391,6 @@ select * from moim_dutch where moim_id = #{moimId}
          FROM
          dual
       </foreach>
-   </insert> --> 
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+   </insert>
+      
 </mapper>

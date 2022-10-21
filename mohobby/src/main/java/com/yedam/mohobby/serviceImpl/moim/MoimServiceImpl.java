@@ -153,7 +153,6 @@ public class MoimServiceImpl implements MoimService {
 	    return mapper.moimUserUpdate(vo);
 	 }
 
-
 	// 소모임 단건조회
 	@Override
 	public MoimVO getMoimInfo(int moimId) {

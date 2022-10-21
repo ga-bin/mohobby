@@ -53,15 +53,26 @@
             </div>
           </v-col>
           <v-col cols="8">
+
+
+
             <!-- 북마크아이콘 -->
             <div class="d-flex justify-end ma-2">
               <v-btn v-if="mark === 1" @click="bookmarkDel(items.postId, memberId)" icon>
                 <v-icon color="#2ac187">mdi-bookmark</v-icon>
               </v-btn>
-              <v-btn v-else @click="markLogin(memberId)" icon>
+              <v-btn v-else @click="markLogin(memberId,1)" icon>
                 <v-icon color="#2ac187">mdi-bookmark-outline</v-icon>
               </v-btn>
               <!-- 북마크아이콘 끝 -->
+
+
+              <!-- 카카오톡 공유 -->
+              <!-- <v-btn @click="markLogin(memberId,2)" icon>
+                <v-icon color="#2ac187">mdi-bookmark-outline</v-icon>
+              </v-btn> -->
+              <!-- 카카오톡 공유 끝 -->
+
 
               <!-- 
                 
@@ -512,14 +523,15 @@ export default {
 
 
     //북마크 전 로그인검증
-    markLogin(memberId){
-      if(this.confirmMember(memberId) == true){
-        this.dialog2 = true
+    markLogin(memberId,e){
+      if(this.confirmMember(memberId) == true && e==1){
+        this.dialog2 = true;
+      }else if(this.confirmMember(memberId) == true && e==2){
+        Kakao.Share.sendDefault();
       }else{
         this.loginConfirm();
-      }
+      }     
     },
-    
 
 
 
@@ -610,8 +622,10 @@ export default {
         .then((res) => {
           // console.log(thumbnailImg);
           console.log(res);
+          this.catgName = "";
           this.dialog3 = !this.dialog3;
           this.getCollectionList(memberId);
+
         })
         .catch((err) => {
           alert(err);

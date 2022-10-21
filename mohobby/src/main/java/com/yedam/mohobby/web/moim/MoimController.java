@@ -346,6 +346,7 @@ public class MoimController {
 	}
 	
 	//n빵 등록
+	@PostMapping("/makeNbbang")
 	public String insertNbbang(@RequestBody MoimDutchVO dutchVO) {
 		try {
 			service.dutchInsert(dutchVO);
@@ -356,6 +357,7 @@ public class MoimController {
 	}
 	
 	//n빵 참여자 등록
+	@PostMapping("/insertPtp")
 	public String insertMemberNbbang(@RequestBody List<MoimDutchPtpVO> dutptpVO) {
 		try {
 			service.dutchMemberInsert(dutptpVO);
