@@ -4,5 +4,8 @@ module.exports = defineConfig({
    [
     'vuetify'
   ],
-  lintOnSave : false
+  lintOnSave : false,
+  devServer: {
+    port : 8080,
+  }
 })
