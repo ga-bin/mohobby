@@ -24,86 +24,6 @@
           <div style="color: white">가입하기</div>
         </v-btn>
       </div>
-      <!-- <div class="right" v-if="right == 0 && member == 0">
-        <div class="text-center">
-          <v-dialog v-model="dialog" width="500">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn text v-bind="attrs" v-on="on">
-                <v-icon small color="white">mdi-plus-circle-outline</v-icon>
-                <div style="color: white">가입하기</div>
-              </v-btn>
-            </template>
-
-            <v-card>
-              <v-card-title class="text-h5 grey lighten-2">
-                가입하기
-              </v-card-title>
-
-              <v-card-text>
-                <br />
-                이 소모임은 가입조건이 설정되어 있습니다.
-                <br />
-                마이페이지에서 성별과 나이를 설정해주십시오.
-              </v-card-text>
-
-              <v-divider></v-divider>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="goMypage()"> 확인 </v-btn>
-
-                <v-btn
-                  class="ml-3"
-                  color="primary"
-                  text
-                  @click="dialog = false"
-                >
-                  취소
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </div>
-      </div> -->
-
-      <!-- 설정 되어있는 모하비 회원 -->
-      <!-- <div class="right" v-if="right == 0 && member == 1">
-        <div class="text-center">
-          <v-dialog v-model="dialog" width="500">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn text v-bind="attrs" v-on="on">
-                <v-icon small color="white">mdi-plus-circle-outline</v-icon>
-                <div style="color: white">가입하기</div>
-              </v-btn>
-            </template>
-
-            <v-card>
-              <v-card-title class="text-h5 grey lighten-2">
-                가입하기
-              </v-card-title>
-              <v-card-text>
-                <br />
-                이 소모임에 가입하기를 원하시면 아래 가입버튼을 눌러주십시오!
-              </v-card-text>
-
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="goMain()"> 가입 </v-btn>
-
-                <v-btn
-                  class="ml-3"
-                  color="primary"
-                  text
-                  @click="dialog = false"
-                >
-                  취소
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </div>
-      </div> -->
       <div class="right" v-if="memberId != '비회원'">
         <v-btn text @click="moimFlagging">
           <v-icon small color="white">mdi-plus-circle-outline</v-icon>
@@ -186,7 +106,7 @@ export default {
     async getMemberInfo() {
       const vm = this;
       await this.axios({
-        url: "http://localhost:8088/java/member/" + this.memberId,
+        url: "/member/" + this.memberId,
         method: "get",
       })
         .then(function (response) {
@@ -206,7 +126,7 @@ export default {
     getMoimOneInfo() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/moimOneInfo/" + this.moimId,
+        url: "/moimOneInfo/" + this.moimId,
         method: "get",
       })
         .then(function (response) {
@@ -221,7 +141,7 @@ export default {
     getMoimMemberCount() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/moimMemberCount/" + this.moimId,
+        url: "/moimMemberCount/" + this.moimId,
         method: "get",
       })
         .then(function (response) {
@@ -243,6 +163,13 @@ export default {
       console.log(this.moimInfo.maxAge);
       console.log(this.moimInfo.maxAge);
       console.log(this.moimInfo.gender);
+      console.log(this.memberInfo);
+      console.log(this.memberInfo);
+      console.log(this.memberInfo);
+      console.log(this.memberInfo);
+      console.log(this.memberInfo);
+      console.log(this.memberInfo);
+      console.log(this.memberInfo);
       if (this.memberId == "비회원") {
         this.$swal
           .fire({

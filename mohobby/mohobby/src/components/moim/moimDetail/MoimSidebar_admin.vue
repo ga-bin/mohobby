@@ -153,8 +153,25 @@ export default {
       } else if (this.memberId == "admin") {
         this.profileImg = "female.png";
       } else if (this.memberId != "" && this.memberId != "admin") {
-        this.profileImg = this.$store.state.user.profileImg;
+        this.getMemberInfo();
       }
+    }, // 로그인 회원 정보 가져와서 셋팅
+    getMemberInfo() {
+      const vm = this;
+      this.axios({
+        url: "/member/" + this.memberId,
+        method: "get",
+      })
+        .then(function (response) {
+          if (response.data != "") {
+            console.log(response.data);
+            vm.memberId = response.data.memberId;
+            vm.profileImg = response.data.profileImg;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
 };
