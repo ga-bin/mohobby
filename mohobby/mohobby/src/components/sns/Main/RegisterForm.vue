@@ -177,7 +177,7 @@ watch: {
       if (typeof v === 'string') {
         v = {
           text: v,
-\mb          color: this.colors[this.nonce - 1],
+          color: this.colors[this.nonce - 1],
         }
 
         this.items.push(v)
