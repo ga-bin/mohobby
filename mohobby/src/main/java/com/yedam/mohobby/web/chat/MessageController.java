@@ -48,9 +48,7 @@ public class MessageController {
 		ChatListContentResVO res = new ChatListContentResVO();
 		for (int i = 0; i < content.getMemberIds().size(); i++) {
 			System.out.println(content.getMemberIds().get(i));
-			System.out.println("=======================");
 			System.out.println(content);
-			System.out.println("=======================");
 			sendTemplate.convertAndSend("/queue/"+content.getMemberIds().get(i),content);
 			//상대방이 같은방에 없을때는 알림을 보낸다.
 			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0) {
