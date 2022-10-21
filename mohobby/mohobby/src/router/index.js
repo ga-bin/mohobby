@@ -41,12 +41,6 @@ const routes = [
     name: "main",
     component: () => import("./../views/main/MainView"),
   },
-  // test
-  {
-    path: "/imageload",
-    name: "imageload",
-    component: () => import("./../components/common/ImageUpload"),
-  },
   // user
   {
     path: "/login",
@@ -142,11 +136,6 @@ const routes = [
     name: "snsBookmarkDetail",
     component: () => import("@/views/sns/bookmark/SnsBookmarkDetailView"),
   },
-  {
-    path: "/classInput",
-    name: "classInput",
-    component: () => import("./../views/lecture/ClassInputView"),
-  },
   // lecture
   {
     path: "/class",
@@ -240,7 +229,8 @@ const routes = [
           {
             path: "location",
             name: "classLocation",
-            component: () => import("./../components/lecture/detail/classLocation"),
+            component: () =>
+              import("./../components/lecture/detail/classLocation"),
             props: true,
           },
         ],
@@ -294,7 +284,6 @@ const routes = [
     component: () => import("./../views/lecture/video/learnMainView"),
     props: true,
   },
-
   // moim
   {
     path: "/moimMain",
