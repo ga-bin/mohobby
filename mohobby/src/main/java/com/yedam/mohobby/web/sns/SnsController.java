@@ -327,6 +327,7 @@ public class SnsController {
     @GetMapping("/collection/{memberId}")
     public List<SnsBookmarkVO> getCollectionList(@PathVariable String memberId){
         System.out.println(memberId);
+        System.out.println(service.getBookmarkCtgs(memberId));
         return service.getBookmarkCtgs(memberId);
     }
     

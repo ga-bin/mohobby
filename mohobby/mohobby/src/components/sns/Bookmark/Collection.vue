@@ -47,10 +47,11 @@
         <div class="container" v-for="(collection,i) in collections" :key="i">
             <div class="content">
                 <div class="content-overlay"></div>
-                <!-- 북마크 저장시 저장 포스트의 첫번째 썸네일을 부모컴포넌트로 보내서 그걸 전달받기<img v-if="v-if='tnPostId != "" && thumbnail != ""'(전달받은 썸네일 있으면)" class="content-image" :src="require(`@/assets/image/sns/${img.postId}/${img.fileName}`)">  -->
+                <!-- 북마크 저장시 저장 포스트의 첫번째 썸네일을 부모컴포넌트로 보내서 그걸 전달받기<img v-if="v-if='tnPostId != "" (저장된 포스트가 있으면)" class="content-image" :src="require(`@/assets/image/sns/${img.postId}/${img.fileName}`)">  -->
                 <!-- 없으면 디폴트 이미지 -->
-                <img  class="content-image" :src="require(`@/assets/image/sns/0.png`)"
-                      @click="goBookmark(collection.catgId, collection.catgName)">
+                <v-img class="white--text align-end rounded-sm dark" aspect-ratio="1.2" v-if ='collection.postId == ""' :src="require('@/assets/image/sns/bookmark/bookmark_defalt.png')" />
+                <v-img class="white--text align-end rounded-sm dark" aspect-ratio="1.2" v-else  :src="require(`@/assets/image/sns/${collection.postId}/${collection.thumbnail}`)"
+                      @click="goBookmark(collection.catgId, collection.catgName)" />
                 <!-- 관리버튼을 누르면 삭제버튼이 뜨도록 -->
                 <div v-if="management" class="content-details fadeIn-bottom">
                   <v-btn color="#2ac187" v-if='collection.catgName!= "default" && editMode' class="text--white" dark v-bind="attrs" v-on="on" @click="showEditForm(collection.catgId)">수정</v-btn>
@@ -120,7 +121,9 @@
                 if(res.data.length == 0){//리스트 불러올 데이터가 없으면 디폴트 컬렉션 생성
                   this.createDefaultCollection(memberId);
                 }else{
+                  console.log(res.data);
                   this.collections = res.data;//or not 생성되어있는 리스트 호출
+                  console.log(this.collections);
                   console.log("컬렉션리스트 호출 성공!");
                 }
 

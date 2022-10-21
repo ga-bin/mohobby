@@ -45,7 +45,7 @@
     
     
     <!-- 미디어등록 -->
-   <insert id="insertMedia" parameterType="com.yedam.mohobby.service.sns.SnsMediaVO">
+   	<insert id="insertMedia" parameterType="com.yedam.mohobby.service.sns.SnsMediaVO">
       INSERT INTO sns_media (
                         media_id,
                         post_id,
@@ -583,11 +583,14 @@
 	
 	<!-- 컬렉션리스트 -->
 	<select id="getBookmarkCtgs" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
-        SELECT c.*, b.thumbnail 
-		  FROM sns_bookmark_catg c, sns_bookmark b
-		 WHERE c.catg_id = b.catg_id
-		   AND c.MEMBER_ID = 'user1'
-		 ORDER BY c.catg_id DESC
+		 SELECT *
+		   FROM (SELECT c.catg_id, c.member_id, c.catg_name, b.post_id, b.thumbnail, b.save_date,
+		           RANK() OVER (PARTITION BY c.catg_id ORDER BY save_date DESC) AS RNK
+		           FROM sns_bookmark_catg c, sns_bookmark b
+		          WHERE c.catg_id = b.catg_id(+)
+		            AND member_id = #{ memberId })
+		  WHERE RNK = '1'
+		  ORDER BY catg_id DESC
 	</select>
 
 
