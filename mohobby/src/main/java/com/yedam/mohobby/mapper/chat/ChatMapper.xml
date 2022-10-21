@@ -197,12 +197,18 @@
 	<!-- 채팅방 체크인 -->
 	<update id="updateCheckIn"
 		parameterType="com.yedam.mohobby.service.chat.ChatUserVO">
-		update room set check_in =1 where room_id=#{roomId}
+		update room 
+		set check_in =1 
+		where room_no=#{roomId} 
+		and member_id=#{memberId}
 	</update>
 		<!-- 채팅방 체크아웃 -->
 	<update id="updateCheckOut"
 		parameterType="com.yedam.mohobby.service.chat.ChatUserVO">
-		update room set check_in =0 where room_id=#{roomId}
+		update room 
+		set check_in =0 
+		where room_no=#{roomId} 
+		and member_id=#{memberId}
 	</update>
 	
 	<!-- 채팅방 전환시 체크인 아웃 -->
@@ -212,13 +218,14 @@
 		call checkInOut(
 						 #{preRoomId,mode=IN}
 						,#{currentRoomId,mode=IN}
+						,#{memberId,mode=IN}
 						)
 		}
 	</update>
-	<select id="getCheckIn" parameterType="Integer" resultType="Integer">
+	<select id="getCheckIn" parameterType="com.yedam.mohobby.service.chat.ChatUserVO" resultType="Integer">
 	select check_in 
 	from room 
 	where room_no=#{roomId}
-	group by check_in
+	and member_id=#{memberId}
 	</select>
 </mapper>

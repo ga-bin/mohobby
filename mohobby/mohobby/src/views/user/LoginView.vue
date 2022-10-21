@@ -46,7 +46,14 @@
                             >
                               Login
                             </v-btn>
-                            <v-btn color="#2ac187" depressed large block dark>
+                            <v-btn
+                              color="#2ac187"
+                              depressed
+                              large
+                              block
+                              dark
+                              @click="$router.push('/register')"
+                            >
                               Sign Up
                             </v-btn>
                             <br />
@@ -227,18 +234,17 @@ export default {
             vm.$store.commit("setUserData", response.data);
             // 메인으로 이동(로그인성공)
             vm.$router.push("/");
-          } else if(response.data != "" && response.data.memberId == "admin") {
+          } else if (response.data != "" && response.data.memberId == "admin") {
             console.log("else if문 안에" + response.data);
             vm.$store.state.id = vm.memberId;
             vm.$store.commit("setUserData", response.data);
             // 메인으로 이동(로그인성공)
             vm.$router.push("/adminuser");
-          }
-          else {
+          } else {
             vm.$swal.fire({
-              icon: 'error',
-              title: '아이디, 비밀번호가 일치하지 않습니다.',
-        })
+              icon: "error",
+              title: "아이디, 비밀번호가 일치하지 않습니다.",
+            });
           }
         })
         .catch(function (error) {

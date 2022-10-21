@@ -8,6 +8,7 @@
               <v-list>
                 <v-list-item-group>
                   <template v-for="(item, index) in roomList">
+                    {{item.roomNo}}
                     <v-list-item v-on:click="openRoom(item.roomNo)">
                       <v-list-item>
                         <v-avatar>
@@ -39,8 +40,7 @@
           <v-col cols="auto" class="flex-grow-1 flex-shrink-0 overflow-y-auto ">
             <v-card flat class="d-flex flex-column fill-height overflow-y-auto" max-height=700px >
               <v-card-title>
-                {{ this.$store.state.id }}
-                {{ roomId }}
+                {{ this.$store.state.user.nickName+" 님의 채팅방입니다" }}
               </v-card-title>
               <v-card-text class="flex-grow-1 overflow-y-auto">
                 <template v-for="(msg, i) in messages">
@@ -82,10 +82,10 @@ export default {
   data() {
     return {
       subTitle: "", //수정중
-      memberId: this.$store.state.id, //세션 로그인값
+      memberId: "", //세션 로그인값
       messages: [], //메세지 내역
       message: "",
-      roomId: this.$route.params.getRoomId, //방번호
+      roomId: "", //방번호
       roomList: [], //방목록정보
       stompClient: "", //소켓서버
       hour: "", //메세지시간
@@ -95,10 +95,12 @@ export default {
     };
   },
   created() {
+    this.memberId= this.$store.state.id,
+    this.roomId= this.$route.params.getRoomId,
     this.connect()
     this.getRoom()
     this.sortRoom()
-    this.updateCheckIn(this.$route.params.getRoomId)
+    this.CheckIn(this.roomId)
   },
   methods: {
     //채팅내역 정렬
@@ -116,18 +118,7 @@ export default {
       var hours = ("0" + today.getHours()).slice(-2);
       var minutes = ("0" + today.getMinutes()).slice(-2);
       var seconds = ("0" + today.getSeconds()).slice(-2);
-      this.createAt =
-        year +
-        "/" +
-        month +
-        "/" +
-        day +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        ":" +
-        seconds;
+      this.createAt = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
     },
     //소켓서버에 채팅전송
     send() {
@@ -159,30 +150,36 @@ export default {
       }
       this.message = "";
     },
-    CheckIn(roomId){      this.axios
+    CheckIn(roomId){     
+         this.axios
         .get("/updateCheckIn", {
-          params: { roomNo: roomId,
-          checkIn : 1},
+          params: { roomId: roomId,
+          checkIn : 1,
+          memberId:this.memberId},
         })
+        .then(function(res){console.log(res
+        )})
     },
     CheckOut(roomId){ this.axios
         .get("/updateCheckOut", {
-          params: { roomNo: roomId,
-          checkIn : 0},
+          params: { roomId: roomId,
+          checkIn : 0,
+          memberId:this.memberId},
         })
       },
         CheckInOut(preRoomId,curentRoomId){this.axios
           .get("/updateCheckInOut", {
           params: { preRoomId: preRoomId,
-            currentRoomId:curentRoomId}
-          ,
+            currentRoomId:curentRoomId,
+            memberId:this.memberId}
         })
         },
     // 채팅방에 채팅내역 출력
     openRoom(roomNo) {
       var vm = this;
       if(this.roomId !=roomNo){
-        CheckInOut(this.roomId,roomNo)
+        this.CheckInOut(this.roomId,roomNo)
+       
       this.roomId = roomNo
     }
       this.messages = [];

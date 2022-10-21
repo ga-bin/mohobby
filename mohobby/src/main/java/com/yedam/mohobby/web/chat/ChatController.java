@@ -82,17 +82,20 @@ public class ChatController {
 	public int deleteNotice(@RequestParam int noticeId) {
 		return nService.delectNotice(noticeId);
 	}
+	// 체크인
 	@GetMapping("/updateCheckIn")
-	public int updateCheckIn(@RequestParam int roomId) {
-		return cService.updateCheckIn(roomId);
+	public int updateCheckIn(@RequestParam int roomId,@RequestParam String memberId) {
+		return cService.updateCheckIn(roomId,memberId);
 	}
+	// 체크아웃
 	@GetMapping("/updateCheckOut")
-	public int updateCheckOut(@RequestParam int roomId) {
-		return cService.updateCheckIn(roomId);
+	public int updateCheckOut(@RequestParam int roomId,@RequestParam String memberId) {
+		return cService.updateCheckIn(roomId,memberId);
 	}
+	// 체크인아웃
 	@GetMapping("/updateCheckInOut")
-	public int updateCheckInOut(@RequestParam int preRoomId,@RequestParam int currentRoomId) {
+	public int updateCheckInOut(@RequestParam int preRoomId,@RequestParam int currentRoomId,@RequestParam String memberId) {
 		
-		return cService.updateCheckInOut(preRoomId,currentRoomId);
+		return cService.updateCheckInOut(preRoomId,currentRoomId,memberId);
 	}
 }

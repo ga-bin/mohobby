@@ -25,22 +25,5 @@ where
 </select>
 
 
-<!--  신고된 유저 목록 -->
-<select id="flagUserList" resultType="com.yedam.mohobby.service.admin.FlaggingVO">
-select flag_id, flag_from, flag_to, flag_code, flag_reason, admin_confirm, flag_result
-from flagging
-where flag_code like 'us%';
-</select>
 
-<!-- 신고된 유저 정보 업데이트 -->
-<update id="updateFlagUser" parameterType="com.yedam.mohobby.service.admin.FlaggingVO">
-update flagging set admin_confirm = #{adminConfirm}, flag_result = #{flagResult}
-where flag_id = #{flagId}; 
-</update>
-
-<!-- 신고하기 -->
-<insert id="insertFlagging" parameterType="com.yedam.mohobby.service.admin.FlaggingVO">
-insert into flagging (flag_id, flag_from, flag_to, flag_code, flag_reason, admin_confirm, flag_result)
-values (flag_id_seq.nextval, #{flagFrom}, #{flagTo}, #{flagCode}, #{flagReason}, 0, 0)
-</insert>
 </mapper>
