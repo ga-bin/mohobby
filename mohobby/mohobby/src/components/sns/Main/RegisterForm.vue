@@ -19,6 +19,23 @@
           name="fileList"
           accept="image/png, image/jpeg, image/jpg"
         />
+
+        <!-- 
+          
+            동적 FILE_INPUT_BOX TEST
+        
+        -->
+
+         <!--INPUT FILE박스 추가 버튼  -->
+        <div id="box"> 
+            <input type="file"><input type="button" value="추가" onclick="add_filebox()">
+        </div>
+
+
+
+
+
+
         <!-- 파일이름, 개수 -->
         <div v-for="(list, i) in fileList" :key="i">
           {{ list.name }}
@@ -177,7 +194,7 @@ watch: {
       if (typeof v === 'string') {
         v = {
           text: v,
-\mb          color: this.colors[this.nonce - 1],
+          color: this.colors[this.nonce - 1],
         }
 
         this.items.push(v)
@@ -190,6 +207,29 @@ watch: {
 },
 
 methods: {
+
+/*
+
+          
+     동적 FILE_INPUT_BOX TEST
+        
+
+*/
+    //파일박스추가
+    add_filebox(){
+
+        const box = document.getElementById("box"); //아이디가 box인 태그를 box 상수로 지정해준다.
+        const newP = document.createElement('p'); //newP라는 상수를 만드는데 그것은 p태그를 만드는것(삭제 버튼을 눌렀을때 div라는 부모노드 안에 p태그 자식노드를 지워주기 위함)
+
+
+        newP.innerHTML = "<input type='file'> <input type='button' value='삭제' onclick='remove(this)'>";
+        box.appendChild(newP); //box에 삭제버튼이 포함된 newP태그 추가
+
+    },
+    remove(){
+      document.getElementById("box").removeChild(obj.parentNode);
+    },
+
 
     //해시태그수정
     edit (index, item) {

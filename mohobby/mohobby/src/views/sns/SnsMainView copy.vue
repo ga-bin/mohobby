@@ -67,11 +67,12 @@
             <div id="searchResult" v-if="show">
                 <div id="nonuserFeeds">
                     <h3>검색페이지입니다</h3>
-                    <NoneUser :feeds="feeds" />
+                    <NoneUser :feedResult="feedResult" />
                 </div>
             </div>
-
-
+            <div id = "noSearchResult" v-if='feeds == ""' class="mx=-auto">
+                 <NoResult :temp="temp" /><!-- temp : 검색어 -->
+            </div>
             <div v-else>
                 <div id="hotLecturers">
                     <h3>추천 만능 재주꾼들 피드</h3>
@@ -89,18 +90,19 @@
   <script>
     import SnsSearchbar from "@/components/sns/Common/Searchbar.vue"
     import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
+    import NoResult from "@/components/sns/Common/NoResult.vue";
     import HotLecturer from "@/components/sns/Main/HotLecturer.vue";
     import NoneUser from "@/components/sns/Main/Noneuser.vue";
   
     export default {
       name: "snsMain",
-      components: { SnsSidebar, SnsSearchbar, HotLecturer, NoneUser },
+      components: { SnsSidebar, SnsSearchbar, HotLecturer, NoneUser, NoResult },
      
       data() {
           return {
-            feeds: [],//해시검색에 받아온
+              feeds: [],//해시검색에 받아온
+              feedResult: [],
               word: "",
-            //   noneuser : false,
               items: [], //HOT해시태그
               member : this.$store.state.id,
               show: false, //1:검색 결과 페이지
@@ -137,11 +139,14 @@
       },
 
       created() {
-          this.getHotHashtags();//함수실행
-          this.feeds=this.$route.params.hashtagResult; //피드디테일에서 받아옴 -> searchPage
+          this.getHotHashtags();//상단바 해시태그 키워드칩
+
+          //피드디테일의 해시태그 키워드검색 -> searchPage
+          this.feedResult=this.$route.params.hashtagResult;
+          this.show=this.$route.params.showing
+
           console.log(this.$route.params.hashtagResult);//(없을시 undefined)
           console.log(this.$store.state.id);
-          this.show=this.$route.params.showing
       },
 
       methods: {

@@ -328,6 +328,7 @@ export default {
   },
   beforeCreate() {},
   created() {
+    this.memberId = this.$route.query.memberId;
     this.getAllRegion();
     this.getAllCatg();
   },
