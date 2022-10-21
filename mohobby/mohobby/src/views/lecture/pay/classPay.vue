@@ -5,7 +5,15 @@
             <v-stepper-header>
                 <v-stepper-step
                     :complete="e1 > 1"
+                    :rules="[(classInfo) => {
+                        if(classInfo.classType == 0) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }]"
                     step="1"
+                    color="#2ac187"
                 >
                     준비물 구매
                 </v-stepper-step>
@@ -15,13 +23,21 @@
                 <v-stepper-step
                     :complete="e1 > 2"
                     step="2"
+                    :rules="[(classInfo) => {
+                        if(classInfo.classType == 0) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }]"
+                    color="#2ac187"
                 >
                     배송지 입력
                 </v-stepper-step>
 
                 <v-divider></v-divider>
 
-                    <v-stepper-step step="3">
+                    <v-stepper-step step="3" color="#2ac187">
                         결제하기
                     </v-stepper-step>
                 </v-stepper-header>
@@ -167,7 +183,7 @@
                                     <h3>총 준비물 금액</h3>
                                 </v-col>
                                 <v-col class="d-flex justify-end">
-                                    <h3>{{ needsPickList.length == 0 ? 0 : needsPickPrice | comma | won }}</h3>
+                                    <h3>{{ needsPickList.length == 0 ? '없음' : (needsPickPrice | comma | won) }}</h3>
                                 </v-col>
                             </v-row>
                             <v-row>
@@ -201,28 +217,23 @@
                             <h2 class="pb-5">결제 방식</h2>
                         </div>
                         <v-row class="pb-10">
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payCard">
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('html5_inicis', 'card')">
                                 카드결제
                             </v-card>
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payNoBank">
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('html5_inicis', 'vbank')">
                                 무통장입금
                             </v-card>
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payKakao">
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('kakaopay', 'card')">
                                 카카오페이
                             </v-card>
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payNaver">
-                                네이버페이
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('smilepay', 'card')">
+                                스마일페이
                             </v-card>
-                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payToss">
+                            <v-card class="ma-auto pa-auto"  width="120" outlined align="center" @click="payBtn('tosspay', 'card')">
                                 토스페이
                             </v-card>
                         </v-row>
                     </v-card>
-                    <v-btn
-                    color="primary"
-                    >
-                    Continue
-                    </v-btn>
 
                     <v-btn text>
                     Cancel
@@ -274,9 +285,10 @@ export default {
                 }
             })
         },
-        payCard() {
+        payBtn(pg, method) {
             let vm = this;
             let payName = this.classInfo.className;
+            let date = new Date();
             if(payName.length > 8) {
                 payName = payName.substring(0, 8) + '...';
             }
@@ -285,37 +297,29 @@ export default {
             }
 
             IMP.request_pay({
-                pg: "html5_inicis",
-                pay_method: "card",
-                merchant_uid: "ORD" + new Date().toISOString().substring(0,10).replace(/-/g,'') + "-" + new Date().getTime(),
+                pg: pg,
+                pay_method: method,
+                merchant_uid: "ORD" + date.toISOString().substring(0,10).replace(/-/g,'') + "-" + date.getTime(),
                 name: payName,
-                amount: 1000,
-                buyer_email: "gildong@gmail.com",
-                buyer_name: "홍길동",
-                buyer_tel: "010-4242-4242",
-                buyer_addr: "서울특별시 강남구 신사동",
-                buyer_postcode: "01181"
+                amount: vm.totalPrice,
+                buyer_email: vm.$store.state.user.email,
+                buyer_name: vm.$store.state.user.userName,
+                buyer_tel: vm.$store.state.user.phoneNum,
+                buyer_addr: vm.dlvyInfo.addr,
+                buyer_postcode: vm.dlvyInfo.postcode
             }, rsp => {
-                console.log(rsp);
+                let data = rsp;
                 if (rsp.success) {
-                    console.log("결제 성공");
+                    this.$router.push({ name: 'classPaySuccess', 
+                                        params: { resultInfo: data, classId: this.classId, date: date }
+                    }).catch(()=>{$router.go(0)});
                 }
                 else {
-                    console.log("결제 실패");
+                    this.$router.push({ name: 'classPayFail', 
+                                        params: { resultInfo: data, classId: this.classId, date: date, classInfo: this.classInfo}
+                    }).catch(()=>{$router.go(0)});
                 }
             });
-        },
-        payNoBank() {
-            alert('무통장');
-        },
-        payKakao() {
-            alert('카카오');
-        },
-        payNaver() {
-            alert('네이버');
-        },
-        payToss() {
-            alert('카드결제');
         },
     }
 }

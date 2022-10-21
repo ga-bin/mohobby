@@ -50,12 +50,43 @@ export default {
         },
         { icon: "mdi-alert-octagon", text: "유저 관리", route: "/adminuser" },
       ],
-      memberId: this.$store.state.id,
-      profileImg: this.$store.state.user.profileImg,
     };
   },
-  created() {},
-  methods: {},
+  created() {
+    this.setMemberInfo();
+  },
+  methods: {
+    setMemberInfo() {
+      this.memberId = this.$store.state.id;
+      if (!this.memberId) {
+        this.memberId = "비회원";
+        this.profileImg = "comfuck.jpg";
+        return;
+      } else if (this.memberId == "admin") {
+        this.profileImg = "female.png";
+      } else if (this.memberId != "" && this.memberId != "admin") {
+        this.getMemberInfo();
+      }
+    },
+    // 로그인 회원 정보 가져와서 셋팅
+    getMemberInfo() {
+      const vm = this;
+      this.axios({
+        url: "http://localhost:8088/java/member/" + this.memberId,
+        method: "get",
+      })
+        .then(function (response) {
+          if (response.data != "") {
+            console.log(response.data);
+            vm.memberId = response.data.memberId;
+            vm.profileImg = response.data.profileImg;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+  },
 };
 </script>
 <style scoped>

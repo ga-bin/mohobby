@@ -138,7 +138,6 @@
 </template>
 
 <script>
-import { lastIndexOf } from 'sockjs-client/lib/transport-list';
 
 export default {
   name: "classDetail",
@@ -262,13 +261,13 @@ export default {
           memberId: this.$store.state.id,
           }
       }).then(res => {
-          if(!res.data) {
-              this.$router.push({ name: 'classPay', 
-                                  params: { classId: this.classId, classInfo: this.classInfo }
-                          }).catch(()=>{$router.go(0)});
-          } else {
-              this.$swal('이미 수강 중인 강의입니다.', '얼른 학습하러 가보아요✍', 'info');
-          }
+        if(!res.data) {
+          this.$router.push({ name: 'classPay', 
+                              params: { classId: this.classId, classInfo: this.classInfo }
+                      }).catch(()=>{$router.go(0)});
+        } else {
+            this.$swal('이미 수강 중인 강의입니다.', '얼른 학습하러 가보아요✍', 'info');
+        }
       })
     },
   },

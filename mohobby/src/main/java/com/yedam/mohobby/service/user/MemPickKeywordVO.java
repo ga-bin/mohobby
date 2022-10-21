@@ -6,4 +6,5 @@ import lombok.Data;
 public class MemPickKeywordVO {
     private String memberId;
     private String keywordId;
+    private String keywordName;
 }

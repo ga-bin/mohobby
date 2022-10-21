@@ -275,6 +275,18 @@ const routes = [
         component: () => import("./../views/lecture/pay/classPay"),
         props: true,
       },
+      {
+        path: "pay/success",
+        name: "classPaySuccess",
+        component: () => import("./../views/lecture/pay/classPaySuccess"),
+        props: true,
+      },
+      {
+        path: "pay/fail",
+        name: "classPayFail",
+        component: () => import("./../views/lecture/pay/classPayFail"),
+        props: true,
+      },
     ],
   },
   // 강의 영상
