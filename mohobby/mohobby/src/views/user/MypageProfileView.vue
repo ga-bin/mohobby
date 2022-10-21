@@ -83,41 +83,24 @@
                             v-on="on"
                           ></v-text-field>
                         </template>
-                        <!-- <v-date-picker
-                          color="#2ac187"
-                          v-model="birth"
-                          scrollable
-                        >
-                          <v-spacer></v-spacer>
-                          <v-btn text color="#2ac187" @click="modal = false">
-                            Cancel
-                          </v-btn>
-                          <v-btn
-                            text
-                            color="#2ac187"
-                            @click="$refs.dialog.save(birth)"
-                          >
-                            OK
-                          </v-btn>
-                        </v-date-picker> -->
                       </v-dialog>
                     </v-col>
                     <!-- 성별 -->
                     <v-col>
-                      <v-radio-group label="성별" row v-model="gender" readonly>
+                      <v-radio-group label="성별" v-model="gender" row readonly>
                         <v-radio
                           label="여성"
-                          value="f"
+                          value="2"
                           color="#2ac187"
                         ></v-radio>
                         <v-radio
                           label="남성"
-                          value="m"
+                          value="1"
                           color="#2ac187"
                         ></v-radio>
                         <v-radio
                           label="선택안함"
-                          value="null"
+                          value="0"
                           color="#2ac187"
                         ></v-radio>
                       </v-radio-group>
@@ -182,6 +165,21 @@
                       @click="checkMember()"
                     >
                       회원정보수정
+                    </v-btn>
+
+                    <!-- 회원탈퇴 버튼 -->
+                    <!-- 회원정보 수정버튼 -->
+                    <v-btn
+                      type="submit"
+                      color="#2ac187"
+                      depressed
+                      large
+                      block
+                      dark
+                      class="mb-3"
+                      @click="deleteMember()"
+                    >
+                      회원탈퇴
                     </v-btn>
                   </div>
                 </v-card>
@@ -260,6 +258,11 @@ export default {
         .then(function (response) {
           if (response.data != "") {
             console.log(response.data);
+            console.log(response.data);
+            console.log(response.data);
+            console.log(response.data);
+            console.log(response.data);
+            console.log(response.data);
             vm.memberId = response.data.memberId;
             vm.password = response.data.password;
             vm.password2 = response.data.password;
@@ -336,7 +339,9 @@ export default {
                   });
                 }
               })
-              .catch(function (error) {});
+              .catch(function (error) {
+                console.log(error);
+              });
           }
         });
     },
@@ -351,9 +356,8 @@ export default {
         .then(function (response) {
           console.log(response);
           if (response.data != "") {
-            console.log(response.data);
             for (let i = 0; i < response.data.length; i++) {
-              vm.keyword += response.data[i].keywordId + ",";
+              vm.keyword += response.data[i].keywordName + ",  ";
             }
             console.log("vm.keyword" + vm.keyword);
           }
@@ -381,6 +385,38 @@ export default {
         })
         .catch(function (error) {
           console.log(error);
+        });
+    },
+    // 회원탈퇴
+    deleteMember() {
+      const vm = this;
+      this.$swal
+        .fire({
+          title: "정말 탈퇴하시겠습니까?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "탈퇴",
+          cancelButtonText: "취소",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.axios({
+              url: "http://localhost:8088/java/memberdelete",
+              method: "put",
+              data: {
+                memberId: vm.memberId,
+              },
+            })
+              .then(function (response) {
+                console.log(response);
+                vm.$swal.fire("탈퇴되었습니다.");
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }
         });
     },
   },

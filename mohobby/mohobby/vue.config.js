@@ -4,5 +4,6 @@ module.exports = defineConfig({
    [
     'vuetify'
   ],
-  lintOnSave : false
+  lintOnSave : false,
+  
 })

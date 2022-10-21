@@ -359,7 +359,7 @@ export default {
             vm.password2 = response.data.password;
             vm.nickName = response.data.nickName;
             vm.email = response.data.email;
-            vm.regionId = response.data.resionId;
+            vm.regionId = response.data.regionId;
             vm.phoneNum = response.data.phoneNum;
             vm.intro = response.data.intro;
             vm.gender = response.data.gender;
@@ -556,6 +556,11 @@ export default {
         return;
       }
       this.confirmMemKeyword();
+      console.log(this.gender);
+      console.log(this.gender);
+      console.log(this.gender);
+      console.log(this.gender);
+      console.log(this.gender);
       this.axios({
         url: "http://localhost:8088/java/memberupdate",
         method: "put",
@@ -658,6 +663,11 @@ export default {
     //이미지 업로드
     uploadImage() {
       const vm = this;
+      console.log(this.formData);
+      console.log(this.formData);
+      console.log(this.formData);
+      console.log(this.formData);
+      console.log(this.formData);
       this.axios({
         url: "/memberProfileUpdate", // 이미지 저장을 위해 back서버와 통신
         method: "POST",
