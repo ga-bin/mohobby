@@ -5,8 +5,7 @@
       <v-row>
         <v-col v-for="(feed,i) in feeds" :key="i" class="d-flex child-flex" cols="3">
           <div @click="goFeedDetail(feed.postId, feed.memberId)"> 
-            <v-img
-                   :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)"
+            <v-img :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)"
                   class="white--text align-end rounded-sm" aspect-ratio="1.2"
                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)">
               <div class="ml-6 mb-5">
@@ -28,14 +27,17 @@
 <script>
 export default {
   name: "NoneUser",
-  // props : ["card"],
+  props: {
+    feeds : [],
+  },
   data() {
       return {
         feeds: [],
       };
     },
     created() {
-      this.search();
+      this.search();  
+      this.feeds = this.feeds;
     }, 
     mounted () {
       // this.feeds;
@@ -57,16 +59,16 @@ export default {
         console.log(memberId);
         this.$router.push({ path: "/snsFeedDetail", query: {postId : postId, writer : memberId} });
       },
-      //infinite scroll
-      handleScroll() {
-      if (
-        window.scrollY + window.innerHeight >=
-        document.body.scrollHeight - 50
-        ) {
-          const new_feeds = this.feeds;
-        this.feeds = [...this.feeds, ...new_feeds];
-        }
-      },  
+      //무한스크롤
+      // handleScroll() {
+      // if (
+      //   window.scrollY + window.innerHeight >=
+      //   document.body.scrollHeight - 50
+      //   ) {
+      //     const new_feeds = this.feeds;
+      //   this.feeds = [...this.feeds, ...new_feeds];
+      //   }
+      // },  
   }
 };
 

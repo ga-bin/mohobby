@@ -583,9 +583,11 @@
 	
 	<!-- 컬렉션리스트 -->
 	<select id="getBookmarkCtgs" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
-		SELECT * FROM sns_bookmark_catg
-		 WHERE MEMBER_ID = #{ memberId }
-		 ORDER BY catg_id DESC
+        SELECT c.*, b.thumbnail 
+		  FROM sns_bookmark_catg c, sns_bookmark b
+		 WHERE c.catg_id = b.catg_id
+		   AND c.MEMBER_ID = 'user1'
+		 ORDER BY c.catg_id DESC
 	</select>
 
 

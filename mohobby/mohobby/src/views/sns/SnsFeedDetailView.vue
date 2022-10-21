@@ -1,6 +1,6 @@
 <template>
   <div id="container">
-    <SnsSidebar></SnsSidebar>
+    <SnsSidebar />
     <h1>피드디테일</h1>
     <v-container fluid>
       <v-card class="mx-auto" min-width="600">
@@ -178,7 +178,7 @@
 
         <!-- 
 
-          해시태그
+          해시태그(키워드검색)
 
          -->
         <v-chip-group id="hashtagGroup" class="ml-8">
@@ -347,6 +347,7 @@ export default {
 
     
 
+
     //게시글 삭제 검증
     feedSwal(postId) {
       this.$swal({
@@ -418,7 +419,7 @@ export default {
         .then((res) => {
           this.feeds = res.data; //해시태그 검색결과 담기
           console.log("AXIOS SUCCESS");
-          this.goSearch(this.feeds, this.show); // 메인 ->컴색컴포넌트
+          this.goSearch(this.feeds, this.show); // 메인 ->검색컴포넌트
         })
         .catch((err) => {
           console.log(err);
@@ -429,9 +430,7 @@ export default {
     //검색페이지 이동
     goSearch(feeds, show) {
       console.log("main->searchPage실행" + feeds);
-      this.$router.push({
-        name: "snsmain",
-        params: { hashtagResult: feeds, showing: show },
+      this.$router.push({ name: "snsmain", params: { hashtagResult: feeds, showing: show },
       });
     },
 
