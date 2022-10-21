@@ -289,12 +289,12 @@ export default {
                 pay_method: "card",
                 merchant_uid: "ORD" + new Date().toISOString().substring(0,10).replace(/-/g,'') + "-" + new Date().getTime(),
                 name: payName,
-                amount: vm.totalPrice,
-                buyer_email: vm.$store.state.user.email,
-                buyer_name: vm.$store,
-                buyer_tel: vm.$store.state.user.phoneNum,
-                buyer_addr: vm.dlvyInfo.addr,
-                buyer_postcode: vm.dlvyInfo.postcode
+                amount: 1000,
+                buyer_email: "gildong@gmail.com",
+                buyer_name: "홍길동",
+                buyer_tel: "010-4242-4242",
+                buyer_addr: "서울특별시 강남구 신사동",
+                buyer_postcode: "01181"
             }, rsp => {
                 console.log(rsp);
                 if (rsp.success) {
