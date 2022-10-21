@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
+import com.yedam.mohobby.service.classes.ClassCurriculumVO;
 import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
+import com.yedam.mohobby.service.classes.ClassNeedsVO;
 import com.yedam.mohobby.service.classes.ClassPayVO;
 import com.yedam.mohobby.service.classes.ClassReviewVO;
 import com.yedam.mohobby.service.classes.ClassService;
@@ -140,13 +142,28 @@ public class ClassController {
 	    classService.updateClassBoard(board);
 	}
 	
+	//강의 커리큘럼 단건 조회
+	@GetMapping("/class/learn/{currId}")
+	public @ResponseBody ClassCurriculumVO getCurrInfo(
+			@PathVariable int currId, 
+			@RequestParam(required=false) String memberId) {
+		return classService.getCurrInfo(currId, memberId);
+	}
+	
 	//강의 커리큘럼 진행율 조회
 	@GetMapping("/class/learn/progress/{currId}")
 	public @ResponseBody ClassAttendanceVO getCurrProgress(@PathVariable int currId, @RequestParam String memberId) {
 		ClassAttendanceVO vo = new ClassAttendanceVO();
 		vo.setCurrId(currId);
 		vo.setMemberId(memberId);
-		return classService.getCurrProgress(vo);
+		classService.getCurrProgress(vo);
+		return vo;
+	}
+	
+	//강의 커리큘럼 단건 진행율 업데이트
+	@PutMapping("/class/learn/update")
+	public void updateAttdInfo(@RequestBody ClassAttendanceVO vo) {
+		classService.updateAttdInfo(vo);
 	}
 	
 	//강의 결제내역 단건 조회
@@ -156,6 +173,12 @@ public class ClassController {
 		vo.setClassId(classId);
 		vo.setMemberId(memberId);
 		return classService.getClassPayOne(vo);
+	}
+	
+	//강의 준비물 조회
+	@GetMapping("/class/pay/needs/{classId}")
+	public @ResponseBody List<ClassNeedsVO> getClassNeedsInfo(@PathVariable int classId) {
+		return classService.getClassNeedsInfo(classId);
 	}
 	
 	//찜 등록
@@ -172,8 +195,10 @@ public class ClassController {
 	
 	// 강의챕터조회
 	@GetMapping("/class/chapterList")
-	 public List<ClassChapterVO> getChapterList(@RequestParam int classId) {
-        return classService.getChapterList(classId);
+	 public List<ClassChapterVO> getChapterList(
+			 @RequestParam(required=true) int classId, 
+			 @RequestParam(required=false) String memberId) {
+        return classService.getChapterList(classId, memberId);
     }
 
 }

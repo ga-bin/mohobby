@@ -8,7 +8,9 @@ import org.apache.ibatis.annotations.Param;
 import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
+import com.yedam.mohobby.service.classes.ClassCurriculumVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
+import com.yedam.mohobby.service.classes.ClassNeedsVO;
 import com.yedam.mohobby.service.classes.ClassPayVO;
 import com.yedam.mohobby.service.classes.ClassReviewVO;
 import com.yedam.mohobby.service.classes.ClassesVO;
@@ -52,6 +54,16 @@ public interface ClassMapper {
     //강의 결제내역 단건조회
     public ClassPayVO getClassPayOne(ClassPayVO vo);
     
+    //강의 준비물 조회
+    public List<ClassNeedsVO> getClassNeedsInfo(int classId);
+    
     //강의 커리큘럼 진행율 조회
     public ClassAttendanceVO getCurrProgress(ClassAttendanceVO vo);
+    
+    //커리큘럼 단건조회
+    public ClassCurriculumVO getCurrInfo(
+    		@Param("currId") int currId, 
+    		@Param("memberId") String memberId);
+    
+    public void updateAttdInfo(ClassAttendanceVO vo);
 }

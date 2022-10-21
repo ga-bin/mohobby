@@ -36,7 +36,7 @@
                             />
                     </v-card-actions>
                     <!-- 검색창 끝 -->
-                    <!-- 상단바 HOT해시태그 -->
+                    <!-- 상단바 HOT해시태그 (키워드검색) -->
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <div id="chip">
@@ -57,24 +57,29 @@
                             </v-row>
                         </div>
                     </v-card-actions>
+                </div>
             </div>
-        </div>
 
-        <!-- 검색컴포넌트 -->
-        <div id="searchResult" v-if="show">
-            <SearchPage :feeds="feeds" />
+            <!-- 검색컴포넌트 
+                검색결과가 있을땐 show를 트루로 바꿔서 HotList가 안보이게되도록.
+            -->
+
+            <div id="searchResult" v-if="show">
+                <div id="nonuserFeeds">
+                    <h3>검색페이지입니다</h3>
+                    <NoneUser :feeds="feeds" />
+                </div>
             </div>
+
+
             <div v-else>
-                <!-- 메인 컴포넌트 -->
                 <div id="hotLecturers">
-                <!-- 인기 피드리스트 -->
                     <h3>추천 만능 재주꾼들 피드</h3>
                     <HotLecturer name="this.items" />
                 </div>
 
                 <div id="nonuserFeeds">
                     <h3>재주 견습생들 피드</h3>
-                    <!-- 랜덤피드 무한스크롤링 -->
                     <NoneUser />
                 </div>
             </div> 
@@ -84,17 +89,16 @@
   <script>
     import SnsSearchbar from "@/components/sns/Common/Searchbar.vue"
     import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
-    import SearchPage from "@/views/sns/SnsSearchPage.vue";
     import HotLecturer from "@/components/sns/Main/HotLecturer.vue";
     import NoneUser from "@/components/sns/Main/Noneuser.vue";
   
     export default {
       name: "snsMain",
-      components: { SnsSidebar, SnsSearchbar, HotLecturer, NoneUser, SearchPage },
+      components: { SnsSidebar, SnsSearchbar, HotLecturer, NoneUser },
      
       data() {
           return {
-              feeds: [],//해시검색에 받아온
+            feeds: [],//해시검색에 받아온
               word: "",
             //   noneuser : false,
               items: [], //HOT해시태그
@@ -120,7 +124,9 @@
             search:"", //검색한 단어
           }
       },
+
       watch: {
+
         //검색창
         userInput(val) {
             if (!val) {
@@ -129,6 +135,7 @@
             this.fetchEntriesDebounced()
         },
       },
+
       created() {
           this.getHotHashtags();//함수실행
           this.feeds=this.$route.params.hashtagResult; //피드디테일에서 받아옴 -> searchPage
@@ -136,6 +143,7 @@
           console.log(this.$store.state.id);
           this.show=this.$route.params.showing
       },
+
       methods: {
           //상단바에 표시되는 top6해시태그
           getHotHashtags() {
@@ -146,7 +154,7 @@
             });
           },
 
-          //해시태그 검색
+          //키워드 해시태그 검색
           searchHashtag(getHashtag){
               console.log("받아온 해시태그 ->");
               console.log(getHashtag);
@@ -169,12 +177,14 @@
                   console.log(err);
               });
           },
+
          //댓글 enter등록
          enter(search){
             if (window.event.keyCode == 13) {
             this.search(search);
             }
         },
+
           //검색
           search(temp) {
             //#을 붙여 검색해보세요 -> 해시태그
@@ -208,6 +218,7 @@
               this.$router.push({ path: 'snsFeedRegister' })
               }
           },
+
           //글등록버튼
           regFeedForm(member) {
             if(member == "" || member == null){
@@ -217,6 +228,7 @@
                 this.$router.push({ path: 'snsFeedRegister' });
             }
           },
+
           //내 피드로 이동
           goMyFeed(member){
             if (member == undefined || member == null || member =="") {
@@ -224,6 +236,7 @@
             }
             this.$router.push({ name: 'snsUserFeed', query: {userId : member} });
           },
+
           //검색창
           fetchEntriesDebounced() {
             // cancel pending call

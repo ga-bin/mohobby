@@ -1,185 +1,234 @@
 <template>
-    <div>
-        <AdminSidebar></AdminSidebar>
-       <v-card
-    class="mx-auto text-center"
-    color="green"
-    dark
-    max-width="600"
-  >
-    <v-card-text>
-      <v-sheet color="rgba(0, 0, 0, .12)">
-        <v-sparkline
-          :value="value"
-          color="rgba(255, 255, 255, .7)"
-          height="100"
-          padding="24"
-          stroke-linecap="round"
-          smooth
-        >
-          <template v-slot:label="item">
-            ${{ item.value }}
-          </template>
-        </v-sparkline>
-      </v-sheet>
-    </v-card-text>
-
-    <v-card-text>
-      <div class="text-h4 font-weight-thin">
-        회원수 증가률
-      </div>
-    </v-card-text>
-
-    <v-divider></v-divider>
-
-    <v-card-actions class="justify-center">
-      <v-btn
-        block
-        text
+  <main>
+    <AdminSidebar></AdminSidebar>
+    <div style="margin-left: 60px; width: 1000px">
+      <br />
+      <h3>신고된 유저</h3>
+      <br />
+      <v-data-table
+        :headers="headers"
+        :items="moimUserList"
+        sort-by="calories"
+        class="elevation-1"
       >
-        Go to Report
-      </v-btn>
-    </v-card-actions>
-  </v-card>
-    <v-row> 
-        <h3>신고된 유저</h3>
-        <v-col lg="12">
-            <v-data-table
-                :headers="headers"
-                :items="flags"
-                :items-per-page="5"
-                class="elevation-1">
-            <template v-slot:item.action>
-                <v-btn color="success">View</v-btn>
-            </template>
-            </v-data-table>
-        </v-col>
-    </v-row>
+        <template v-slot:item.actions="{ item }">
+          <v-icon small class="mr-2" @click="editFlagUser(item)">
+            mdi-pencil
+          </v-icon>
+          <v-icon @click="deleteFlagUser(item)"> mdi-delete </v-icon>
+        </template>
+        small
+
+        <template v-slot:no-data>
+          <v-btn color="primary" @click="initialize"> Reset </v-btn>
+        </template>
+        <template v-slot:item.showDetail="{ item }">
+          <v-icon @click="goToMoim(item)"> mdi-arrow-right-bold-box </v-icon>
+        </template>
+        small
+
+        <template v-slot:no-data>
+          <v-btn color="primary" @click="initialize"> Reset </v-btn>
+        </template>
+      </v-data-table>
     </div>
+  </main>
 </template>
 <script>
 import AdminSidebar from "../../components/admin/AdminSidebar.vue";
 export default {
-    components: { AdminSidebar },
-     data () {
-      return {
-        headers: [
-          {
-            text: '신고번호',
-            align: 'start',
-            sortable: false,
-            value: 'flag_id',
-          },
-          { text: '신고자', value: 'flag_from' },
-          { text: '신고대상자', value: 'flag_to' },
-          { text: '신고코드', value: 'flag_code' },
-          { text: '신고이유', value: 'flag_reason' },
-          { text: '상세보기', value: 'action' },
-          { text: '관리자 승인여부', value: 'admin_confirm' },
-          { text: '신고결과', value: 'flag_result' },
-        ],
-        flags: [
-          {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '상대방을 비방하는 글을 올렸습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-            {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '상대방을 비방하는 글을 올렸습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-             {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '상대방을 비방하는 글을 올렸습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-             {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '상대방을 비방하는 글을 올렸습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-            {
-            flag_id: '1',
-            flag_from: 'user1',
-            flag_to: 'user2',
-            flag_code: 10,
-            flag_reason: '상대방을 비방하는 글을 올렸습니다.',
-            admin_confirm: '확인중',
-            flag_result: '',
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-            iron: '0%',
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-            iron: '2%',
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-            iron: '45%',
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-            iron: '22%',
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-            iron: '6%',
-          },
-        ],
-        value: [
-        423,
-        446,
-        675,
-        510,
-        590,
-        610,
-        760,
+  name: "",
+  components: { AdminSidebar },
+  data() {
+    return {
+      dialog: false,
+      dialogDelete: false,
+      headers: [
+        {
+          text: "신고번호",
+          align: "start",
+          sortable: false,
+          value: "flagId",
+        },
+        { text: "신고자", value: "flagFrom" },
+        { text: "신고소모임", value: "flagTo" },
+        { text: "신고코드", value: "flagCode" },
+        { text: "신고이유 (g)", value: "flagReason" },
+        { text: "관리자 승인여부", value: "adminConfirm" },
+        { text: "신고결과", value: "flagResult" },
+        { text: "수정하기", value: "actions", sortable: false },
+        { text: "상세보기", value: "showDetail", sortable: false },
       ],
-    }
-     }
-}
+      desserts: [],
+      editedIndex: -1,
+      editedItem: {},
+      defaultItem: {
+        name: "",
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+      },
+      moimUserList: [],
+      moimOneInfo: [],
+      moimOpen : 0,
+    };
+  },
+  beforeCreate() {},
+  created() {
+    this.getFlagedUser();
+  },
+  beforeMount() {},
+  mounted() {},
+  beforeUpdate() {},
+  updated() {},
+  beforeUnmount() {},
+  unmounted() {},
+  computed: {
+  },
+  watch: {},
+
+  methods: {
+    getFlagedUser() {
+      const vm = this;
+      this.axios({
+        url: "http://localhost:8088/java/admimflaguser",
+        method: "get",
+      })
+        .then(function (response) {
+          console.log(response);
+          for (let i = 0; i < response.data.length; i++) {
+            if (response.data[i].adminConfirm == 0) {
+              response.data[i].adminConfirm = "미승인";
+            } else if (response.data[i].adminConfirm == 1) {
+              response.data[i].adminConfirm = "승인";
+            }
+            if (response.data[i].flagResult == 0) {
+              response.data[i].flagResult = "통과";
+            } else if (response.data[i].flagResult == 1) {
+              response.data[i].flagResult = "패널티";
+            }
+          }
+          vm.moimUserList = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    editFlagUser(item) {
+      this.editedItem = Object.assign({}, item);
+
+      const vm = this;
+
+      (async () => {
+        const { value: fruit } = await this.$swal.fire({
+          title: "유저 신고 결과를 결정해 주세요",
+          input: "select",
+          inputOptions: {
+            0: "통과",
+            1: "패널티",
+          },
+          inputPlaceholder: "유저 신고 결과",
+          showCancelButton: true,
+          inputValidator: (value) => {
+            return new Promise((resolve) => {
+              if (value) {
+                if(value == 1) {
+                  this.moimOpen = 1;
+                } 
+                this.axios({
+                  url: "http://localhost:8088/java/updateFlag",
+                  method: "put",
+                  data: {
+                    flagResult: value,
+                    adminConfirm: 1,
+                    flagId: item.flagId,
+                  },
+                })
+                  .then(function (response) {
+                    console.log(response);
+                    vm.$swal.fire("유저 신고결과 수정이 완료되었습니다");
+                    vm.updateMoimOpen(value);
+                    vm.getFlagedUser();
+                  })
+                  .catch(function (error) {
+                    console.log(error);
+                    console.log("유저 신고결과 수정 실패");
+                  });
+              } else {
+              }
+            });
+          },
+        });
+      })();
+    },
+    updateMoimOpen() {
+      this.axios({
+        url: "http://localhost:8088/java/updateuserblock",
+        method: "put",
+        data: {
+          moimOpen: 2,
+          moimId: 1,
+        },
+      })
+        .then(function (response) {
+          console.log(response);
+          console.log("유저 오픈여부 수정 성공");
+        })
+        .catch(function (error) {
+          console.log(error);
+          console.log("유저 오픈여부 수정 실패");
+        });
+    },
+    deleteFlagUser(item) {
+      const vm = this;
+      this.editedIndex = this.moimFlagList.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      console.log(item.flagId);
+      console.log(item.flagId);
+      console.log(item.flagId);
+      console.log(item.flagId);
+      console.log(item.flagId);
+
+      this.axios({
+        url: "http://localhost:8088/java/flagging/" + item.flagId,
+        method: "delete",
+      })
+        .then(function (response) {
+          console.log(response);
+          vm.$swal.fire("유저 신고결과 식제가 완료되었습니다");
+          vm.getFlagedUser();
+        })
+        .catch(function (error) {
+          console.log(error);
+          console.log("유저 신고결과 식제 실패");
+        });
+    },
+
+    async goToMoim(item) {
+      this.editedItem = Object.assign({}, item);
+      await this.getOneMoim(this.editedItem.flagTo);
+      if (this.moimOneInfo.moimOpen == 2) {
+        this.$swal.fire("관리자에 의해 접근 금지된 모임입니다.");
+      } else {
+        this.$router.push({
+          name: "moimBoard",
+          params: { moimId: this.editedItem.flagTo, boardType: 1 },
+        });
+      }
+    },
+
+    async getOneUser(moimId) {
+      const vm = this;
+      await this.axios
+        .get("/userOneInfo/" + moimId, {})
+        .then((response) => {
+          vm.moimOneInfo = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+  },
+};
 </script>
-<style>
-  .v-sheet--offset {
-    position: relative;
-  }
-</style>

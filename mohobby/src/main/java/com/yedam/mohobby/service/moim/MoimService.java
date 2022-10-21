@@ -107,6 +107,18 @@ public interface MoimService {
 	//소모임 n빵 참여자 등록
 	public String dutchMemberInsert(List<MoimDutchPtpVO> dutptpVO);
 	
+	//소모임 투표 중복검사
+	public int voteCheck(MoimVoteListVO vo);
+	
+	//소모임 투표 선택 검사
+	public List<MoimVoteListVO> selectCheck(@Param("moimId")int moimId, @Param("memberId")String memberId);		
+
+	//소모임 n빵 등록
+	public String dutchInsert(MoimDutchVO dutchVO);
+
+	//소모임 n빵 참여자 등록
+	public String dutchMemberInsert(List<MoimDutchPtpVO> dutptpVO);
+	
 	
 }
 

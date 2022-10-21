@@ -8,6 +8,7 @@
               <v-list>
                 <v-list-item-group>
                   <template v-for="(item, index) in roomList">
+                    {{item.roomNo}}
                     <v-list-item v-on:click="openRoom(item.roomNo)">
                       <v-list-item>
                         <v-avatar>
@@ -39,8 +40,7 @@
           <v-col cols="auto" class="flex-grow-1 flex-shrink-0 overflow-y-auto ">
             <v-card flat class="d-flex flex-column fill-height overflow-y-auto" max-height=700px >
               <v-card-title>
-                {{ this.$store.state.id }}
-                {{ roomId }}
+                {{ this.$store.state.user.nickName+" 님의 채팅방입니다" }}
               </v-card-title>
               <v-card-text class="flex-grow-1 overflow-y-auto">
                 <template v-for="(msg, i) in messages">
@@ -82,10 +82,10 @@ export default {
   data() {
     return {
       subTitle: "", //수정중
-      memberId: this.$store.state.id, //세션 로그인값
+      memberId: "", //세션 로그인값
       messages: [], //메세지 내역
       message: "",
-      roomId: this.$route.params.getRoomId, //방번호
+      roomId: "", //방번호
       roomList: [], //방목록정보
       stompClient: "", //소켓서버
       hour: "", //메세지시간
@@ -95,14 +95,32 @@ export default {
     };
   },
   created() {
+    this.memberId= this.$store.state.id,
+    this.roomId= this.$route.params.getRoomId,
     this.connect()
     this.getRoom()
     this.sortRoom()
-    this.updateCheckIn(this.$route.params.getRoomId)
+    this.CheckIn(this.roomId)
+    for(let i=0;i<this.roomList.length;i++){
+        console.log("=================asdadsadsadsadsadsadsadsadsadsad======")
+        console.log(this.roomList[i])
+      }
+  },
+  mounted() {
+    window.addEventListener('beforeunload', this.unLoadEvent);
+  },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.unLoadEvent);
   },
   methods: {
+    unLoadEvent: function (event) {
+      alert("1@!@#!#!@")
+
+      event.preventDefault();
+      event.returnValue = '';
+    },
     //채팅내역 정렬
-    sortRoom() {
+    sortRoom() { 
       this.roomList.sort(function (a, b) {
         return a.msgTime > b.msgTime ? -1 : a.msgTime < b.msgTime ? 1 : 0;
       });
@@ -116,18 +134,7 @@ export default {
       var hours = ("0" + today.getHours()).slice(-2);
       var minutes = ("0" + today.getMinutes()).slice(-2);
       var seconds = ("0" + today.getSeconds()).slice(-2);
-      this.createAt =
-        year +
-        "/" +
-        month +
-        "/" +
-        day +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        ":" +
-        seconds;
+      this.createAt = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
     },
     //소켓서버에 채팅전송
     send() {
@@ -158,31 +165,40 @@ export default {
         });
       }
       this.message = "";
+      for(let i=0;i<this.roomList.length;i++){
+        console.log("=================a22222222222222222222sdadsadsadsadsadsadsadsadsadsad======")
+        console.log(this.roomList[i])
+      }
     },
-    CheckIn(roomId){      this.axios
+    CheckIn(roomId){     
+         this.axios
         .get("/updateCheckIn", {
-          params: { roomNo: roomId,
-          checkIn : 1},
+          params: { roomId: roomId,
+          checkIn : 1,
+          memberId:this.memberId},
         })
+        .then(function(res){console.log(res
+        )})
     },
     CheckOut(roomId){ this.axios
         .get("/updateCheckOut", {
-          params: { roomNo: roomId,
-          checkIn : 0},
+          params: { roomId: roomId,
+          checkIn : 0,
+          memberId:this.memberId},
         })
       },
         CheckInOut(preRoomId,curentRoomId){this.axios
           .get("/updateCheckInOut", {
           params: { preRoomId: preRoomId,
-            currentRoomId:curentRoomId}
-          ,
+            currentRoomId:curentRoomId,
+            memberId:this.memberId}
         })
         },
     // 채팅방에 채팅내역 출력
     openRoom(roomNo) {
       var vm = this;
       if(this.roomId !=roomNo){
-        CheckInOut(this.roomId,roomNo)
+        this.CheckInOut(this.roomId,roomNo)
       this.roomId = roomNo
     }
       this.messages = [];
@@ -301,7 +317,9 @@ export default {
             .get("/ChatMoimRoom/" + vm.memberId, {})
             .then(function (res) {
               for (let i = 0; i < res.data.length; i++) {
+                console.log("resDATA")
                 console.log(res.data);
+                console.log("resDATA")
                 vm.roomList.push(res.data[i]);
               }
               console.log(res.data);
@@ -319,27 +337,25 @@ export default {
       const serverURL = "http://localhost:8088/java/sock";
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
-      console.log("와치뒤에 걸리나요");
       let vm = this;
-
       this.stompClient.connect(
         {},
         (frame) => {
-          console.log("소켓 연결 성공?", frame);
-
+          console.log("소켓 연결 성공", frame);
           vm.stompClient.subscribe(
             "/queue/" + this.$store.state.id,
             function (res) {
-              let changeContent = JSON.parse(res.body);
+              let resContent = JSON.parse(res.body);
               for (let i = 0; i < vm.roomList.length; i++) {
-                if (vm.roomList[i].roomNo == changeContent.roomNo) {
-                  vm.roomList[i].content = changeContent.content;
-                  vm.roomList[i].hour = changeContent.msgTime;
+                if (vm.roomList[i].roomNo == resContent.roomNo) {
+                  vm.roomList[i].content = resContent.content;
+                  vm.roomList[i].msgTime = resContent.hour;
+                  if(vm.roomId!=resContent.roomNo)
                   ++vm.roomList[i].nonReadChat;
-                  vm.sortRoom();
-                } else console.log("안되나요");
+                  console.log("roomList:" +vm.roomList[i].roomNo)
+                } 
               }
-              console.log("구독했나요", frame);
+              vm.sortRoom();
             }
           );
         },

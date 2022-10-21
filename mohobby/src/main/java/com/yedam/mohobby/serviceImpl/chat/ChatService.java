@@ -62,23 +62,23 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 	}
 //체크인
 	@Override
-	public int updateCheckIn(int roomId) {
-		return mapper.updateCheckIn(roomId);
+	public int updateCheckIn(int roomId,String memberId) {
+		return mapper.updateCheckIn(roomId, memberId);
 	}
 //체크아웃
 	@Override
-	public int updateCheckOut(int roomId) {
-		return mapper.updateCheckOut(roomId);
+	public int updateCheckOut(int roomId,String memberId) {
+		return mapper.updateCheckOut(roomId,memberId);
 	}
 //체크인아웃
 	@Override
-	public int updateCheckInOut(int preRoomId, int currentRoomId) {
-		return mapper.updateCheckInOut(preRoomId, currentRoomId);
+	public int updateCheckInOut(int preRoomId, int currentRoomId,String memberId) {
+		return mapper.updateCheckInOut(preRoomId, currentRoomId,memberId);
 	}
 //체크인여부 조회
 	@Override
-	public int getCheckIn(int roomId) {
-		return mapper.getCheckIn(roomId);
+	public int getCheckIn(int roomId,String memberId) {
+		return mapper.getCheckIn(roomId,memberId);
 	}
 	
 }

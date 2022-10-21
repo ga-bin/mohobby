@@ -15,7 +15,7 @@
         > -->
           <v-col v-for="post in postList" :key="post.postId" class="d-flex child-flex" cols="4">
             <v-img
-              :src="require(`@/assets/image/sns/${post.thumbnail}`)"
+              :src="require(`@/assets/image/sns/${post.postId}/${post.thumbnail}`)"
               aspect-ratio="1"
               class="grey lighten-2"
             >
@@ -44,7 +44,7 @@
         <v-row>
           <v-col v-for="jjimPost in jjimList" :key="jjimPost.postId" class="d-flex child-flex" cols="4">
             <v-img
-              :src="require(`@/assets/image/sns/${jjimPost.thumbnail}`)"
+              :src="require(`@/assets/image/sns/${jjimPost.postId}/${jjimPost.thumbnail}`)"
               aspect-ratio="1"
               class="grey lighten-2"
             >

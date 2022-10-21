@@ -222,6 +222,16 @@ public class MoimServiceImpl implements MoimService {
 		return mapper.UserSelectvote(vo);
 	}
 
+	@Override
+	public int voteCheck(MoimVoteListVO vo) {
+		return mapper.voteCheck(vo);
+	}
+
+	@Override
+	public List<MoimVoteListVO> selectCheck(int moimId, String memberId) {
+		return mapper.selectCheck(moimId, memberId );
+	}
+
 	//n빵 등록
 	@Override
 	public String dutchInsert(MoimDutchVO dutchVO) {
@@ -231,6 +241,8 @@ public class MoimServiceImpl implements MoimService {
 	//n빵 참여자 등록
 	@Override
 	public String dutchMemberInsert(List<MoimDutchPtpVO> dutptpVO) {
+		MoimDutchVO dutchVO = new MoimDutchVO();
+	
 		return mapper.dutchMemberInsert(dutptpVO);
 	}
 	

@@ -41,12 +41,6 @@ const routes = [
     name: "main",
     component: () => import("./../views/main/MainView"),
   },
-  // test
-  {
-    path: "/imageload",
-    name: "imageload",
-    component: () => import("./../components/common/ImageUpload"),
-  },
   // user
   {
     path: "/login",
@@ -142,16 +136,6 @@ const routes = [
     name: "snsBookmarkDetail",
     component: () => import("@/views/sns/bookmark/SnsBookmarkDetailView"),
   },
-  {
-    path: "/classOfflineDetail",
-    name: "classOfflineDetail",
-    component: () => import("./../views/lecture/list/ClassOfflineDetail"),
-  },
-  {
-    path: "/classInput",
-    name: "classInput",
-    component: () => import("./../views/lecture/ClassInputView"),
-  },
   // lecture
   {
     path: "/class",
@@ -211,9 +195,50 @@ const routes = [
         props: true,
       },
       {
-        path: ":classId",
-        name: "classDetail",
-        component: () => import("./../views/lecture/list/classDetail"),
+        path: "off/:classId",
+        name: "classOfflineDetail",
+        component: () => import("./../views/lecture/list/classOfflineDetail"),
+        props: true,
+        children: [
+          {
+            path: "info",
+            name: "classInfo",
+            component: () => import("./../components/lecture/detail/classInfo"),
+            props: true,
+          },
+          {
+            path: "course",
+            name: "classCourse",
+            component: () =>
+              import("./../components/lecture/detail/classCourse"),
+            props: true,
+          },
+          {
+            path: "qna",
+            name: "classQna",
+            component: () => import("./../components/lecture/detail/classQna"),
+            props: true,
+          },
+          {
+            path: "review",
+            name: "classReview",
+            component: () =>
+              import("./../components/lecture/detail/classReview"),
+            props: true,
+          },
+          {
+            path: "location",
+            name: "classLocation",
+            component: () =>
+              import("./../components/lecture/detail/classLocation"),
+            props: true,
+          },
+        ],
+      },
+      {
+        path: "on/:classId",
+        name: "classOnlineDetail",
+        component: () => import("./../views/lecture/list/classOnlineDetail"),
         props: true,
         children: [
           {
@@ -244,6 +269,12 @@ const routes = [
           },
         ],
       },
+      {
+        path: "pay",
+        name: "classPay",
+        component: () => import("./../views/lecture/pay/classPay"),
+        props: true,
+      },
     ],
   },
   // 강의 영상
@@ -253,7 +284,6 @@ const routes = [
     component: () => import("./../views/lecture/video/learnMainView"),
     props: true,
   },
-
   // moim
   {
     path: "/moimMain",

@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,11 @@ import com.yedam.mohobby.mapper.classes.ClassMapper;
 import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
+import com.yedam.mohobby.service.classes.ClassCurriculumVO;
 import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
+import com.yedam.mohobby.service.classes.ClassNeedsVO;
 import com.yedam.mohobby.service.classes.ClassPayVO;
 import com.yedam.mohobby.service.classes.ClassReviewVO;
 import com.yedam.mohobby.service.classes.ClassService;
@@ -100,10 +103,10 @@ public class ClassServiceImpl implements ClassService {
     
     // 강의챕터조회
     @Override
-    public List<ClassChapterVO> getChapterList(int classId) {
+    public List<ClassChapterVO> getChapterList(int classId, String memberId) {
     	ClassChapterVO vo = new ClassChapterVO();
+    	vo.setMemberId(memberId);
     	vo.setClassId(classId);
-    	System.out.println(vo);
         return classMapper.getChapterList(vo);
     }
     
@@ -113,9 +116,28 @@ public class ClassServiceImpl implements ClassService {
     	return classMapper.getCurrProgress(vo);
     }
     
+    // 강의 커리큘럼 단건 조회
+    @Override
+    public ClassCurriculumVO getCurrInfo(int currId, String memberId) {
+    	return classMapper.getCurrInfo(currId, memberId);
+    }
+    
+    // 강의 커리큘럼 단건 업데이트
+    @Override
+    public void updateAttdInfo(ClassAttendanceVO vo) {
+    	classMapper.updateAttdInfo(vo);
+    }
+    
     // 강의 결제내역 단건조회
+    @Override
     public ClassPayVO getClassPayOne(ClassPayVO vo) {
     	return classMapper.getClassPayOne(vo);
+    }
+    
+    //강의 준비물 조회
+    @Override
+    public List<ClassNeedsVO> getClassNeedsInfo(int classId) {
+    	return classMapper.getClassNeedsInfo(classId);
     }
 
     // html 저장

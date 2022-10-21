@@ -7,7 +7,7 @@
           <v-icon color="white" @click.stop="drawer = !drawer" style="padding: 0px;">
             mdi-menu
           </v-icon>
-          <span class="currName">제목</span>
+          <span class="currName">{{ this.currInfo.partName }}</span>
         </v-row>
         <Artplayer @get-instance="getInstance" :option="option" :style="style" />
       </v-container>
@@ -17,29 +17,41 @@
 
         <v-expansion-panels v-model="panel" multiple flat>
           <h1 class="panel-header-title">
-            제목
+            {{ this.chapName }}
           </h1>
           <v-expansion-panel v-for="(item,i) in items" :key="i">
             <v-expansion-panel-header class="panel-header" @click="changePanelHeader">
               <v-row justify="start" align="center">
                 <v-chip label color="white">{{ i+1 }}</v-chip>
                 <div>
-                  <h3 class="panel-header-text">{{ item.header }}</h3>
+                  <h3 class="panel-header-text">{{ item.chapName }}</h3>
                 </div>
               </v-row>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="panel-content">
               <v-list dense nav>
-                <v-list-item v-for="(child,j) in item.content" :key="j" link @click.stop="pushCheck(child)"
+                <v-list-item v-for="(child,j) in item.currList" :key="j" link @click.stop="pushCheck(child)"
                   class="panel-list-item">
-                  <div style="font-weight: bold; color:#AAABB7; padding-right: 30px;">{{ j+1 | idx }}</div>
-                  <div v-if="child.preview == 1"
-                    style="margin-right:20px; padding:3px 7px; background-color: #dfeff1; color:#188ba7; border-radius: 5px; font-size: 0.9em;">
-                    {{ '미리보기' }}</div>
+                  <div v-if="child.currId == currId"  style="font-weight: bold; padding-right: 30px;"><v-icon color="white">mdi-play</v-icon></div>
+                  <div v-if="child.currId != currId" style="font-weight: bold; color:#AAABB7; padding-right: 30px;">{{ j+1 | idx }}</div>
                   <v-list-item-content>
-                    <h3 class="panel-list-item-title">{{ child.title }}</h3>
+                    <h3 :class="child.currId == currId ? 'panel-list-item-title-2' : 'panel-list-item-title'">{{ child.partName }}</h3>
                   </v-list-item-content>
-                  <div style="font-weight: bold; color:#AAABB7;">{{ child.runtime | runtime }}</div>
+                  <div 
+                    v-if="child.viewProgress < 100"
+                    :class="child.currId == currId ? 'panel-list-item-time-2' : 'panel-list-item-time'"
+                  >
+                    {{ child.videoLength | runtime }}
+                  </div>
+                  <div
+                    v-if="child.viewProgress >= 100"
+                  >
+                    <v-icon
+                      :class="child.currId == currId ? 'panel-list-item-time-2' : 'panel-list-item-time'"
+                    >
+                      mdi-check-circle
+                    </v-icon>
+                  </div>
                 </v-list-item>
               </v-list>
             </v-expansion-panel-content>
@@ -53,8 +65,11 @@
     </v-progress-linear>
     <v-bottom-navigation color="primary" horizontal class="bottom-nav">
       <v-row>
-        <div class="d-flex justify-start align-center">
-          <v-btn>
+        <div
+          v-if="currId != currList[0]"
+          class="d-flex justify-start align-center"
+        >
+          <v-btn @click.stop="$router.push({ path: '/learn/'+(Number(currId)-1), }).catch(()=>{$router.go(0)})">
             <v-icon color="white" style="margin-left: 15px;">mdi-chevron-left</v-icon>
             <span class="bottom-nav-text" style="margin-left: 20px; font-size: 1.1em;">이전학습</span>
 
@@ -80,8 +95,11 @@
           </v-tabs>
         </div>
       </v-row>
-      <div class="d-flex justify-center align-center">
-        <v-btn>
+      <div 
+        v-if="currId != currList[currList.length-1]"
+        class="d-flex justify-center align-center"
+      >
+        <v-btn @click.stop="$router.push({ path: '/learn/'+(Number(currId)+1), }).catch(()=>{$router.go(0)})">
           <span class="bottom-nav-text" style="margin-right: 20px; font-size: 1.1em;">다음학습</span>
           <v-icon color="white">mdi-chevron-right</v-icon>
         </v-btn>
@@ -159,11 +177,7 @@
                         {{ rv.nickname }}
                       </span>
                       <span style="font-size: 1em; color: gray; padding-left: 7px;">{{ replaceDate(rv.writeDate) }}</span>
-                      <div style="font-size: 1.3em; 
-                                  color: #2b2b2b; 
-                                  padding-top: 14px; 
-                                  word-break: keep-all;"
-                      >
+                      <div style="font-size: 1.3em;vcolor: #2b2b2b; padding-top: 14px; word-break: keep-all;">
                         {{ rv.content }}
                       </div>
                     </v-col>
@@ -194,6 +208,14 @@
               <h1>🙇</h1>
               <h1>등록된 질문이 없습니다</h1>
             </v-card>
+            <v-btn
+              outlined
+              color="#2b2b2b"
+              @click="clickWriteBtn"
+
+            >
+              질문 작성하기
+            </v-btn>
           </div>
         </v-tab-item>
         <v-tab-item key="3">
@@ -206,16 +228,11 @@
                   <v-btn
                     outlined
                     color="#2b2b2b"
-                    @click="sheet = true"
+                    @click="clickWriteBtn"
                   >
                     노트 작성하기
                   </v-btn>
                 </div>
-                <v-card tile flat>
-                  <!-- 정렬 방식 -->
-                  <v-select :items="listFilter" item-text="title" item-value="value"
-                    :menu-props="{ bottom: true, offsetY: true }" attach style="width: 160px;" v-model="defaultFilter" />
-                </v-card>
               </v-card>
             </div>
             <!-- 노트 게시글 목록 -->
@@ -232,11 +249,7 @@
                       #{{ rv.title | runtime }}
                     </v-chip>
                     <v-col cols="11">
-                      <div style="font-size: 1.3em; 
-                                  color: #2b2b2b; 
-                                  padding-top: 14px; 
-                                  word-break: keep-all;
-                                  max-width: 1190px;"
+                      <div style="font-size: 1.3em; color: #2b2b2b; padding-top: 14px; word-break: keep-all; max-width: 1190px;"
                       >
                         {{ rv.content }}
                       </div>
@@ -293,141 +306,11 @@ export default {
         },
       ],
       tab: '2',
-      classInfo: {},
+      currInfo: {},
+      originProgress: '',
       questList: [],
-      panel: [],
-      items: [
-        {
-          header: '프로그래밍 혁명',
-          content: [
-            {
-              title: '코딩배우기',
-              runtime: '142',
-              preview: 1,
-              currId: 1,
-            },
-            {
-              title: '얏호',
-              runtime: '1680',
-              preview: 1,
-              currId: 1,
-            },
-            {
-              title: '코딩이 뭘까?',
-              runtime: '239',
-              preview: 1,
-              currId: 1,
-            },
-            {
-              title: '프로그래밍 혁명에 참여하는 방법',
-              runtime: '237',
-              preview: 1,
-              currId: 1,
-            },
-          ],
-        },
-        {
-          header: '입문자가 알기 힘든 두 가지',
-          content: [
-            {
-              title: '코딩배우기',
-              runtime: '142',
-              preview: 1,
-              currId: 1,
-            },
-            {
-              title: '얏호',
-              runtime: '1680',
-              preview: 0,
-            },
-            {
-              title: '코딩이 뭘까?',
-              runtime: '239',
-              preview: 0,
-            },
-            {
-              title: '프로그래밍 혁명에 참여하는 방법',
-              runtime: '237',
-              preview: 0,
-            },
-          ],
-        },
-        {
-          header: '프로그래밍 분야들',
-          content: [
-            {
-              title: '코딩배우기',
-              runtime: '142',
-              preview: 0,
-            },
-            {
-              title: '얏호',
-              runtime: '1680',
-              preview: 0,
-            },
-            {
-              title: '코딩이 뭘까?',
-              runtime: '239',
-              preview: 0,
-            },
-            {
-              title: '프로그래밍 혁명에 참여하는 방법',
-              runtime: '237',
-              preview: 0,
-            },
-          ],
-        },
-        {
-          header: '공부하기!',
-          content: [
-            {
-              title: '코딩배우기',
-              runtime: '142',
-              preview: 0,
-            },
-            {
-              title: '얏호',
-              runtime: '1680',
-              preview: 0,
-            },
-            {
-              title: '코딩이 뭘까?',
-              runtime: '239',
-              preview: 0,
-            },
-            {
-              title: '프로그래밍 혁명에 참여하는 방법',
-              runtime: '237',
-              preview: 0,
-            },
-          ],
-        },
-        {
-          header: '퀴즈',
-          content: [
-            {
-              title: '코딩배우기',
-              runtime: '142',
-              preview: 0,
-            },
-            {
-              title: '얏호',
-              runtime: '1680',
-              preview: 0,
-            },
-            {
-              title: '코딩이 뭘까?',
-              runtime: '239',
-              preview: 0,
-            },
-            {
-              title: '프로그래밍 혁명에 참여하는 방법',
-              runtime: '237',
-              preview: 0,
-            },
-          ],
-        },
-      ],
+      panel: '',
+      items: [],    //전체 커리큘럼
       drawer: false,
       option: {
         url: require('@/assets/video/class/curriculum/1.mp4'),
@@ -491,7 +374,7 @@ export default {
         margin: "0 auto",
         padding: "3% 0",
       },
-      knowledge: 82.65,
+      knowledge: '',
       sheet: false,
       newContent: '',
       form: {
@@ -503,12 +386,39 @@ export default {
       noteList: [],
       updateObj: {},
       progressInfo: {},
+      chapName: '',
+      currList: [],
+      // progressList: '',
     };
   },
   components: {
     Artplayer,
   },
   methods: {
+    pushCheck(item) {
+      this.$router.push({ path: '/learn/'+item.currId, }).catch(()=>{$router.go(0)});
+    },
+    getCurrInfo() {
+      this.axios('/class/learn/'+this.currId, {
+        params: {
+          memberId: this.$store.state.id,
+        }
+      })
+      .then( res => {
+        if(res.status == 200) {
+          this.currInfo = res.data;
+          this.getOriginProgress();
+          this.getChapList();
+        }
+      })
+    },
+    getOriginProgress() {
+      let total = this.currInfo.videoLength;
+      let prog = this.currInfo.viewProgress;
+
+      this.originProgress = total * (prog / 100);
+      console.log(this.originProgress);
+    },
     getProgressInfo() {
       this.axios('/class/learn/progress/'+this.currId, {
         params: {
@@ -517,6 +427,7 @@ export default {
       }).then(res => {
         if(res.status == 200) {
           this.progressInfo = res.data;
+          this.knowledge = res.data.totalViewProgress;
         }
       })
     },
@@ -528,7 +439,6 @@ export default {
         }
       })
       .then(res => {
-        console.log(res.data);
         if (res.data.length > 0) {
           this.questList = res.data;
         }
@@ -550,11 +460,10 @@ export default {
       .catch(err => console.log(err));
     },
     changePanelHeader() {
-      console.log(event.currentTarget.style);
     },
     getInstance(art) {
-      console.log(art);
-      console.log(art.playing);
+      //console.log(art);
+      //console.log(art.playing);
     },
     questForm() {
       if (!this.$store.state.id) {
@@ -734,6 +643,81 @@ export default {
       event.preventDefault();
       event.returnValue = '';
     },
+    getChapList() {
+      this.axios('/class/chapterList', {
+        params: {
+          classId: Number(this.currInfo.classId),
+          memberId: this.$store.state.id,
+        }
+      }).then(res => {
+        if(res.status == 200) {
+          this.items = res.data;
+          
+          for(let i=0; i<this.items.length; i++) {
+            for(let j=0; j<this.items[i].currList.length; j++) {
+              if(this.items[i].currList[j].currId == this.currId) {
+                this.panel = i;
+                this.chapName = this.items[i].chapName;
+              }
+              this.currList.push(this.items[i].currList[j].currId);
+            }
+          };
+        }
+      })
+    },
+    timeUpdate(event) {
+      let length = this.currInfo.videoLength;
+      let time = Math.ceil(document.querySelector(".art-video").currentTime);
+      let origin = length * (this.currInfo.viewProgress/100);
+      let currLength = this.currList.length;
+      
+      if(time > origin) {
+        let diff = time - origin;
+        let diffPercent = diff / length * 100;
+        let totaldiffPercent = diffPercent / currLength;
+        this.knowledge = this.progressInfo.totalViewProgress + totaldiffPercent;
+      } else {
+        this.knowledge = this.progressInfo.totalViewProgress;
+      }
+    },
+    async onEnded(currentCurrId) {
+      let length = this.currInfo.videoLength;
+      let time = Math.round(document.querySelector(".art-video").currentTime);
+      let origin = length * (this.currInfo.viewProgress/100);
+
+
+      if(time > origin) {
+        //시청시간기록
+        let submit = Math.round(time / length * 100);
+
+        if(submit >= 100) {
+          submit = 100;
+        }
+
+        //axios
+        let res = await this.axios.put('/class/learn/update', {
+          memberId: this.$store.state.id,
+          currId: currentCurrId,
+          viewProgress: submit,
+        })
+
+
+        // .then(res => {
+          if(res.status == 200) {
+            //성공
+            for(let item in this.items) {
+              for(let child in item.currList) {
+                if(child.currId == this.currId) {
+                  child.viewProgress = submit;
+                }
+              } 
+            }
+          }
+        // }).catch(err => {
+        //   console.log(err);
+        // })
+      }
+    },
   },
   watch: {
     sheet: function() {
@@ -750,30 +734,26 @@ export default {
         }
       }
     },
-    $route: function(to, from) {
-      console.log('$route');
-      console.log('$route');
-      console.log('$route');
-      console.log(to);
-    }
+    $route: function(to, from, next) {
+      let fromId = from.path.split('/')[2];
+      this.onEnded(fromId);
+      this.$router.go(0);
+    },
   },
   created() {
+    this.getCurrInfo();
     this.getNoteList();
     this.getQuestList();
     this.getProgressInfo();
   },
-  mounted() {
-    window.addEventListener('beforeunload', this.unLoadEvent);
-  },
-  beforeUnmount() {
-    window.removeEventListener('beforeunload', this.unLoadEvent);
-  },
   beforeRouteLeave(to, from, next) {
-    //시간 기록하기
-
-
+    this.onEnded(from.path.split('/')[2]);
     next();
-  }
+  },
+  mounted () {
+    document.querySelector(".art-video").addEventListener('timeupdate', this.timeUpdate);
+    document.querySelector(".art-video").addEventListener('ended', this.onEnded(this.currId));
+  },
 };
 </script>
 <style>
@@ -809,6 +789,22 @@ export default {
   font-size: 1.1em;
   color: #cccccc;
   font-weight: 100;
+}
+
+.panel-list-item-title-2 {
+  font-size: 1.1em;
+  color: #2ac187;
+  font-weight: 100;
+}
+
+.panel-list-item-time {
+  font-weight: bold; 
+  color:#AAABB7;
+}
+
+.panel-list-item-time-2 {
+  font-weight: bold; 
+  color:#3ea980;
 }
 
 .panel-header {
