@@ -1,7 +1,6 @@
 
 package com.yedam.mohobby.web.classes;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
-import com.yedam.mohobby.service.classes.ClassCurriculumVO;
 import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
@@ -142,18 +140,6 @@ public class ClassController {
 	    classService.updateClassBoard(board);
 	}
 	
-	//강의 커리큘럼 단건 조회
-	@GetMapping("/class/learn/{currId}")
-	public @ResponseBody ClassCurriculumVO getCurrInfo(@PathVariable int currId) {
-		return classService.getCurrInfo(currId);
-	}
-	
-	//강의 커리큘럼 전체 진행율 조회
-	@GetMapping("/class/learn/progress")
-	public @ResponseBody HashMap<String, Integer> getCurrProgressAll(@RequestParam int classId, @RequestParam String memberId) {
-		return classService.getCurrProgressAll(classId, memberId);
-	}
-	
 	//강의 커리큘럼 진행율 조회
 	@GetMapping("/class/learn/progress/{currId}")
 	public @ResponseBody ClassAttendanceVO getCurrProgress(@PathVariable int currId, @RequestParam String memberId) {
@@ -186,8 +172,8 @@ public class ClassController {
 	
 	// 강의챕터조회
 	@GetMapping("/class/chapterList")
-	 public List<ClassChapterVO> getChapterList(@RequestParam int classId, @RequestParam String memberId) {
-        return classService.getChapterList(classId, memberId);
+	 public List<ClassChapterVO> getChapterList(@RequestParam int classId) {
+        return classService.getChapterList(classId);
     }
 
 }

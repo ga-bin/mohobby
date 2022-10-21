@@ -284,7 +284,7 @@ dialog: false,
             data: {
               fragId: value,
               adminConfirm : 1,
-              flagId : this.editedItem.flagId;
+              flagId : this.editedItem.flagId
             },
           })
             .then(function (response) {

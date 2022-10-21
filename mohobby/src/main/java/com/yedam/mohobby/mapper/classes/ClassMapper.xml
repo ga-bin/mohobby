@@ -3,40 +3,26 @@
 <mapper namespace="com.yedam.mohobby.mapper.classes.ClassMapper">
 
 	<resultMap id="currList" type="com.yedam.mohobby.service.classes.ClassChapterVO">
-		<id property="chapId" column="chap_id"/>
+		<result property="chapId" column="chap_id"/>
 		<result property="classId" column="class_id"/>
 		<result property="chapName" column="chap_name"/>
-		<result property="memberId" column="member_id"/>
-		<collection column="{chapId=chap_id, memberId=member_id}" property="currList" javaType="java.util.ArrayList"
+		<collection column="{chapId=chap_id}" property="currList" javaType="java.util.ArrayList"
 					ofType="com.yedam.mohobby.service.classes.ClassCurriculumVO"
 					select="selectCurrInfoList"/>
 	</resultMap>
 	
 	<!-- 커리큘럼 조회 -->
-	<select id="selectCurrInfoList" parameterType="com.yedam.mohobby.service.classes.ClassChapterVO" 
-	          resultType="com.yedam.mohobby.service.classes.ClassCurriculumVO">
-		<!-- select * from class_curriculum
+	<select id="selectCurrInfoList" parameterType="com.yedam.mohobby.service.classes.ClassChapterVO" resultType="com.yedam.mohobby.service.classes.ClassCurriculumVO">
+		select * from class_curriculum
 		where chap_id = #{chapId}
-		order by chap_id, curr_id -->
-		select c.*, nvl(p.view_progress, 0) view_progress
-		from class_curriculum c,
-		    (select * 
-		    from class_attendance)p
-		where chap_id = #{chapId}
-		and c.curr_id = p.curr_id(+)
-		order by c.curr_id
+		order by chap_id, curr_id
 	</select>
 	
 	<!-- 챕터와 커리큘럼 조회 -->
 	<select id="getChapterList" parameterType="com.yedam.mohobby.service.classes.ClassChapterVO" resultMap="currList">
-		select a.*, #{memberId} member_id
-		from class_chapter a
+		select *
+		from class_chapter
 		where class_id = #{classId}
-	</select>
-	
-	<!-- 커리큘럼 단건 조회 -->
-	<select id="getCurrInfo" parameterType="java.lang.Integer" resultType="com.yedam.mohobby.service.classes.ClassCurriculumVO">
-		select * from class_curriculum where curr_id = #{currId}
 	</select>
 
 
@@ -222,18 +208,6 @@
 						#{secret, jdbcType=INTEGER}
 						)
 	</insert>
-	
-	<!-- 커리큘럼 전체 진행율 조회 -->
-	<select id="getCurrProgressAll" resultType="java.util.HashMap">
-		select c.curr_id, nvl(p.view_progress, 0) view_progress
-		from class_curriculum c,
-			(select * 
-			from class_attendance
-			where member_id = #{memberId})p
-		where class_id = #{classId}
-		and c.curr_id = p.curr_id(+)
-		order by c.curr_id
-	</select>
 	
 	<!-- 커리큘럼 진행율 조회 -->
 	<select id="getCurrProgress" parameterType="com.yedam.mohobby.service.classes.ClassAttendanceVO" resultType="com.yedam.mohobby.service.classes.ClassAttendanceVO">

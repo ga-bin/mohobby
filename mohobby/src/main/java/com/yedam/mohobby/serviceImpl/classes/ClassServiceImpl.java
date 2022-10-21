@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import com.yedam.mohobby.mapper.classes.ClassMapper;
 import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
-import com.yedam.mohobby.service.classes.ClassCurriculumVO;
 import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
@@ -102,29 +100,17 @@ public class ClassServiceImpl implements ClassService {
     
     // 강의챕터조회
     @Override
-    public List<ClassChapterVO> getChapterList(int classId, String memberId) {
+    public List<ClassChapterVO> getChapterList(int classId) {
     	ClassChapterVO vo = new ClassChapterVO();
-    	vo.setMemberId(memberId);
     	vo.setClassId(classId);
+    	System.out.println(vo);
         return classMapper.getChapterList(vo);
     }
-    
-    @Override
-    //강의 커리큘럼 전체 진행율 조회
-  	public HashMap<String, Integer> getCurrProgressAll(int classId, String memberId) {
-  		return classMapper.getCurrProgressAll(classId, memberId);
-  	}
     
     // 강의 커리큘럼 진행율 조회
     @Override
     public ClassAttendanceVO getCurrProgress(ClassAttendanceVO vo) {
     	return classMapper.getCurrProgress(vo);
-    }
-    
-    // 강의 커리큘럼 단건 조회
-    @Override
-    public ClassCurriculumVO getCurrInfo(int currId) {
-    	return classMapper.getCurrInfo(currId);
     }
     
     // 강의 결제내역 단건조회

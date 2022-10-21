@@ -1,12 +1,8 @@
 package com.yedam.mohobby.service.classes;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.mohobby.service.communal.JjimVO;
 
@@ -43,16 +39,10 @@ public interface ClassService {
     public void deleteJjim(JjimVO jjim);
     
     //강의 챕터 조회
-    public List<ClassChapterVO> getChapterList(int classId, String memberId);
-    
-    //강의 커리큘럼 전체 진행율 조회
-  	public HashMap<String, Integer> getCurrProgressAll(int classId, String memberId);
+    public List<ClassChapterVO> getChapterList(int classId);
     
     //강의 커리큘럼 진행율 조회
     public ClassAttendanceVO getCurrProgress(ClassAttendanceVO vo);
-    
-    //강의 커리큘럼 단건 조회
-    public ClassCurriculumVO getCurrInfo(int currId);
     
     //강의 결제내역 단건조회
     public ClassPayVO getClassPayOne(ClassPayVO vo);
