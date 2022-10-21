@@ -106,7 +106,7 @@
                 <div>{{ "* 5개월 할부 시" }}</div>
               </v-col>
               <v-col cols="auto">
-                <v-btn depressed dark color="#2ac187"> 수강하기 </v-btn>
+                <v-btn depressed dark color="#2ac187" @click="goPayBtn"> 수강하기 </v-btn>
               </v-col>
             </v-row>
           </v-card-text>
@@ -138,6 +138,8 @@
 </template>
 
 <script>
+import { lastIndexOf } from 'sockjs-client/lib/transport-list';
+
 export default {
   name: "classDetail",
   // props: {
@@ -155,15 +157,16 @@ export default {
         {
           index: 0,
           name: "클래스 소개",
-          route: "/class/" + this.classId + "/info",
+          route: this.$route.path.substring(0, this.$route.path.lastIndexOf("/")) + "/info",
         },
         {
           index: 1,
           name: "커리큘럼",
-          route: "/class/" + this.classId + "/course",
+          route: this.$route.path.substring(0, this.$route.path.lastIndexOf("/")) + "/course",
         },
-        { index: 3, name: "QnA", route: "/class/" + this.classId + "/qna" },
-        { index: 4, name: "후기", route: "/class/" + this.classId + "/review" },
+        { index: 3, name: "QnA", route: this.$route.path.substring(0, this.$route.path.lastIndexOf("/")) + "/qna" },
+        { index: 4, name: "후기", route: this.$route.path.substring(0, this.$route.path.lastIndexOf("/")) + "/review" },
+        { index: 5, name: '위치', route: this.$route.path.substring(0, this.$route.path.lastIndexOf("/")) + '/location' }
       ],
       weeks: "",
       chapterCount: "",
@@ -185,7 +188,6 @@ export default {
           console.log(res.data);
           this.calDate();
           this.calRound();
-          this.inputTap();
         });
     },
     clickHeart: function () {
@@ -246,14 +248,28 @@ export default {
           console.log(error);
         });
     },
-    inputTap() {
-      if (this.classInfo.classType == 1) {
-        this.tabs.push({
-          index: 5,
-          name: "위치",
-          route: "/class/" + this.classId + "/location",
-        });
+    goPayBtn() {
+      if(!this.$store.state.id) {
+        this.$swal('로그인 후 이용하세요!', '', 'info');
+        return;
+      } else {
+        this.goPay();
       }
+    },
+    goPay() {
+      this.axios("/class/pay/"+this.classId, {
+          params: {
+          memberId: this.$store.state.id,
+          }
+      }).then(res => {
+          if(!res.data) {
+              this.$router.push({ name: 'classPay', 
+                                  params: { classId: this.classId, classInfo: this.classInfo }
+                          }).catch(()=>{$router.go(0)});
+          } else {
+              this.$swal('이미 수강 중인 강의입니다.', '얼른 학습하러 가보아요✍', 'info');
+          }
+      })
     },
   },
   components: {},

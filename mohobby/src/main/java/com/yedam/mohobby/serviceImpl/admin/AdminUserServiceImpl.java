@@ -28,20 +28,5 @@ public class AdminUserServiceImpl implements AdminUserService {
 		return mapper.leaveMemList(dateList);
 	}
 
-	// 신고된 유저 목록
-	@Override
-	public List<FlaggingVO> flagUserList() {
-		return mapper.flagUserList();
-	}
-
-	// 신고된 유저 정보 업데이트
-	@Override
-	public void updateFlagUser(FlaggingVO flaggingVO) {
-		mapper.updateFlagUser(flaggingVO);
-	}
 	
-	// 신고하기
-	public void insertFlagging(FlaggingVO flaggingVO) {
-		mapper.insertFlagging(flaggingVO);
-	}
 }
