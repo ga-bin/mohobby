@@ -69,12 +69,12 @@
 </v-btn>
 </v-card-actions>
     <h1>Mo#obby 소모임</h1> 
-    
+    <div>
     <!-- 소모임 유저별 모임 리스트 -->
-    <MyMoim_user v-if="moimRight===1 || moimRight===0"></MyMoim_user>
-    <MyMoim_leader v-else-if="moimRight===2 || moimRight===3"></MyMoim_leader>
+    <MyMoim_user v-if="moimRight === 1 || moimRight === 0"></MyMoim_user>
+    <MyMoim_leader v-else-if="moimRight === 2 || moimRight === 3"></MyMoim_leader>
     <MyMoim_none v-else></MyMoim_none>
-
+  </div>
     <!-- 소모임 검색창 -->
     <br>
     <div>
@@ -102,7 +102,7 @@
           active-class="primary--text"
         >
           <v-chip
-            v-for="catg in catg"
+            v-for="catg in catgs"
             :key="catg"
             :value="catg"
             @click="chipclick"
@@ -121,10 +121,20 @@
   import MyMoim_user from "./mymoim/MyMoim_user.vue";
   import MyMoim_leader from "./mymoim/MyMoim_leader.vue";
   export default {
-    components :{ MyMoim_none, MyMoim_user, MyMoim_leader },
+    components :{ MyMoim_user, MyMoim_leader, MyMoim_none },
+    mounted() {
+    this.$store.watch(
+      () => this.$store.getters.getId,
+      () => {
+     
+
+        console.log(this.moimRight);
+      }
+    );
+  },
     data() {
       return {
-        catg: [
+        catgs: [
           '전체',
           '취미',
           '스포츠/레저',
@@ -147,10 +157,14 @@
           '자연/귀농'
         ],
         search : '',
-        moimRight : this.$store.state.user.role,
-        id : this.$store.state.id,
+        moimRight : '',//this.$store.state.user.role,
+        id : '',//this.$store.state.id,
         noneuser : false,
       }
+    },
+    created() {
+      this.moimRight = this.$store.state.user.role;
+      this.id = this.$store.state.id;
     },
     methods : {
   select : function() {

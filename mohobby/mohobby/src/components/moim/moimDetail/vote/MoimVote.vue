@@ -13,6 +13,7 @@
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
         <v-list-item-content>
           <div class="text-overline mt-6">
+            {{item.voteId}}
             {{ item.memberId }}
             <hr />
             {{ item.startDate }}
@@ -55,6 +56,7 @@
         <v-btn v-if="item.voteId != vote" @click="voteResult(item.voteId)">결과확인</v-btn>
         <v-btn v-if="item.voteId == vote" @click="voteResult(item.voteId)">목록으로</v-btn>
       </v-card-actions>
+      
       </div>
     </v-card>
   </div>

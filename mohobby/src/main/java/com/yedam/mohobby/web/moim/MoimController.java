@@ -317,6 +317,7 @@ public class MoimController {
 	@PutMapping("/selectVote")
 	public int selectVote(@RequestBody MoimVoteListVO vo) {
 		try {
+			System.out.println(vo);
 			service.UserSelectvote(vo);
 			return 1;
 		} catch (Exception e) {

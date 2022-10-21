@@ -316,8 +316,7 @@ select * from moim_dutch where moim_id = #{moimId}
 		parameterType="com.yedam.mohobby.service.moim.MoimVoteListVO">
 		DECLARE
 		v_voteId NUMBER := #{voteId};
-		v_memberId
-		VARCHAR2(100) := #{memberId};
+		v_memberId VARCHAR2(100) := #{memberId};
 		v_itemSelect NUMBER := #{itemSelect};
 		v_moimId NUMBER := #{moimId};
 		v_preSelect Number := #{preSelect};
@@ -339,7 +338,7 @@ select * from moim_dutch where moim_id = #{moimId}
 		set cnt = cnt-1
 		where item_id = v_preSelect;
 
-		END
+		END;
 	</update>
 
 	<!-- 투표 중복체크 -->

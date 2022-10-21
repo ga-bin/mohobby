@@ -17,5 +17,6 @@ public class MoimVoteListVO {
 	private int moimId; // 소모임 아이디
 	private int commentCnt; //댓글수
 	private String voteUser; //투표자
-	private int itemSelect; //아이템 선택	
+	private int itemSelect; //아이템 선택
+	private int preSelect; //선택된 아이템
 }
