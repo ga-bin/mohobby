@@ -70,7 +70,7 @@ export default {
       })
     },
     makeNbbang: function () {
-      this.$router.push({ path: "makeNbbang" });
+      this.$router.push({ path: "makeNbbang" , params : { moimId : this.moimId } });
     },
     Nbbangdetail: function(idx){
       this.$router.push({ path: "nBBangDetail", params : { moimId : this.moimId }})

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
+import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimVO;
@@ -103,5 +104,10 @@ public interface MoimMapper {
 	//소모임 투표 선택 
 	public int UserSelectvote(MoimVoteListVO vo);
 	
+	//소모임 n빵 등록
+	public String dutchInsert(MoimDutchVO dutchVO);
+	
+	//소모임 n빵 참여자 등록
+	public String dutchMemberInsert(List<MoimDutchPtpVO> dutptpVO);
 	
 }

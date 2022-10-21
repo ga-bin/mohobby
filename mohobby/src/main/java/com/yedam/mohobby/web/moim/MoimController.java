@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
+import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimService;
@@ -320,6 +321,28 @@ public class MoimController {
 			return 1;
 		} catch (Exception e) {
 			return 0;
+		}
+	}
+	
+	//n빵 등록
+	@PostMapping("/makeNbbang")
+	public String insertNbbang(@RequestBody MoimDutchVO dutchVO) {
+		try {
+			service.dutchInsert(dutchVO);
+			return "success";
+		} catch (Exception e) {
+			return "fail"+e;
+		}
+	}
+	
+	//n빵 참여자 등록
+	@PostMapping("/insertPtp")
+	public String insertMemberNbbang(@RequestBody List<MoimDutchPtpVO> dutptpVO) {
+		try {
+			service.dutchMemberInsert(dutptpVO);
+			return "success";
+		} catch(Exception e) {
+			return "fail"+e;
 		}
 	}
 }

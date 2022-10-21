@@ -10,6 +10,7 @@ import com.yedam.mohobby.mapper.moim.MoimMapper;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
+import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimService;
@@ -151,13 +152,6 @@ public class MoimServiceImpl implements MoimService {
 	 public int moimUserUpdate(MemberVO vo) {
 	    return mapper.moimUserUpdate(vo);
 	 }
-	 
-	 //소모임 투표 디테일 리스트
-//	 @Override
-//	 public List<MoimVoteListVO> moimVoteAllList(int moimId, int voteId) {
-//		 return mapper.moimVoteAllList(moimId, voteId);
-//	 }
- 
 
 	// 소모임 단건조회
 	@Override
@@ -228,5 +222,19 @@ public class MoimServiceImpl implements MoimService {
 		return mapper.UserSelectvote(vo);
 	}
 
+	//n빵 등록
+	@Override
+	public String dutchInsert(MoimDutchVO dutchVO) {
+		return mapper.dutchInsert(dutchVO);
+	}
 
+	//n빵 참여자 등록
+	@Override
+	public String dutchMemberInsert(List<MoimDutchPtpVO> dutptpVO) {
+		return mapper.dutchMemberInsert(dutptpVO);
+	}
+	
+	
+
+	
 }
