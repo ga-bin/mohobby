@@ -16,6 +16,7 @@ where moim_id=#{moimId}
    SELECT NVL(MAX(moim_id), 0)+1 FROM moim
 </selectKey>
    INSERT INTO moim (
+   			   member_id,
                moim_id,
                moim_img,
                moim_name,
@@ -26,6 +27,7 @@ where moim_id=#{moimId}
                )
             VALUES
                (
+               #{memberId},
                #{moimId},
                #{moimImg},
                #{moimName},

@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.yedam.mohobby.mapper.classes.ClassMapper;
 import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
+import com.yedam.mohobby.service.classes.ClassCurriculumVO;
 import com.yedam.mohobby.service.classes.ClassImageVO;
 import com.yedam.mohobby.service.classes.ClassInfoRequestVO;
 import com.yedam.mohobby.service.classes.ClassListRequestVO;
@@ -101,10 +103,10 @@ public class ClassServiceImpl implements ClassService {
     
     // 강의챕터조회
     @Override
-    public List<ClassChapterVO> getChapterList(int classId) {
+    public List<ClassChapterVO> getChapterList(int classId, String memberId) {
     	ClassChapterVO vo = new ClassChapterVO();
+    	vo.setMemberId(memberId);
     	vo.setClassId(classId);
-    	System.out.println(vo);
         return classMapper.getChapterList(vo);
     }
     
