@@ -106,8 +106,8 @@ public class MemberController {
 	 * @title 회원탈퇴 날짜 update 
 	 */
 	@PutMapping("/memberdelete")
-	public void deleteMember(@RequestBody String memberId) {
-		service.deleteMember(memberId);
+	public void deleteMember(@RequestBody MemberVO memberVO) {
+		service.deleteMember(memberVO.getMemberId());
 	}
 	
 	/**
