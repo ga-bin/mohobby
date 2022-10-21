@@ -323,4 +323,3 @@ select * from moim_dutch where moim_id = #{moimId}
       END;
    </update>
 </mapper>
-

@@ -99,6 +99,8 @@
               저장할 컬렉션 선택
             </v-card-title>
             <v-card-text>
+
+
               <!-- 컬렉션 선택 select_box -->
               <v-select
                 @click="getCollectionList(memberId)"
@@ -110,6 +112,8 @@
               </v-btn>
             </v-row>
             <v-card-actions>
+
+
               <!-- 북마크 컬렉션 지정 저장, 취소버튼 -->
               <v-row class="ma-4 justify-space-around">
                 <v-btn
@@ -120,10 +124,14 @@
                 </v-btn>
                 <v-btn text @click="dialog2 = false"> 취소 </v-btn>
                 <!-- 북마크 컬렉션 지정 저장,취소버튼 끝 -->
+
+
               </v-row>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
+
         <!-- 컬렉션추가 dialog in dialog -->
         <v-dialog v-model="dialog3" max-width="500px">
           <v-card>
@@ -154,6 +162,7 @@
         </v-dialog>
         <!-- 북마크 끝 -->
 
+
         <!-- 
 
           내용
@@ -165,6 +174,7 @@
           </v-card-text>
         </div>
         <!-- 내용 끝 -->
+
 
         <!-- 
 
@@ -179,6 +189,7 @@
           </v-chip>
         </v-chip-group>
         <br />
+
 
         <!-- 
 
@@ -244,6 +255,8 @@ export default {
   setup() {},
 
   created() {
+    this.writer = this.$route.query.writer;
+    this.postId = this.$route.query.postId;
     this.showDetail(this.postId, this.writer); //게시글 상세 로드
     this.detailImg(this.postId); //게시글 이미지 로드
     console.log(this.writer);
@@ -252,7 +265,8 @@ export default {
   },
 
   methods: {
-
+  
+  //세션유무 검증
   confirmMember(memberId){  
     if(memberId){
       console.log("true");
@@ -262,7 +276,25 @@ export default {
       console.log("false");
       return false;
     }
-},
+  },
+  //로그인 검증 모달
+  loginConfirm(){
+    this.$swal({
+      title: "로그인하셔야 가능하세요🙏",
+      text: "🙏로그인화면으로 이동부탁드립니다🙏",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#2ac187",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "취소",
+      confirmButtonText: "이동",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.$router.push({ path: "login" });
+      }
+    });
+  },
+
 
 /*
     
@@ -313,6 +345,7 @@ export default {
 
     //게시글 수정*******************************
 
+    
 
     //게시글 삭제 검증
     feedSwal(postId) {
@@ -444,11 +477,9 @@ export default {
         }
       );
       //좋아요 유저검증
-      if (memberId === null || memberId === "") {
-        //유저일때만 좋아요가 가능하도록
-        this.$swal("로그인부터 부탁드립니다🙏");
-        return;
-      } else {
+      if(this.confirmMember(memberId) == false){
+        this.loginConfirm();
+      }else{
         //상태값에따라 좋아요 or 취소처리
         this.axios
           .post("/sns/like", {
@@ -492,22 +523,7 @@ export default {
     },
     
 
-    loginConfirm(){
-      this.$swal({
-        title: "로그인부터 부탁드립니다🙏",
-        text: "로그인화면으로 이동할까요?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#2ac187",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "취소",
-        confirmButtonText: "네, 이동할래요!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.$router.push({ path: "login" });
-        }
-      });
-    },
+
 
     //북마크상태조회
     getBookmarkStatus(postId) {
@@ -587,7 +603,6 @@ export default {
         return;
       }
       this.dialog = !this.dialog;
-      // let thumbnailImg = this.items.postId+"/"+this.items.thumbnail;
       this.axios
         .post("/sns/collection", {
           memberId: memberId,
@@ -633,7 +648,7 @@ export default {
 
     //유저 피드로 이동
     goMyFeed(userId) {
-      this.$router.push({ name: "snsUserFeed", query: { userId: userId } });
+      this.$router.push({ path: "/snsUserFeed", query: { userId: userId } });
     },
   },
 };

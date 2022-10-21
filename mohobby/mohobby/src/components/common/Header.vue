@@ -218,8 +218,8 @@ export default {
                 if (resNotice.contentType == 0) {
                   vm.subtitle = "댓글을 남기셨습니다."
                 }
-                else if (resNotice.contentType) {
-              }
+                else if (resNotice.contentType){
+                }
                 vm.items.push({
                   avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
                   title: resNotice.nickname,
