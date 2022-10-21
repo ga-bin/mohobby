@@ -197,23 +197,48 @@ export default {
                   vm.items.push({ divider: true, inset: true });
                   ++vm.noticeCount;
                 }
-                //소모임 알림 처리
-                else if (resNotice.noticeType == 1) {
-                  //소모임 댓글 알림 처리
-                  if (resNotice.contentType == 0) {
-                    vm.subtitle = "댓글을 남기셨습니다.";
-                  } else if (resNotice.contentType) {
-                  }
-                  vm.items.push({
-                    avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-                    title: resNotice.nickname,
-                    subtitle: vm.subtitle,
-                    postId: resNotice.postId,
-                    noticeType: resNotice.noticeType,
-                    noticeId: resNotice.noticeId,
-                  });
-                  vm.items.push({ divider: true, inset: true });
-                  ++vm.noticeCount;
+                //sns - 댓글 알림 처리
+                else if (resNotice.contentType == 1) {
+                  vm.subtitle = "댓글을 남겼습니다."
+                }
+                vm.items.push({
+                  avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
+                  title: resNotice.nickname,
+                  subtitle: vm.subtitle,
+                  postId: resNotice.postId,
+                  noticeType: resNotice.noticeType,
+                  noticeId: resNotice.noticeId
+                })
+                vm.items.push({ divider: true, inset: true })
+                ++vm.noticeCount
+              }
+              //소모임 알림 처리
+              else if (resNotice.noticeType == 1) {
+                //소모임 댓글 알림 처리
+                if (resNotice.contentType == 0) {
+                  vm.subtitle = "댓글을 남기셨습니다."
+                }
+                else if (resNotice.contentType) {
+              }
+                vm.items.push({
+                  avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
+                  title: resNotice.nickname,
+                  subtitle: vm.subtitle,
+                  postId: resNotice.postId,
+                  noticeType: resNotice.noticeType,
+                  noticeId: resNotice.noticeId
+                })
+                vm.items.push({ divider: true, inset: true })
+                ++vm.noticeCount
+              }
+              //소모임 알림 처리
+              else if (resNotice.noticeType == 1) {
+                //소모임 댓글 알림 처리
+                if (resNotice.contentType == 0) {
+                  vm.subtitle = "댓글을 남기셨습니다."
+                }
+                else if (resNotice.contentType == 1) {
+                  vm.subtitle = "새로운 게시글이 등록되었습니다."
                 }
                 //소모임 알림 처리
                 else if (resNotice.noticeType == 1) {
