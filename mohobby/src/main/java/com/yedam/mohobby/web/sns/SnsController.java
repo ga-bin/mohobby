@@ -196,16 +196,19 @@ public class SnsController {
     public List<MemberVO> gerUsers() {
         return service.getUsers();
     }
-   //유저 아이디, 닉네임검색 - 테스트완료
+    
+   //유저아이디검색 - 테스트완료
     @GetMapping("/search/user")
-    public List<MemberVO> searchUser(@PathVariable String memberId, @PathVariable String nickname){
-        return service.searchUser(memberId, nickname);
+    public List<MemberVO> searchUser(@RequestParam String memberId){
+        return service.searchUser(memberId);
     }
+    
    //유저닉네임검색 - 테스트완료
     @GetMapping("/search/nick/{nickname}")
     public List<MemberVO> getUsersByNick(@PathVariable String nickname){
         return service.getUsersByNick(nickname);
     }
+    
    //해시태그검색 - 테스트완료
     @GetMapping("/search/hashtag")
     public List<SnsPostVO> searchHashtag(@RequestParam String hashtag){

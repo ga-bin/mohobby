@@ -7,10 +7,8 @@
           :key="snsfeed.index"
         >
           <div class="displayflex">
-            <v-card
-              width="250px"
-              @click="getFeedDetail(snsfeed.postId, snsfeed.memberId)"
-            >
+            <v-card width="250px" @click="getFeedDetail(snsfeed.postId, snsfeed.memberId)">
+
               <v-img
                 :src="
                   require(`@/assets/image/sns/${snsfeed.postId}/${snsfeed.thumbnail}`)
@@ -57,12 +55,11 @@ export default {
   mounted() {},
   unmounted() {},
   methods: {
-    getFeedDetail(postId, writer) {
-      console.log(postId, writer);
-      this.$router.push({
-        name: "snsFeedDetail",
-        query: { postId: postId, writer: writer },
-      });
+
+    getFeedDetail(postId, memberId) {
+      console.log(postId, memberId);
+      this.$router.push({ name: "snsFeedDetail", query: { postId: postId, writer: memberId } });
+
     },
   },
 };

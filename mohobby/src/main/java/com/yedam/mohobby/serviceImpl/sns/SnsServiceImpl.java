@@ -133,36 +133,43 @@ public class SnsServiceImpl implements SnsService{
        return false;
        
     }
+    
    //게시물 수정
    @Override
    public int updateFeed(SnsPostVO snsPostVO) {
       return mapper.updateFeed(snsPostVO);
    }
+   
    //피드 삭제
    @Override
    public int deleteFeed(int postId) {
       return mapper.deleteFeed(postId);
    }
+   
    //인기강사피드조회
    @Override
    public List<SnsPostVO> hotLecturerList() {
       return mapper.hotLecturerList();
    }
+   
    //전체피드조회
    @Override
    public List<SnsPostVO> allList() {
       return mapper.allList();
    }
+   
    //최신피드조회
    @Override
    public List<SnsPostVO> newList() {
       return mapper.newList();
    }
+   
    //인기피드조회
    @Override
    public List<SnsPostVO> hotList() {
       return mapper.hotList();
    }
+   
     //팔로잉피드조회
     public List<SnsPostVO> getFollowingFeeds(String memberId){
         return mapper.getFollowingFeeds(memberId);
@@ -173,21 +180,26 @@ public class SnsServiceImpl implements SnsService{
     public SnsProfileVO getProfile(String memberId) {
         return mapper.getProfile(memberId);
     }
+    
     //유저피드조회
     @Override
     public List<SnsPostVO> getUserFeed(String memberId) {
         return mapper.getUserFeed(memberId);
     }
+    
    //피드상세조회
    @Override
    public SnsFeedVO getFeedDetail(int postId, String memberId){
         return mapper.getFeedDetail(postId, memberId);
    }
+   
     //이미지 조회
    @Override
    public List<SnsMediaVO> getFeedImg(int postId) {
       return mapper.getFeedImg(postId);
    }
+   
+   
     /*
      * 해시태그
      */
@@ -197,29 +209,35 @@ public class SnsServiceImpl implements SnsService{
       return mapper.updateHashtag(postId);
    }
    
+   
     /*
      * 팔로우
      */
+   
    //팔로우
    @Override
    public int follow(SnsFollowVO followVO) {
       return mapper.follow(followVO);
    }
+   
    //언팔로우
    @Override
    public int unfollow(String followerId, String followingId) {
       return mapper.unfollow(followerId, followingId);
    }
+   
    //팔로잉 조회
    @Override
    public List<SnsFollowVO> getFollowingList(String followerId) {
       return mapper.getFollowingList(followerId);
    }
+   
    //팔로워 조회
    @Override
    public List<SnsFollowVO> getFollowerList(String followingId) {
       return mapper.getFollowerList(followingId);
    }
+   
    //필로우 상태 조회
    @Override
    public int followCheck(String myId, String targetId) {
@@ -233,21 +251,25 @@ public class SnsServiceImpl implements SnsService{
    public List<MemberVO> getUsers() {
       return mapper.getUsers();
    }
+   
    //유저검색
    @Override
-   public List<MemberVO> searchUser(String memberId, String nickname) {
-      return mapper.searchUser(memberId, nickname);
+   public List<MemberVO> searchUser(String memberId) {
+      return mapper.searchUser(memberId);
    }
+   
    //유저닉네임검색
     @Override
     public List<MemberVO> getUsersByNick(String nickname) {
         return mapper.getUsersByNick(nickname);
     }
+    
    //해시태그검색
    @Override
    public List<SnsPostVO> searchHashtag(String hashtag) {
       return mapper.searchHashtag(hashtag);
    }
+   
    //인기해시태그
     @Override
     public List<HashtagVO> selectHashtagForMain() {
@@ -265,6 +287,7 @@ public class SnsServiceImpl implements SnsService{
       return mapper.sumLikes(jjimVO);
    }
    
+   
     /*
      * 댓글
      */
@@ -273,40 +296,48 @@ public class SnsServiceImpl implements SnsService{
    public int inserCmt(CommentsVO commentsVO) {
       return mapper.inserCmt(commentsVO);
    }
+   
    //댓글수정
    @Override
    public int updateCmt(CommentsVO commentsVO) {
       return mapper.updateCmt(commentsVO);
    }
+   
    //댓글삭제
    @Override
    public int deleteCmt(int commId, int targetId) {
        System.out.println(commId);
       return mapper.deleteCmt(commId, targetId);
    }
+   
    //댓글조회
    @Override
    public List<CommentsVO> getCmtLists(int postId) {
       return mapper.getCmtLists(postId);
    }
     
+   
     /*
      * 대댓글
      */
+   
    //대댓입력
    @Override
    public int insertReCmt(CommentsVO commentsVO) {
       return mapper.insertReCmt(commentsVO);
    }
+   
    //대댓수정
    @Override
    public int updateReCmt(CommentsVO commentsVO) {
       return mapper.updateReCmt(commentsVO);
    }
 
+   
     /*
      * 북마크
      */
+   
     //컬렉션 등록
     @Override
     public int createBookmarkCtg(SnsBookmarkVO bmkCtgVO) {
@@ -318,11 +349,13 @@ public class SnsServiceImpl implements SnsService{
     public int updateBookmarkCtgName(SnsBookmarkVO bmkCtgVO) {
         return mapper.updateBookmarkCtgName(bmkCtgVO);
     }
+    
     //컬렉션 삭제(안의 게시물도 전부 삭제되도록)
     @Override
     public int deleteBookmarkCtg(int catgId) {
         return mapper.deleteBookmarkCtg(catgId);
     }
+    
     //컬렉션 목록
     @Override
     public List<SnsBookmarkVO> getBookmarkCtgs(String memberId) {
@@ -334,39 +367,47 @@ public class SnsServiceImpl implements SnsService{
     public int addBookmark(SnsBookmarkVO bmkVO) {
         return mapper.addBookmark(bmkVO);
     }
+    
     //북마크 삭제
     @Override
     public int deleteBookmark(int postId, String memberId) {
         return mapper.deleteBookmark(postId, memberId);
     }
+    
     //북마크 여부조회
     @Override
     public int isBookmark(int postId, String memberId) {
         return mapper.isBookmark(postId, memberId);
     }
+    
     //북마크 조회
     @Override
     public List<SnsBookmarkVO> getBookmarks(int catgId) {
         return mapper.getBookmarks(catgId);
     }
+    
     //전체 북마크
     public List<SnsBookmarkVO> getAllBookmarks(){
        return mapper.getAllBookmarks();
     }
     
+    
     /*
      * 검색기록
      */
+    
     //검색기록 등록
     @Override
     public int addHistory(SnsSearchHistoryVO historyVO) {
         return mapper.addHistory(historyVO);
     }
+    
     //검색기록 리스트
     @Override
     public List<SnsSearchHistoryVO> getHistoryList(String memberId) {
         return mapper.getHistoryList();
     }
+    
     //검색기록 삭제
     @Override
     public int deleteHistory(int searchId) {
