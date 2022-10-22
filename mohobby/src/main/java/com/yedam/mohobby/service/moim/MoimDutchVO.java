@@ -12,7 +12,7 @@ public class MoimDutchVO {
 	private int totalPrice; //총 금액
 	private String title; //n빵제목	
 	private int people; //참여인원
-	private int finish; //완료여부 0:진행중 1:완료
+	private int finish; //완료 여부 0:진행중 1:완료
 	private Date writeDate; //작성 날짜
 	private String moneyTarget; // n빵할 대상
 	private int calcPrice; // n빵된 돈

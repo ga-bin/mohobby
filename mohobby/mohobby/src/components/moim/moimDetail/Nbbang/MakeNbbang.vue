@@ -15,7 +15,7 @@
               outlined
               placeholder="금액을 입력해주세요"
               v-model="price"
-              oninput="javascript: this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|a-z]/g, '' );"
+              oninput="javascript: this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|a-z|~!@#$%^&*()_+|<>?:{};=-₩']/g, '' );"
               prefix="₩"
             >
             </v-text-field>
@@ -103,13 +103,15 @@ export default {
         })
         .then((resp) => {
           if(resp.status == 200) {
+            console.log('then resp===============')
             console.log('calcPrice: '+this.totalPrice)
             console.log('moimId: '+this.moimId)
+            console.log('then resp===============')
             console.log(resp.data);
             this.axios.post("/insertPtp", {
               memberId: this.empty,
               moimId: this.moimId,
-              calcPrice: this.calcPrice
+              calcPrice: this.totalPrice
             });
             console.log("then==============")
             console.log('writer:'+this.writer)
@@ -118,7 +120,7 @@ export default {
             console.log('calcPrice:'+this.totalPrice)
             console.log('moimId:' +this.moimId)
             this.$swal("N빵 생성이 완료되었습니다.");
-            this.$router.push("/nBBangDetail");
+            // this.$router.push(name :'/nBBangDetail');
           }
         })
         .catch((error) => {
