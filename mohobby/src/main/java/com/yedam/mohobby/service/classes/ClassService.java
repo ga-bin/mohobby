@@ -1,12 +1,8 @@
 package com.yedam.mohobby.service.classes;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.mohobby.service.communal.JjimVO;
 
@@ -53,6 +49,9 @@ public interface ClassService {
     
     //강이 커리큘럼 단건 업데이트
     public void updateAttdInfo(ClassAttendanceVO vo);
+    
+    //강의 결제내역 추가
+    public int insertClassPayOne(ClassPayVO vo);
     
     //강의 결제내역 단건조회
     public ClassPayVO getClassPayOne(ClassPayVO vo);

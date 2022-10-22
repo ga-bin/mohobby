@@ -250,6 +250,89 @@
 		and member_id = #{memberId}
 	</update>
 	
+	<!-- 강의 결제내역 단건추가 -->
+	<insert id="insertClassPayOne" parameterType="com.yedam.mohobby.service.classes.ClassPayVO">
+		<selectKey keyProperty="payId" resultType="java.lang.Integer" order="BEFORE">
+			select nvl(max(pay_id), 0) + 1 from class_pay
+		</selectKey>
+		insert into class_pay (
+								PAY_ID,
+								STATUS,
+								PG_TYPE,
+								PG_TID,
+								PG_PROVIDER,
+								PAY_METHOD,
+								PAID_AT,
+								PAID_AMOUNT,
+								NAME,
+								MERCHANT_UID,
+								IMP_UID,
+								CUSTOM_DATA,
+								CURRENCY,
+								CARD_QUOTA,
+								CARD_NUMBER,
+								CARD_NAME,
+								BUYER_TEL,
+								BUYER_POSTCODE,
+								BUYER_NAME,
+								BUYER_EMAIL,
+								BUYER_ADDR,
+								BANK_NAME,
+								APPLY_NUM,
+								VBANK_DATE,
+								VBANK_HOLDER,
+								VBANK_NAME,
+								VBANK_NUM,
+								MEMBER_ID,
+								CLASS_ID,
+								DLVY_FEE,
+								DLVY_MEMO,
+								CLASS_PRICE,
+								NEEDS_PRICE,
+								POINT,
+								CLASS_STATUS,
+								BUYER_ADDR_DETAIL,
+								)
+				values(
+					#{payId},
+					#{status, jdbcType=VARCHAR},
+					#{pgType, jdbcType=VARCHAR},
+					#{pgTid, jdbcType=VARCHAR},
+					#{pgProvider, jdbcType=VARCHAR},
+					#{payMethod, jdbcType=VARCHAR},
+					#{paidAt, jdbcType=INTEGER},
+					#{paidAmount, jdbcType=INTEGER},
+					#{name, jdbcType=VARCHAR},
+					#{merchantUid, jdbcType=VARCHAR},
+					#{impUid, jdbcType=VARCHAR},
+					#{customData, jdbcType=VARCHAR},
+					#{currency, jdbcType=VARCHAR},
+					#{cardQuota, jdbcType=INTEGER},
+					#{cardNumber, jdbcType=VARCHAR},
+					#{cardName, jdbcType=VARCHAR},
+					#{buyerTel, jdbcType=VARCHAR},
+					#{buyerPostcode, jdbcType=VARCHAR},
+					#{buyerName, jdbcType=VARCHAR},
+					#{buyerEmail, jdbcType=VARCHAR},
+					#{buyerAddr, jdbcType=VARCHAR},
+					#{bankName, jdbcType=VARCHAR},
+					#{applyNum, jdbcType=VARCHAR},
+					#{vbankDate, jdbcType=DATE},
+					#{vbankHolder, jdbcType=VARCHAR},
+					#{vbankName, jdbcType=VARCHAR},
+					#{vbankNum, jdbcType=VARCHAR},
+					#{memberId, jdbcType=VARCHAR},
+					#{classId, jdbcType=INTEGER},
+					#{dlvyFee, jdbcType=INTEGER},
+					#{dlvyMemo, jdbcType=VARCHAR},
+					#{classPrice, jdbcType=INTEGER},
+					#{needsPrice, jdbcType=INTEGER},
+					#{point, jdbcType=INTEGER},
+					#{classStatus, jdbcType=INTEGER},
+					#{buyerAddrDetail, jdbcType=VARCHAR}
+				)
+	</insert>
+	
 	<!-- 강의 결제내역 단건조회 -->
 	<select id="getClassPayOne" parameterType="com.yedam.mohobby.service.classes.ClassPayVO" resultType="com.yedam.mohobby.service.classes.ClassPayVO">
 		select * from class_pay

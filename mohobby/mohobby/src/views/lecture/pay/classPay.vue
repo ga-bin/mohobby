@@ -301,7 +301,7 @@ export default {
                 pay_method: method,
                 merchant_uid: "ORD" + date.toISOString().substring(0,10).replace(/-/g,'') + "-" + date.getTime(),
                 name: payName,
-                amount: vm.totalPrice,
+                amount: 1000,
                 buyer_email: vm.$store.state.user.email,
                 buyer_name: vm.$store.state.user.userName,
                 buyer_tel: vm.$store.state.user.phoneNum,
@@ -310,6 +310,8 @@ export default {
             }, rsp => {
                 let data = rsp;
                 if (rsp.success) {
+                    this.insertPay(data);
+
                     this.$router.push({ name: 'classPaySuccess', 
                                         params: { resultInfo: data, classId: this.classId, date: date }
                     }).catch(()=>{$router.go(0)});
@@ -321,6 +323,16 @@ export default {
                 }
             });
         },
+
+        insertPay(info) {
+            this.axios.post('/class/pay', {
+                payResult: JSON.stringify(info)
+            }).then(res => {
+                console.log('res', res)
+                console.log('res.data', res.data);
+            })
+        },
+
     }
 }
 </script>
