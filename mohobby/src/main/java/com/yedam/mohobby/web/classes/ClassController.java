@@ -166,6 +166,12 @@ public class ClassController {
 		classService.updateAttdInfo(vo);
 	}
 	
+	//강의 결제내역 추가
+	@PostMapping("/class/pay")
+    public int insertClassPayOne(@RequestBody ClassPayVO payResult) {
+    	return classService.insertClassPayOne(payResult);
+    }
+	
 	//강의 결제내역 단건 조회
 	@GetMapping("/class/pay/{classId}")
 	public @ResponseBody ClassPayVO getClassPayOne(@PathVariable int classId, @RequestParam String memberId) {
