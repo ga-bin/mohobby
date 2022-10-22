@@ -51,6 +51,9 @@ public interface ClassMapper {
     //강의 챕터 조회
     public List<ClassChapterVO> getChapterList(ClassChapterVO vo);
     
+    //강의 결제내역 추가
+    public int insertClassPayOne(ClassPayVO vo);
+    
     //강의 결제내역 단건조회
     public ClassPayVO getClassPayOne(ClassPayVO vo);
     

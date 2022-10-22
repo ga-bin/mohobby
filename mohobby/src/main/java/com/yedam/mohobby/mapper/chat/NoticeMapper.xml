@@ -4,10 +4,28 @@
 	<!-- 알림 전체조회 -->
 	<select id="getAllNotice" parameterType="String"
 		resultType="com.yedam.mohobby.service.notice.NoticeVO">
-		select *
-		from
-		notice
-		where member_id =#{memberId}
+	select	MEMBER_ID,
+			AVATAR,
+			TITLE,
+			SUBTITLE,
+			NOTICE_ID,
+			NOTICE_TYPE,
+			BOARD_TYPE,
+			MOIM_ID,
+			POST_ID,
+			CONTENT_TYPE,
+			(
+			 select	count(*) as non_read_count
+			 from chat a
+			 join room b
+			 on (a.room_no=b.room_no)
+			 where b.member_id =#{memberId}
+			 and	a.msg_time>b.check_time
+			)as nonReadCount
+	from
+	notice
+	where member_id =#{memberId}
+	order by NOTICE_ID;
 	</select>
 	<!-- 알림 등록 -->
 	<insert id="insertNotice"
@@ -43,6 +61,15 @@
 	<select id="getNoticeId" resultType="integer">
 		select nvl(Max(notice_id),0)+1
 		from notice
+	</select>
+		<!-- 전체 안읽은 메시지수  -->
+	<select id="getNonReadAllChat" resultType="Integer"	parameterType="String">
+		select count(*) as non_read_count
+		from chat a
+		join room b
+		on (a.room_no=b.room_no)
+		where b.member_id =#{memberId}
+		and	a.msg_time>b.check_time
 	</select>
 
 </mapper>

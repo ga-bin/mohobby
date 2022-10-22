@@ -14,6 +14,11 @@
         >
           신고하기
         </v-btn>
+        <v-btn text @click="moimFlagging" v-bind="attrs"
+          v-on="on">
+          <v-icon small color="white">mdi-plus-circle-outline</v-icon>
+          <div style="color: white">신고하기</div>
+        </v-btn>
       </template>
       <v-card>
         <v-card-title>Select Country</v-card-title>
@@ -120,7 +125,7 @@ export default {
         insertFlag() {
           const vm = this;
           this.axios({
-            url: "http://localhost:8088/java/flagging",
+            url: "/flagging",
             method: "post",
             data : {
               flagFrom : this.memberId,

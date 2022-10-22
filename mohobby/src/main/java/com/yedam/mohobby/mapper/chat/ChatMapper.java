@@ -33,4 +33,5 @@ public int updateCheckOut(@Param("roomId") int roomId,@Param("memberId") String 
 public int updateCheckInOut(@Param("preRoomId") int preRoomId,@Param("currentRoomId")int currentRoomId,@Param("memberId") String memberId);
 //체크인 여부 조회
 public int getCheckIn(@Param("roomId")int roomId,@Param("memberId") String memberId);
+
 }

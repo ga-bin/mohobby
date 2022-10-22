@@ -178,6 +178,15 @@ export default {
     this.getCmtList(); //댓글리스트 로딩
   },
   methods: {
+    //회원검증
+    checkLogin(e){
+      if (this.memberId == "" || this.memberId == undefined) {
+        return this.$swal("로그인부터 부탁드립니다🙏");
+      } else if (this.inputReCmt == "" || this.inputReCmt == undefined) {
+        return this.$swal("내용 입력부터 부탁드립니다🙏");
+      }
+    },
+
     //date처리
     writeDate(writeDate) {
       return this.$moment(writeDate).fromNow();
@@ -196,16 +205,7 @@ export default {
     },
     //댓글등록
     regCmt() {
-      console.log(this.inputCmt);
-      if (this.memberId == "" || this.memberId == undefined) {
-        this.$swal("로그인부터 부탁드립니다🙏");
-        return;
-      }
-      if (this.inputCmt == "" || this.inputCmt == undefined) {
-        this.$swal("내용 입력부터 부탁드립니다🙏");
-        return;
-      }
-
+      this.checkLogin();
       this.axios
         .post("/sns/cmt", {
           memberId: this.memberId,
@@ -281,15 +281,7 @@ export default {
     },
     //댓글 수정
     editCmt(commId) {
-      if (this.memberId == "" || this.memberId == undefined) {
-        this.$swal("로그인부터 부탁드립니다🙏");
-        return;
-      }
-      if (this.editedContent == "" || this.editedContent == undefined) {
-        this.$swal("내용 입력부터 부탁드립니다🙏");
-        return;
-      }
-
+      this.checkLogin();//로그인검증
       this.axios
         .put("/sns/cmt/" + commId, {
           content: this.editedContent,
@@ -307,6 +299,7 @@ export default {
     //대댓글 입력창 열기(닫기)
     //답장 click -> 인자 comm_id-> 데이터변수 reCmt에 바인딩 -> v-if에서 비교 조건으로 사용
     showRegReCmt(cmtId, cmtmemId) {
+      this.checkLogin();
       this.inputReCmt = "";
       if (cmtId == this.reCmt) {
         //댓글창닫기
@@ -319,16 +312,7 @@ export default {
     },
     //대댓글등록
     regReCmt(commId, parentMemberId) {
-      if (this.memberId == "" || this.memberId == undefined) {
-        //회원검증
-        this.$swal("로그인부터 부탁드립니다🙏");
-        return;
-      }
-      if (this.inputReCmt == "" || this.inputReCmt == undefined) {
-        //내용검증
-        this.$swal("내용 입력부터 부탁드립니다🙏");
-        return;
-      }
+      this.checkLogin();//로그인검증
       this.axios
         .post("/sns/recmt", {
           memberId: this.memberId,

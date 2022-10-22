@@ -288,7 +288,7 @@ export default {
     }
     // 유효성 검사시 사용할 회원 전체 정보 가져 오기
     this.axios({
-      url: "http://localhost:8088/java/memberAll",
+      url: "/memberAll",
       method: "get",
     })
       .then(function (response) {
@@ -311,7 +311,7 @@ export default {
     getAllRegion() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/regionAll",
+        url: "/regionAll",
         method: "get",
       })
         .then(function (response) {
@@ -441,7 +441,7 @@ export default {
         return;
       }
       this.axios({
-        url: "http://localhost:8088/java/member",
+        url: "/member",
         method: "post",
         data: {
           memberId: this.memberId,

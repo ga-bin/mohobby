@@ -70,7 +70,7 @@ public interface SnsService {
     //유저전체
     public List<MemberVO> getUsers();
     //유저검색
-    public List<MemberVO> searchUser(String memberId, String nickname);
+    public List<MemberVO> searchUser(String memberId);
     //유저닉네임검색
     public List<MemberVO> getUsersByNick(String nickname);
     //해시태그검색

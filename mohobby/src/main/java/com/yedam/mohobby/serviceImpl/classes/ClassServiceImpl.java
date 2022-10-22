@@ -128,6 +128,15 @@ public class ClassServiceImpl implements ClassService {
     	classMapper.updateAttdInfo(vo);
     }
     
+    //강의 결제내역 추가 (준비물 배송 정보도 추가)
+    @Override
+    public int insertClassPayOne(ClassPayVO vo) {
+    	classMapper.insertClassPayOne(vo);
+    	int payId = vo.getPayId();
+    	
+    	return payId;
+    }
+    
     // 강의 결제내역 단건조회
     @Override
     public ClassPayVO getClassPayOne(ClassPayVO vo) {

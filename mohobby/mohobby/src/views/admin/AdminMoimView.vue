@@ -51,7 +51,8 @@ export default {
           value: "flagId",
         },
         { text: "신고자", value: "flagFrom" },
-        { text: "신고소모임", value: "flagTo" },
+        { text: "신고소모임Id", value: "flagTo" },
+        { text: "신고소모임이름", value: "moimName" },
         { text: "신고코드", value: "flagCode" },
         { text: "신고이유 (g)", value: "flagReason" },
         { text: "관리자 승인여부", value: "adminConfirm" },
@@ -91,7 +92,7 @@ export default {
     getFlagedMoim() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/adminflagmoim",
+        url: "/adminflagmoim",
         method: "get",
       })
         .then(function (response) {
@@ -109,6 +110,12 @@ export default {
             }
           }
           vm.moimFlagList = response.data;
+          console.log(vm.moimFlagList);
+          console.log(vm.moimFlagList);
+          console.log(vm.moimFlagList);
+          console.log(vm.moimFlagList);
+          console.log(vm.moimFlagList);
+
         })
         .catch(function (error) {
           console.log(error);
@@ -138,7 +145,7 @@ export default {
                   this.moimOpen = 0;
                 }
                 this.axios({
-                  url: "http://localhost:8088/java/updateFlag",
+                  url: "/updateFlag",
                   method: "put",
                   data: {
                     flagResult: value,
@@ -149,7 +156,7 @@ export default {
                   .then(function (response) {
                     console.log(response);
                     vm.$swal.fire("모임 신고결과 수정이 완료되었습니다");
-                    vm.updateMoimOpen(value);
+                    vm.updateMoimOpen(item.flagTo);
                     vm.getFlagedMoim();
                   })
                   .catch(function (error) {
@@ -163,13 +170,13 @@ export default {
         });
       })();
     },
-    updateMoimOpen() {
+    updateMoimOpen(flagTo) {
       this.axios({
-        url: "http://localhost:8088/java/updateMoimOpen",
+        url: "/updateMoimOpen",
         method: "put",
         data: {
           moimOpen: this.moimOpen,
-          moimId: 1,
+          moimId: flagTo,
         },
       })
         .then(function (response) {
@@ -185,14 +192,9 @@ export default {
       const vm = this;
       this.editedIndex = this.moimFlagList.indexOf(item);
       this.editedItem = Object.assign({}, item);
-      console.log(item.flagId);
-      console.log(item.flagId);
-      console.log(item.flagId);
-      console.log(item.flagId);
-      console.log(item.flagId);
 
       this.axios({
-        url: "http://localhost:8088/java/flagging/" + item.flagId,
+        url: "/flagging/" + item.flagId,
         method: "delete",
       })
         .then(function (response) {
@@ -214,7 +216,7 @@ export default {
       } else {
         this.$router.push({
           name: "moimBoard",
-          params: { moimId: this.editedItem.flagTo, boardType: 1 },
+          params: { moimId: Number(this.editedItem.flagTo), boardType: 1 },
         });
       }
     },

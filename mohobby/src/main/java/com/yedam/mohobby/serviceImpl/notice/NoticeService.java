@@ -36,4 +36,10 @@ public class NoticeService implements com.yedam.mohobby.service.notice.NoticeSer
 	public int getNoticeId() {
 		return nMapper.getNoticeId();
 	}
+
+	//안읽은 메세지수 조회
+	@Override
+	public int getNonReadAllChat(String memberId) {
+		return nMapper.getNonReadAllChat(memberId);
+	}
 }

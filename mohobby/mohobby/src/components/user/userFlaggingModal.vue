@@ -116,7 +116,7 @@ export default {
         insertFlag() {
           const vm = this;
           this.axios({
-            url: "http://localhost:8088/java/flagging",
+            url: "/flagging",
             method: "post",
             data : {
               flagFrom : this.memberId,

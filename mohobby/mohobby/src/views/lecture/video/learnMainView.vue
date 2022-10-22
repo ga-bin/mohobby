@@ -20,7 +20,7 @@
             {{ this.chapName }}
           </h1>
           <v-expansion-panel v-for="(item,i) in items" :key="i">
-            <v-expansion-panel-header class="panel-header" @click="changePanelHeader">
+            <v-expansion-panel-header class="panel-header" @click="changePanelHeader(i)">
               <v-row justify="start" align="center">
                 <v-chip label color="white">{{ i+1 }}</v-chip>
                 <div>
@@ -309,7 +309,7 @@ export default {
       currInfo: {},
       originProgress: '',
       questList: [],
-      panel: '',
+      panel: 0,
       items: [],    //전체 커리큘럼
       drawer: false,
       option: {
@@ -417,7 +417,6 @@ export default {
       let prog = this.currInfo.viewProgress;
 
       this.originProgress = total * (prog / 100);
-      console.log(this.originProgress);
     },
     getProgressInfo() {
       this.axios('/class/learn/progress/'+this.currId, {
@@ -459,7 +458,8 @@ export default {
       })
       .catch(err => console.log(err));
     },
-    changePanelHeader() {
+    changePanelHeader(idx) {
+      this.panel = idx;
     },
     getInstance(art) {
       //console.log(art);
@@ -656,8 +656,10 @@ export default {
           for(let i=0; i<this.items.length; i++) {
             for(let j=0; j<this.items[i].currList.length; j++) {
               if(this.items[i].currList[j].currId == this.currId) {
-                this.panel = i;
+                this.panel = [];
+                this.panel.push(i);
                 this.chapName = this.items[i].chapName;
+                console.log(i);
               }
               this.currList.push(this.items[i].currList[j].currId);
             }
