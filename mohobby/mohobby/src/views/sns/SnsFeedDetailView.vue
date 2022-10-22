@@ -660,7 +660,11 @@ export default {
 
     //유저 피드로 이동
     goMyFeed(userId) {
-      this.$router.push({ path: "/snsUserFeed", query: { userId: userId } });
+      if (this.userOneInfo.role == 4) {
+        this.$swal.fire("관리자에 의해 접근 유저 프로필입니다.");
+      } else {
+         this.$router.push({ path: "/snsUserFeed", query: { userId: userId } });
+      }
     },
   },
 };

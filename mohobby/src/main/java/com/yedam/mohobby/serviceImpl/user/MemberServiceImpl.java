@@ -52,11 +52,6 @@ public class MemberServiceImpl implements MemberService {
 	public void updateProfile(MemberVO memberVO) {
 		System.out.println(memberVO.getProfileImg());
 		if (memberVO.getProfileImg().equals("nullnull") || memberVO.getProfileImg() == null) {
-			System.out.println("걸려라");
-			System.out.println("걸려라");
-			System.out.println("걸려라");
-			System.out.println("걸려라");
-			System.out.println("걸려라");
 			memberVO.setProfileImg("comfuck.jpg");
 		} 
 		mMapper.updateProfile(memberVO);
@@ -71,12 +66,9 @@ public class MemberServiceImpl implements MemberService {
 	// 회원정보 수정 update
 	@Override
 	public void updateMember(MemberVO memberVO) {
-		System.out.println(memberVO.getGender());
-		System.out.println(memberVO.getGender());
-		System.out.println(memberVO.getGender());
-		System.out.println(memberVO.getGender());
-		System.out.println(memberVO.getGender());
-		
+		if (memberVO.getProfileImg().equals("nullnull") || memberVO.getProfileImg() == null) {
+			memberVO.setProfileImg("comfuck.jpg");
+		} 
 		mMapper.updateMember(memberVO);
 	}
 

@@ -120,7 +120,15 @@
                     >
                     </v-text-field>
                     <!-- 생년월일입력 -->
-                    <v-col cols="24" sm="20" md="20">
+                    <v-text-field
+                      color="#2ac187"
+                      prepend-inner-icon="mdi-account-outline"
+                      label="생일"
+                      v-model="birth"
+                      readonly
+                    >
+                    </v-text-field>
+                    <!-- <v-col cols="24" sm="20" md="20">
                       <v-dialog
                         ref="dialog"
                         color="#2ac187"
@@ -158,7 +166,8 @@
                           </v-btn>
                         </v-date-picker>
                       </v-dialog>
-                    </v-col>
+                    </v-col> -->
+
                     <!-- 성별입력 -->
                     <v-col>
                       <v-radio-group label="성별" row v-model="gender">
@@ -302,9 +311,7 @@ export default {
       canRegister: "",
       memberName: "",
       nickName: "",
-      birth: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
+      birth: "",
       menu: false,
       modal: false,
       menu2: false,
@@ -354,6 +361,10 @@ export default {
         .then(function (response) {
           if (response.data != "") {
             console.log(response.data);
+            console.log(response.data);
+            console.log(response.data);
+            console.log(response.data);
+            console.log(response.data);
             vm.memberId = response.data.memberId;
             vm.password = response.data.password;
             vm.password2 = response.data.password;
@@ -365,11 +376,33 @@ export default {
             vm.gender = response.data.gender;
             vm.memberName = response.data.memberName;
             vm.profileImg = response.data.profileImg;
+            console.log(response.data.birth);
+            console.log(response.data.birth);
+            console.log(response.data.birth);
+            console.log(response.data.birth);
+            console.log(response.data.birth);
+            vm.birth = vm.calDate(response.data.birth);
+            console.log(vm.birth);
+            console.log(vm.birth);
+            console.log(vm.birth);
+            console.log(vm.birth);
+            console.log(vm.birth);
           }
         })
         .catch(function (error) {
           console.log(error);
         });
+    },
+    calDate(milliSecond) {
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        const data = new Date(milliSecond);  //Date객체 생성
+
+        const year = data.getFullYear();    //0000년 가져오기
+        const month = data.getMonth() + 1;  //월은 0부터 시작하니 +1하기
+        const date = data.getDate();        //일자 가져오기
+        const day = days[data.getDay()];    //요일 가져오기
+
+        return `${year}-${month}-${date}`;
     },
     // 관심사 전체 목록 가져오기
     getAllCatg() {
@@ -541,6 +574,13 @@ export default {
     },
     editUser() {
       const vm = this;
+      console.log(this.birth);
+      console.log(this.birth);
+      console.log(this.birth);
+      console.log(this.birth);
+      console.log(this.birth);
+      console.log(this.birth);
+      console.log(this.birth);
       if (
         this.memberId === "" ||
         this.password === "" ||
@@ -556,13 +596,8 @@ export default {
         return;
       }
       this.confirmMemKeyword();
-      console.log(this.gender);
-      console.log(this.gender);
-      console.log(this.gender);
-      console.log(this.gender);
-      console.log(this.gender);
       this.axios({
-        url: "http://localhost:8088/java/memberupdate",
+        url: "/memberupdate",
         method: "put",
         data: {
           memberId: this.memberId,
@@ -574,6 +609,7 @@ export default {
           phoneNum: this.phoneNum,
           intro: this.intro,
           gender: this.gender,
+          birth: this.birth,
         },
       })
         .then(function (response) {
@@ -583,7 +619,7 @@ export default {
           console.log("회원정보 수정 실패");
         });
       this.axios({
-        url: "http://localhost:8088/java/memberupdateprofilename",
+        url: "/memberupdateprofilename",
         method: "put",
         data: {
           memberId: this.memberId,
@@ -611,7 +647,7 @@ export default {
     },
     insertMemKeyword(keywordId) {
       this.axios({
-        url: "http://localhost:8088/java/memPickKeyword",
+        url: "/memPickKeyword",
         method: "post",
         data: {
           memberId: this.memberId,
@@ -627,11 +663,7 @@ export default {
     },
     deleteMemKeyword(keywordId) {
       this.axios({
-        url:
-          "http://localhost:8088/java/memPickKeyword/" +
-          this.memberId +
-          "/" +
-          keywordId,
+        url: "/memPickKeyword/" + this.memberId + "/" + keywordId,
         method: "delete",
       })
         .then(function (response) {

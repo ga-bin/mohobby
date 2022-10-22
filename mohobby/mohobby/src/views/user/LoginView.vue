@@ -121,6 +121,9 @@
 }
 </style>
 <script>
+
+window.Kakao.init("157b38874395f658a48c02cc8473066b"); // 카카오 로그인 앱 키
+
 import router from "@/router";
 export default {
   data: () => ({
@@ -232,7 +235,7 @@ export default {
 
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/membercheck",
+        url: "/membercheck",
         method: "post",
         data: {
           memberId: this.memberId,
@@ -274,7 +277,7 @@ export default {
       console.log(this.email);
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/memberEmail/" + this.email,
+        url: "/memberEmail/" + this.email,
         method: "get",
       })
         .then(function (response) {
@@ -309,7 +312,7 @@ export default {
       this.$swal
         .fire({
           title: "가입 시 입력한 이메일을 입력하세요",
-          html: `<input type="text" id="email" class="swal2-input" placeholder="Username">`,
+          html: `<input type="text" id="email" class="swal2-input" placeholder="email">`,
           confirmButtonText: "제출",
           cancelButtonText: "취소",
           focusConfirm: false,
@@ -324,12 +327,47 @@ export default {
         .then((result) => {
           vm.email = result.value.email;
           this.axios({
-            url: "http://localhost:8088/java/memberEmail/" + vm.email,
+            url: "/memberEmail/" + vm.email,
             method: "get",
           })
             .then(function (response) {
               vm.$swal.fire(
                 "가입하신 아이디는" + response.data.memberId + "입니다."
+              );
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        });
+    },
+    findMemberPassword() {
+      const vm = this;
+      this.$swal
+        .fire({
+          title: "아이디를 입력하세요",
+          html: `<input type="text" id="memberId" class="swal2-input" placeholder="memberId">`,
+          confirmButtonText: "제출",
+          cancelButtonText: "취소",
+          focusConfirm: false,
+          preConfirm: () => {
+            const memberId = this.$swal
+              .getPopup()
+              .querySelector("#memberId").value;
+            if (!memberId) {
+              this.$swal.showValidationMessage(`아이디를 입력해 주세요`);
+            }
+            return { memberId: memberId };
+          },
+        })
+        .then((result) => {
+          vm.memberId = result.value.memberId;
+          this.axios({
+            url: "/member/" + vm.memberId,
+            method: "get",
+          })
+            .then(function (response) {
+              vm.$swal.fire(
+                "찾으시는 비밀번호는" + response.data.password + "입니다."
               );
             })
             .catch(function (error) {

@@ -14,4 +14,7 @@ public class MoimDutchVO {
 	private int people; //참여인원
 	private int finish; //완료여부 0:진행중 1:완료
 	private Date writeDate; //작성 날짜
+	private String moneyTarget; // n빵할 대상
+	private int calcPrice; // n빵된 돈
+	private int calcCheck; // 확인 여부
 }
