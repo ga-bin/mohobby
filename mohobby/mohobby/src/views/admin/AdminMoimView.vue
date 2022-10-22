@@ -91,7 +91,7 @@ export default {
     getFlagedMoim() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/adminflagmoim",
+        url: "/adminflagmoim",
         method: "get",
       })
         .then(function (response) {
@@ -138,7 +138,7 @@ export default {
                   this.moimOpen = 0;
                 }
                 this.axios({
-                  url: "http://localhost:8088/java/updateFlag",
+                  url: "/updateFlag",
                   method: "put",
                   data: {
                     flagResult: value,
@@ -165,7 +165,7 @@ export default {
     },
     updateMoimOpen() {
       this.axios({
-        url: "http://localhost:8088/java/updateMoimOpen",
+        url: "/updateMoimOpen",
         method: "put",
         data: {
           moimOpen: this.moimOpen,
@@ -192,7 +192,7 @@ export default {
       console.log(item.flagId);
 
       this.axios({
-        url: "http://localhost:8088/java/flagging/" + item.flagId,
+        url: "/flagging/" + item.flagId,
         method: "delete",
       })
         .then(function (response) {

@@ -63,28 +63,14 @@
                     >
                     </v-text-field>
                     <!-- 생년월일 -->
-                    <v-col cols="24" sm="20" md="20">
-                      <v-dialog
-                        ref="dialog"
-                        color="#2ac187"
-                        v-model="modal"
-                        :return-value.sync="birth"
-                        persistent
-                        width="290px"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            color="#2ac187"
-                            v-model="birth"
-                            label="Picker in dialog"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                          ></v-text-field>
-                        </template>
-                      </v-dialog>
-                    </v-col>
+                    <v-text-field
+                      color="#2ac187"
+                      prepend-inner-icon="mdi-account-outline"
+                      label="생년월일"
+                      v-model="birth"
+                      readonly
+                    >
+                    </v-text-field>
                     <!-- 성별 -->
                     <v-col>
                       <v-radio-group label="성별" v-model="gender" row readonly>
@@ -252,17 +238,11 @@ export default {
     setMemberInfo() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/member/" + this.memberId,
+        url: "/member/" + this.memberId,
         method: "get",
       })
         .then(function (response) {
           if (response.data != "") {
-            console.log(response.data);
-            console.log(response.data);
-            console.log(response.data);
-            console.log(response.data);
-            console.log(response.data);
-            console.log(response.data);
             vm.memberId = response.data.memberId;
             vm.password = response.data.password;
             vm.password2 = response.data.password;
@@ -321,7 +301,7 @@ export default {
             });
           } else {
             this.axios({
-              url: "http://localhost:8088/java/membercheck",
+              url: "/membercheck",
               method: "post",
               data: {
                 memberId: vm.memberId,
@@ -350,7 +330,7 @@ export default {
     getMemberPickKeyword() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/memPickKeyword/" + this.memberId,
+        url: "/memPickKeyword/" + this.memberId,
         method: "get",
       })
         .then(function (response) {
@@ -370,7 +350,7 @@ export default {
     getAllRegion() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/regionAll",
+        url: "/regionAll",
         method: "get",
       })
         .then(function (response) {
@@ -403,7 +383,7 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             this.axios({
-              url: "http://localhost:8088/java/memberdelete",
+              url: "/memberdelete",
               method: "put",
               data: {
                 memberId: vm.memberId,
