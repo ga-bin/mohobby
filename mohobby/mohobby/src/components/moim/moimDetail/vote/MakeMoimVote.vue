@@ -2,22 +2,15 @@
   <div class="container">
     <v-card class="pa-5">
       <div class="head">
-      <div>투표 하기</div>
+      <div id="main">투표 하기</div>
       </div>
       <hr>
       <v-text-field class="mt-3" label="투표 제목" hide-details />
-      <v-text-field class="mt-3" label="항목 1" hide-details />
-      <v-text-field class="mt-3" label="항목 2" hide-details />
-      <v-text-field class="mt-3" label="항목 3" hide-details />
-
-      <v-btn class="mt-4" small>투표 항목 추가하기</v-btn>
-
-      <v-checkbox
-        class="mb-4"
-       
-        label="익명 투표하기"
-        hide-details
-      ></v-checkbox>
+      <div v-for="(item,idx) in items" :key=idx>     
+        <v-text-field class="mt-5" :label="item.list" hide-details />
+    </div>
+   
+      <v-btn class="mt-8 mb-8" @click="listplus()" small>투표 항목 추가하기</v-btn>
 
       <v-expansion-panels>
         <v-expansion-panel>
@@ -74,6 +67,15 @@
   export default {
     data(){
       return{
+      items : [{
+        list: "투표항목을 입력해주세요...!"
+      },
+      {
+        list: "투표항목을 입력해주세요...!"
+      },
+      {
+        list: "투표항목을 입력해주세요...!"
+      }],
       date: '',
       calendarFlag: false,
       picker: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
@@ -97,9 +99,14 @@
       },
       pickDate(){
         this.date = this.picker;
-      }
+      },
+      listplus() {
+        this.items.push({
+                list: "투표항목을 입력해주세요...!"
+      })
     }
   }
+}
 </script>
 <style scoped>
 .container{
