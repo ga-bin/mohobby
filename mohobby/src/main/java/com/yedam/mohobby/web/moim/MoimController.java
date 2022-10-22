@@ -348,6 +348,7 @@ public class MoimController {
 	//n빵 등록
 	@PostMapping("/makeNbbang")
 	public String insertNbbang(@RequestBody MoimDutchVO dutchVO) {
+		System.out.println("dutchVO:"+dutchVO);
 		try {
 			service.dutchInsert(dutchVO);
 			return "success";
@@ -358,13 +359,20 @@ public class MoimController {
 	
 	//n빵 참여자 등록
 	@PostMapping("/insertPtp")
-	public String insertMemberNbbang(@RequestBody List<MoimDutchPtpVO> dutptpVO) {
+	public String insertMemberNbbang(@RequestBody MoimDutchPtpVO dutptpVO) {
+		System.out.println("dutptpVO"+dutptpVO);
 		try {
 			service.dutchMemberInsert(dutptpVO);
 			return "success";
 		} catch(Exception e) {
 			return "fail"+e;
 		}
+	}
+	
+	//소모임 n빵 디테일 조회
+	@GetMapping("/nbbangDetail")
+	public List<MoimDutchVO> getNbbangDetail(@Param("moimId")int moimId) {
+		return service.nbbangSelect(moimId);
 	}
 }
 

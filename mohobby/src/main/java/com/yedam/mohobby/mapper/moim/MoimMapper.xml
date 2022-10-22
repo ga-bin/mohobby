@@ -81,7 +81,7 @@ where moim_id=#{moimId}
 <!-- 모임명 중복체크 -->
 <select id="moimIdCheck" resultType="Integer">
    SELECT COUNT(*) FROM moim WHERE moim_name = #{moimName}
-</select>
+</select>                                                                                                                                                                               
 
 <!-- 소모임 공지사항 전체 리스트 조회 -->
 <select id="moimNoticeBaord" parameterType="hashMap" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
@@ -181,7 +181,7 @@ select * from moim_dutch where moim_id = #{moimId}
       select a.moim_id, a.moim_img, a.moim_name
       from moim a, moim_member b
       where a.moim_id = b.moim_id
-      and b.memeber_role = 3
+      and b.member_role = 3
       and b.member_id = #{memberId}
    </select>
 
@@ -363,34 +363,36 @@ select * from moim_dutch where moim_id = #{moimId}
  
    <!-- 소모임 n빵 등록 -->
    <insert id="dutchInsert">
-   <selectKey resultType="Integer" keyProperty="duchId" order="BEFORE"> 
+   <selectKey resultType="Integer" keyProperty="dutchId" order="BEFORE"> 
       SELECT NVL(MAX(dutch_id), 0)+1 FROM moim_dutch
    </selectKey>
       INSERT INTO moim_dutch
-      VALUES(#{dutch_id},
+      VALUES(#{dutchId},
              #{memberId},
-             #{totlaPrice},
+             #{totalPrice},
              #{title},
              #{people} ,
-             #{0},
+             0,
              #{moimId},
              current_date)
    </insert>
  
    <!-- 소모임 n빵 참여자 등록 -->
    <insert id="dutchMemberInsert">
-      INSERT INTO moim_dutch_ptp
-      <foreach collection="memberId" item="arr" 
-         separator="UNION ALL">
-         SELECT
-         ((select MAX(dutch_id) from moim_dutch),
+      INSERT INTO moim_dutch_ptp values(
+         (select MAX(dutch_id) from moim_dutch),
          #{memberId},
          #{moimId},
          #{calcPrice},
-         #{0}
-         FROM
-         dual
-      </foreach>
+         0)
    </insert>
+   
+  <select id="nbbangSelect" resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
+  select a.dutch_id, a.member_id, a.write_date, a.total_price, 
+  		 a.people, b.member_id as money_target, b.calc_price, b.calc_check
+  from moim_dutch a, moim_dutch_ptp b
+  where a.dutch_id(+) = b.dutch_id
+  and a.moim_id = #{moimId}
+  </select>
       
 </mapper>
