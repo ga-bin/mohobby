@@ -21,6 +21,17 @@ Vue.prototype.stompClient = stompClient;
 
 moment.locale("ko");
 
+stompClient.connect(
+  {},
+  (frame) => {
+    console.log("소켓 연결 성공!!!", frame);
+
+  },
+  (error) => {
+    console.log("소켓 연결 실패", error);
+  }
+);
+
 Vue.use(VueSweetalert2);
 
 Vue.use(BootstrapVue);

@@ -47,26 +47,28 @@ public class MessageController {
 	
 		ChatListContentResVO res = new ChatListContentResVO();
 		for (int i = 0; i < content.getMemberIds().size(); i++) {
-			System.out.println(content.getMemberIds().get(i));
+			System.out.println("content:"+ content.getMemberIds().get(i));
 			System.out.println(content);
 			sendTemplate.convertAndSend("/queue/"+content.getMemberIds().get(i),content);
 			//상대방이 같은방에 없을때는 알림을 보낸다.
 			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0) {
-				res.setContent(content.getContent());
-				res.setRoomNo(content.getRoomNo());
-				res.setMsgTime(content.getHour());
-				System.out.println(res);
-				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i)+ "/notice", content);
-				resNotice.setProfileImge(mService.getMember(content.getMemberId()).getProfileImg());
-				resNotice.setNickname(mService.getMember(content.getMemberId()).getNickName());
+				resNotice.setNoticeId(nService.getNoticeId());
+				resNotice.setProfileImge(mService.getMember(content.getMemberIds().get(i)).getProfileImg());
+				resNotice.setNickname(mService.getMember(content.getMemberIds().get(i)).getNickName());
+				resNotice.setNoticeType(2);
+				resNotice.setTargetId(content.getMemberIds().get(i));
+				resNotice.setPostId(content.getRoomNo());
+				
+				//db에 담을 정보
 				noticeVO.setMemberId(content.getMemberIds().get(i));
 				noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
 				noticeVO.setTitle(resNotice.getNickname());
-				noticeVO.setNoticeId(4);
+				noticeVO.setSubtitle("새로운 메세지가 도착했습니다.");
+				noticeVO.setPostId(content.getRoomNo());
+				noticeVO.setNoticeType(2);
+
+				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i)+ "/notice", resNotice);
 				nService.insertNotice(noticeVO);
-			}
-			else {
-	
 			}
 		}
 	}

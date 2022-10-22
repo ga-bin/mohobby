@@ -112,10 +112,12 @@ export default {
   beforeUnmount() {
     window.removeEventListener('beforeunload', this.unLoadEvent);
   },
+ 
   methods: {
     unLoadEvent: function (event) {
       event.preventDefault();
       event.returnValue = '';
+      this.CheckOut(this.roomId);
     },
     //채팅내역 정렬
     sortRoom() {
@@ -163,10 +165,6 @@ export default {
         });
       }
       this.message = "";
-      for (let i = 0; i < this.roomList.length; i++) {
-        console.log("=================a22222222222222222222sdadsadsadsadsadsadsadsadsadsad======")
-        console.log(this.roomList[i])
-      }
     },
     CheckIn(roomId) {
       this.axios
@@ -204,6 +202,8 @@ export default {
     },
     // 채팅방에 채팅내역 출력
     openRoom(roomNo) {
+      this.$store.state.isRoomNo=roomNo;
+      console.log(this.$store.state.isRoomNo)
       var vm = this;
       if (this.roomId != roomNo) {
         this.CheckInOut(this.roomId, roomNo)
