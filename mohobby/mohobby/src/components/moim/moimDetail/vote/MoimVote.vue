@@ -13,7 +13,6 @@
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
         <v-list-item-content>
           <div class="text-overline mt-6">
-            {{item.voteId}}
             {{ item.memberId }}
             <hr />
             {{ item.startDate }}
@@ -38,7 +37,8 @@
           </v-card>
           <v-card-text v-else class="text--primary" v-for="item in content" :key="item.itemID">
             <p>{{item.content}}</p>
-            <v-progress-linear :value=item.cnt>
+            <v-progress-linear height="25" color="success" :value="calcProgress(item.cnt)">
+              <strong>{{ Math.ceil(calcProgress(item.cnt)) }}%</strong>
             </v-progress-linear>
           </v-card-text>
         </div>
@@ -52,9 +52,9 @@
       <div v-else-if="itemSelectList[idx]['memberId'] === memberId">
         <v-card-actions class="mr-5">
         <v-spacer></v-spacer>
-        <v-btn v-if="item.voteId != vote" @click="selectCheck(item.voteId, itemSelectList[idx]['itemSelect'], selectItemList[idx]['itemSelect'])">투표하기 데이터 있음</v-btn>
-        <v-btn v-if="item.voteId != vote" @click="voteResult(item.voteId)">결과확인</v-btn>
-        <v-btn v-if="item.voteId == vote" @click="voteResult(item.voteId)">목록으로</v-btn>
+        <v-btn depressed color="success" v-if="item.voteId != vote" @click="selectCheck(item.voteId, itemSelectList[idx]['itemSelect'], selectItemList[idx]['itemSelect'])">투표하기 데이터 있음</v-btn>
+        <v-btn depressed color="deep-orange" class="white--text" v-if="item.voteId != vote" @click="voteResult(item.voteId)">결과확인</v-btn>
+        <v-btn depressed color="deep-orange" class="white--text" v-if="item.voteId == vote" @click="voteResult(item.voteId)">목록으로</v-btn>
       </v-card-actions>
       
       </div>
@@ -81,6 +81,7 @@ export default {
       content: [],
       selectItemList : [],
       memberId : this.$store.state.id,
+      totalCnt: '',
     };
   },
   methods: {
@@ -188,6 +189,7 @@ export default {
       .then((resp)=> {
         console.log(resp)
         this.content = resp.data
+        this.calcTotalCnt();
         if(voteId === this.vote) {
         this.vote = -1
         this.selectCheckItem()
@@ -235,7 +237,19 @@ export default {
       .catch((err)=> {
         console.log(err)
       })
-    }
+    },
+    calcProgress(cnt) {
+      //todo-퍼센트 구하기
+      return cnt / this.totalCnt * 100;
+    },
+    calcTotalCnt() {
+      //todo-총투표수구하기
+      let sum = 0;
+      for(let item of this.content) {
+        sum += item.cnt;
+      }
+      this.totalCnt = sum;
+    },
   },
 }
 </script>
