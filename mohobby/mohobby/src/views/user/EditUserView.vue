@@ -556,13 +556,8 @@ export default {
         return;
       }
       this.confirmMemKeyword();
-      console.log(this.gender);
-      console.log(this.gender);
-      console.log(this.gender);
-      console.log(this.gender);
-      console.log(this.gender);
       this.axios({
-        url: "http://localhost:8088/java/memberupdate",
+        url: "/memberupdate",
         method: "put",
         data: {
           memberId: this.memberId,
@@ -574,6 +569,7 @@ export default {
           phoneNum: this.phoneNum,
           intro: this.intro,
           gender: this.gender,
+          birth: this.birth,
         },
       })
         .then(function (response) {
@@ -583,7 +579,7 @@ export default {
           console.log("회원정보 수정 실패");
         });
       this.axios({
-        url: "http://localhost:8088/java/memberupdateprofilename",
+        url: "/memberupdateprofilename",
         method: "put",
         data: {
           memberId: this.memberId,
@@ -611,7 +607,7 @@ export default {
     },
     insertMemKeyword(keywordId) {
       this.axios({
-        url: "http://localhost:8088/java/memPickKeyword",
+        url: "/memPickKeyword",
         method: "post",
         data: {
           memberId: this.memberId,
@@ -627,11 +623,7 @@ export default {
     },
     deleteMemKeyword(keywordId) {
       this.axios({
-        url:
-          "http://localhost:8088/java/memPickKeyword/" +
-          this.memberId +
-          "/" +
-          keywordId,
+        url: "/memPickKeyword/" + this.memberId + "/" + keywordId,
         method: "delete",
       })
         .then(function (response) {

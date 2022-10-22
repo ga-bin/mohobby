@@ -71,7 +71,7 @@ export default {
     getSnsList() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/mainsnslist",
+        url: "/mainsnslist",
         method: "get",
       })
         .then(function (response) {
@@ -85,7 +85,7 @@ export default {
     getMoimList() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/mainmoimlist",
+        url: "/mainmoimlist",
         method: "get",
       })
         .then(function (response) {
@@ -100,7 +100,7 @@ export default {
     getClassList() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/mainclasslist",
+        url: "/mainclasslist",
         method: "get",
       })
         .then(function (response) {
