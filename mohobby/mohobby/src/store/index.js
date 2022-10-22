@@ -15,6 +15,7 @@ export default new Vuex.Store({
     isLogin: false,
     id: "",
     user: null,
+    isRoomNo : ""
   },
   getters: {
     isLogin(state) {

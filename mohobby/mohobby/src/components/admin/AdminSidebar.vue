@@ -72,7 +72,7 @@ export default {
     getMemberInfo() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/member/" + this.memberId,
+        url: "/member/" + this.memberId,
         method: "get",
       })
         .then(function (response) {

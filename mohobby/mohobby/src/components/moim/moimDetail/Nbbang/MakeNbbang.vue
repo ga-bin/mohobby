@@ -15,6 +15,7 @@
               outlined
               placeholder="금액을 입력해주세요"
               v-model="price"
+              oninput="javascript: this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|a-z]/g, '' );"
               prefix="₩"
             >
             </v-text-field>
@@ -79,31 +80,46 @@ export default {
       writer: this.$store.state.id, //작성자
       title: "",
       empty: [], //멤버 담는 배열
-      price: "", //나눌 값
+      price: "", //총 금액
       totalPrice: "", //나눠서 뿌리는 값
-      moimId: "", //가져오기
-      calcPrice: "", //하위컴포넌트 나눈값
+      moimId: this.$route.params.moimId,
+      calcPrice: "", //하위컴포넌트 나눈값 (n빵 금액)
       calcCheck: "",
+      src: "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
     };
   },
   components: { MemberSelect },
   methods: {
     allInsert() {
+      console.log(this.empty.length)
       this.axios
         .post("/makeNbbang", {
           title: this.title,
           totalPrice: this.price,
           calcPrice: this.totalPrice,
           memberId: this.writer,
-          moimId: this.$route.params.moimId,
+          moimId: this.moimId,
+          people: this.empty.length
         })
         .then((resp) => {
-          console.log(resp.data);
-
-          this.axios.post("/insertPtp", {});
-
-          this.$swal("N빵 생성이 완료되었습니다.");
-          this.route.push("/nBBangDetail");
+          if(resp.status == 200) {
+            console.log('calcPrice: '+this.totalPrice)
+            console.log('moimId: '+this.moimId)
+            console.log(resp.data);
+            this.axios.post("/insertPtp", {
+              memberId: this.empty,
+              moimId: this.moimId,
+              calcPrice: this.calcPrice
+            });
+            console.log("then==============")
+            console.log('writer:'+this.writer)
+            console.log('title:'+this.title)
+            console.log('totalPrice:'+this.price)
+            console.log('calcPrice:'+this.totalPrice)
+            console.log('moimId:' +this.moimId)
+            this.$swal("N빵 생성이 완료되었습니다.");
+            this.$router.push("/nBBangDetail");
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -111,12 +127,9 @@ export default {
     },
   },
   watch: {
-    price() {
-      console.log("watch" + this.price);
-      console.log("length: " + this.empty.length);
-      console.log("newPrice: " + this.newPrice);
+    price(val) {
       this.totalPrice = this.price / this.empty.length;
-    },
+    }
   },
 };
 </script>

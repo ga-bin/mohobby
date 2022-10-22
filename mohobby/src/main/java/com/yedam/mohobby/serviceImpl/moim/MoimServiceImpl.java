@@ -1,5 +1,6 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import com.yedam.mohobby.mapper.moim.MoimMapper;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
+import com.yedam.mohobby.service.moim.MoimDutchPtpSoloVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
@@ -240,11 +242,36 @@ public class MoimServiceImpl implements MoimService {
 
 	//n빵 참여자 등록
 	@Override
-	public String dutchMemberInsert(List<MoimDutchPtpVO> dutptpVO) {
-		MoimDutchVO dutchVO = new MoimDutchVO();
-	
-		return mapper.dutchMemberInsert(dutptpVO);
+	public String dutchMemberInsert(MoimDutchPtpVO dutptpVO) {
+		
+		List<String> memberIdList = dutptpVO.getMemberId();
+		int sum = 0;
+		
+		for(String memberId : memberIdList) {
+			MoimDutchPtpSoloVO vo = new MoimDutchPtpSoloVO();
+			vo.setCalcCheck(dutptpVO.getCalcCheck());
+			vo.setCalcPrice(dutptpVO.getCalcPrice());
+			vo.setDutchId(dutptpVO.getDutchId());
+			vo.setMemberId(memberId);
+			vo.setMoimId(dutptpVO.getMoimId());
+			
+			sum += mapper.dutchMemberInsert(vo);
+		}
+
+		if (sum == memberIdList.size()) {
+			return "success";
+		}
+		
+		return "fail";
 	}
+
+	//소모임 n빵 디테일 조회
+	@Override
+	public List<MoimDutchVO> nbbangSelect(int moimId) {
+		return mapper.nbbangSelect(moimId);
+	}
+	
+	
 	
 	
 

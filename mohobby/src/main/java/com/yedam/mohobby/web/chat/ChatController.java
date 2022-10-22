@@ -90,12 +90,12 @@ public class ChatController {
 	// 체크아웃
 	@GetMapping("/updateCheckOut")
 	public int updateCheckOut(@RequestParam int roomId,@RequestParam String memberId) {
-		return cService.updateCheckIn(roomId,memberId);
+		return cService.updateCheckOut(roomId,memberId);
 	}
 	// 체크인아웃
 	@GetMapping("/updateCheckInOut")
 	public int updateCheckInOut(@RequestParam int preRoomId,@RequestParam int currentRoomId,@RequestParam String memberId) {
-		
 		return cService.updateCheckInOut(preRoomId,currentRoomId,memberId);
 	}
+	// 
 }
