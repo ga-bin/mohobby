@@ -56,10 +56,17 @@
 
 
 
-            <!-- 북마크아이콘 -->
+            <!-- 카카오톡 공유 - 따로 권한 X-->
             <div class="d-flex justify-end ma-2">
+              <v-btn @click="sendLink()" icon>
+                <v-icon color="#2ac187">mdi-share-variant</v-icon>
+              </v-btn>
+              <!-- 카카오톡 공유 끝 -->
+
+            <!-- 북마크아이콘 -->
+            
               <v-btn v-if="mark === 1" @click="bookmarkDel(items.postId, memberId)" icon>
-                <v-icon color="#2ac187">mdi-bookmark</v-icon>
+                <v-icon size="25" color="#2ac187">mdi-bookmark</v-icon>
               </v-btn>
               <v-btn v-else @click="markLogin(memberId,1)" icon>
                 <v-icon color="#2ac187">mdi-bookmark-outline</v-icon>
@@ -67,19 +74,12 @@
               <!-- 북마크아이콘 끝 -->
 
 
-              <!-- 카카오톡 공유 -->
-              <!-- <v-btn @click="markLogin(memberId,2)" icon>
-                <v-icon color="#2ac187">mdi-bookmark-outline</v-icon>
-              </v-btn> -->
-              <!-- 카카오톡 공유 끝 -->
-
-
               <!-- 
                 
-                dot 메뉴
+                dot 메뉴 - 게시글 작성자만 확인 가능. 수정, 삭제, 비밀글로 전환
               
               -->
-              <v-menu>
+              <v-menu v-if = "memberId && memberId == items.memberId ">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn dark icon v-bind="attrs" v-on="on">
                     <v-icon color="grey">mdi-dots-vertical</v-icon>
@@ -214,6 +214,7 @@
     </v-container>
   </div>
 </template>
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script>
 import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
 import CmtReg from "@/components/sns/FeedDetail/CmtReg.vue";
@@ -229,7 +230,8 @@ export default {
       touch: false,
       imgs: [], //이미지 저장
       width: 800,
-      roomId: 0,
+      
+
       //게시글관련
       items: [], //게시글 정보 저장
       hashtags: [], //해시태그 배열 split 후 저장
@@ -246,15 +248,16 @@ export default {
         //메뉴 리스트
         { title: "수정" },
         { title: "삭제" },
-        { title: "게시글 공유" },
+        { title: "비밀글로" },
       ],
+      roomId: 0, //채팅
+
       //북마크
+      dialog2: false, //컬렉션 선택 dialog
+      dialog3: false, //컬렉션 추가 dialog
       catgName: "", //카테고리이름
       thumbnail: "", //썸네일
       mark: 0, //북마크 아이콘
-      dialog: false, //
-      dialog2: false,
-      dialog3: false,
       select: [], //유저의 기존 컬렉션,
       selectedCollection: "", //북마크를 저장할 컬렉션
       catgName: "", //새로 생성할 컬렉션 이름
@@ -266,6 +269,7 @@ export default {
   setup() {},
 
   created() {
+    // Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); //js키 초기화(페이지 로딩시 처음한번만)
     this.writer = this.$route.query.writer;
     this.postId = this.$route.query.postId;
     this.showDetail(this.postId, this.writer); //게시글 상세 로드
@@ -276,7 +280,37 @@ export default {
   },
 
   methods: {
-  
+  //카카오톡 공유하기
+  sendLink() {
+    Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: this.items.memberId + ' 님 모하비 피드',
+        description: this.items.content,
+        imageUrl: 'https://ifh.cc/g/H0FFVT.jpg',   
+        link: {
+          webUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
+        },
+      },
+      // social: {
+      //   likeCount: this.items.likes,  //좋아요 수
+      //   commentCount: this.items.cmts,  //댓글 수
+      // },
+      buttons: [
+        {
+          title: '모하비에서 확인하기',  //첫 번째 버튼 
+          link: {
+            mobileWebUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,  //버튼 클릭 시 이동 링크
+            webUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
+          },
+        },
+      ],
+    })
+  },
+  //   // Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); // 사용하려는 앱의 JavaScript 키 입력
+
+
+
   //세션유무 검증
   confirmMember(memberId){  
     if(memberId){
@@ -392,10 +426,6 @@ export default {
     },
 
 
-    //게시글 공유
-    sharePost() {},
-
-
     //DOT LIST
     listBtn(i) {
       if (i == 0) {
@@ -407,11 +437,6 @@ export default {
         //게시글 삭제
         console.log("삭제하기");
         this.feedSwal(this.items.postId);
-      }
-      if (i == 2) {
-        //게시글 공유
-        console.log("공유하기");
-        this.sharePost();
       }
     },
 

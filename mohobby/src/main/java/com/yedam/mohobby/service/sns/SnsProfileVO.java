@@ -8,6 +8,7 @@ public class SnsProfileVO {
     private String nickname;
     private String profileImg;
     private String intro;
+    private int role;
     private int postCnt;
     private int followerCnt;
     private int followingCnt;

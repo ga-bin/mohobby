@@ -101,7 +101,7 @@
               JOIN member m
                 ON(s.member_id = m.member_id)
               
-             WHERE m.role = 1
+             WHERE m.role in (1,3)
              ORDER BY likes DESC
            )
       WHERE ROWNUM <![CDATA[ <= ]]> 20
@@ -152,17 +152,18 @@
              m.nickname, 
              m.profile_img, 
              m.intro, 
-           (  SELECT  COUNT(post_id) 
+           (  SELECT COUNT(post_id)
       		  FROM sns_post
-      		  WHERE member_id = m.member_id) POST_CNT,
+      		  WHERE member_id = m.member_id ) POST_CNT,
       		  
-           (  SELECT  COUNT(follower_id) 
+           (  SELECT COUNT(follower_id)
               FROM follow
-              WHERE following_id = m.member_id) FOLLOWER_CNT,
+              WHERE following_id = m.member_id ) FOLLOWER_CNT,
               
-           (  SELECT  COUNT(following_id) 
+           (  SELECT COUNT(following_id)
               FROM follow
-              WHERE follower_id = m.member_id) FOLLOWING_CNT
+              WHERE follower_id = m.member_id ) FOLLOWING_CNT
+              
        FROM member m
       WHERE m.member_id = #{ memberId }
    </select>
@@ -331,17 +332,11 @@
 	<select id="searchUser" resultType="com.yedam.mohobby.service.user.MemberVO">
 		SELECT member_id, profile_img, nickname
 		  FROM member
-		<where>
-			<if test='member_id != null and memberId != ""'>
-				WHERE member_id like LOWER('%' || #{ memberId } || '%')
-			</if>
-		</where>
+		 WHERE member_id LIKE LOWER('%' || #{ memberId } || '%')
 	</select>
 	
 	
-<!--<if test='nickname != null and nickname != ""'>
-		AND nickname LIKE LOWER('%' || #{ nickname } || '%')
-	</if> -->
+
 	<!-- 유저단건조회 -->
 <!--<select id="selectOneUser" resultType="com.yedam.mohobby.service.user.MemberVO">
 		SELECT member_id, profile_img, nickname
