@@ -121,6 +121,9 @@
 }
 </style>
 <script>
+
+window.Kakao.init("157b38874395f658a48c02cc8473066b"); // 카카오 로그인 앱 키
+
 import router from "@/router";
 export default {
   data: () => ({

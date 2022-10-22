@@ -12,4 +12,5 @@ public class FlaggingVO {
     private String flagReason;
     private int adminConfirm;
     private int flagResult;
+    private String moimName;
 }
