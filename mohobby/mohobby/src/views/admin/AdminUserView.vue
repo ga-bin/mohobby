@@ -7,7 +7,7 @@
       <br />
       <v-data-table
         :headers="headers"
-        :items="moimUserList"
+        :items="flagUserList"
         sort-by="calories"
         class="elevation-1"
       >
@@ -23,7 +23,7 @@
           <v-btn color="primary" @click="initialize"> Reset </v-btn>
         </template>
         <template v-slot:item.showDetail="{ item }">
-          <v-icon @click="goToMoim(item)"> mdi-arrow-right-bold-box </v-icon>
+          <v-icon @click="goToUserProfile(item)"> mdi-arrow-right-bold-box </v-icon>
         </template>
         small
 
@@ -51,7 +51,7 @@ export default {
           value: "flagId",
         },
         { text: "신고자", value: "flagFrom" },
-        { text: "신고소모임", value: "flagTo" },
+        { text: "신고유저", value: "flagTo" },
         { text: "신고코드", value: "flagCode" },
         { text: "신고이유 (g)", value: "flagReason" },
         { text: "관리자 승인여부", value: "adminConfirm" },
@@ -69,9 +69,9 @@ export default {
         carbs: 0,
         protein: 0,
       },
-      moimUserList: [],
-      moimOneInfo: [],
-      moimOpen : 0,
+      flagUserList: [],
+      userOneInfo: [],
+      role : 0,
     };
   },
   beforeCreate() {},
@@ -92,7 +92,7 @@ export default {
     getFlagedUser() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/admimflaguser",
+        url: "/admimflaguser",
         method: "get",
       })
         .then(function (response) {
@@ -109,7 +109,7 @@ export default {
               response.data[i].flagResult = "패널티";
             }
           }
-          vm.moimUserList = response.data;
+          vm.flagUserList = response.data;
         })
         .catch(function (error) {
           console.log(error);
@@ -133,11 +133,13 @@ export default {
           inputValidator: (value) => {
             return new Promise((resolve) => {
               if (value) {
-                if(value == 1) {
-                  this.moimOpen = 1;
-                } 
-                this.axios({
-                  url: "http://localhost:8088/java/updateFlag",
+                if (value == 1) {
+                  this.role = 4;
+                } else if (value == 0) {
+                  this.role = 0;
+                }
+                 this.axios({
+                  url: "/updateFlag",
                   method: "put",
                   data: {
                     flagResult: value,
@@ -148,7 +150,7 @@ export default {
                   .then(function (response) {
                     console.log(response);
                     vm.$swal.fire("유저 신고결과 수정이 완료되었습니다");
-                    vm.updateMoimOpen(value);
+                    vm.updateUserBlock(item.flagTo);
                     vm.getFlagedUser();
                   })
                   .catch(function (error) {
@@ -162,36 +164,36 @@ export default {
         });
       })();
     },
-    updateMoimOpen() {
+    updateUserBlock(memberId) {
+      console.log(memberId);
+      console.log(memberId);
+      console.log(memberId);
+      console.log(memberId);
+      console.log(memberId);
       this.axios({
-        url: "http://localhost:8088/java/updateuserblock",
+        url: "/memberupdaterole",
         method: "put",
         data: {
-          moimOpen: 2,
-          moimId: 1,
+          role: this.role,
+          memberId: memberId,
         },
       })
         .then(function (response) {
           console.log(response);
-          console.log("유저 오픈여부 수정 성공");
+          console.log("유저 block여부 수정 성공");
         })
         .catch(function (error) {
           console.log(error);
-          console.log("유저 오픈여부 수정 실패");
+          console.log("유저 block여부 수정 실패");
         });
     },
     deleteFlagUser(item) {
       const vm = this;
       this.editedIndex = this.moimFlagList.indexOf(item);
       this.editedItem = Object.assign({}, item);
-      console.log(item.flagId);
-      console.log(item.flagId);
-      console.log(item.flagId);
-      console.log(item.flagId);
-      console.log(item.flagId);
 
       this.axios({
-        url: "http://localhost:8088/java/flagging/" + item.flagId,
+        url: "/flagging/" + item.flagId,
         method: "delete",
       })
         .then(function (response) {
@@ -205,29 +207,33 @@ export default {
         });
     },
 
-    async goToMoim(item) {
+    async goToUserProfile(item) {
       this.editedItem = Object.assign({}, item);
-      await this.getOneMoim(this.editedItem.flagTo);
-      if (this.moimOneInfo.moimOpen == 2) {
-        this.$swal.fire("관리자에 의해 접근 금지된 모임입니다.");
+      await this.getOneUser(this.editedItem.flagTo);
+      console.log(this.userOneInfo.role);
+       console.log(this.userOneInfo.role);
+        console.log(this.userOneInfo.role);
+         console.log(this.userOneInfo.role);
+          console.log(this.userOneInfo.role);
+      if (this.userOneInfo.role == 4) {
+        this.$swal.fire("관리자에 의해 접근 유저 프로필입니다.");
       } else {
-        this.$router.push({
-          name: "moimBoard",
-          params: { moimId: this.editedItem.flagTo, boardType: 1 },
-        });
+         this.$router.push({ path: "/snsUserFeed", query: { userId: this.editedItem.flagTo } });
       }
     },
 
-    async getOneUser(moimId) {
+    async getOneUser(memberId) {
       const vm = this;
-      await this.axios
-        .get("/userOneInfo/" + moimId, {})
-        .then((response) => {
-          vm.moimOneInfo = response.data;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      await this.axios({
+            url: "/member/" + memberId,
+            method: "get",
+          })
+            .then(function (response) {
+              vm.userOneInfo = response.data;
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
     },
   },
 };

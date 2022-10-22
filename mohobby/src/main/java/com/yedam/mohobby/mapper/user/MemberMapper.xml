@@ -67,7 +67,8 @@
    						  profile_img = #{profileImg},
    						  intro = #{intro},
    						  member_name = #{memberName},
-   						  gender= #{gender}
+   						  gender= #{gender},
+   						  birth = #{birth}
         where member_id = #{memberId}
    </update>
    
@@ -81,7 +82,7 @@
    		update member set chall_grade = #{challGrade} where member_id = #{memberId}
    </update>
    
-   <!-- role변환(멋진활동가,  -->
+   <!-- role변환(만능재주꾼, 멋진활동가, 만능재주꾼 + 멋진활동가, 관리자에 의해 block)  -->
    <update id="updateRole" parameterType="com.yedam.mohobby.service.admin.MemberVO">
    		update member set role = #{role} where member_id = #{memberId}
    </update>

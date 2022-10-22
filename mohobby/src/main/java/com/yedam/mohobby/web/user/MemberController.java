@@ -117,6 +117,11 @@ public class MemberController {
 	 */
 	@PutMapping("/memberupdate")
 	public void updateMemxber(@RequestBody MemberVO memberVO) {
+		System.out.println(memberVO.getBirth());
+		System.out.println(memberVO.getBirth());
+		System.out.println(memberVO.getBirth());
+		System.out.println(memberVO.getBirth());
+		System.out.println(memberVO.getBirth());
 		service.updateMember(memberVO);
 	}
 	

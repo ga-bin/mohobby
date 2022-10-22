@@ -64,6 +64,12 @@ const routes = [
     component: () => import("./../views/user/RegisterView"),
   },
   {
+    path: "/mainsearch",
+    name: "mainsearch",
+    props: true,
+    component: () => import("./../views/main/MainSearchView"),
+  },
+  {
     path: "/mypageprofile",
     name: "mypageprofile",
     props: true,
