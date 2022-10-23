@@ -1,5 +1,7 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -298,21 +300,14 @@ public class MoimServiceImpl implements MoimService {
 	}
 	
 	//소모임 일정 등록
+	@Override
 	public String scheduleInsert(MoimScheduleVO scheduleVO){
 		return mapper.scheduleInsert(scheduleVO);
 	}
 	
-	
-	
-	
-//	// 소모임 공지사항 리스트 출력
-//	@Override
-//	public List<MoimBoardVO> moimNoticeBoard(int moimId, int boardType) {
-//		HashMap<String, Integer> map = new HashMap<>();
-//		map.put("moimId", moimId);
-//		map.put("boardType", boardType);
-//		return mapper.moimNoticeBaord(map);
-//	}
-
-	
+	//소모임 일정 전체조회
+	@Override
+	public List<MoimScheduleVO> scheduleSelect(int moimId) {
+		return mapper.scheduleSelect(moimId);
+	}
 }
