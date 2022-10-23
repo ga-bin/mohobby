@@ -20,6 +20,7 @@ import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
+import com.yedam.mohobby.service.moim.MoimScheduleVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
@@ -373,6 +374,30 @@ public class MoimController {
 	@GetMapping("/nbbangDetail")
 	public List<MoimDutchVO> getNbbangDetail(@Param("moimId")int moimId) {
 		return service.nbbangSelect(moimId);
+	}
+	
+	//소모임 투표 항목
+	@PostMapping("/voteList")
+	public void insertVoteList(@RequestBody MoimVoteListVO vo) {
+		System.out.println(vo);
+		service.insertVoteList(vo);
+	}
+	
+	//소모임 일정 등록
+	@PostMapping("/scheduleInsert")
+	public String insertSchedule(@RequestBody MoimScheduleVO scheduleVO) {
+		try {
+			service.scheduleInsert(scheduleVO);
+			return "success";
+		} catch (Exception e) {
+			return "fail"+e;
+		}
+	}
+	
+	//소모임 일정 조회
+	@GetMapping("/selectSchedule")
+	public List<MoimScheduleVO> selectSchedule(@Param("moimId")int moimId){
+		return service.scheduleSelect(moimId);
 	}
 }
 

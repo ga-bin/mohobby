@@ -129,7 +129,7 @@ export default {
       member: 0,
       right: 0,
       links: [
-        { icon: "mdi-plus-box", text: "관리하기", route: "/" },
+        { icon: "mdi-plus-box", text: "프로필 관리", route: "mypageprofile" },
         { icon: "mdi-note-text", text: "게시글", route: "moimBoard" },
         { icon: "mdi-image", text: "사진첩", route: "moimPhoto" },
         { icon: "mdi-clipboard-check", text: "공지사항", route: "moimNotice" },

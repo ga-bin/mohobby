@@ -28,6 +28,7 @@
     "sockjs-client": "^1.6.1",
     "style-loader": "^3.3.1",
     "url-loader": "^4.1.1",
+    "v-calendar": "^2.4.1",
     "v-upload-image": "^1.0.0",
     "v-viewer": "^1.6.4",
     "vue": "^2.7.10",

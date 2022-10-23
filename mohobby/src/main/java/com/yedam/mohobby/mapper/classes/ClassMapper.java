@@ -1,5 +1,6 @@
 package com.yedam.mohobby.mapper.classes;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -31,7 +32,10 @@ public interface ClassMapper {
 	public ClassReviewVO getClassReview(int classId);
 	
 	//강의게시글조회
-	public List<ClassBoardVO> getClassBoardList(@Param("classId") int classId, @Param("boardType") int boardType);
+	public List<ClassBoardVO> getClassBoardList(
+			@Param("classId") int classId, 
+			@Param("boardType") int boardType,
+			@Param("memberId") String memberId);
 	
 	//강의게시글등록
 	public void addClassBoard(ClassBoardVO board);
@@ -69,4 +73,7 @@ public interface ClassMapper {
     		@Param("memberId") String memberId);
     
     public void updateAttdInfo(ClassAttendanceVO vo);
+    
+    //내 강의 목록 조회
+    public List<ClassesVO> getMyCourse(HashMap<String, String> reqBody);
 }

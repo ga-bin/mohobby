@@ -5,9 +5,9 @@
       <div id="main">투표 하기</div>
       </div>
       <hr>
-      <v-text-field class="mt-3" label="투표 제목" hide-details />
+      <v-text-field class="mt-3" label="투표 제목" v-model="title" hide-details />
       <div v-for="(item,idx) in items" :key=idx>     
-        <v-text-field class="mt-5" :label="item.list" hide-details />
+        <v-text-field class="mt-5" :label="item.list" :value:content="item.content" v-model:content="item.content" hide-details />
     </div>
    
       <v-btn class="mt-8 mb-8" @click="listplus()" small>투표 항목 추가하기</v-btn>
@@ -58,7 +58,7 @@
        </v-expansion-panels>
 
       <div class="attach">
-      <v-btn class="mt-5" @click="goDetail()">첨부하기</v-btn>
+      <v-btn class="mt-5" @click="attach()">첨부하기</v-btn>
       </div>
     </v-card>
   </div>
@@ -68,14 +68,20 @@
     data(){
       return{
       items : [{
-        list: "투표항목을 입력해주세요...!"
+        list: "투표항목을 입력해주세요...!",
+        content : ''
       },
       {
-        list: "투표항목을 입력해주세요...!"
+        list: "투표항목을 입력해주세요...!",
+        content : ''
       },
       {
-        list: "투표항목을 입력해주세요...!"
+        list: "투표항목을 입력해주세요...!",
+        content : ''
       }],
+      moimId : this.$route.params.moimId,
+      memberId : this.$store.state.id,
+      title : '',
       date: '',
       calendarFlag: false,
       picker: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
@@ -102,8 +108,41 @@
       },
       listplus() {
         this.items.push({
-                list: "투표항목을 입력해주세요...!"
+                list: "투표항목을 입력해주세요...!",
+                content : ''
       })
+    },
+    attach() {
+      console.log(this.items)
+      if(this.title == '' ) {
+        this.$swal("항목을 모두 기입해주세요")
+      } else if (this.items[0].content == '' || this.items[1].content == '') {
+        this.$swal("투표항목을 두가지 이상 기입해주세요")
+      } else if (this.trip.end == '' || this.trip.end == null) {
+        this.$swal("종료일을 선택해주세요")
+      } else if(this.items.content != '') { 
+      console.log(this.title)
+      console.log(this.items)
+      console.log(this.trip.end)
+      this.axios.post("/voteList",{
+        topic : this.title,
+        votelist : this.items,
+        endDate : this.trip.end,
+        moimId : this.moimId,
+        memberId : this.memberId
+       })
+      .then((result) => {
+      console.log(result)
+      this.$swal("등록완료")
+      this.$router.push({ name : "moimVote" });
+      
+      }).catch((err) => {
+      console.log(err)
+      this.$swal("등록완료")
+      this.$router.push({ name : "moimVote" });
+        
+      });
+    }
     }
   }
 }

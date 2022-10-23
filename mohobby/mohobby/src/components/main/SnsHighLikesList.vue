@@ -41,18 +41,23 @@ export default {
   components: {},
   props: {
     snsHighLikesList: {
-      type: Array,
+      type: Object,
       required: true,
     },
   },
   data() {
     return {
-      sampleData: "",
     };
   },
   setup() {},
   created() {},
-  mounted() {},
+  mounted() {
+    console.log(this.snsHighLikesList.data);
+    console.log(this.snsHighLikesList.data);
+    console.log(this.snsHighLikesList.data);
+    console.log(this.snsHighLikesList.data);
+    console.log(this.snsHighLikesList.data);
+  },
   unmounted() {},
   methods: {
 

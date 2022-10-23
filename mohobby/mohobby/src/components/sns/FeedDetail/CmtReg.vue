@@ -165,9 +165,11 @@ export default {
   props: {
     postid: String,
     targetId: String,
+ 
   },
   data() {
     return {
+      cmtCount:"",
       inputCmt: "", //댓글v-model
       inputReCmt: "", //대댓글v-model
       editedContent: "", //수정댓글v-model
@@ -178,6 +180,7 @@ export default {
       editForm: "", //댓글수정창 show여부
       cmtMemberId: "", //소환된 회원
       formValue: false,
+      
     };
   },
   created() {
@@ -204,7 +207,8 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.comments = res.data;
-          console.log("댓글리스트 가져오기 성공!");
+          this.cmtCount=res.data.length
+          this.$emit('cmtCount',  this.cmtCount)
         })
         .catch((err) => {
           console.log(err);
@@ -320,8 +324,10 @@ export default {
     //대댓글등록
     regReCmt(commId, parentMemberId) {
       this.checkLogin();//로그인검증
+      let vm =this
       this.axios
         .post("/sns/recmt", {
+          postId: this.postid,
           memberId: this.memberId,
           parentCommId: commId,
           targetId: this.postid,
@@ -329,10 +335,26 @@ export default {
           parentMemberId: parentMemberId,
         })
         .then((res) => {
-          console.log("대댓글등록 성공! " + res);
-          this.inputReCmt = "";
-          this.reCmt = !this.reCmt;
-          this.getCmtList();
+          console.log("대댓글등록 성공! " + res)
+          this.inputReCmt = ""
+          this.reCmt = !this.reCmt
+          this.getCmtList()
+          const noticeContent = {  
+            postId: vm.postid,
+            myId: this.$store.state.id,
+            targetId: parentMemberId,
+            contentType: 2, //0:좋아요 1:댓글
+            postId: vm.postid,
+            noticeType: 0, //0:sns ,1:소모임, 2:강의
+          };
+          console.log(noticeContent)
+          this.stompClient.send(
+            "/app/Notice",
+            JSON.stringify(noticeContent),
+            (res) => {
+              console.log(res);
+            }
+          );
         })
         .catch((err) => {
           console.log(err);

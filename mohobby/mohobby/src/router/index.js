@@ -192,6 +192,11 @@ const routes = [
             name: "VideoTest",
             component: () => import("./../components/lecture/test/VideoPlayer"),
           },
+          {
+            path: "printTest",
+            name: "printTest",
+            component: () => import("./../components/lecture/test/printTest"),
+          },
         ],
       },
       {
@@ -292,6 +297,12 @@ const routes = [
         name: "classPayFail",
         component: () => import("./../views/lecture/pay/classPayFail"),
         props: true,
+      },
+      {
+        path: "my",
+        name: "mycourse",
+        component: () => import("./../views/lecture/mycourse/classMycourseMain"),
+        children: [],
       },
     ],
   },

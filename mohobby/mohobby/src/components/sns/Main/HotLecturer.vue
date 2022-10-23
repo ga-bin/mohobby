@@ -60,6 +60,11 @@ export default {
         this.axios('/sns/main/top20LecturerFeeds')
         .then(res => {
             console.log(res);
+            console.log(res.data);
+            console.log(res.data);
+            console.log(res.data);
+            console.log(res.data);
+            console.log(res.data);
             this.listInfo = res.data;
             console.log("getHotLecturerList받아오기 성공")
           }).catch(err =>{

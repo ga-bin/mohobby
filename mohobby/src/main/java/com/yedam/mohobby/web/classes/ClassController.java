@@ -1,6 +1,7 @@
 
 package com.yedam.mohobby.web.classes;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,8 +121,11 @@ public class ClassController {
 	
 	//강의게시글리스트
 	@GetMapping("/class/board")
-	public @ResponseBody List<ClassBoardVO> getClassReviewList(@RequestParam int classId, @RequestParam int boardType) {
-		return classService.getClassBoardList(classId, boardType);
+	public @ResponseBody List<ClassBoardVO> getClassReviewList(
+			@RequestParam(required=true) int classId, 
+			@RequestParam(required=true) int boardType,
+			@RequestParam(required=false) String memberId) {
+		return classService.getClassBoardList(classId, boardType, memberId);
 	}
 	
 	//강의게시글등록
@@ -169,6 +173,7 @@ public class ClassController {
 	//강의 결제내역 추가
 	@PostMapping("/class/pay")
     public int insertClassPayOne(@RequestBody ClassPayVO payResult) {
+		System.out.println(payResult);
     	return classService.insertClassPayOne(payResult);
     }
 	
@@ -205,6 +210,12 @@ public class ClassController {
 			 @RequestParam(required=true) int classId, 
 			 @RequestParam(required=false) String memberId) {
         return classService.getChapterList(classId, memberId);
+    }
+	
+	//내 강의 목록 조회
+	@GetMapping("/class/my")
+    public List<ClassesVO> getMyCourse(@RequestBody HashMap<String, String> reqBody) {
+    	return classService.getMyCourse(reqBody);
     }
 
 }

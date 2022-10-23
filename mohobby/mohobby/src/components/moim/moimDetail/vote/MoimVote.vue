@@ -15,7 +15,7 @@
           <div class="text-overline mt-6">
             {{ item.memberId }}
             <hr />
-            {{ item.startDate }}
+            {{ item.startDate | moment('YYYY-MM-DD HH:mm')}} ~ {{item.endDate | moment('YYYY-MM-DD HH:mm')}} 까지 투표 진행
           </div>
           <v-list-item-subtitle class="content mt-5">
             {{ item.content }}
@@ -38,26 +38,37 @@
           <v-card-text v-else class="text--primary" v-for="item in content" :key="item.itemID">
             <p>{{item.content}}</p>
             <v-progress-linear height="25" color="success" :value="calcProgress(item.cnt)">
-              <strong>{{ Math.ceil(calcProgress(item.cnt)) }}%</strong>
+              <strong>{{ item.cnt == 0 ? 0 : Math.ceil(calcProgress(item.cnt)) }}%</strong>
             </v-progress-linear>
           </v-card-text>
         </div>
       </div>
+      <div v-if="item.endDate >= nowDate">
       <div v-if="itemSelectList[idx]['memberId'] === null">
       <v-card-actions class="mr-5">
         <v-spacer></v-spacer>
-        <v-btn @click="insertSelect(item.voteId, itemSelectList[idx]['itemSelect'],idx)">투표하기 데이터 없음</v-btn>
-      </v-card-actions>
+        <v-btn color="success" @click="insertSelect(item.voteId, itemSelectList[idx]['itemSelect'],idx)">투표하기</v-btn>
+      </v-card-actions>     
       </div>
+      
       <div v-else-if="itemSelectList[idx]['memberId'] === memberId">
         <v-card-actions class="mr-5">
         <v-spacer></v-spacer>
-        <v-btn depressed color="success" v-if="item.voteId != vote" @click="selectCheck(item.voteId, itemSelectList[idx]['itemSelect'], selectItemList[idx]['itemSelect'])">투표하기 데이터 있음</v-btn>
+        <v-btn depressed color="success" v-if="item.voteId != vote" @click="selectCheck(item.voteId, itemSelectList[idx]['itemSelect'], selectItemList[idx]['itemSelect'])">투표하기</v-btn>
         <v-btn depressed color="deep-orange" class="white--text" v-if="item.voteId != vote" @click="voteResult(item.voteId)">결과확인</v-btn>
         <v-btn depressed color="deep-orange" class="white--text" v-if="item.voteId == vote" @click="voteResult(item.voteId)">목록으로</v-btn>
       </v-card-actions>
-      
       </div>
+      </div>
+      <div v-else>
+        <v-card-actions class="mr-5">
+        <v-spacer></v-spacer>
+        <v-btn v-if="item.voteId != vote" color="error" depressed disabled>종료가된 투표입니다.</v-btn>
+        <v-btn depressed color="deep-orange" class="white--text" v-if="item.voteId != vote" @click="voteResult(item.voteId)">결과확인</v-btn>
+        <v-btn depressed color="deep-orange" class="white--text" v-if="item.voteId == vote" @click="voteResult(item.voteId)">목록으로</v-btn>
+      </v-card-actions>     
+      </div>
+
     </v-card>
   </div>
 </template>
@@ -69,6 +80,7 @@ export default {
     this.getvoteItemList()
     this.voteItemSelect()
     this.selectCheckItem()
+    this.setNowTimes()
   },
   data() {
     return {
@@ -82,9 +94,14 @@ export default {
       selectItemList : [],
       memberId : this.$store.state.id,
       totalCnt: '',
+      nowDate : ''
     };
   },
   methods: {
+    setNowTimes () {
+    let myDate = new Date()  
+    this.nowDate = myDate
+    },
     voteMake: function () {
       this.$router.push({ path: "makeVote" });
     },
@@ -245,8 +262,12 @@ export default {
     calcTotalCnt() {
       //todo-총투표수구하기
       let sum = 0;
-      for(let item of this.content) {
-        sum += item.cnt;
+      
+      if(this.content.length != 0 || this.content == null) {
+        
+        for(let item of this.content) {
+          sum += item.cnt;
+        }
       }
       this.totalCnt = sum;
     },

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.mohobby.service.classes.ClassesVO;
@@ -56,4 +57,41 @@ public class MainController {
 	public List<MainChallVO> challNewCertList() {
 		return service.challNewCertList();
 	}
+	
+	/**
+	 * 
+	 * @title sns키워드 검색 조회
+	 * @return List<SnsPostVO>
+	 */
+	@GetMapping("/searchSnskeyword/{searchText}")
+	public List<SnsPostVO> searchSnsKeyword(@PathVariable String searchText) {
+		return service.searchSnsKeyword(searchText);
+	}
+	
+	/**
+	 * 
+	 * @title moim키워드 검색 조회
+	 * @return List<MoimVO>
+	 */
+	@GetMapping("/searchMoimkeyword/{searchText}")
+	public List<MoimVO> searchMoimKeyword(@PathVariable String searchText) {
+		return service.searchMoimKeyword(searchText);
+	}
+	
+	
+	/**
+	 * 
+	 * @title 강의 키워드 검색 조회
+	 * @return List<MainClassVO>
+	 */
+	@GetMapping("/searchClassKeyword/{searchText}")
+	public List<MainClassVO> searchClassKeyword(@PathVariable String searchText) {
+		return service.searchClassKeyword(searchText);
+	}
+	
+	
+	
+	
+	
+	
 }

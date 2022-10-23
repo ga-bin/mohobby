@@ -1,5 +1,6 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.yedam.mohobby.service.moim.MoimDutchPtpSoloVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
+import com.yedam.mohobby.service.moim.MoimScheduleVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
@@ -271,9 +273,41 @@ public class MoimServiceImpl implements MoimService {
 		return mapper.nbbangSelect(moimId);
 	}
 	
+	//소모임 투표 항목
+	@Override
+	public void insertVoteList(MoimVoteListVO vo) {
+		
+		List<MoimVoteItemVO> itemList = vo.getVotelist();
+		
+		MoimVoteListVO body = new MoimVoteListVO();
+		body.setTopic(vo.getTopic());
+		body.setEndDate(vo.getEndDate());
+		body.setMoimId(vo.getMoimId());
+		body.setMemberId(vo.getMemberId());
+		mapper.insertVoteList(body);
+		
+		int voteId = body.getVoteId();
+		
+		
+		for(int i=0; i<itemList.size(); i++) {
+			if(itemList.get(i).getContent() != null) {
+			body.setVoteId(voteId);
+			body.setContent(itemList.get(i).getContent());
+			}		
+			mapper.insertVoteListFor(body);
+		}
+		
+	}
 	
+	//소모임 일정 등록
+	@Override
+	public String scheduleInsert(MoimScheduleVO scheduleVO){
+		return mapper.scheduleInsert(scheduleVO);
+	}
 	
-	
-
-	
+	//소모임 일정 전체조회
+	@Override
+	public List<MoimScheduleVO> scheduleSelect(int moimId) {
+		return mapper.scheduleSelect(moimId);
+	}
 }
