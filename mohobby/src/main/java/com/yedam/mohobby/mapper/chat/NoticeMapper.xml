@@ -13,19 +13,11 @@
 			BOARD_TYPE,
 			MOIM_ID,
 			POST_ID,
-			CONTENT_TYPE,
-			(
-			 select	count(*) as non_read_count
-			 from chat a
-			 join room b
-			 on (a.room_no=b.room_no)
-			 where b.member_id =#{memberId}
-			 and	a.msg_time>b.check_time
-			)as nonReadCount
+			CONTENT_TYPE
 	from
 	notice
 	where member_id =#{memberId}
-	order by NOTICE_ID;
+	order by NOTICE_ID
 	</select>
 	<!-- 알림 등록 -->
 	<insert id="insertNotice"

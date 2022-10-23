@@ -115,6 +115,9 @@ public interface MoimService {
 
 	//소모임 n빵 디테일 조회
 	public List<MoimDutchVO> nbbangSelect(int moimId);
+
+	//소모임 일정 등록
+	public String scheduleInsert(MoimScheduleVO scheduleVO);
 	
 	//소모임 투표 항목
 	public void insertVoteList(MoimVoteListVO vo);

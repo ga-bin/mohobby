@@ -616,6 +616,7 @@ export default {
           console.log("회원정보 수정 성공");
         })
         .catch(function (error) {
+          console.log(error);
           console.log("회원정보 수정 실패");
         });
       this.axios({

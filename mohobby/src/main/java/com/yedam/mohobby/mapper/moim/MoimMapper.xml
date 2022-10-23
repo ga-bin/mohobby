@@ -434,4 +434,75 @@
 		</if>
 	</insert>
 
+   <!-- 투표 중복체크 -->
+   <select id="voteCheck" resultType="Integer">
+      select count(*) from
+      moim_vote_ptp
+      where member_id = #{memberId}
+      and moim_id = #{moimId}
+      and
+      item_select = #{itemSelect}
+      and vote_id = #{voteId}
+   </select>
+   <select id="selectCheck"
+      resultType="com.yedam.mohobby.service.moim.MoimVoteListVO">
+      select v.vote_id, nvl(p.item_select, 0)item_select
+      from moim_vote v,
+      (select * from moim_vote_ptp where member_id = #{memberId}) p
+      where v.vote_id = p.vote_id(+)
+      and v.moim_id = #{moimId}
+      order by v.vote_id
+   </select>
+ 
+   <!-- 소모임 n빵 등록 -->
+   <insert id="dutchInsert">
+   <selectKey resultType="Integer" keyProperty="dutchId" order="BEFORE"> 
+      SELECT NVL(MAX(dutch_id), 0)+1 FROM moim_dutch
+   </selectKey>
+      INSERT INTO moim_dutch
+      VALUES(#{dutchId},
+             #{memberId},
+             #{totalPrice},
+             #{title},
+             #{people} ,
+             0,
+             #{moimId},
+             current_date)
+   </insert>
+ 
+   <!-- 소모임 n빵 참여자 등록 -->
+   <insert id="dutchMemberInsert">
+      INSERT INTO moim_dutch_ptp values(
+         (select MAX(dutch_id) from moim_dutch),
+         #{memberId},
+         #{moimId},
+         #{calcPrice},
+         0)
+   </insert>
+   
+  <!-- n빵 디테일 조회 -->
+  <select id="nbbangSelect" resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
+  select a.dutch_id, a.member_id, a.write_date, a.total_price, 
+  		 a.people, b.member_id as money_target, b.calc_price, b.calc_check
+  from moim_dutch a, moim_dutch_ptp b
+  where a.dutch_id(+) = b.dutch_id
+  and a.moim_id = #{moimId}
+  </select>
+  
+  <!-- 소모임 일정 등록 -->
+  <insert id="scheduleInsert">
+  <selectKey resultType="Integer" keyProperty="skedId" order="BEFORE"> 
+      SELECT NVL(MAX(sked_id), 0)+1 FROM moim_schedule
+   </selectKey>
+   	  INSERT INTO moim_schedule 
+   	  VALUES(#{skedId},
+			 #{memberId},
+			 #{title},
+			 #{info},
+			 to_timestamp(#{startTime},'hh24:mi:ss.ff3'), 
+			 to_timestamp(#{endTime},'hh24:mi:ss.ff3'),
+			 #{startDate},
+			 #{endDate} 	  
+   	  		)
+  </insert>
 </mapper>

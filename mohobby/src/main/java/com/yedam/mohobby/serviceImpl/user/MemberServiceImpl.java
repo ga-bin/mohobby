@@ -66,10 +66,15 @@ public class MemberServiceImpl implements MemberService {
 	// 회원정보 수정 update
 	@Override
 	public void updateMember(MemberVO memberVO) {
-		if (memberVO.getProfileImg().equals("nullnull") || memberVO.getProfileImg() == null) {
+		try {
+			if (memberVO.getProfileImg().equals("nullnull")) {
+				memberVO.setProfileImg("comfuck.jpg");
+			}
+		} catch(NullPointerException e){
 			memberVO.setProfileImg("comfuck.jpg");
-		} 
-		mMapper.updateMember(memberVO);
+		}finally{
+			mMapper.updateMember(memberVO);
+		}
 	}
 
 	// 회원 비밀번호 수정
