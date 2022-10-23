@@ -67,8 +67,8 @@ public class ClassServiceImpl implements ClassService {
     
     // 강의게시글조회
     @Override
-    public List<ClassBoardVO> getClassBoardList(int classId, int boardType) {
-    	return classMapper.getClassBoardList(classId, boardType);
+    public List<ClassBoardVO> getClassBoardList(int classId, int boardType, String memberId) {
+    	return classMapper.getClassBoardList(classId, boardType, memberId);
     }
     
     // 강의게시글등록

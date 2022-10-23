@@ -31,7 +31,10 @@ public interface ClassMapper {
 	public ClassReviewVO getClassReview(int classId);
 	
 	//강의게시글조회
-	public List<ClassBoardVO> getClassBoardList(@Param("classId") int classId, @Param("boardType") int boardType);
+	public List<ClassBoardVO> getClassBoardList(
+			@Param("classId") int classId, 
+			@Param("boardType") int boardType,
+			@Param("memberId") String memberId);
 	
 	//강의게시글등록
 	public void addClassBoard(ClassBoardVO board);

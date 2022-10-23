@@ -313,21 +313,22 @@ export default {
                     this.insertPay(data);
 
                     this.$router.push({ name: 'classPaySuccess', 
-                                        params: { resultInfo: data, classId: this.classId, date: date }
+                                        params: { resultInfo: data, classId: this.classId, date: date, classInfo: this.classInfo }
                     }).catch(()=>{$router.go(0)});
                 }
                 else {
                     this.$router.push({ name: 'classPayFail', 
-                                        params: { resultInfo: data, classId: this.classId, date: date, classInfo: this.classInfo}
+                                        params: { resultInfo: data, classId: this.classId, date: date,}
                     }).catch(()=>{$router.go(0)});
                 }
             });
         },
 
-        insertPay(info) {
-            this.axios.post('/class/pay', {
-                payResult: JSON.stringify(info)
-            }).then(res => {
+        insertPay(payResult) {
+            payResult.memberId = this.$store.state.id;
+            payResult.classId = this.classId;
+
+            this.axios.post('/class/pay', payResult).then(res => {
                 console.log('res', res)
                 console.log('res.data', res.data);
             })
