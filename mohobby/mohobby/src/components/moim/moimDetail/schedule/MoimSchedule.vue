@@ -12,7 +12,7 @@
             text
             small
             color="grey darken-2"
-            @click="prev"
+            @click="prev()"
           >
             <v-icon small>
               mdi-chevron-left
@@ -25,7 +25,7 @@
             text
             small
             color="grey darken-2"
-            @click="next"
+            @click="next()"
           >
             <v-icon small>
               mdi-chevron-right
@@ -33,7 +33,7 @@
           </v-btn>
           
           <v-toolbar-title v-if="calendar">
-            {{ calendar.title }}
+            {{today}}
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu
@@ -46,7 +46,7 @@
 
         <!-- 달력 부분 -->
         <v-sheet height="500" max-width="800">
-          <v-calendar ref="calendar" :start="start" @click:date="open" :type="type" ></v-calendar>
+          <v-calendar   v-model="value" ref="calendar" :start="start" @click:date="open" :type="type" ></v-calendar>
         </v-sheet>
       </v-col> 
     </v-row>
@@ -63,30 +63,37 @@ import MakeSchedule from "./MakeSchedule.vue"
 export default {
   data() {
     return {
+      month:'',
+      year:'',
+      value: '',
       dialog: false,
+      today:'',
       //받아오는 값 저장할 변수 지정
       calendar: {
         startDate: '',
         startTime: '',
-        hasTime: '',
-        year: '',
-        month: '',
-        title: this.$moment().format('YYYY-MM')
-            },
-      dateOpen: false,
-      start: '2022-10-07',
-      type: 'month',
-      typeOptions: [
-        { text: 'Day', value: 'day' },
-        { text: 'Week', value: 'week' },
-        { text: 'Month', value: 'month' },
-      ],
-      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
-    }
+        info: '',
+        endDate: '',
+        endTime: '',
+        title: '',
+        dateOpen: false,
+        start: '2022-10-07',
+        type: 'month',
+        memberId: this.$route.params.moimId,
+      }
+    }},
+
+  created(){
+    this.todate()
   },
   components: { MakeSchedule },
   methods: {
+    todate() {
+      var day = new Date();
+      this.year = day.getFullYear();
+      this.month = ("0" + (day.getMonth() + 1)).slice(-2);
+      this.today=this.year+"-"+this.month;
+    },
     open(date) {
       console.log(date)
       //받아온 데이터 변수에 저장
@@ -103,15 +110,31 @@ export default {
     dialogClose(name) {
       console.log(name);
       this.dialog = false;
-    }
-  },
-  mounted: {
+    },
     prev () {
-      this.$refs.calendar.month.prev()
+      this.month--
+      if(this.month<1){
+        this.month=12;
+        this.year--;
+      }
+      this.today=this.year+"-"+this.month;
+      this.$refs.calendar.prev()
     },
     next () {
-      this.$refs.calendar.month.next()
+      this.month++
+      if(this.month>12){
+        this.month=1;
+        this.year++;
+      }
+      this.today=this.year+"-"+this.month;
+      this.$refs.calendar.next()
     },
+  },
+  mounted: {
+
+  },
+  create(){
+this.calendar.title = new Date()
   }
 }
 </script>
