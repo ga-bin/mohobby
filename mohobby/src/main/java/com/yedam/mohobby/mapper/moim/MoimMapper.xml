@@ -290,7 +290,7 @@
 		where v.vote_id = c.target_id(+)
 		and
 		v.moim_id=#{moimId}
-		order by vote_id
+		order by vote_id desc
 	</select>
 
 
@@ -416,19 +416,22 @@
 		where a.dutch_id(+) = b.dutch_id
 		and a.moim_id = #{moimId}
 	</select>
-
+	
+	<!-- 투표 리스트 추가 -->
 	<insert id="insertVoteList" parameterType="com.yedam.mohobby.service.moim.MoimVoteListVO" >
 		<selectKey keyProperty="voteId" resultType="com.yedam.mohobby.service.moim.MoimVoteListVO" order="BEFORE">
 		SELECT NVL(MAX(vote_id), 0)+1 as voteId from moim_vote
 		</selectKey>
 		INSERT INTO moim_vote VALUES (#{voteId}, #{memberId}, CURRENT_DATE, #{endDate}, #{moimId}, #{topic})
-	</insert>
+	</insert>	
 	
 	<insert id="insertVoteListFor" parameterType="com.yedam.mohobby.service.moim.MoimVoteListVO" >
 		<selectKey keyProperty="itemId" resultType="com.yedam.mohobby.service.moim.MoimVoteListVO" order="BEFORE">
 		SELECT NVL(MAX(item_id), 0)+1 as itemId from moim_vote_item
 		</selectKey>
+		<if test="content != null or content != ''">
 		INSERT INTO moim_vote_item VALUES (#{itemId}, #{voteId}, #{content}, 0)
+		</if>
 	</insert>
 
 </mapper>

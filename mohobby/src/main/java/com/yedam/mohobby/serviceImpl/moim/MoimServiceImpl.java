@@ -287,11 +287,10 @@ public class MoimServiceImpl implements MoimService {
 		
 		
 		for(int i=0; i<itemList.size(); i++) {
-			
+			if(itemList.get(i).getContent() != null) {
 			body.setVoteId(voteId);
 			body.setContent(itemList.get(i).getContent());
-			
-			
+			}		
 			mapper.insertVoteListFor(body);
 		}
 		
