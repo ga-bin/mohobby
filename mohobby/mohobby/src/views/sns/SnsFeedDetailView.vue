@@ -704,12 +704,12 @@ export default {
             url: "/member/" + userId,
             method: "get",
           })
-            .then(function (response) {
-              vm.userOneInfo = response.data;
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          .then(function (response) {
+            vm.userOneInfo = response.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     },
   },
 };

@@ -29,6 +29,7 @@ export default {
   name: "NoneUser",
   props: {
     feeds : [],
+    searchResult : [],
   },
   data() {
       return {
@@ -38,13 +39,44 @@ export default {
     created() {
       this.search();  
       this.feeds = this.feeds;
+      if(this.searchResult){
+        this.feeds = this.searchResult;
+      };
     }, 
     mounted () {
       // this.feeds;
       window.addEventListener('scroll', this.handleScroll);
     },
     methods : {
+      //    //키워드 해시태그 검색
+      //   searchHashtag(getHashtag){
+      //     console.log("받아온 해시태그 ->");
+      //     console.log(getHashtag);
+      //     this.axios('/sns/search/hashtag', {
+      //         params : {
+      //             hashtag : getHashtag
+      //         }
+      //     }).then(res => {
+      //         this.feeds = res.data;
+      //         console.log("피드받기 성공!");
+      //         this.showHashtag = getHashtag;
+      //         this.show = true;
+      //         this.main = false;
+      //         if (this.feeds.length === 0){
+      //           this.noResult = true;
+      //           this.main = false;
+      //         }
+              
+      //     }).catch(err =>{
+      //         console.log(err);
+      //     });
+      // },
+
+
+
       search() {
+
+
         //AllList조회
         this.axios('/sns/main/allFeeds').then(res => {
             console.log(res);
@@ -54,11 +86,15 @@ export default {
             console.log(err);
           });
       },
+
+
       //디테일피드 테스트버튼
       goFeedDetail(postId, memberId) {
         console.log(memberId);
         this.$router.push({ path: "/snsFeedDetail", query: {postId : postId, writer : memberId} });
       },
+
+
       //무한스크롤
       // handleScroll() {
       // if (

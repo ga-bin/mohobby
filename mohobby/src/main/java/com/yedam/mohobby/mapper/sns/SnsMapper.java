@@ -77,10 +77,13 @@ public interface SnsMapper {
     
     //유저전체
     public List<MemberVO> getUsers();
-    //유저 아이디, 닉네임 검색
+    
+    //유저 아이디검색
     public List<MemberVO> searchUser(@Param("memberId")String memberId);
+    
     //유저닉네임검색
     public List<MemberVO> getUsersByNick(String nickname);
+    
     //해시태그검색
     public List<SnsPostVO> searchHashtag(String hashtag);
 

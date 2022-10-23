@@ -13,7 +13,8 @@
          피드
           
       -->
-         <!-- 새로운 postId 생성 -->
+        
+       <!-- 새로운 postId 생성 -->
        <select id="getPostId" resultType="Integer">
 		SELECT NVL(MAX(post_id),0)+1 FROM sns_post
 	   </select>
@@ -200,6 +201,7 @@
 		     WHERE c.post_id = m.target_id(+)
 		     AND c.post_id = x.target_id(+)
 			) k
+			
 		WHERE mem.member_id = k.member_id
 		  AND post_id = #{ postId }
 		ORDER BY post_id
@@ -329,7 +331,7 @@
 	
 	
 	<!-- 유저포함검색 -->
-	<select id="searchUser" resultType="com.yedam.mohobby.service.user.MemberVO">
+	<select id="searchUser" parameterType="String" resultType="com.yedam.mohobby.service.user.MemberVO">
 		SELECT member_id, profile_img, nickname
 		  FROM member
 		 WHERE member_id LIKE LOWER('%' || #{ memberId } || '%')
@@ -370,7 +372,7 @@
    </select>
 
 
-   <!-- 리스트 해시태그 5개 -->
+   <!-- 리스트 해시태그 6개 -->
    <select id="selectHashtagForMain" resultType="com.yedam.mohobby.service.communal.HashtagVO">
    	SELECT * FROM hashtag
    	 WHERE ROWNUM <![CDATA[ <= ]]> 6

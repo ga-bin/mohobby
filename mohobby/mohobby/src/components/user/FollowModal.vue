@@ -24,7 +24,7 @@
                       :key="data.followId"
                       :inset="data.inset"
                     />
-                    <v-list-item v-else :key="data.index">
+                    <v-list-item v-else :key="index">
                       <v-list-item-avatar>
                         <v-img
                           :src="

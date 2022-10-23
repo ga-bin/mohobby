@@ -16,11 +16,12 @@
             hide-details
             v-model="inputCmt"
             name="content"
-            @keydown.enter="enter()"
+            @keydown.enter="regCmt()"
           />
         </v-col>
         <v-spacer></v-spacer>
-        <!-- 댓글등록 버튼 -->
+
+
         <div style="margin-right: 80px">
           <v-btn
             class="ma-2 white--text"
@@ -33,6 +34,8 @@
       </v-card-actions>
     </div>
     <!-- 본 댓글 입력창 끝 -->
+
+
     <!-- 댓글리스트 -->
     <div>
       <div class="profile" v-for="cmt in comments" :key="cmt.commId">
@@ -53,6 +56,8 @@
               writeDate(cmt.writeDate)
             }}</span></small
           >
+
+
           <!-- 버튼: 저장, 답장, 수정, 삭제 -->
           <div class="btn">
             <v-btn
@@ -88,6 +93,8 @@
               삭제</v-btn>
           </div>
           <!-- 댓글 버튼 끝 -->
+
+
           <!-- 대댓 유저소환 -->
           <v-card-actions>
             <div class="content">
@@ -112,7 +119,7 @@
                   auto-grow
                   outlined
                   :value="originContent"
-                  @keydown.enter="editEnter(cmt.commId)"
+                  @keydown.enter="editCmt(cmt.commId)"
                   v-model="editedContent"
                 ></v-textarea>
               </div>
@@ -132,7 +139,7 @@
                   :prefix="cmtMemberId"
                   v-model="inputReCmt"
                   name="content"
-                  @keydown.enter="reEnter(cmt.commId, cmt.memberId)"
+                  @keydown.enter="regReCmt(cmt.commId, cmt.memberId)"
                 />
               </v-col>
               <v-spacer></v-spacer>
@@ -239,24 +246,24 @@ export default {
           console.log(err);
         });
     },
-    //댓글 enter등록
-    enter() {
-      if (window.event.keyCode == 13) {
-        this.regCmt();
-      }
-    },
-    //댓글 수정 enter
-    editEnter(commId) {
-      if (window.event.keyCode == 13) {
-        this.editCmt(commId);
-      }
-    },
-    //대댓 enter등록
-    reEnter(commId, parentMemberId) {
-      if (window.event.keyCode == 13) {
-        this.regReCmt(commId, parentMemberId);
-      }
-    },
+    // //댓글 enter등록
+    // enter() {
+    //   if (window.event.keyCode == 13) {
+    //     this.regCmt();
+    //   }
+    // },
+    // //댓글 수정 enter
+    // editEnter(commId) {
+    //   if (window.event.keyCode == 13) {
+    //     this.editCmt(commId);
+    //   }
+    // },
+    // //대댓 enter등록
+    // reEnter(commId, parentMemberId) {
+    //   if (window.event.keyCode == 13) {
+    //     this.regReCmt(commId, parentMemberId);
+    //   }
+    // },
     //댓글 삭제
     deleteCmt(commId, targetId) {
       console.log("dd-----------------:" + commId, targetId);
