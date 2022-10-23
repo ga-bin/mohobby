@@ -113,6 +113,14 @@
       })
     },
     attach() {
+      console.log(this.items)
+      if(this.title == '' ) {
+        this.$swal("항목을 모두 기입해주세요")
+      } else if (this.items[0].content == '' || this.items[1].content == '') {
+        this.$swal("투표항목을 두가지 이상 기입해주세요")
+      } else if (this.trip.end == '' || this.trip.end == null) {
+        this.$swal("종료일을 선택해주세요")
+      } else if(this.items.content != '') { 
       console.log(this.title)
       console.log(this.items)
       console.log(this.trip.end)
@@ -125,11 +133,16 @@
        })
       .then((result) => {
       console.log(result)
-
+      this.$swal("등록완료")
+      this.$router.push({ name : "moimVote" });
+      
       }).catch((err) => {
       console.log(err)
+      this.$swal("등록완료")
+      this.$router.push({ name : "moimVote" });
         
       });
+    }
     }
   }
 }
