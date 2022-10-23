@@ -379,14 +379,18 @@ public class MoimController {
 	//소모임 일정 등록
 	@PostMapping("/scheduleInsert")
 	public String insertSchedule(@RequestBody MoimScheduleVO scheduleVO) {
-		System.out.println(scheduleVO.getEndTime());
-		System.out.println(scheduleVO.getStartTime());
 		try {
 			service.scheduleInsert(scheduleVO);
 			return "success";
 		} catch (Exception e) {
 			return "fail"+e;
 		}
+	}
+	
+	//소모임 일정 조회
+	@GetMapping("/selectSchedule")
+	public List<MoimScheduleVO> selectSchedule(@Param("moimId")int moimId){
+		return service.scheduleSelect(moimId);
 	}
 }
 

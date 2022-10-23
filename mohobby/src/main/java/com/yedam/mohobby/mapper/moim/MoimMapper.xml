@@ -406,10 +406,15 @@ select * from moim_dutch where moim_id = #{moimId}
 			 #{memberId},
 			 #{title},
 			 #{info},
-			 to_timestamp(#{startTime},'hh24:mi:ss.ff3'), 
-			 to_timestamp(#{endTime},'hh24:mi:ss.ff3'),
+			 #{startTime}, 
+			 #{endTime},
 			 #{startDate},
 			 #{endDate} 	  
    	  		)
   </insert>
+  
+  <!-- 소모임 일정 전체조회 -->
+  <select id="scheduleSelect">
+  	SELECT * FROM moim_schedule
+  </select>
 </mapper>

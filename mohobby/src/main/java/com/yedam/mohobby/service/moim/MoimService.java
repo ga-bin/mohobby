@@ -118,6 +118,9 @@ public interface MoimService {
 
 	//소모임 일정 등록
 	public String scheduleInsert(MoimScheduleVO scheduleVO);
+
+	//소모임 일정 전체 조회
+	public List<MoimScheduleVO> scheduleSelect(int moimId);
 	
 }
 

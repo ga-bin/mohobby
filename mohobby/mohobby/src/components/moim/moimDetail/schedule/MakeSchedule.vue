@@ -88,11 +88,9 @@ export default {
   },
   methods: {
     submit() {
-    //   console.log(this.calendar)
-    //   this.start = this.$moment(this.calendar.startTime).format('HH:mm:ss.SSS')
-    //   console.log('start:'+this.start)
-    //   this.end = this.$moment(this.calendar.endTime).format('HH:mm:ss.SSS')
-      // console.log('end:'+this.end)
+      let myDate = new Date()  
+      let startTime = this.calendar.startTime 
+      let endTime = this.calendar.endTime
       this.axios
         .post("/scheduleInsert", {
           startDate: this.calendar.startDate,
