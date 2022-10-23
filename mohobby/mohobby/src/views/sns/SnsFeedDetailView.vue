@@ -48,7 +48,7 @@
               </v-btn>
               <span class="mr-2 mt-1">{{ items.likes }}</span>
               <v-icon class="mr-2">mdi-chat-outline</v-icon>
-              <span class="mr-2 mt-1">{{ items.cmts }}</span>
+              <span class="mr-2 mt-1">{{ cmtCount }}</span>
               <v-icon v-if="this.$store.state.id != items.memberId" @click="send" color="#2ac187">mdi-send</v-icon>
             </div>
           </v-col>
@@ -201,14 +201,14 @@
         </v-chip-group>
         <br />
 
-
         <!-- 
 
           댓글
 
          -->
+  
         <v-col cols="12">
-          <CmtReg :postid="postId" :targetId="items.memberId" />
+          <CmtReg @cmtCount="cmtAllCount" :postid="postId" :targetId="items.memberId" />
         </v-col>
       </v-card>
     </v-container>
@@ -264,6 +264,7 @@ export default {
       notifications: false,
       sound: true,
       widgets: false,
+      cmtCount:""
       userOneInfo : [],
     };
   },
@@ -282,6 +283,10 @@ export default {
 
   methods: {
   //카카오톡 공유하기
+  cmtAllCount(cmtCount){
+    this.cmtCount =cmtCount
+
+  },
   sendLink() {
     Kakao.Link.sendDefault({
       objectType: 'feed',

@@ -15,6 +15,7 @@
       </v-form>
     </v-col>
     <v-spacer />
+    <v-btn v-if="this.$store.state.id" icon>
     <v-menu offset-y v-if="this.$store.state.id">
       <template v-slot:activator="{ on, attrs }">
         <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer; color: #2ac187;">
@@ -53,7 +54,7 @@
           </span>
         </template>
         <v-list three-line width="400" height="400">
-          <template v-for="(item, index) in items">
+          <template v-for="(item, index) in messages">
             <div @click="pageMove(item)" style="background-color: white">
               <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
               <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
@@ -139,7 +140,6 @@ export default {
             if (res.data[i].noticeType == 2) {
               vm.messages.unshift({ divider: true, inset: true });
               vm.messages.unshift(res.data[i])
-
             }
             else {
               vm.items.unshift({ divider: true, inset: true });
@@ -152,9 +152,7 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-
     },
-
     //알림 처리
     noticeRes() {
       let vm = this;
@@ -162,7 +160,6 @@ export default {
         function (res) {
           let resNotice = JSON.parse(res.body);
           console.log(resNotice);
-          if (resNotice.memberId != vm.$store.state.id) {
             //sns 알림 처리
             if (resNotice.noticeType == 0) {
               //sns - 좋아요 알림 처리
@@ -184,17 +181,20 @@ export default {
                 noticeType: resNotice.noticeType,
                 noticeId: resNotice.noticeId,
               });
-              vm.items.unshift({ divider: true, inset: true });
-              ++vm.noticeCount;
+              vm.items.unshift({ divider: true, inset: true })
+              ++vm.noticeCount
             }
             //소모임 알림 처리
             else if (resNotice.noticeType == 1) {
               //소모임 댓글 알림 처리
-              vm.items.unshift({ divider: true, inset: true });
+              vm.items.unshift({ divider: true, inset: true })
               if (resNotice.contentType == 0) {
-                vm.subtitle = "댓글을 남기셨습니다.";
+                vm.subtitle = "댓글을 남기셨습니다."
               } else if (resNotice.contentType == 1) {
-                vm.subtitle = "새로운 게시글이 등록되었습니다.";
+                vm.subtitle = "새로운 게시글이 등록되었습니다."
+              }else if(resNotice.contentType == 2){
+                vm.subtitle="님이 언급했어요!"
+                console.log("안녕하세요")
               }
               vm.items.unshift({
                 avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
@@ -227,11 +227,11 @@ export default {
               }
               ++vm.noticeMsgCount;
             }
-          }
         }
       );
     },
 
+    //알림 클릭 이벤트
     pageMove(item) {
       if (item.noticeType != 2) {
         for (let i = 0; i < this.items.length; i++) {
