@@ -6,32 +6,32 @@ import lombok.Data;
 public class ClassPayVO {
     private int payId; //주문id
     private String status;
-    private String pgType;
-    private String pgTid;
-    private String pgProvider;
-    private String payMethod;
-    private int paidAt;
-    private int paidAmount;
+    private String pg_type;
+    private String pg_tid;
+    private String pg_provider;
+    private String pay_method;
+    private int paid_at;
+    private int paid_amount;
     private String name;
-    private String merchantUid;
-    private String impUid;
-    private String customData;
+    private String merchant_uid;
+    private String imp_uid;
+    private String custom_data;
     private String currency;
-    private int cardQuota;
-    private String cardNumber;
-    private String cardName;
-    private String buyerTel;
-    private String buyerPostcode;
-    private String buyerName;
-    private String buyerEmail;
-    private String buyerAddr;
-    private String buyerAddrDetail;
-    private String bankName;
-    private String applyNum;
-    private String vbankDate;
-    private String vbankHolder;
-    private String vbankName;
-    private String vbankNum;
+    private int card_quota;
+    private String card_number;
+    private String card_name;
+    private String buyer_tel;
+    private String buyer_postcode;
+    private String buyer_name;
+    private String buyer_email;
+    private String buyer_addr;
+    private String buyer_addr_detail;
+    private String bank_name;
+    private String apply_num;
+    private String vbank_date;
+    private String vbank_holder;
+    private String vbank_name;
+    private String vbank_num;
     private String memberId; //회원아이디
     private int classId; //강의 아이디
     private int dlvyFee; //배송비

@@ -14,7 +14,8 @@
             </v-row>
             <v-row v-if="resultInfo.pay_method != 'vbank'">
                 <v-col class="d-flex justify-center align-center">
-                    <v-btn x-large outlined>바로 학습하러 가기 <v-icon class="ml-3" color="#2ac187">mdi-arrow-right</v-icon></v-btn>
+                    <v-btn x-large outlined>바로 학습하러 가기 <v-icon class="ml-3" color="#2ac187">mdi-arrow-right</v-icon>
+                    </v-btn>
                 </v-col>
             </v-row>
             <div v-if="resultInfo.pay_method == 'vbank'">
@@ -41,6 +42,9 @@ export default {
         },
         date: {
             type: Date
+        },
+        classInfo: {
+            type: Object
         }
     },
     created() {

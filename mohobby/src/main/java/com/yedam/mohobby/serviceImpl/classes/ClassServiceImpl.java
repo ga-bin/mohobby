@@ -67,8 +67,8 @@ public class ClassServiceImpl implements ClassService {
     
     // 강의게시글조회
     @Override
-    public List<ClassBoardVO> getClassBoardList(int classId, int boardType) {
-    	return classMapper.getClassBoardList(classId, boardType);
+    public List<ClassBoardVO> getClassBoardList(int classId, int boardType, String memberId) {
+    	return classMapper.getClassBoardList(classId, boardType, memberId);
     }
     
     // 강의게시글등록
@@ -147,6 +147,12 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public List<ClassNeedsVO> getClassNeedsInfo(int classId) {
     	return classMapper.getClassNeedsInfo(classId);
+    }
+    
+    //내 강의 목록 조회
+    @Override
+    public List<ClassesVO> getMyCourse(HashMap<String, String> reqBody) {
+    	return classMapper.getMyCourse(reqBody);
     }
 
     // html 저장
@@ -281,6 +287,8 @@ public class ClassServiceImpl implements ClassService {
         
         
     }
+    
+    
 
 
 }
