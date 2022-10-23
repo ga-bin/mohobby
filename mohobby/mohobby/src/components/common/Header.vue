@@ -1,13 +1,12 @@
 <template>
-  <v-app-bar app color="black" elevate-on-scroll elevation="4">
-    <v-toolbar-title @click="$router.push('/').catch(() => {})" style="cursor: pointer; color: #2ac187;">Mohobby</v-toolbar-title>
-    <!-- <p>{{ this.$store.state.id }}</p> -->
+  <v-app-bar app color="white" elevate-on-scroll elevation="4">
+    <v-toolbar-title @click="$router.push('/').catch(() => {})" style="cursor: pointer; color: #2ac187; font-weight: bolder;">Mohobby</v-toolbar-title>
     <v-spacer/>
-    <p style="color: #2ac187;">{{ this.$store.state.id }}님, 오늘 모하비?</p>
+    <p style="color: #2ac187; font-weight: bolder;">{{ this.$store.state.id }}님, 오늘 모하비?</p>
     <v-spacer />
-    <v-btn text class="ml-2" to="/snsmain" style="color: #2ac187;">sns</v-btn>
-    <v-btn text class="ml-2" to="/class/list/all" style="color: #2ac187;">강의</v-btn>
-    <v-btn text class="ml-2" to="/moimmain" style="color: #2ac187;">소모임</v-btn>
+    <v-btn text class="ml-2" to="/snsmain" style="color: #2ac187; font-weight: bolder;">sns</v-btn>
+    <v-btn text class="ml-2" to="/class/list/all" style="color: #2ac187; font-weight: bolder;">강의</v-btn>
+    <v-btn text class="ml-2" to="/moimmain" style="color: #2ac187; font-weight: bolder;">소모임</v-btn>
     <v-spacer />
     <v-col lg="4" cols="12">
       <v-form class="mt-5">
@@ -15,12 +14,12 @@
       </v-form>
     </v-col>
     <v-spacer />
-    <v-btn v-if="this.$store.state.id" icon>
+    <!-- <v-btn v-if="this.$store.state.id" icon/> -->
     <v-menu offset-y v-if="this.$store.state.id">
-      <template v-slot:activator="{ on, attrs }">
-        <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer; color: #2ac187;">
-          <v-badge v-if="noticeCount != 0" offset-x="10" offset-y="10" color="red" :content="noticeCount">
-            <v-icon style="color: #2ac187;">mdi-bell</v-icon>
+      <template style="margin-right:30px;" v-slot:activator="{ on, attrs }">
+        <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer; margin-right:10px;">
+          <v-badge style="cursor: pointer;" v-if="noticeCount != 0" offset-x="10" offset-y="10" color="red" :content="noticeCount">
+            <v-icon style="cursor: pointer; ">mdi-bell</v-icon>
           </v-badge>
         </span>
       </template>
@@ -44,10 +43,9 @@
     </v-menu>
       <v-btn v-if="!this.$store.state.id" @click="$router.push('/login')" elevation="2" style="margin-right:10px; color: #2ac187;">로그인</v-btn>
       <v-btn v-if="!this.$store.state.id" @click="$router.push('/register')" elevation="2" style="color: #2ac187;">회원가입</v-btn>
-    <v-btn v-if="this.$store.state.id" icon>
       <v-menu offset-y v-if="this.$store.state.id">
         <template v-slot:activator="{ on, attrs }">
-          <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer">
+          <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer; margin-right:30px; margin-left: 30px;">
             <v-badge v-if="noticeCount != 0" offset-x="10" offset-y="10" color="red" :content="noticeMsgCount">
               <v-icon style="color: #2ac187;">mail</v-icon>
             </v-badge>
@@ -71,7 +69,6 @@
           </template>
         </v-list>
       </v-menu>
-    </v-btn>
     <v-btn v-if="this.$store.state.id" icon>
       <v-icon style="color: #2ac187;" @click="$router.push('/mypageprofile')">mdi-account</v-icon>
     </v-btn>
@@ -139,11 +136,43 @@ export default {
           for (let i = 0; i < res.data.length; i++) {
             if (res.data[i].noticeType == 2) {
               vm.messages.unshift({ divider: true, inset: true });
-              vm.messages.unshift(res.data[i])
+              vm.messages.unshift({
+                avatar: require(`@/assets/image/user/${res.data[i].avatar}`),
+                title: res.data[i].title + " 님이",
+                subtitle: res.data[i].subtitle,
+                postId: res.data[i].postId,
+                boardType: res.data[i].boardType,
+                moimId: res.data[i].moimId,
+                noticeType: res.data[i].noticeType,
+                noticeId: res.data[i].noticeId,
+              })
             }
             else {
+              if (res.data[i].noticeType == 0) {
               vm.items.unshift({ divider: true, inset: true });
-              vm.items.unshift(res.data[i]);
+              vm.items.unshift({
+                avatar: require(`@/assets/image/user/${res.data[i].avatar}`),
+                title: res.data[i].title+ " 님이",
+                subtitle: res.data[i].subtitle,
+                postId: res.data[i].postId,
+                boardType: res.data[i].boardType,
+                moimId: res.data[i].moimId,
+                noticeType: res.data[i].noticeType,
+                noticeId: res.data[i].noticeId,
+              })
+            }else if(res.data[i].noticeType == 0) {
+              vm.items.unshift({ divider: true, inset: true });
+              vm.items.unshift({
+                avatar: require(`@/assets/image/moim/${res.data[i].avatar}`),
+                title: res.data[i].title+ " 님이",
+                subtitle: res.data[i].subtitle,
+                postId: res.data[i].postId,
+                boardType: res.data[i].boardType,
+                moimId: res.data[i].moimId,
+                noticeType: res.data[i].noticeType,
+                noticeId: res.data[i].noticeId,
+              })
+            }
             }
           }
           vm.noticeMsgCount = (vm.messages.length-1)/2;
@@ -172,10 +201,13 @@ export default {
               }  //sns - 댓글 알림 처리
               else if (resNotice.contentType == 1) {
                 vm.subtitle = "댓글을 남겼습니다.";
+              }else if(resNotice.contentType == 2){
+                vm.subtitle="님이 언급했어요!"
+                console.log("안녕하세요")
               }
               vm.items.unshift({
                 avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-                title: resNotice.nickname,
+                title: resNotice.nickname+ " 님이",
                 subtitle: vm.subtitle,
                 postId: resNotice.postId,
                 noticeType: resNotice.noticeType,
@@ -192,13 +224,10 @@ export default {
                 vm.subtitle = "댓글을 남기셨습니다."
               } else if (resNotice.contentType == 1) {
                 vm.subtitle = "새로운 게시글이 등록되었습니다."
-              }else if(resNotice.contentType == 2){
-                vm.subtitle="님이 언급했어요!"
-                console.log("안녕하세요")
               }
               vm.items.unshift({
                 avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
-                title: resNotice.nickname,
+                title: resNotice.nickname+ " 님이",
                 subtitle: vm.subtitle,
                 postId: resNotice.postId,
                 boardType: resNotice.boardType,
@@ -206,17 +235,17 @@ export default {
                 noticeType: resNotice.noticeType,
                 noticeId: resNotice.noticeId,
               });
-             
               ++vm.noticeCount;
             }
             //메신저 알림 처리
             else if (resNotice.noticeType == 2) {
               if (vm.$store.state.isRoomNo != resNotice.postId) {
+
                 vm.messages.unshift({ divider: true, inset: true });
                 vm.subtitle = "새로운 메세지가 도착했습니다.";
                 vm.messages.unshift({
                   avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-                  title: resNotice.nickname,
+                  title: resNotice.nickname+ " 님이",
                   subtitle: vm.subtitle,
                   postId: resNotice.postId,
                   boardType: resNotice.boardType,
@@ -242,6 +271,7 @@ export default {
         }
         console.log("11");
         console.log(this.items);
+        console.log("배히열")
         --this.noticeCount;
 
         this.axios
@@ -257,7 +287,7 @@ export default {
             console.log(err);
           });
         if (item.noticeType == 0) {
-          this.$router.push("/snsFeedDetail?id=" + item.postId);
+          this.$router.push("/snsFeedDetail?writer="+item.targetId+"&postId="+item.postId);
         } else if (item.noticeType == 1) {
           this.$router.push("/moimDetail/" + item.moimId + "/" + item.postId + "/moimPost?moimId=" + item.moimId + "&boardId=" + item.postId + "&boardType=" + item.boardType
           );

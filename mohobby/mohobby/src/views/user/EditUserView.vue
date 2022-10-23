@@ -124,7 +124,7 @@
                       color="#2ac187"
                       prepend-inner-icon="mdi-account-outline"
                       label="생일"
-                      v-model="birth"
+                      v-model="calcBirth"
                       readonly
                     >
                     </v-text-field>
@@ -331,6 +331,7 @@ export default {
       fileList: [],
       file: {},
       formData: {},
+      calcBirth: "",
     };
   },
   beforeCreate() {},
@@ -376,23 +377,15 @@ export default {
             vm.gender = response.data.gender;
             vm.memberName = response.data.memberName;
             vm.profileImg = response.data.profileImg;
-            console.log(response.data.birth);
-            console.log(response.data.birth);
-            console.log(response.data.birth);
-            console.log(response.data.birth);
-            console.log(response.data.birth);
-            vm.birth = vm.calDate(response.data.birth);
-            console.log(vm.birth);
-            console.log(vm.birth);
-            console.log(vm.birth);
-            console.log(vm.birth);
-            console.log(vm.birth);
+            vm.birth = response.data.birth;
+            vm.calcBirth = vm.calDate(response.data.birth);
           }
         })
         .catch(function (error) {
           console.log(error);
         });
     },
+    // 날짜계산
     calDate(milliSecond) {
         const days = ['일', '월', '화', '수', '목', '금', '토'];
         const data = new Date(milliSecond);  //Date객체 생성
@@ -696,11 +689,6 @@ export default {
     //이미지 업로드
     uploadImage() {
       const vm = this;
-      console.log(this.formData);
-      console.log(this.formData);
-      console.log(this.formData);
-      console.log(this.formData);
-      console.log(this.formData);
       this.axios({
         url: "/memberProfileUpdate", // 이미지 저장을 위해 back서버와 통신
         method: "POST",
@@ -729,7 +717,7 @@ export default {
 
 .profile-image {
   float: left;
-  width: calc(33.333% - 1rem);
+  width: (33.333% - 1rem);
   display: flex;
   justify-content: center;
   align-items: center;
