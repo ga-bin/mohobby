@@ -72,38 +72,45 @@ public class SnsController {
             //file.delete로 파일 삭제할 수 있음 **********찾아볼 것
           return service.deleteFeed(postId);
     }
+    
    //인기강사피드조회 - 테스트완료
     //more기능 rownum가져오기(넘길 파라미너 : 마지막 번호)
     @GetMapping("/main/top20LecturerFeeds")
     public List<SnsPostVO> hotLecturerList() {
         return service.hotLecturerList();
     }
+    
    //전체피드조회 - 테스트완료
     //페이징처리할것 ************* 페이징을 안할거면 최대 보낼 페이지 지정해서 걸어주기
     @GetMapping("/main/allFeeds")
     public List<SnsPostVO> allList() {
         return service.allList();
     }
+    
    //최신피드조회 - 테스트완료
     @GetMapping("/main/newFeeds")
     public List<SnsPostVO> newList() {
         return service.newList();
     }
+    
    //인기피드조회 - 테스트완료(좀 느림)
     @GetMapping("/main/hotFeeds")
     public List<SnsPostVO> hotList() {
         return service.hotList();
     }
+    
    //해시태그 top6 - 테스트완료
     @GetMapping("/main/hashtag")
     public List<HashtagVO> selectHashtagForMain(){
         return service.selectHashtagForMain();
     }
+    
    //팔로잉피드조회 - 
     @GetMapping("/main/followingFeeds/{memberId}")
     public List<SnsPostVO> getFollowingFeeds(@PathVariable String memberId) {
         return service.getFollowingFeeds(memberId);
     }
+    
   //프로필조회
     @GetMapping("/user/profile/{memberId}")
     public SnsProfileVO getProfile(@PathVariable("memberId") String memberId) {

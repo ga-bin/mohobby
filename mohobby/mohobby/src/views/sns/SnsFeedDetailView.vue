@@ -264,6 +264,7 @@ export default {
       notifications: false,
       sound: true,
       widgets: false,
+      userOneInfo : [],
     };
   },
   setup() {},
@@ -684,12 +685,26 @@ export default {
 
 
     //유저 피드로 이동
-    goMyFeed(userId) {
+    async goMyFeed(userId) {
+      await this.getOneUser(userId);
       if (this.userOneInfo.role == 4) {
         this.$swal.fire("관리자에 의해 접근 유저 프로필입니다.");
       } else {
          this.$router.push({ path: "/snsUserFeed", query: { userId: userId } });
       }
+    },
+     async getOneUser(userId) {
+      const vm = this;
+      await this.axios({
+            url: "/member/" + userId,
+            method: "get",
+          })
+          .then(function (response) {
+            vm.userOneInfo = response.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     },
   },
 };

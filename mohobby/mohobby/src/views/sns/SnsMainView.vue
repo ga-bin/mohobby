@@ -2,7 +2,6 @@
     <div id = "container" align-center>
         <v-container>
             <v-spacer></v-spacer>
-            <div id="searchbar"> 
                 <!-- 로그인버튼-->
                 <v-btn text @click="regFeedForm(member)">
                     <v-chip color="#2ac187" class="mx-auto white--text font-weight-bold">
@@ -12,10 +11,10 @@
                 <!-- 로그인버튼 끝 -->
 
 
-                <!-- 검색창 -->
-                <div class="mx-auto" style="width:500px;">
-                    <v-autocomplete class="rounded-xl mx-auto"
-                            v-model="search" 
+                    <!-- 검색창 끝 -->
+                    <div class="mx-auto" style="width:500px;">
+                    <v-text-field class="rounded-xl mx-auto"
+                            v-model="keyword"
                             :items="ctg" 
                             item-text="tag" 
                             item-value="tag" 
@@ -26,11 +25,10 @@
                             @input="userInput=null"
                             menu-props="{'closeOnContentClick': true}"
                             append-icon="mdi-magnify"
-                            @change="searchMem(search)"
-                            @keydown.enter="enter(search)"
-                            style="height:50px"
-                    />
-                    <!-- 검색창 끝 -->
+                            @change="searchMem(keyword)"
+                            @keydown.enter="searchMem(keyword)"
+                            style="height:50px" />
+                            
 
                     <!-- 상단바 HOT해시태그 (키워드검색) -->
                     <div id="chip" style="width:500px;">
@@ -48,13 +46,17 @@
                         </v-sheet>
                     </div>
                 </div>
-            </div>
 
+                
             <!-- 검색컴포넌트 
                 검색결과가 있을땐 show를 트루로 바꿔서 HotList가 안보이게되도록.
             -->
 
-            <div id="searchResult" v-if="show">
+
+
+
+
+            <div id="searchResult" v-if="show == true">
                 <div id="nonuserFeeds">
                     <h3>검색페이지입니다</h3>
                     <NoneUser :feeds="feeds" />
@@ -62,7 +64,7 @@
             </div>
 
 
-            <div v-else>
+            <div v-if="showHot == true">
                 <div id="hotLecturers">
                     <h3>추천 만능 재주꾼들 피드</h3>
                     <HotLecturer name="this.items" />
@@ -73,6 +75,10 @@
                     <NoneUser />
                 </div>
             </div>
+            <!-- 유저 검색 페이지 -->
+            <div v-if="showResult == true">
+                <Follow :searchResult="searchResult" />
+            </div>
         </v-container> 
     </div>
   </template>
@@ -81,31 +87,33 @@
     import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
     import HotLecturer from "@/components/sns/Main/HotLecturer.vue";
     import NoneUser from "@/components/sns/Main/Noneuser.vue";
+    import Follow from "@/components/sns/Management/Follower.vue";
   
     export default {
       name: "snsMain",
-      components: { SnsSidebar, SnsSearchbar, HotLecturer, NoneUser },
+      components: { SnsSidebar, SnsSearchbar, HotLecturer, NoneUser, Follow },
      
       data() {
           return {
             feeds: [],//해시검색에 받아온
-              word: "",
+            searchResult: "",//검색창에서 받아온 결과
+            keyword: "",
             //   noneuser : false,
-              items: [], //HOT해시태그
-              member : this.$store.state.id,
-              show: false, //1:검색 결과 페이지
-              noResult: false, //1:검색결과 없음
-              main: true,
-              showHashtag : "",
+            items: [], //HOT해시태그
+            member : this.$store.state.id,
+            show: false, //1:검색 페이지
+            showHot: true, //howLectureList
+            showResult: false, //user검색 페이지
+            // showHashtag : "",
               //자동검색
-              ctg: [
+            ctg: [
                 { tag: '운동' },
                 { tag: '공예' },
                 { tag: '연극' },
                 { tag: '독서' },
             ],
             userInput: null,
-            search:"", //검색한 단어
+            temp:"", //검색한 단어
           }
       },
 
@@ -122,9 +130,8 @@
 
       created() {
           this.getHotHashtags();//함수실행
-          this.feeds=this.$route.params.hashtagResult; //피드디테일에서 받아옴 -> searchPage
+          this.searchResult=this.$route.params.hashtagResult; //피드디테일에서 받아옴 -> searchPage
           console.log(this.$route.params.hashtagResult);//(없을시 undefined)
-          console.log(this.$store.state.id);
           this.show=this.$route.params.showing
       },
 
@@ -149,7 +156,7 @@
               }).then(res => {
                   this.feeds = res.data;
                   console.log("피드받기 성공!");
-                  this.showHashtag = getHashtag;
+                //   this.showHashtag = getHashtag;
                   this.show = true;
                   this.main = false;
                   if (this.feeds.length === 0){
@@ -162,31 +169,16 @@
               });
           },
 
-         //댓글 enter등록
-         enter(search){
-            if (window.event.keyCode == 13) {
-            this.searchMem(search);
-            }
-        },
+          searchMem(keyword){
+            this.searchResult = this.keyword; //props로 보낼 값 바인딩
+            console.log(this.searchResult);
+            this.show = false;
+            this.showHot = false;
+            this.showResult = true;
+            // this.keyword = "";
+          },
 
-          //검색
-          searchMem(temp) {
-            this.axios('/sns/search/user', {
-                  params : {
-                    memberId : temp
-                  }
-              }).then(res => {
-                  this.feeds = res.data;
-                  console.log("피드받기 성공!");
-                  this.show = true;
-                  this.main = false;
-                  if (this.feeds.length === 0){
-                    this.noResult = true;
-                    this.main = false;
-                  }
-              }).catch(err =>{
-                  console.log(err);
-              });
+
 
             //데이터 저장시 배열 선언하여 각각의 정보들을 배열의 요소로 추가하고 한 이름에 대한 정보들은 여러 항목이 있기에 객체로 저장한다.
             
@@ -245,10 +237,6 @@
             //       console.log(err);
             //   });
 
-
-
-          },
-
           //글 등록 이동
           select : function() {
               if (this.member) {
@@ -274,19 +262,8 @@
             this.$router.push({ name: 'snsUserFeed', query: {userId : member} });
           },
 
-          //검색창
-          fetchEntriesDebounced() {
-            // cancel pending call
-            clearTimeout(this._timerId)
-
-            // delay new call 500ms
-            this._timerId = setTimeout(() => {
-                // maybe : this.fetch_data()
-                this.people = this.itemData ? this.itemData : []
-            }, 500)
-        },
-     }
-  };
+    }
+};
   </script>
   
   <style scoped lang="css" src="@/assets/css/sns/SnsMain.css" />
