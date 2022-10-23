@@ -23,4 +23,13 @@ public interface MainMapper {
 	
 	// 챌린지 실시간 인증샷 조회
 	public List<MainChallVO> challNewCertList();
+	
+	// sns키워드 검색 조회
+	public List<SnsPostVO> searchSnsKeyword(String searchText);
+	
+	// moim키워드 검색 조회
+	public List<MoimVO> searchMoimKeyword(String searchText);
+	
+	// 강의 키워드 검색 조회
+	public List<MainClassVO> searchClassKeyword(String searchText);
 }

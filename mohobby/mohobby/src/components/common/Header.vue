@@ -1,27 +1,26 @@
 <template>
-  <v-app-bar app color="white" elevate-on-scroll elevation="4">
-    <v-btn @click="test()" icon>
-      <v-icon>mdi-arrow-left-box</v-icon>
-    </v-btn>
-    <v-toolbar-title @click="$router.push('/').catch(() => {})" style="cursor: pointer">Mohobby</v-toolbar-title>
-    <p>{{ this.$store.state.id }}</p>
+  <v-app-bar app color="black" elevate-on-scroll elevation="4">
+    <v-toolbar-title @click="$router.push('/').catch(() => {})" style="cursor: pointer; color: #2ac187;">Mohobby</v-toolbar-title>
+    <!-- <p>{{ this.$store.state.id }}</p> -->
+    <v-spacer/>
+    <p style="color: #2ac187;">{{ this.$store.state.id }}님, 오늘 모하비?</p>
     <v-spacer />
-    <v-btn text class="ml-2" to="/snsmain">sns</v-btn>
-    <v-btn text class="ml-2" to="/class/list/all">강의</v-btn>
-    <v-btn text class="ml-2" to="/moimmain">소모임</v-btn>
-    <v-btn text class="ml-2" to="/challengemain">챌린지</v-btn>
+    <v-btn text class="ml-2" to="/snsmain" style="color: #2ac187;">sns</v-btn>
+    <v-btn text class="ml-2" to="/class/list/all" style="color: #2ac187;">강의</v-btn>
+    <v-btn text class="ml-2" to="/moimmain" style="color: #2ac187;">소모임</v-btn>
     <v-spacer />
     <v-col lg="4" cols="12">
       <v-form class="mt-5">
-        <v-text-field rounded outlined dense placeholder="Search Here" append-icon="mdi-magnify" />
+        <v-text-field style="color: #2ac187;" v-model="searchText" @keydown.enter.prevent='search' rounded outlined dense placeholder="Search Here" append-icon="mdi-magnify" />
       </v-form>
     </v-col>
     <v-spacer />
+    <v-btn v-if="this.$store.state.id" icon>
     <v-menu offset-y v-if="this.$store.state.id">
       <template v-slot:activator="{ on, attrs }">
-        <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer">
+        <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer; color: #2ac187;">
           <v-badge v-if="noticeCount != 0" offset-x="10" offset-y="10" color="red" :content="noticeCount">
-            <v-icon>mdi-bell</v-icon>
+            <v-icon style="color: #2ac187;">mdi-bell</v-icon>
           </v-badge>
         </span>
       </template>
@@ -43,21 +42,19 @@
         </template>
       </v-list>
     </v-menu>
-    <v-btn icon>
-      <v-icon v-if="!this.$store.state.id" @click="$router.push('/login')">mdi-arrow-left-box</v-icon>
-    </v-btn>
-    <v-icon v-if="!this.$store.state.id" @click="$router.push('/register')">mdi-account-multiple-plus</v-icon>
+      <v-btn v-if="!this.$store.state.id" @click="$router.push('/login')" elevation="2" style="margin-right:10px; color: #2ac187;">로그인</v-btn>
+      <v-btn v-if="!this.$store.state.id" @click="$router.push('/register')" elevation="2" style="color: #2ac187;">회원가입</v-btn>
     <v-btn v-if="this.$store.state.id" icon>
       <v-menu offset-y v-if="this.$store.state.id">
         <template v-slot:activator="{ on, attrs }">
           <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer">
             <v-badge v-if="noticeCount != 0" offset-x="10" offset-y="10" color="red" :content="noticeMsgCount">
-              <v-icon>mail</v-icon>
+              <v-icon style="color: #2ac187;">mail</v-icon>
             </v-badge>
           </span>
         </template>
         <v-list three-line width="400" height="400">
-          <template v-for="(item, index) in items">
+          <template v-for="(item, index) in messages">
             <div @click="pageMove(item)" style="background-color: white">
               <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
               <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
@@ -76,10 +73,10 @@
       </v-menu>
     </v-btn>
     <v-btn v-if="this.$store.state.id" icon>
-      <v-icon @click="$router.push('/mypageprofile')">mdi-account</v-icon>
+      <v-icon style="color: #2ac187;" @click="$router.push('/mypageprofile')">mdi-account</v-icon>
     </v-btn>
     <v-btn v-if="this.$store.state.id" @click="logout()" icon>
-      <v-icon>mdi-arrow-right-box</v-icon>
+      <v-icon style="color: #2ac187;">mdi-arrow-right-box</v-icon>
     </v-btn>
   </v-app-bar>
 </template>
@@ -95,7 +92,8 @@ export default {
       avatar: "", //알람 프로필
       subtitle: "", // 알람 내용
       items: [{ header: this.$moment().format("YYYY-MM-DD") }], //일반 알람 목록
-      messages: [{ header: this.$moment().format("YYYY-MM-DD") }] //메신저 알람 목록
+      messages: [{ header: this.$moment().format("YYYY-MM-DD") }], //메신저 알람 목록,
+      searchText: "",
     };
   },
   setup() { },
@@ -112,17 +110,19 @@ export default {
     );
   },
   unmounted() { },
-
+  // watch: {
+  //   $route: function(to, from, next) {
+  //     this.$router.go(0);
+  //   },
+  // },
+  //  before(to, from, next) {
+  //   // next();
+  //   // this.$router.go(0);
+  // },
+  afterEach() {
+    this.$router.go(0);
+  },
   methods: {
-    test() {
-      console.log(this.items);
-    },
-    logout() {
-      this.$store.commit("setIsLoginFalse");
-      this.$store.commit("logout");
-      this.$store.commit("setUserData", null);
-      this.$router.push("/");
-    },
     //알림정보 가져오기
     getAllNotice() {
       let vm = this;
@@ -140,7 +140,6 @@ export default {
             if (res.data[i].noticeType == 2) {
               vm.messages.unshift({ divider: true, inset: true });
               vm.messages.unshift(res.data[i])
-
             }
             else {
               vm.items.unshift({ divider: true, inset: true });
@@ -153,9 +152,7 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-
     },
-
     //알림 처리
     noticeRes() {
       let vm = this;
@@ -163,7 +160,6 @@ export default {
         function (res) {
           let resNotice = JSON.parse(res.body);
           console.log(resNotice);
-          if (resNotice.memberId != vm.$store.state.id) {
             //sns 알림 처리
             if (resNotice.noticeType == 0) {
               //sns - 좋아요 알림 처리
@@ -185,17 +181,20 @@ export default {
                 noticeType: resNotice.noticeType,
                 noticeId: resNotice.noticeId,
               });
-              vm.items.unshift({ divider: true, inset: true });
-              ++vm.noticeCount;
+              vm.items.unshift({ divider: true, inset: true })
+              ++vm.noticeCount
             }
             //소모임 알림 처리
             else if (resNotice.noticeType == 1) {
               //소모임 댓글 알림 처리
-              vm.items.unshift({ divider: true, inset: true });
+              vm.items.unshift({ divider: true, inset: true })
               if (resNotice.contentType == 0) {
-                vm.subtitle = "댓글을 남기셨습니다.";
+                vm.subtitle = "댓글을 남기셨습니다."
               } else if (resNotice.contentType == 1) {
-                vm.subtitle = "새로운 게시글이 등록되었습니다.";
+                vm.subtitle = "새로운 게시글이 등록되었습니다."
+              }else if(resNotice.contentType == 2){
+                vm.subtitle="님이 언급했어요!"
+                console.log("안녕하세요")
               }
               vm.items.unshift({
                 avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
@@ -228,11 +227,11 @@ export default {
               }
               ++vm.noticeMsgCount;
             }
-          }
         }
       );
     },
 
+    //알림 클릭 이벤트
     pageMove(item) {
       if (item.noticeType != 2) {
         for (let i = 0; i < this.items.length; i++) {
@@ -272,6 +271,18 @@ export default {
         }
         this.$router.push({ name: "chat", params: { getRoomId: item.postId } });
       }
+    },
+    search() {
+      console.log(this.searchText);
+      this.$router.push({name: 'mainsearch', query: {searchText: this.searchText}});
+      this.$router.go(0);
+      
+    },
+    logout() {
+      this.$store.commit("setIsLoginFalse");
+      this.$store.commit("logout");
+      this.$store.commit("setUserData", null);
+      this.$router.push("/");
     },
   },
 };

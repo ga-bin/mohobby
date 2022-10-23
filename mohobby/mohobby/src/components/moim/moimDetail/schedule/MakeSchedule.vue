@@ -82,8 +82,6 @@ export default {
     return {
       startTimer: false,
       endTimer: false,
-      start: '',
-      end: ''
     }
   },
   methods: {
@@ -97,7 +95,7 @@ export default {
           startTime: this.calendar.startTime,
           info: this.calendar.info,
           endDate: this.calendar.endDate,
-          endTime: this.calendar.endTime,
+          endTime: end,
           title: this.calendar.title,
           memberId: this.$route.params.moimId,
         })

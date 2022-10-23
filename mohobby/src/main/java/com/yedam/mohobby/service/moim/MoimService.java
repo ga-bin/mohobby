@@ -122,5 +122,8 @@ public interface MoimService {
 	//소모임 일정 전체 조회
 	public List<MoimScheduleVO> scheduleSelect(int moimId);
 	
+	//소모임 투표 항목
+	public void insertVoteList(MoimVoteListVO vo);
+	
 }
 

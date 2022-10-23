@@ -2,8 +2,9 @@
 <template>
   <div>
     <!-- 권한에 따라 컴포넌트 다르게 보여주기 -->
-    <MoimSidebar :moimId="Id"/>
-    <!-- <MoimSidebar_admin></MoimSidebar_admin> -->
+    
+    <MoimSidebar v-if="moimInfo.memberId != this.$store.state.id" :moimId="Id"/>
+    <MoimSidebar_admin v-else></MoimSidebar_admin>
     
     <div v-if="moim == 0">
     <InvisibleBoard></InvisibleBoard>
@@ -49,7 +50,8 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    },  
+    },
+      
   },
   props: [],
 }

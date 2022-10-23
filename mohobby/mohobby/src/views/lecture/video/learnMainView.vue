@@ -207,20 +207,22 @@
             <v-card flat justify="center" align="center" style="padding-top: 50px">
               <h1>🙇</h1>
               <h1>등록된 질문이 없습니다</h1>
+              <h4 class="mt-5">강의 내용 중에 궁금한 점이 있으신가요?</h4>
+              <h4>지금 바로 질문해보세요!</h4>
+              <v-btn
+                outlined
+                color="#2b2b2b"
+                @click="clickWriteBtn"
+                class="mt-5"
+              >
+                질문 작성하기
+              </v-btn>
             </v-card>
-            <v-btn
-              outlined
-              color="#2b2b2b"
-              @click="clickWriteBtn"
-
-            >
-              질문 작성하기
-            </v-btn>
           </div>
         </v-tab-item>
         <v-tab-item key="3">
           <!-- 노트 내역 존재 -->
-          <div v-if="questList.length != 0">
+          <div v-if="noteList.length != 0">
             <div>
               <v-card class="d-flex justify-end align-center" flat tile>
                 <!-- 작성하기 버튼 -->
@@ -266,10 +268,20 @@
               </v-card>
             </div>
           </div>
-          <div v-if="questList.length == 0">
+          <div v-if="noteList.length == 0">
             <v-card flat justify="center" align="center" style="padding-top: 50px">
               <h1>🙇</h1>
-              <h1>작성한 학습노트가 없습니다</h1>
+              <h1>작성된 학습노트가 없습니다</h1>
+              <h4 class="mt-5">기억해두고 싶은 있으신가요?</h4>
+              <h4>지금 바로 학습노트를 작성해보세요!</h4>
+              <v-btn 
+                class="mt-5"
+                outlined
+                color="#2b2b2b"
+                @click="clickWriteBtn"
+              >
+                노트 작성하기
+              </v-btn>
             </v-card>
           </div>
         </v-tab-item>
@@ -448,7 +460,8 @@ export default {
       this.axios("/class/board", {
         params: {
           classId: this.currId,
-          boardType: 3
+          boardType: 3,
+          memberId: this.$store.state.id
         }
       })
       .then(res => {

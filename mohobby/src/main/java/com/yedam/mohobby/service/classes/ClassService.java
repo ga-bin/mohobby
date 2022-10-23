@@ -1,5 +1,6 @@
 package com.yedam.mohobby.service.classes;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public interface ClassService {
     public ClassReviewVO getClassReview(int classId);
     
     //강의게시글조회
-    public List<ClassBoardVO> getClassBoardList(int classId, int boardType);
+    public List<ClassBoardVO> getClassBoardList(int classId, int boardType, String memberId);
     
     //강의게시글등록
     public ClassBoardVO addClassBoard(ClassBoardVO board);
@@ -70,5 +71,8 @@ public interface ClassService {
     
     //에디터 이미지 저장
     public void uploadClassImage(ClassImageVO vo);
+    
+    //내 강의 목록 조회
+    public List<ClassesVO> getMyCourse(HashMap<String, String> reqBody);
 
 }

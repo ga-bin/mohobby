@@ -273,6 +273,32 @@ public class MoimServiceImpl implements MoimService {
 		return mapper.nbbangSelect(moimId);
 	}
 	
+	//소모임 투표 항목
+	@Override
+	public void insertVoteList(MoimVoteListVO vo) {
+		
+		List<MoimVoteItemVO> itemList = vo.getVotelist();
+		
+		MoimVoteListVO body = new MoimVoteListVO();
+		body.setTopic(vo.getTopic());
+		body.setEndDate(vo.getEndDate());
+		body.setMoimId(vo.getMoimId());
+		body.setMemberId(vo.getMemberId());
+		mapper.insertVoteList(body);
+		
+		int voteId = body.getVoteId();
+		
+		
+		for(int i=0; i<itemList.size(); i++) {
+			if(itemList.get(i).getContent() != null) {
+			body.setVoteId(voteId);
+			body.setContent(itemList.get(i).getContent());
+			}		
+			mapper.insertVoteListFor(body);
+		}
+		
+	}
+	
 	//소모임 일정 등록
 	@Override
 	public String scheduleInsert(MoimScheduleVO scheduleVO){
@@ -284,5 +310,4 @@ public class MoimServiceImpl implements MoimService {
 	public List<MoimScheduleVO> scheduleSelect(int moimId) {
 		return mapper.scheduleSelect(moimId);
 	}
-
 }

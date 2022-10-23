@@ -1,8 +1,12 @@
 <template>
-  
+   <v-container fluid>
+    <v-sheet max-width="2200">
+      <v-slide-group class="pa-2">
+        <v-slide-item v-for="(info,i) in snsHighLikesList.data" :key="i">
+          <div class="displayflex" style="width: 350px">
   <div class="cards-container" >
     <!-- FIRST CARD -->
-    <div class="card card-first" v-for="(info,i) in listInfo" :key="i">
+    <div class="card card-first" style="width: 290px">
       <div class="card-header-wrapper" @click="goMyFeed(info.memberId)">
           <h2 class="card-title"></h2>
           <h4 class="card-subtitle">{{info.memberId}}</h4>
@@ -20,25 +24,30 @@
       <button class="card-button">More</button>
     </div>
   </div>
+          </div>
+        </v-slide-item>
+      </v-slide-group>
+    </v-sheet>
+  </v-container>
 </template>
 <script>
 export default {
-  name: "HotLecturer",
   props:{
-      items : []
+     snsHighLikesList: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
       listInfo: [],
-      memberId: this.$store.state.id, //세션아이디
     };
   },
   setup() {
     
   },
   created() {
-    this.getHotLecturerList();
-    console.log(this.memberId);
+  
   },
   mounted() {
 
@@ -50,22 +59,6 @@ export default {
     //피드상세로 이동
     getFeedDetail(memberId, postId) {
         this.$router.push({ path: '/snsFeedDetail', query: {writer : memberId, postId : postId} });
-      },
-      getHotLecturerList() {
-        //hotLectureList조회
-        this.axios('/sns/main/top20LecturerFeeds')
-        .then(res => {
-            console.log(res);
-            console.log(res.data);
-            console.log(res.data);
-            console.log(res.data);
-            console.log(res.data);
-            console.log(res.data);
-            this.listInfo = res.data;
-            console.log("getHotLecturerList받아오기 성공")
-          }).catch(err =>{
-            console.log(err);
-          });
       },
     //유저피드로 이동
     goMyFeed(userId) {

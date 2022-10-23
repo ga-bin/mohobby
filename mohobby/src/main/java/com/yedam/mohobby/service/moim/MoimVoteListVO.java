@@ -1,6 +1,7 @@
 package com.yedam.mohobby.service.moim;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -19,4 +20,5 @@ public class MoimVoteListVO {
 	private String voteUser; //투표자
 	private int itemSelect; //아이템 선택
 	private int preSelect; //선택된 아이템
+	private List<MoimVoteItemVO> votelist;
 }
