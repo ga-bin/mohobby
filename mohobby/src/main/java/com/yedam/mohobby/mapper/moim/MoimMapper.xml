@@ -387,6 +387,7 @@ select * from moim_dutch where moim_id = #{moimId}
          0)
    </insert>
    
+  <!-- n빵 디테일 조회 -->
   <select id="nbbangSelect" resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
   select a.dutch_id, a.member_id, a.write_date, a.total_price, 
   		 a.people, b.member_id as money_target, b.calc_price, b.calc_check
@@ -394,5 +395,21 @@ select * from moim_dutch where moim_id = #{moimId}
   where a.dutch_id(+) = b.dutch_id
   and a.moim_id = #{moimId}
   </select>
-      
+  
+  <!-- 소모임 일정 등록 -->
+  <insert id="scheduleInsert">
+  <selectKey resultType="Integer" keyProperty="skedId" order="BEFORE"> 
+      SELECT NVL(MAX(sked_id), 0)+1 FROM moim_schedule
+   </selectKey>
+   	  INSERT INTO moim_schedule 
+   	  VALUES(#{skedId},
+			 #{memberId},
+			 #{title},
+			 #{info},
+			 to_timestamp(#{startTime},'hh24:mi:ss.ff3'), 
+			 to_timestamp(#{endTime},'hh24:mi:ss.ff3'),
+			 #{startDate},
+			 #{endDate} 	  
+   	  		)
+  </insert>
 </mapper>

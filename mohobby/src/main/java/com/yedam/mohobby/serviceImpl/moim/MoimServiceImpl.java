@@ -15,6 +15,7 @@ import com.yedam.mohobby.service.moim.MoimDutchPtpSoloVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
+import com.yedam.mohobby.service.moim.MoimScheduleVO;
 import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
@@ -271,7 +272,10 @@ public class MoimServiceImpl implements MoimService {
 		return mapper.nbbangSelect(moimId);
 	}
 	
-	
+	//소모임 일정 등록
+	public String scheduleInsert(MoimScheduleVO scheduleVO){
+		return mapper.scheduleInsert(scheduleVO);
+	}
 	
 	
 

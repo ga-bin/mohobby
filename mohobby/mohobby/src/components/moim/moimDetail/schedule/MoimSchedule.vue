@@ -46,14 +46,14 @@
 
         <!-- 달력 부분 -->
         <v-sheet height="500" max-width="800">
-          <v-calendar   v-model="value" ref="calendar" :start="start" @click:date="open" :type="type" ></v-calendar>
+          <v-calendar   v-model="value" ref="calendar" @click:date="open" ></v-calendar>
         </v-sheet>
       </v-col> 
     </v-row>
 
     <!-- 다이어로그 띄우기 -->
     <div class="example">
-      <MakeSchedule :dialog="dialog" :calendar="calendar" @dialogClose="dialogClose(name)"></MakeSchedule>
+      <MakeSchedule :dialog="dialog" :calendar="calendar"></MakeSchedule>
     </div>
   </div>
 </template>
@@ -77,8 +77,6 @@ export default {
         endTime: '',
         title: '',
         dateOpen: false,
-        start: '2022-10-07',
-        type: 'month',
         memberId: this.$route.params.moimId,
       }
     }},
@@ -95,21 +93,8 @@ export default {
       this.today=this.year+"-"+this.month;
     },
     open(date) {
-      console.log(date)
-      //받아온 데이터 변수에 저장
-      this.calendar.month = date.month;
-      this.calendar.year = date.year;
-      this.calendar.startDate = date.date;
-      this.calendar.startTime = date.time;
-      this.calendar.hasTime = date.hasTime;
-      console.log(this.calendar);
-      // this.$store.commit('OPEN_CALENDAR_DIALOG', date)
       //다이어로그 실행
       this.dialog = true;
-    },
-    dialogClose(name) {
-      console.log(name);
-      this.dialog = false;
     },
     prev () {
       this.month--

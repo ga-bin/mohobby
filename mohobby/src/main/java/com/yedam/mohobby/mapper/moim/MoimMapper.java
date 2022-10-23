@@ -11,6 +11,7 @@ import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpSoloVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
+import com.yedam.mohobby.service.moim.MoimScheduleVO;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
@@ -118,5 +119,8 @@ public interface MoimMapper {
 	
 	//소모임 n빵 디테일 조회
 	public List<MoimDutchVO> nbbangSelect(int moimId);
+	
+	//소모임 일정 등록
+	public String scheduleInsert(MoimScheduleVO scheduleVO);
 	
 }
