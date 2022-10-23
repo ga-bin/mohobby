@@ -6,9 +6,9 @@
       </v-card-title>
       <v-card-text>
         <v-form class="px-3" ref="form">
-          <v-text-field label="일정" v-model="calendar.title" prepend-icon="mdi-folder-marker" :rules="inputRules">
+          <v-text-field label="일정" v-model="calendar.title" prepend-icon="mdi-folder-marker">
           </v-text-field>
-          <v-textarea label="상세설명" v-model="calendar.content" prepend-icon="mdi-pencil" :rules="inputRules">
+          <v-textarea label="상세설명" v-model="calendar.info" prepend-icon="mdi-pencil">
           </v-textarea>
           <v-row>
             <v-col cols="6" class="pb-0">
@@ -82,27 +82,47 @@ export default {
     return {
       startTimer: false,
       endTimer: false,
-      name: '현정'
     }
-  },
-  computed: {
-    // dialog() {
-    //   return this.$store.state.calendar.dialog;
-    // },
-    // calendar() {
-    //   return this.$store.state.calendar.calendar;
-    // },s
   },
   methods: {
     submit() {
-      if (this.$refs.form.validate()) {
-        this.$store.dispatch('REQUEST_ADD_EVENT', this.calendar);
-      }
+      const moment = require('moment');
+      const today = moment(this.calendar.startTime);
+      console.log(moment().format('YYYY-MM-DD HH:mm:ss'))
+      console.log(this.calendar)
+      var start = this.$moment(this.calendar.startTime).format('HH:mm:ss.SSS')
+      var end = this.$moment(this.calendar.endTime).format('HH:mm:ss.SSS')
+      console.log('start:'+ start)
+      console.log('end:'+ end)
+      console.log("this.calendar.startTime : " + this.calendar.startTime)
+      console.log("this.calendar.endTime :" + this.calendar.endTime)
+      this.axios
+        .post("/scheduleInsert", {
+          startDate: this.calendar.startDate,
+          startTime: this.calendar.startTime,
+          info: this.calendar.info,
+          endDate: this.calendar.endDate,
+          endTime: end,
+          title: this.calendar.title,
+          memberId: this.$route.params.moimId,
+        })
+        .then((resp) => {
+            console.log('======================================')
+            console.log('startDate:'+ this.calendar.startDate)
+            console.log('startTime:'+ this.calendar.startTime)
+            console.log('info:'+ this.calendar.info)
+            console.log('endDate:'+ this.calendar.endDate)
+            console.log('endTime:'+ this.calendar.endTime)
+            console.log('title:'+ this.calendar.title)
+            console.log('memberId '+ this.$route.params.moimId)
+            console.log('======================================')
+            console.log(resp.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     close() {
-      console.log(this.name);
-      //부모로 값 보내기(부모의 파라미터로)
-      this.$emit('dialogClose', this.name);
       //this.$store.commit('CLOSE_CALENDAR_DIALOG');
     },
     selectTime() {

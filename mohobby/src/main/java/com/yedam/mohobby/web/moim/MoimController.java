@@ -374,5 +374,13 @@ public class MoimController {
 	public List<MoimDutchVO> getNbbangDetail(@Param("moimId")int moimId) {
 		return service.nbbangSelect(moimId);
 	}
+	
+	//소모임 투표 항목
+	@PostMapping("/voteList")
+	public void insertVoteList(@RequestBody MoimVoteListVO vo) {
+		System.out.println(vo);
+		service.insertVoteList(vo);
+	}
+	
 }
 
