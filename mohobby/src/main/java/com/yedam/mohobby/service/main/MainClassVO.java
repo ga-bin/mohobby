@@ -11,4 +11,6 @@ public class MainClassVO {
 	private String className; // 강의명
 	private Date startDate; // 시작일자
 	private int classPrice; // 수강료
+	private String memberId;
+	private String regionName;
 }

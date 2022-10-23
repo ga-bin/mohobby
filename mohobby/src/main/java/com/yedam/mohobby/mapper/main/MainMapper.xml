@@ -4,8 +4,11 @@
 
 <!-- sns인기글 조회  -->
 <select id="SnsHighLikesList"  resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-select post_id, member_id, hashtag, content, write_date, thumbnail, likes, cmts
-from (select post_id, member_id, hashtag, content, write_date, thumbnail, likes, cmts from sns_post order by likes desc)
+select *
+from (select a.post_id, a.member_id, a.hashtag, a.content, a.write_date, a.thumbnail, a.likes, a.cmts, b.profile_img
+     from sns_post a join member b 
+     on a.member_id = b.member_id
+     order by a.likes desc)
 where rownum <![CDATA[<=]]> 10
 </select>
 
@@ -35,5 +38,37 @@ select *from
 	on c.ptp_id = d.ptp_id
 	order by d.cert_date)
 where rownum <![CDATA[<=]]> 10
+</select>
+
+<!-- sns키워드 검색 조회  -->
+<select id="searchSnsKeyword" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+select * from sns_post
+where hashtag like '%' || #{searchText} || '%' 
+or content like '%' || #{searchText} || '%'
+or member_id like #{searchText}
+</select>
+
+<!-- moim키워드 검색 조회  -->
+<select id="searchMoimKeyword" parameterType="String" resultType="com.yedam.mohobby.service.moim.MoimVO">
+select * from moim
+where moim_name like #{searchText}
+or moim_info like '%' || #{searchText} || '%'
+or moim_catg like '%' || #{searchText} || '%'
+or moim_region like '%' || #{searchText} || '%'
+or member_id like '%' || #{searchText} || '%'
+</select>
+
+<!-- 강의 키워드 검색 조회  -->
+<select id="searchClassKeyword" parameterType="String" resultType="com.yedam.mohobby.service.main.MainClassVO">
+select b.class_id, b.member_id, b.class_name, a.keyword_name as keyword_name, b.class_price, c.keyword_name as region_name
+from keyword a full outer join class b
+on a.keyword_id = b.keyword_id
+full outer join keyword c
+on b.region_id = c.keyword_id
+where a.keyword_name like '%' || #{searchText} || '%'
+or b.class_name like '%' || #{searchText} || '%'
+or b.job_name like '%' || #{searchText} || '%'
+or c.keyword_name like '%' || #{searchText} || '%'
+or b.member_id like #{searchText}
 </select>
 </mapper>
