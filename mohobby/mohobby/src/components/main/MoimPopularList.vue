@@ -6,7 +6,7 @@
           <div class="displayflex">
             <v-card
               class="mx-auto"
-              max-width="320px"
+              max-width="230px"
               @click="
                 $router.push({
                   name: 'moimBoard',
@@ -28,19 +28,19 @@
                 {{ moim.moimCatg }}
               </v-chip>
               <v-card-actions>
-                <v-btn color="orange lighten-2" text> Explore </v-btn>
+                <v-btn color="orange lighten-2" text> 상세보기 </v-btn>
 
                 <v-spacer></v-spacer>
 
-                <v-btn icon @click.capture.stop="show = !show">
+                <v-btn icon @click.capture.stop="moim.show = !moim.show">
                   <v-icon>{{
-                    show ? "mdi-chevron-up" : "mdi-chevron-down"
+                    moim.show ? "mdi-chevron-up" : "mdi-chevron-down"
                   }}</v-icon>
                 </v-btn>
               </v-card-actions>
 
               <v-expand-transition>
-                <div v-show="show">
+                <div v-show="moim.show">
                   <v-divider></v-divider>
 
                   <v-card-text>
@@ -65,7 +65,6 @@ export default {
   },
   data() {
     return {
-      show: false,
     };
   },
   setup() {},

@@ -42,15 +42,15 @@ public class MessageController {
 	public void send(ContentVO content) {
 		NoticeVO noticeVO = new NoticeVO();
 		ResNoticeVO resNotice = new ResNoticeVO();
-		//실시간 메시지 보내기
+		// 실시간 메시지 보내기
 		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
-	
+
 		ChatListContentResVO res = new ChatListContentResVO();
 		for (int i = 0; i < content.getMemberIds().size(); i++) {
-			System.out.println("content:"+ content.getMemberIds().get(i));
+			System.out.println("content:" + content.getMemberIds().get(i));
 			System.out.println(content);
-			sendTemplate.convertAndSend("/queue/"+content.getMemberIds().get(i),content);
-			//상대방이 같은방에 없을때는 알림을 보낸다.
+			sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i), content);
+			// 상대방이 같은방에 없을때는 알림을 보낸다.
 			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0) {
 				resNotice.setNoticeId(nService.getNoticeId());
 				resNotice.setProfileImge(mService.getMember(content.getMemberIds().get(i)).getProfileImg());
@@ -58,8 +58,8 @@ public class MessageController {
 				resNotice.setNoticeType(2);
 				resNotice.setTargetId(content.getMemberIds().get(i));
 				resNotice.setPostId(content.getRoomNo());
-				
-				//db에 담을 정보
+
+				// db에 담을 정보
 				noticeVO.setMemberId(content.getMemberIds().get(i));
 				noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
 				noticeVO.setTitle(resNotice.getNickname());
@@ -67,7 +67,7 @@ public class MessageController {
 				noticeVO.setPostId(content.getRoomNo());
 				noticeVO.setNoticeType(2);
 
-				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i)+ "/notice", resNotice);
+				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i) + "/notice", resNotice);
 				nService.insertNotice(noticeVO);
 			}
 		}
@@ -82,53 +82,60 @@ public class MessageController {
 	@MessageMapping("Notice")
 	public void NoticeSns(ResNoticeVO resNotice) {
 		NoticeVO noticeVO = new NoticeVO();
-		resNotice.setNoticeId(nService.getNoticeId());
-		noticeVO.setBoardType(resNotice.getBoardType());
-		noticeVO.setMoimId(resNotice.getMoimId());
-		noticeVO.setPostId(resNotice.getPostId());
-		noticeVO.setNoticeType(resNotice.getNoticeType());
-		noticeVO.setContentType(resNotice.getContentType());
-		// sns 알림
-		if (resNotice.getNoticeType() == 0) {
-			resNotice.setProfileImge(mService.getMember(resNotice.getMyId()).getProfileImg());
-			resNotice.setNickname(mService.getMember(resNotice.getMyId()).getNickName());
-			// db에 담을정보
-			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
-			noticeVO.setTitle(resNotice.getNickname());
-			// sns - 좋아요 클릭시
-			if (resNotice.getContentType() == 0) {
-				if (resNotice.getLikeStatus() == 0) {
-					noticeVO.setSubtitle("좋아요를 눌렀습니다.");
-				} else if (resNotice.getLikeStatus() == 1) {
-					noticeVO.setSubtitle("좋아요를 취소했습니다.");
+		if (!resNotice.getMyId().equals(resNotice.getTargetId())) {
+			System.out.println("문자열비교성공");
+			System.out.println(resNotice.getMyId());
+			System.out.println(resNotice.getTargetId());
+			if (resNotice.getMyId() != resNotice.getTargetId()) {
+				resNotice.setNoticeId(nService.getNoticeId());
+				noticeVO.setBoardType(resNotice.getBoardType());
+				noticeVO.setMoimId(resNotice.getMoimId());
+				noticeVO.setPostId(resNotice.getPostId());
+				noticeVO.setNoticeType(resNotice.getNoticeType());
+				noticeVO.setContentType(resNotice.getContentType());
+				// sns 알림
+				if (resNotice.getNoticeType() == 0) {
+					resNotice.setProfileImge(mService.getMember(resNotice.getMyId()).getProfileImg());
+					resNotice.setNickname(mService.getMember(resNotice.getMyId()).getNickName());
+					// db에 담을정보
+					noticeVO.setMemberId(resNotice.getTargetId());
+					noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
+					noticeVO.setTitle(resNotice.getNickname());
+					// sns - 좋아요 클릭시
+					if (resNotice.getContentType() == 0) {
+						if (resNotice.getLikeStatus() == 0) {
+							noticeVO.setSubtitle("좋아요를 눌렀습니다.");
+						} else if (resNotice.getLikeStatus() == 1) {
+							noticeVO.setSubtitle("좋아요를 취소했습니다.");
+						}
+						// sns - 댓글 등록시
+					} else if (resNotice.getContentType() == 1) {
+						noticeVO.setSubtitle("댓글을 남기셨습니다.");
+					}
 				}
-				// sns - 댓글 등록시
-			} else if (resNotice.getContentType() == 1) {
-				noticeVO.setSubtitle("댓글을 남기셨습니다.");
-			}
-		}
-		// 소모임 알림
-		else if (resNotice.getNoticeType() == 1) {
-			resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMoimId()).getMoimImg());
-			resNotice.setNickname(moService.getMoimInfo(resNotice.getMoimId()).getMoimName());
+				// 소모임 알림
+				else if (resNotice.getNoticeType() == 1) {
+					resNotice.setProfileImge(moService.getMoimInfo(resNotice.getMoimId()).getMoimImg());
+					resNotice.setNickname(moService.getMoimInfo(resNotice.getMoimId()).getMoimName());
 
-			// db에 담을정보
-			noticeVO.setMemberId(resNotice.getTargetId());
-			noticeVO.setAvatar("require(`@/assets/image/moim/" + resNotice.getProfileImge() + "`)");
-			noticeVO.setTitle(resNotice.getNickname());
-			// 소모임 - 댓글
-			if (resNotice.getContentType() == 0) {
-				noticeVO.setSubtitle("댓글을 남기셨습니다.");
+					// db에 담을정보
+					noticeVO.setMemberId(resNotice.getTargetId());
+					noticeVO.setAvatar("require(`@/assets/image/moim/" + resNotice.getProfileImge() + "`)");
+					noticeVO.setTitle(resNotice.getNickname());
+					// 소모임 - 댓글
+					if (resNotice.getContentType() == 0) {
+						noticeVO.setSubtitle("댓글을 남기셨습니다.");
+					}
+					// 소모임 - 게시글 등록시
+					else if (resNotice.getContentType() == 1) {
+						noticeVO.setSubtitle("새로운 게시글이 등록되었습니다.");
+					}
+				} else if (resNotice.getBoardType() == 2) {
+				}
+				System.out.println(noticeVO);
+				sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
+				nService.insertNotice(noticeVO);
 			}
-			// 소모임 - 게시글 등록시
-			else if (resNotice.getContentType() == 1) {
-				noticeVO.setSubtitle("새로운 게시글이 등록되었습니다.");
-			}
-		} else if (resNotice.getBoardType() == 2) {
 		}
-		System.out.println(noticeVO);
-		sendTemplate.convertAndSend("/queue/" + resNotice.getTargetId() + "/notice", resNotice);
-		nService.insertNotice(noticeVO);
 	}
 }

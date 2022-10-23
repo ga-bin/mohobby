@@ -66,9 +66,11 @@
                 </template>
               </v-card-text>
               <v-card-text class="flex-shrink-1">
+                <div class="messages" ref="messages">
                 <v-text-field class="fixed" v-model="message" label="type_a_message" type="text" no-details outlined
                   append-outer-icon="send" @keyup.enter="send(),$vuetify.goTo(100)" hide-details />
-              </v-card-text>
+                </div>
+                </v-card-text>
             </v-card>
           </v-col>
         </v-row>
@@ -96,6 +98,7 @@ export default {
       subscribeRoot: "", //구독정보
       targetId: [], //상대방 정보
       createAt: "", //작성시간
+      
     };
   },
   created() {
@@ -372,6 +375,16 @@ export default {
         }
       );
     },
+  },
+  watch: {
+    messages() {
+            // 화면에 추가된 후 동작하도록
+            this.$nextTick(() => {
+                let messages = this.$refs.messages;
+
+                messages.scrollTo({ top: messages.scrollHeight, behavior: 'smooth' });
+            });
+        }
   },
 };
 </script>

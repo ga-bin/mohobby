@@ -210,13 +210,8 @@ export default {
     async goToUserProfile(item) {
       this.editedItem = Object.assign({}, item);
       await this.getOneUser(this.editedItem.flagTo);
-      console.log(this.userOneInfo.role);
-       console.log(this.userOneInfo.role);
-        console.log(this.userOneInfo.role);
-         console.log(this.userOneInfo.role);
-          console.log(this.userOneInfo.role);
       if (this.userOneInfo.role == 4) {
-        this.$swal.fire("관리자에 의해 접근 유저 프로필입니다.");
+        this.$swal.fire("관리자에 의해 접근 금지된 유저 프로필입니다.");
       } else {
          this.$router.push({ path: "/snsUserFeed", query: { userId: this.editedItem.flagTo } });
       }
