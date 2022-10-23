@@ -1,6 +1,7 @@
 
 package com.yedam.mohobby.web.classes;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,6 +210,12 @@ public class ClassController {
 			 @RequestParam(required=true) int classId, 
 			 @RequestParam(required=false) String memberId) {
         return classService.getChapterList(classId, memberId);
+    }
+	
+	//내 강의 목록 조회
+	@GetMapping("/class/my")
+    public List<ClassesVO> getMyCourse(@RequestBody HashMap<String, String> reqBody) {
+    	return classService.getMyCourse(reqBody);
     }
 
 }

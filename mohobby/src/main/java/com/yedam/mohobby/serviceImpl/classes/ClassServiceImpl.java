@@ -148,6 +148,12 @@ public class ClassServiceImpl implements ClassService {
     public List<ClassNeedsVO> getClassNeedsInfo(int classId) {
     	return classMapper.getClassNeedsInfo(classId);
     }
+    
+    //내 강의 목록 조회
+    @Override
+    public List<ClassesVO> getMyCourse(HashMap<String, String> reqBody) {
+    	return classMapper.getMyCourse(reqBody);
+    }
 
     // html 저장
     @Override
@@ -281,6 +287,8 @@ public class ClassServiceImpl implements ClassService {
         
         
     }
+    
+    
 
 
 }

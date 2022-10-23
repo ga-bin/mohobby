@@ -1,5 +1,6 @@
 package com.yedam.mohobby.mapper.classes;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -72,4 +73,7 @@ public interface ClassMapper {
     		@Param("memberId") String memberId);
     
     public void updateAttdInfo(ClassAttendanceVO vo);
+    
+    //내 강의 목록 조회
+    public List<ClassesVO> getMyCourse(HashMap<String, String> reqBody);
 }
