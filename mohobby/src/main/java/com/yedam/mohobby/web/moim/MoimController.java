@@ -376,6 +376,13 @@ public class MoimController {
 		return service.nbbangSelect(moimId);
 	}
 	
+	//소모임 투표 항목
+	@PostMapping("/voteList")
+	public void insertVoteList(@RequestBody MoimVoteListVO vo) {
+		System.out.println(vo);
+		service.insertVoteList(vo);
+	}
+	
 	//소모임 일정 등록
 	@PostMapping("/scheduleInsert")
 	public String insertSchedule(@RequestBody MoimScheduleVO scheduleVO) {

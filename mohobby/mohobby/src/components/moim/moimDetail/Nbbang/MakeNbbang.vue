@@ -120,7 +120,7 @@ export default {
             console.log('calcPrice:'+this.totalPrice)
             console.log('moimId:' +this.moimId)
             this.$swal("N빵 생성이 완료되었습니다.");
-            // this.$router.push(name :'/nBBangDetail');
+            this.$router.push({ name : "moimNbbang" });
           }
         })
         .catch((error) => {

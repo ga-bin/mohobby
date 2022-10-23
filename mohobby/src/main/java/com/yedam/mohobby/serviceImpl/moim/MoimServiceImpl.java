@@ -1,6 +1,5 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -272,12 +271,48 @@ public class MoimServiceImpl implements MoimService {
 		return mapper.nbbangSelect(moimId);
 	}
 	
+	//소모임 투표 항목
+	@Override
+	public void insertVoteList(MoimVoteListVO vo) {
+		
+		List<MoimVoteItemVO> itemList = vo.getVotelist();
+		
+		MoimVoteListVO body = new MoimVoteListVO();
+		body.setTopic(vo.getTopic());
+		body.setEndDate(vo.getEndDate());
+		body.setMoimId(vo.getMoimId());
+		body.setMemberId(vo.getMemberId());
+		mapper.insertVoteList(body);
+		
+		int voteId = body.getVoteId();
+		
+		
+		for(int i=0; i<itemList.size(); i++) {
+			if(itemList.get(i).getContent() != null) {
+			body.setVoteId(voteId);
+			body.setContent(itemList.get(i).getContent());
+			}		
+			mapper.insertVoteListFor(body);
+		}
+		
+	}
+	
 	//소모임 일정 등록
 	public String scheduleInsert(MoimScheduleVO scheduleVO){
 		return mapper.scheduleInsert(scheduleVO);
 	}
 	
 	
+	
+	
+//	// 소모임 공지사항 리스트 출력
+//	@Override
+//	public List<MoimBoardVO> moimNoticeBoard(int moimId, int boardType) {
+//		HashMap<String, Integer> map = new HashMap<>();
+//		map.put("moimId", moimId);
+//		map.put("boardType", boardType);
+//		return mapper.moimNoticeBaord(map);
+//	}
 
 	
 }

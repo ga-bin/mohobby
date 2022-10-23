@@ -82,24 +82,27 @@ export default {
     return {
       startTimer: false,
       endTimer: false,
-      start: '',
-      end: ''
     }
   },
   methods: {
     submit() {
-    //   console.log(this.calendar)
-    //   this.start = this.$moment(this.calendar.startTime).format('HH:mm:ss.SSS')
-    //   console.log('start:'+this.start)
-    //   this.end = this.$moment(this.calendar.endTime).format('HH:mm:ss.SSS')
-      // console.log('end:'+this.end)
+      const moment = require('moment');
+      const today = moment(this.calendar.startTime);
+      console.log(moment().format('YYYY-MM-DD HH:mm:ss'))
+      console.log(this.calendar)
+      var start = this.$moment(this.calendar.startTime).format('HH:mm:ss.SSS')
+      var end = this.$moment(this.calendar.endTime).format('HH:mm:ss.SSS')
+      console.log('start:'+ start)
+      console.log('end:'+ end)
+      console.log("this.calendar.startTime : " + this.calendar.startTime)
+      console.log("this.calendar.endTime :" + this.calendar.endTime)
       this.axios
         .post("/scheduleInsert", {
           startDate: this.calendar.startDate,
           startTime: this.calendar.startTime,
           info: this.calendar.info,
           endDate: this.calendar.endDate,
-          endTime: this.calendar.endTime,
+          endTime: end,
           title: this.calendar.title,
           memberId: this.$route.params.moimId,
         })
