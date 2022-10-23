@@ -5,7 +5,7 @@
                         <v-sheet class="py-4 px-1">
                           <v-slide-group class="pa-2">
                             <v-slide-item
-                              v-for="catg in catg"
+                              v-for="catg in catgs"
                               :key="catg.keywordId"
                             >
                               <div class="displayflex">
@@ -32,7 +32,7 @@ export default {
     components: {},
     data() {
         return {
-            catg: [],
+            catgs: [],
             selectedCatg : "",
     }
 },
@@ -57,7 +57,7 @@ export default {
         .then(function (response) {
           console.log(response.data);
           if (response.data != "") {
-            vm.catg = response.data;
+            vm.catgs = response.data;
           }
         })
         .catch(function (error) {

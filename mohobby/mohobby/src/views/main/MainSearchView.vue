@@ -1,42 +1,125 @@
 <template>
     <main>
-      <v-col lg="4" cols="12" style="margin-left: 100px;">
+      <div class="container">
+      <v-col lg="4" cols="12" style="margin-left: 100px; width: 100%;"></v-col>
       <v-form class="mt-5">
-        <v-text-field
-          rounded
-          outlined
-          dense
-          placeholder="Search Here"
-          append-icon="mdi-magnify"
-          
-        />
         <h3>검색된 sns</h3>
+          <snsHighLikesList :snsHighLikesList="searchSnsList"></snsHighLikesList>
+          <h3>검색된 모임</h3>
+          <moimPopularList :moimPopularList="searchMoimList"></moimPopularList>
+          <h3>검색된 클래스</h3>
+          <collectClassList :collectClassList="searchClassList"></collectClassList>
       </v-form>
-    </v-col>  
+    </div>  
     </main>
 </template>
 <script>
+import collectClassList from "../../components/main/CollectClassList.vue";
+import moimPopularList from "../../components/main/MoimPopularList.vue";
+import snsHighLikesList from "../../components/main/SnsHighLikesList.vue";
+
 export default {
-    name: '',
-    components: {},
+    components: {
+        moimPopularList,
+        snsHighLikesList,
+        collectClassList,
+  },
     data() {
         return {
-            example: '',
+          searchText : "",
+          searchSnsList : [],
+          searchMoimList : [],
+          searchClassList : [],
     }
 },
-    beforeCreate() {},
-    created() {},
+    beforeCreate() {
+    },
+    created() {
+      this.searchText = this.$route.query.searchText;
+      this.getSearchSnsList();
+      this.getSearchMoimList();
+      this.getSearchClassList();
+    },
     beforeMount() {},
-    mounted() {},
+    mounted() {
+    },
     beforeUpdate() {},
     updated() {},
     beforeUnmount() {},
     unmounted() {},
-    methods: {}
+    methods: {
+        getSearchSnsList() {
+          console.log(this.searchText);
+          console.log(this.searchText);
+          console.log(this.searchText);
+          console.log(this.searchText);
+          console.log(this.searchText);
+          const vm = this;
+          this.axios({
+            url: "/searchSnskeyword/" + this.searchText,
+            method: "get",
+          })
+            .then(function (response) {
+              vm.searchSnsList = response;
+              console.log(vm.searchSnsList);
+              console.log(vm.searchSnsList);
+              console.log(vm.searchSnsList);
+              console.log(vm.searchSnsList);
+              console.log(vm.searchSnsList);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+        getSearchMoimList() {
+          const vm = this;
+          this.axios({
+            url: "/searchMoimkeyword/" + this.searchText,
+            method: "get",
+          })
+            .then(function (response) {
+              for(let i = 0; i < response.data.length; i++) {
+                response.data[i].show = false;
+              }
+              vm.searchMoimList = response;
+              console.log(vm.searchMoimList);
+              console.log(vm.searchMoimList);
+              console.log(vm.searchMoimList);
+              console.log(vm.searchMoimList);
+              console.log(vm.searchMoimList);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+        getSearchClassList() {
+          const vm = this;
+          this.axios({
+            url: "/searchClassKeyword/" + this.searchText,
+            method: "get",
+          })
+            .then(function (response) {
+              vm.searchClassList = response;
+              console.log(vm.searchClassList);
+              console.log(vm.searchClassList);
+              console.log(vm.searchClassList);
+              console.log(vm.searchClassList);
+              console.log(vm.searchClassList);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }
+    }
 }
 </script>
 <style scoped>
-.v-input {
+/* .v-input {
     margin-left: 30px;
+} */
+
+.container {
+  width: 1500px;
+
 }
 </style>

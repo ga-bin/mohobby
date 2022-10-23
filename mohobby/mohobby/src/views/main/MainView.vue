@@ -13,29 +13,26 @@
     </div>
     <v-spacer />
     <h3>SNS인기feed</h3>
-    <snsHighLikesList :snsHighLikesList="snsHighLikesList"></snsHighLikesList>
+    <MainSnsList :snsHighLikesList="snsHighLikesList"></MainSnsList>
     <h3>인기 소모임</h3>
     <moimPopularList :moimPopularList="moimPopularList"></moimPopularList>
     <h3>모집 중인 강의</h3>
     <collectClassList :collectClassList="collectClassList"></collectClassList>
-    <h3>챌린저스 후기</h3>
-    <challReview></challReview>
   </div>
 </template>
 
 <script>
 import collectClassList from "../../components/main/CollectClassList.vue";
 import moimPopularList from "../../components/main/MoimPopularList.vue";
-import challReview from "../../components/main/ChallReview.vue";
 import snsHighLikesList from "../../components/main/SnsHighLikesList.vue";
+import MainSnsList from "../../components/main/MainSnsList.vue";
 
 export default {
   components: {
     moimPopularList,
-    challReview,
     snsHighLikesList,
     collectClassList,
-    Image,
+    MainSnsList
   },
 
   data() {
@@ -76,6 +73,12 @@ export default {
       })
         .then(function (response) {
           vm.snsHighLikesList = response;
+          console.log(vm.snsHighLikesList);
+          console.log(vm.snsHighLikesList);
+          console.log(vm.snsHighLikesList);
+          console.log(vm.snsHighLikesList);
+          console.log(vm.snsHighLikesList);
+          console.log(vm.snsHighLikesList);
         })
         .catch(function (error) {
           console.log(error);
@@ -89,8 +92,10 @@ export default {
         method: "get",
       })
         .then(function (response) {
+          for(let i = 0; i < response.data.length; i++) {
+            response.data[i].show = false;
+          }
           vm.moimPopularList = response;
-          console.log(vm.moimPopularList);
         })
         .catch(function (error) {
           console.log(error);
@@ -105,7 +110,6 @@ export default {
       })
         .then(function (response) {
           vm.collectClassList = response;
-          console.log(vm.collectClassList);
         })
         .catch(function (error) {
           console.log(error);
