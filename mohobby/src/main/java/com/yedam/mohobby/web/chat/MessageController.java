@@ -99,7 +99,7 @@ public class MessageController {
 					resNotice.setNickname(mService.getMember(resNotice.getMyId()).getNickName());
 					// db에 담을정보
 					noticeVO.setMemberId(resNotice.getTargetId());
-					noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
+					noticeVO.setAvatar(resNotice.getProfileImge());
 					noticeVO.setTitle(resNotice.getNickname());
 					// sns - 좋아요 클릭시
 					if (resNotice.getContentType() == 0) {
@@ -120,7 +120,7 @@ public class MessageController {
 
 					// db에 담을정보
 					noticeVO.setMemberId(resNotice.getTargetId());
-					noticeVO.setAvatar("require(`@/assets/image/moim/" + resNotice.getProfileImge() + "`)");
+					noticeVO.setAvatar(resNotice.getProfileImge());
 					noticeVO.setTitle(resNotice.getNickname());
 					// 소모임 - 댓글
 					if (resNotice.getContentType() == 0) {

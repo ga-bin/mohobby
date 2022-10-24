@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer app>
-    <div class="text-center mt-4 pa-10">
+    <div class="text-center pa-10">
       <v-avatar class="mb-4" color="grey darken-1" size="64">
         <v-img
           aspect-ratio="30"

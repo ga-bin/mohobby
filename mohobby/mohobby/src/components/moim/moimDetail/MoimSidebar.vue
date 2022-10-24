@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer app>
-    <div class="text-center mt-4 pa-10">
+    <div class="text-center pa-10">
       <v-avatar class="mb-4" color="grey darken-1" size="64">
         <v-img
           aspect-ratio="30"
@@ -176,6 +176,11 @@ export default {
         .then(function (response) {
           vm.memberInfo = response.data;
           console.log(vm.memberInfo);
+          console.log(vm.memberInfo);
+          console.log(vm.memberInfo);
+          console.log(vm.memberInfo);
+          console.log(vm.memberInfo);
+
         })
         .catch(function (error) {
           console.log(error);
@@ -296,8 +301,8 @@ export default {
           // 회원 정보 설정이 되어 있는데, 모임 조건과 일치하지 않는 경우
         } else if (
           this.memberInfo.gender != this.moimInfo.gender ||
-          this.memberInfo.birth > this.moimInfo.maxAge ||
-          this.memberInfo.birth < this.moimInfo.minAge
+          this.calcAge(this.calcDate(this.memberInfo.birth)) > this.moimInfo.maxAge ||
+          this.calcAge(this.calcDate(this.memberInfo.birth)) < this.moimInfo.minAge
         ) {
           this.$swal.fire({
             icon: "error",
@@ -306,6 +311,33 @@ export default {
         }
       }
     },
+    // 날짜계산
+    calcDate(milliSecond) {
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        const data = new Date(milliSecond);  //Date객체 생성
+
+        const year = data.getFullYear();    //0000년 가져오기
+        const month = data.getMonth() + 1;  //월은 0부터 시작하니 +1하기
+        const date = data.getDate();        //일자 가져오기
+        const day = days[data.getDay()];    //요일 가져오기
+
+        return `${year}-${month}-${date}`;
+    },
+    // 생년월일로 나이 계산하기
+    calcAge(birth) {
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = (date.getMonth() + 1);
+    var day = date.getDate();
+    if (month < 10) month = '0' + month;
+    if (day < 10) day = '0' + day;
+    var monthDay = month + day;
+    birth = birth.replace('-', '').replace('-', '');
+    var birthdayy = birth.substr(0, 4);
+    var birthdaymd = birth.substr(4, 4);
+    var age = monthDay < birthdaymd ? year - birthdayy - 1 : year - birthdayy;
+    return age;
+    },  
     // 모임 가입하기 로직(axios만들자)
     insertMoim() {},
     // 모임 신고하기

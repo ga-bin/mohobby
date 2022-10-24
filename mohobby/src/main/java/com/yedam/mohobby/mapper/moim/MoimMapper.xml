@@ -446,12 +446,13 @@
           #{startTime}, 
           #{endTime},
           #{startDate},
-          #{endDate}      
+          #{endDate},
+          #{moimId}      
               )
   </insert>
   
-  <!-- 소모임 일정 전체조회 -->
-  <select id="scheduleSelect">
-     SELECT * FROM moim_schedule
+   <!-- 소모임 일정 전체조회 -->
+  <select id="scheduleSelect" resultType="com.yedam.mohobby.service.moim.MoimScheduleVO">
+     SELECT * FROM moim_schedule where moim_id = #{moimId} order by sked_id DESC
   </select>
 </mapper>

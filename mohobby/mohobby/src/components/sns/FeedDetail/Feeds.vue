@@ -46,11 +46,8 @@ export default {
             console.log(postId);
             this.$router.push({ path: '/snsFeedDetail', query: {writer : memberId, postId : postId} }).$router.go(0);
         },
-
     },
-
     setup() {
-        
     },
 }
 </script>

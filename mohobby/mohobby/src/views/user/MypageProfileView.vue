@@ -243,6 +243,7 @@ export default {
       })
         .then(function (response) {
           if (response.data != "") {
+
             vm.memberId = response.data.memberId;
             vm.password = response.data.password;
             vm.password2 = response.data.password;
@@ -254,11 +255,23 @@ export default {
             vm.gender = response.data.gender;
             vm.memberName = response.data.memberName;
             vm.profileImg = response.data.profileImg;
+            vm.birth = vm.calDate(response.data.birth);
           }
         })
         .catch(function (error) {
           console.log(error);
         });
+    },
+    calDate(milliSecond) {
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        const data = new Date(milliSecond);  //Date객체 생성
+
+        const year = data.getFullYear();    //0000년 가져오기
+        const month = data.getMonth() + 1;  //월은 0부터 시작하니 +1하기
+        const date = data.getDate();        //일자 가져오기
+        const day = days[data.getDay()];    //요일 가져오기
+
+        return `${year}-${month}-${date}`;
     },
     // 멤버확인
     checkMember() {

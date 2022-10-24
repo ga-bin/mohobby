@@ -44,27 +44,41 @@
         </v-toolbar>
       </v-sheet>
 
-        <!-- 달력 부분 -->
-        <v-sheet height="500" max-width="800">
-          <v-calendar   v-model="value" ref="calendar" @click:date="open" ></v-calendar>
+         <!-- 달력 부분 -->
+         <v-sheet height="500" max-width="800">
+          <v-calendar   v-model="value" ref="calendar" @click:date="open"></v-calendar>
         </v-sheet>
       </v-col> 
     </v-row>
 
     <!-- 다이어로그 띄우기 -->
     <div class="example">
-      <MakeSchedule :dialog="dialog" :calendar="calendar"></MakeSchedule>
+      <MakeSchedule  :items.sync="items" :dialog="dialog" :calendar="calendar" @dialogClose="dialogClose(dialog)"></MakeSchedule>
     </div>
 
     <!-- 일정 조회 -->
     <template>
-      <v-data-table
-        :headers="headers"
-        :items="desserts"
-        :items-per-page="5"
-        class="elevation-1"
-      ></v-data-table>
-    </template>
+      <v-card
+      class="mx-auto mb-8 mt-5"
+      max-width="700"
+      outlined
+      v-for="(item, idx) in items"
+      :key="item.writeDate"
+      >
+      <v-list-item three-line>
+        <v-list-item-content>
+          <div class="text-overline mt-6">
+            {{ item.title }}
+            <hr />
+            {{ item.startDate }} {{item.startTime}} ~ {{item.endDate}} {{item.endTime}}
+          </div>
+          <v-list-item-subtitle class="content mt-5 mb-5">
+            {{ item.info }}</v-list-item-subtitle
+          >
+        </v-list-item-content>
+      </v-list-item>
+    </v-card> 
+  </template>
   </div>
 </template>
   
@@ -73,102 +87,8 @@ import MakeSchedule from "./MakeSchedule.vue"
 export default {
   data() {
     return {
-      headers: [
-          {
-            text: 'Dessert (100g serving)',
-            align: 'start',
-            sortable: false,
-            value: 'name',
-          },
-          { text: 'Calories', value: 'calories' },
-          { text: 'Fat (g)', value: 'fat' },
-          { text: 'Carbs (g)', value: 'carbs' },
-          { text: 'Protein (g)', value: 'protein' },
-          { text: 'Iron (%)', value: 'iron' },
-        ],
-        desserts: [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-            iron: '1%',
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-            iron: '1%',
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-            iron: '7%',
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-            iron: '8%',
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-            iron: '16%',
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-            iron: '0%',
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-            iron: '2%',
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-            iron: '45%',
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-            iron: '22%',
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-            iron: '6%',
-          },
-        ],
-        
+      Id: this.$route.params.moimId,
+      items: [], //소모임 일정 전체조회
       month:'',
       year:'',
       value: '',
@@ -183,15 +103,33 @@ export default {
         endTime: '',
         title: '',
         dateOpen: false,
-        memberId: this.$route.params.moimId,
+        memberId: this.$store.state.id,
       }
     }},
 
   created(){
     this.todate()
+    this.getSchedule()
   },
   components: { MakeSchedule },
   methods: {
+      getSchedule() {
+      this.axios
+        .get("/selectSchedule", {
+          params: {
+            moimId: this.Id,
+          },
+        })
+        .then((resp) => {
+          console.log(resp);
+          console.log(this.items);
+          this.items = resp.data;
+        })
+        .catch((err) => {
+          console.log(this.items);
+          console.log(err);
+        });
+    },
     todate() {
       var day = new Date();
       this.year = day.getFullYear();
@@ -199,8 +137,16 @@ export default {
       this.today=this.year+"-"+this.month;
     },
     open(date) {
+      console.log(date)
+      this.calendar.startDate = date.date;
+      console.log(this.calendar);
+      // this.$store.commit('OPEN_CALENDAR_DIALOG', date)
       //다이어로그 실행
       this.dialog = true;
+    },
+    dialogClose(dialog) {
+      console.log(dialog);
+      this.dialog = false;
     },
     prev () {
       this.month--

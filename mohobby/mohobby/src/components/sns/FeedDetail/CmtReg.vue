@@ -399,7 +399,6 @@ export default {
           this.reCmt = !this.reCmt
           this.getCmtList()
           const noticeContent = {  
-            postId: vm.postid,
             myId: this.$store.state.id,
             targetId: parentMemberId,
             contentType: 2, //0:좋아요 1:댓글
