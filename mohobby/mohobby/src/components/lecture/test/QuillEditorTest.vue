@@ -4,6 +4,7 @@
       <quill-editor
         class="editor"
         ref="myTextEditor"
+        :style="editorStyle"
         :disabled="false"
         :value="content"
         :options="editorOption"
@@ -61,6 +62,9 @@ export default {
           }
 
         },
+      },
+      editorStyle: {
+        height: "150px",
       },
       content: "",
       sampleData: "",

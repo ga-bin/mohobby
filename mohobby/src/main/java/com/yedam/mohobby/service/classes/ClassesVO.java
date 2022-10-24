@@ -38,4 +38,7 @@ public class ClassesVO {
 	private String jobName;  //직업
 	private int chapTotal;  //챕터 토탈
 	private int currTotal; //커리큘럼 토탈
+	private int totalViewProgress;	//진행율
+	private int lastCurrId;		//이어보기 할 커리큘럼 아이디
+	private String certyn;	//수료증 발급 여부
 }

@@ -264,7 +264,7 @@ export default {
       notifications: false,
       sound: true,
       widgets: false,
-      cmtCount:""
+      cmtCount:"",
       userOneInfo : [],
     };
   },

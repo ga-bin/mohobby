@@ -302,7 +302,23 @@ const routes = [
         path: "my",
         name: "mycourse",
         component: () => import("./../views/lecture/mycourse/classMycourseMain"),
-        children: [],
+        children: [
+          {
+            path: "instudy",
+            name: "instudy",
+            component: () => import("./../components/lecture/mycourse/inStudy"),
+          },
+          {
+            path: "endstudy",
+            name: "endstudy",
+            component: () => import("./../components/lecture/mycourse/endStudy"),
+          },
+          {
+            path: "certificate",
+            name: "certificatestudy",
+            component: () => import("./../components/lecture/mycourse/certificate"),
+          },
+        ],
       },
     ],
   },

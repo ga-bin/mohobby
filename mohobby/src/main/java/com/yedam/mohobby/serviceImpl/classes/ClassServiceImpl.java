@@ -151,9 +151,35 @@ public class ClassServiceImpl implements ClassService {
     
     //내 강의 목록 조회
     @Override
-    public List<ClassesVO> getMyCourse(HashMap<String, String> reqBody) {
-    	return classMapper.getMyCourse(reqBody);
+    public List<ClassesVO> getMyCourse(String memberId, int classStatus) {
+    	ClassPayVO reqBody = new ClassPayVO();
+    	reqBody.setMemberId(memberId);
+    	reqBody.setClassStatus(classStatus);
+    	
+    	List<ClassesVO> resp = classMapper.getMyCourse(reqBody);
+    	
+    	for(int i = 0; i < resp.size(); i++) {
+    		ClassesVO vo = resp.get(i);
+    		HashMap<String, Integer> result = classMapper.getMyCourseProgress(vo.getClassId(), memberId);
+    		
+    		int view = Integer.parseInt(String.valueOf(result.get("TOTAL_VIEW_PROGRESS")));
+    		int curr = Integer.parseInt(String.valueOf(result.get("LAST_CURR_ID")));
+    		
+    		resp.get(i).setTotalViewProgress(view);
+    		resp.get(i).setLastCurrId(curr);
+    	}
+    	
+    	System.out.println("rest");
+    	System.out.println(resp);
+    	
+    	return resp;
     }
+    
+    //내 수료증 발급 가능한 강의 목록 조회
+    public List<ClassesVO> getMyCourseCertificate(String memberId) {
+    	return classMapper.getMyCourseCertificate(memberId);
+    }
+    
 
     // html 저장
     @Override
