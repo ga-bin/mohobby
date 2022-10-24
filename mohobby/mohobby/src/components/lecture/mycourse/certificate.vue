@@ -35,7 +35,7 @@
             style="padding-top: 50px"
         >
             <h1>🙇</h1>
-            <h1>수강을 완료한 강의가 없습니다</h1>
+            <h1>수료증을 발급할 수 있는 강의가 없습니다</h1>
         </v-card>
     </v-container>
 </template>
@@ -70,7 +70,18 @@ export default {
             }
         },
         openPrint(item) {
-            window.print();
+            let routeUrl = this.$router.resolve({
+                path: "/class/my/cert/print",
+                query: {
+                    className: item.className,
+                    classType: item.classType,
+                    startDate: item.startDate,
+                    endDate: item.endDate,
+                    memberName: this.$store.state.user.memberName,
+                    birth: this.$store.state.user.birth,
+                }
+            });
+            window.open(routeUrl .href, '_blank');
         },
     },
 }
