@@ -355,6 +355,11 @@ export default {
     setMemberInfo() {
       const vm = this;
       this.memberId = this.$store.state.id;
+      console.log(this.memberId);
+      console.log(this.memberId);
+      console.log(this.memberId);
+      console.log(this.memberId);
+      console.log(this.memberId);
       this.axios({
         url: "http://localhost:8088/java/member/" + this.memberId,
         method: "get",
@@ -567,13 +572,6 @@ export default {
     },
     editUser() {
       const vm = this;
-      console.log(this.birth);
-      console.log(this.birth);
-      console.log(this.birth);
-      console.log(this.birth);
-      console.log(this.birth);
-      console.log(this.birth);
-      console.log(this.birth);
       if (
         this.memberId === "" ||
         this.password === "" ||
