@@ -214,9 +214,15 @@ public class ClassController {
 	
 	//내 강의 목록 조회
 	@GetMapping("/class/my")
-    public List<ClassesVO> getMyCourse(@RequestBody HashMap<String, String> reqBody) {
-    	return classService.getMyCourse(reqBody);
+    public List<ClassesVO> getMyCourse(@RequestParam String memberId, @RequestParam int classStatus) {
+    	return classService.getMyCourse(memberId, classStatus);
     }
+	
+	//내 수료증 발급 가능한 강의 목록 조회
+	@GetMapping("/class/my/cert")
+    public List<ClassesVO> getMyCourseCertificate(@RequestParam String memberId) {
+		return classService.getMyCourseCertificate(memberId);
+	}
 
 }
 

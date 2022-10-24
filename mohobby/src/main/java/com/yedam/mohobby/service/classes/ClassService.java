@@ -73,6 +73,9 @@ public interface ClassService {
     public void uploadClassImage(ClassImageVO vo);
     
     //내 강의 목록 조회
-    public List<ClassesVO> getMyCourse(HashMap<String, String> reqBody);
+    public List<ClassesVO> getMyCourse(String memberId, int classStatus);
+    
+    //내 수료증 발급 가능한 강의 목록 조회
+    public List<ClassesVO> getMyCourseCertificate(String memberId);
 
 }

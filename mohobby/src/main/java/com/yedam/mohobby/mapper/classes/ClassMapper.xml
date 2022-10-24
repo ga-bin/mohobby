@@ -384,13 +384,59 @@
 	</delete>
 	
 	<!-- 내 강의 목록 조회 -->
-	<select id="getMyCourse" parameterType="java.util.HashMap" resultType="com.yedam.mohobby.service.classes.ClassesVO">
+	<select id="getMyCourse" resultType="com.yedam.mohobby.service.classes.ClassesVO">
 		select c.*
 		from class c
 		where class_id in (select class_id
 		                    from class_pay
 		                    where member_id = #{memberId}
 		                    and class_status = #{classStatus})
+	</select>
+	
+	<!-- 내 강의 진행율 조회 -->
+	<select id="getMyCourseProgress" resultType="java.util.HashMap">
+		select total_view_progress, decode(last_curr_id, null, min, last_curr_id)last_curr_id
+		from (select round(sum(view_progress)/count(curr_id))total_view_progress, min(curr_id) min
+		        from
+		            (select c.curr_id, nvl(a.view_progress, 0) view_progress
+		            from class_curriculum c,
+		                (select *
+		                from class_attendance
+		                where member_id = #{memberId}) a
+		            where c.class_id = #{classId}
+		            and c.curr_id = a.curr_id(+))),
+		        (select min(c.curr_id) last_curr_id
+		        from class_curriculum c,
+		            (select *
+		            from class_attendance
+		            where member_id = #{memberId}) a
+		        where c.class_id = #{classId}
+		        and view_progress <![CDATA[<]]> 100
+		        and c.curr_id = a.curr_id(+))
+	</select>
+	
+	<!-- 내 수료증 발급 가능 강의 목록 -->
+	<select id="getMyCourseCertificate" resultType="com.yedam.mohobby.service.classes.ClassesVO">
+		select s.*, t.total_view_progress, case when s.cert_standard > t.total_view_progress then 'n'
+		                                        else 'y'
+		                                    end as certyn
+		from class s,
+		    (   select round(sum(view_progress)/count(curr_id))total_view_progress, class_id
+		        from
+		            (select c.curr_id, nvl(a.view_progress, 0) view_progress, c.class_id
+		            from class_curriculum c,
+		                (select *
+		                from class_attendance
+		                where member_id = #{memberId}) a
+		            where c.class_id in (select class_id from class where cert_able = 1)
+		            and c.curr_id = a.curr_id(+))
+		        group by class_id)t
+		where s.class_id = t.class_id(+)
+		and s.class_id in (select class_id
+		                    from class_pay
+		                    where member_id = #{memberId}
+		                    and class_status = 1)
+		and s.class_id in (select class_id from class where cert_able = 1)
 	</select>
 	
 </mapper>

@@ -156,7 +156,7 @@ export default {
             {
               text: "학습 관리",
               items: [
-                { id: 20, text: "내 학습", route: "/class/my", catg: "/" },
+                { id: 20, text: "내 학습", route: "/class/my/instudy", catg: "/" },
                 { id: 21, text: "출석관리", route: "", catg: "" },
                 { id: 22, text: "강의노트", route: "", catg: "" },
                 { id: 23, text: "작성한 글 목록", route: "", catg: "" },

@@ -75,5 +75,13 @@ public interface ClassMapper {
     public void updateAttdInfo(ClassAttendanceVO vo);
     
     //내 강의 목록 조회
-    public List<ClassesVO> getMyCourse(HashMap<String, String> reqBody);
+    public List<ClassesVO> getMyCourse(ClassPayVO reqBody);
+    
+    //내 강의 진행율 조회
+    public HashMap<String, Integer> getMyCourseProgress(
+    		@Param("classId") int classId, 
+    		@Param("memberId") String memberId);
+    
+    //내 수료증 발급 가능한 강의 목록 조회
+    public List<ClassesVO> getMyCourseCertificate(String memberId);
 }

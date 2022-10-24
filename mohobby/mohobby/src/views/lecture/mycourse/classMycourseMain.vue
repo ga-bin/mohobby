@@ -15,7 +15,7 @@
                 </div>
             </v-tab>
         </v-tabs>
-        <div>
+        <div style="padding-top: 20px;">
             <router-view />
         </div>
     </v-container>
@@ -29,17 +29,17 @@ export default {
                 {
                     index: 0,
                     name: "진행중인 강의",
-                    route: "/class/my/",
+                    route: "/class/my/instudy",
                 },
                 {
                     index: 1,
                     name: "종료된 강의",
-                    route: "/class/my/",
+                    route: "/class/my/endstudy",
                 },
                 {
                     index: 2,
                     name: "수료증", 
-                    route: "/class/my/",
+                    route: "/class/my/certificate",
                 },
             ],
         };
