@@ -1,9 +1,11 @@
 <template>
   
   <div class="cards-container" >
+    <v-container fluid>
+    <v-sheet max-width="1400">
     <!-- FIRST CARD -->
     <v-slide-group class="pa-2">
-        <v-slide-item  v-for="(info,i) in listInfo" :key="i">
+        <v-slide-item  v-for="(info,i) in listInfo" :key="i" style="width:280px;">
           <div class="card card-first">
             <div class="card-header-wrapper" @click="goMyFeed(info.memberId)">
                 <h2 class="card-title"></h2>
@@ -19,10 +21,12 @@
             <div class="card-like" height="32" width="32">
                 <div style="width:130px;"><v-icon color="#2ac187">mdi-heart</v-icon> {{ info.likes }} likes</div>       
             </div>
-            <button class="card-button">More</button>
+            <button class="card-button" @click="getFeedDetail(info.memberId, info.postId)">More</button>
           </div>
       </v-slide-item>
     </v-slide-group>
+  </v-sheet>
+  </v-container>
   </div>
 </template>
 <script>
