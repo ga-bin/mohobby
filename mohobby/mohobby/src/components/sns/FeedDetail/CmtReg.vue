@@ -2,9 +2,11 @@
 <template>
   <div>
     <div>
-      <!-- 본 댓글입력창 -->
+
+
+      <!-- 본 댓글입력창 : 세션값 있으면 입력 가능. 없으면 입결 불가능-->
       <v-card-actions>
-        <v-col cols="10">
+        <v-col cols="10" v-if="memberId">
           <v-text-field
             class="m1-11"
             placeholder="댓글을 입력해주세요!"
@@ -19,76 +21,85 @@
             @keydown.enter="regCmt()"
           />
         </v-col>
+        <v-col cols="10" v-else>
+          <v-text-field
+            class="m1-11"
+            placeholder="댓글은 로그인부터 부탁드립니다🙏"
+            disabled
+            counter
+            filled
+            rounded
+            solo
+            dense
+            hide-details
+          />
+        </v-col>
         <v-spacer></v-spacer>
 
 
+        <!-- 댓글 등록버튼 -->
         <div style="margin-right: 80px">
-          <v-btn
-            class="ma-2 white--text"
-            color="#2ac187"
-            rounded
-            @click="regCmt()"
-            >등록</v-btn
-          >
+          <v-btn @click="regCmt()" class="ma-2 white--text" color="#2ac187" dense rounded>등록</v-btn>
         </div>
       </v-card-actions>
     </div>
     <!-- 본 댓글 입력창 끝 -->
 
-
+  
     <!-- 댓글리스트 -->
     <div>
       <div class="profile" v-for="cmt in comments" :key="cmt.commId">
         <div v-if="cmt.parentCommId != ''" style="width: 35px"></div>
         <v-avatar class="ml-10 my-5 mr-4" color="grey darken-1" size="30">
-          <v-img
-            aspect-ratio="30"
+          <v-img aspect-ratio="30" alt="profile_img" style="cursor: pointer"
             :src="require(`@/assets/image/user/${cmt.profileImg}`)"
-            alt="profile_img" 
-            @click="$router.push({ path: '/snsUserFeed?memId=' + cmt.memberId }).catch(() => {$router.go(0);})"
-            style="cursor: pointer"/>
+          @click="$router.push({ path: '/snsUserFeed?userId=' + cmt.memberId }).catch(() => {$router.go(0);})" />
         </v-avatar>
         <input type="hidden" class="cmtId" value="cmt.commId" />
         <div class="user text-overline">
           {{ cmt.memberId }}
-          <small class="date"
-            ><span style="font-size: 1em">{{
-              writeDate(cmt.writeDate)
-            }}</span></small
-          >
+          <small class="date">
+            <span style="font-size: 1em">
+              {{writeDate(cmt.writeDate)}}
+            </span>
+          </small>
 
 
-          <!-- 버튼: 저장, 답장, 수정, 삭제 -->
+          <!-- 버튼: 저장, 답장, 수정, 삭제 
+            댓글 쓴 사람과 로그인세션 아이디가 같을 떄 -> 수정, 삭제, 답장 버튼
+           -->
           <div class="btn">
-            <v-btn
-              x-small
-              outlined
-              color="success"
-              class="mr-3"
-              v-if="cmt.memberId == memberId"
-              @click="editCmt(cmt.commId)"
-              >저장</v-btn>
             <v-btn
               x-small
               outlined
               color="dark-grey"
               class="mr-3"
-              v-if="cmt.commId != editForm"
               @click="showRegReCmt(cmt.commId, cmt.memberId)"
               >답장</v-btn>
+
             <v-btn
+            v-if="cmt.memberId == memberId && saveBtn == true"
               x-small
               outlined
               color="success"
               class="mr-3"
-              v-if="cmt.memberId == memberId"
+              @click="editCmt(cmt.commId)"
+              >저장</v-btn>
+
+            <v-btn
+            v-if="cmt.memberId == memberId && editBtn == true"
+              x-small
+              outlined
+              color="success"
+              class="mr-3"
               @click="showEditForm(cmt.commId)"
               >수정</v-btn>
-            <v-btn
+
+              <v-btn
+              v-if="cmt.memberId == memberId && deleteBtn == true"
               x-small
               outlined
               color="error"
-              v-if="cmt.memberId == memberId"
               @click="deleteCmt(cmt.commId, cmt.targetId)">
               삭제</v-btn>
           </div>
@@ -108,12 +119,10 @@
                 {{ cmt.content }}
               </div>
               <!-- 유저소환 끝 -->
+
+
               <!-- 댓글 수정창 -->
-              <div
-                v-if="
-                  cmt.commId == editForm && cmt.commId != reCmt && formValue
-                "
-              >
+              <div v-if="cmt.commId == editForm && cmt.commId != reCmt && formValue">
                 <v-textarea
                   name="editContent"
                   auto-grow
@@ -125,6 +134,8 @@
               </div>
             </div>
           </v-card-actions>
+
+
           <!-- showRegReCmt(cmt.commId) 대댓글 입력창 -->
           <div v-if="cmt.commId == reCmt">
             <v-card-actions>
@@ -143,14 +154,11 @@
                 />
               </v-col>
               <v-spacer></v-spacer>
+
+
+              <!-- 대댓글 등록버튼 -->
               <div style="margin-right: 80px">
-                <v-btn
-                  class="ma-2 white--text"
-                  color="#2ac187"
-                  rounded
-                  @click="regReCmt(cmt.commId, cmt.memberId)"
-                  >등록
-                </v-btn>
+                <v-btn class="ma-2 white--text" color="#2ac187" rounded @click="regReCmt(cmt.commId, cmt.memberId)">등록</v-btn>
               </div>
             </v-card-actions>
           </div>
@@ -167,6 +175,7 @@ export default {
     targetId: String,
  
   },
+
   data() {
     return {
       cmtCount:"",
@@ -177,32 +186,68 @@ export default {
       memberId: this.$store.state.id,
       comments: [], //cmt리스트
       reCmt: "", //대댓등록창 show여부
-      editForm: "", //댓글수정창 show여부
+      editForm: "", //댓글수정창
       cmtMemberId: "", //소환된 회원
-      formValue: false,
-      
+      formValue: false, //form 노출여부
+      saveBtn: false, //저장버튼
+      editBtn: false, //수정버튼
+      deleteBtn: false, //삭제버튼
     };
   },
+
   created() {
-    console.log(this.$store.state.id);
-    this.getCmtList(); //댓글리스트 로딩
+    this.getCmtList(); //댓글리스트
+    this.editBtn = true;
+    this.deleteBtn = true;
   },
+
   methods: {
-    //회원검증
-    checkLogin(e){
-      if (this.memberId == "" || this.memberId == undefined) {
-        return this.$swal("로그인부터 부탁드립니다🙏");
-      } else if (this.inputReCmt == "" || this.inputReCmt == undefined) {
-        return this.$swal("내용 입력부터 부탁드립니다🙏");
+
+    //세션유무 검증
+    confirmMember(memberId){  
+      if(memberId){
+        console.log("true");
+        return true;
       }
+      else{
+        console.log("false");
+        return false;
+      }
+      
     },
+
+    //로그인 검증 모달
+    loginConfirm(){
+
+      this.$swal({
+        title: "로그인하셔야 가능하세요🙏",
+        text: "🙏로그인화면으로 이동부탁드립니다🙏",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2ac187",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "취소",
+        confirmButtonText: "이동",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$router.push({ path: "login" });
+        }
+      });
+
+    },
+
 
     //date처리
     writeDate(writeDate) {
+
       return this.$moment(writeDate).fromNow();
+
     },
+
+    
     //댓글리스트upload
     getCmtList() {
+
       this.axios("/sns/cmt/" + this.postid)
         .then((res) => {
           console.log(res.data);
@@ -213,11 +258,21 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+
     },
-    //댓글등록
+
+
+    //댓글등록 - 입력창
     regCmt() {
-      this.checkLogin();
-      this.axios
+
+      if(this.confirmMember(this.memberId) == false){ //유효성검사 - 회원 id, 내용값
+        this.loginConfirm();
+
+      } else if (this.inputCmt == ""){ 
+        this.$swal("내용 입력하셔야 등록 가능하세요🙏")
+        
+      } else{
+        this.axios
         .post("/sns/cmt", {
           memberId: this.memberId,
           targetId: this.postid,
@@ -227,6 +282,7 @@ export default {
           console.log("댓글등록 성공! " + res);
           this.inputCmt = ""; //댓글입력창 초기화
           this.getCmtList();
+
           const noticeContent = {
             myId: this.$store.state.id,
             targetId: this.targetId,
@@ -234,6 +290,7 @@ export default {
             postId: this.postid,
             noticeType: 0, //0:sns ,1:소모임, 2:강의
           };
+
           this.stompClient.send(
             "/app/Notice",
             JSON.stringify(noticeContent),
@@ -242,31 +299,18 @@ export default {
             }
           );
         })
+        
         .catch((err) => {
           console.log(err);
         });
+      }
+
     },
-    // //댓글 enter등록
-    // enter() {
-    //   if (window.event.keyCode == 13) {
-    //     this.regCmt();
-    //   }
-    // },
-    // //댓글 수정 enter
-    // editEnter(commId) {
-    //   if (window.event.keyCode == 13) {
-    //     this.editCmt(commId);
-    //   }
-    // },
-    // //대댓 enter등록
-    // reEnter(commId, parentMemberId) {
-    //   if (window.event.keyCode == 13) {
-    //     this.regReCmt(commId, parentMemberId);
-    //   }
-    // },
+
+
     //댓글 삭제
     deleteCmt(commId, targetId) {
-      console.log("dd-----------------:" + commId, targetId);
+
       this.axios
         .delete("/sns/cmt/" + commId + "/" + targetId)
         .then((res) => {
@@ -274,13 +318,18 @@ export default {
           this.inputCmt = ""; //댓글입력창 초기화
           this.getCmtList();
         })
+
         .catch((err) => {
           alert(err);
         });
+        
     },
+
     //댓글 수정폼 호출
     showEditForm(commId, content) {
+      
       this.formValue = !this.formValue;
+      
       if (commId == this.editForm) {
         //수정창닫기
         this.editForm = -1;
@@ -289,7 +338,9 @@ export default {
         this.editForm = commId;
         this.originContent = content;
       }
+
     },
+    
     //댓글 수정
     editCmt(commId) {
       this.checkLogin();//로그인검증
@@ -307,23 +358,31 @@ export default {
           console.log(err);
         });
     },
-    //대댓글 입력창 열기(닫기)
+
+    //답장버튼 -> 대댓글 입력창 열기(닫기)
     //답장 click -> 인자 comm_id-> 데이터변수 reCmt에 바인딩 -> v-if에서 비교 조건으로 사용
     showRegReCmt(cmtId, cmtmemId) {
-      this.checkLogin();
-      this.inputReCmt = "";
-      if (cmtId == this.reCmt) {
-        //댓글창닫기
-        this.reCmt = -1;
+      if(this.confirmMember(this.memberId) == false){ //유효성검사 - 회원 id, 내용값
+        this.loginConfirm();
       } else {
-        //댓글창열기
-        this.reCmt = cmtId;
-        if (cmtId == this.reCmt) this.cmtMemberId = "@" + cmtmemId;
+        this.inputReCmt = ""; //대댓 입력창 초기화
+        if (cmtId == this.reCmt) {
+          //댓글창닫기
+          this.reCmt = -1; //reCmt 에 임의로 -1을 줘서 같을 수 없도록
+        } else {
+          //댓글창열기
+          this.reCmt = cmtId;
+          if (cmtId == this.reCmt) this.cmtMemberId = "@" + cmtmemId;
+        }
       }
     },
     //대댓글등록
     regReCmt(commId, parentMemberId) {
-      this.checkLogin();//로그인검증
+      if(this.confirmMember(this.memberId) == false){ //유효성검사 - 회원 id, 내용값
+        this.loginConfirm();
+      } else if (this.inputCmt == ""){ 
+        this.$swal("내용 입력하셔야 등록 가능하세요🙏")
+      } else{
       let vm =this
       this.axios
         .post("/sns/recmt", {
@@ -358,6 +417,7 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+      }
     },
     //댓글 삭제버튼 추가하기
     // onAdd(){

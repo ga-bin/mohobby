@@ -259,83 +259,6 @@ watch: {
 
 methods: {
 
-/*
-
-          
-     동적 FILE_INPUT_BOX TEST
-        
-
-*/
-
-
-                      onImageChange() {
-                        console.log(this.$refs.files.files);
-
-                        // this.files = [...this.files, this.$refs.files.files];
-                        //하나의 배열로 넣기
-                        let num = -1;
-                        for (let i = 0; i < this.$refs.files.files.length; i++) {
-                            this.files = [
-                                ...this.files,
-                                //이미지 업로드
-                                {
-                                    //실제 파일
-                                    file: this.$refs.files.files[i],
-                                    //이미지 프리뷰
-                                    preview: URL.createObjectURL(this.$refs.files.files[i]),
-                                    //삭제및 관리를 위한 number
-                                    number: i
-                                }
-                            ];
-                            num = i;
-                            //이미지 업로드용 프리뷰
-                            // this.filesPreview = [
-                            //   ...this.filesPreview,
-                            //   { file: URL.createObjectURL(this.$refs.files.files[i]), number: i }
-                            // ];
-                        }
-                        this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
-                        console.log(this.files);
-                        // console.log(this.filesPreview);
-                    },
-
-                    imageAddUpload() {
-                        console.log(this.$refs.files.files);
-
-                        // this.files = [...this.files, this.$refs.files.files];
-                        //하나의 배열로 넣기c
-                        let num = -1;
-                        for (let i = 0; i < this.$refs.files.files.length; i++) {
-                            console.log(this.uploadImageIndex);
-                            this.files = [
-                                ...this.files,
-                                //이미지 업로드
-                                {
-                                    //실제 파일
-                                    file: this.$refs.files.files[i],
-                                    //이미지 프리뷰
-                                    preview: URL.createObjectURL(this.$refs.files.files[i]),
-                                    //삭제및 관리를 위한 number
-                                    number: i + this.uploadImageIndex
-                                }
-                            ];
-                            num = i;
-                        }
-                        this.uploadImageIndex = this.uploadImageIndex + num + 1;
-
-                        console.log(this.files); // console.log(this.filesPreview);
-                    },
-                    fileDeleteButton(e) {
-                        const name = e.target.getAttribute('name');
-                        this.files = this.files.filter(data => data.number !== Number(name));
-                        // console.log(this.files);
-                    },
-
-
-
-
-
-
     //해시태그수정
     edit (index, item) {
       if (!this.editing) {
@@ -345,6 +268,79 @@ methods: {
         this.editing = null
         this.editingIndex = -1
       }
+    },
+
+
+/*
+
+          
+     동적 FILE_INPUT_BOX TEST
+        
+
+*/
+
+      //이미지 미리보기
+      onImageChange() {
+        console.log(this.$refs.files.files);
+
+        // this.files = [...this.files, this.$refs.files.files];
+        //하나의 배열로 넣기
+        let num = -1;
+        for (let i = 0; i < this.$refs.files.files.length; i++) {
+            this.files = [
+                ...this.files,
+                //이미지 업로드
+                {
+                    //실제 파일
+                    file: this.$refs.files.files[i],
+                    //이미지 프리뷰
+                    preview: URL.createObjectURL(this.$refs.files.files[i]),
+                    //삭제및 관리를 위한 number
+                    number: i
+                }
+            ];
+            num = i;
+            //이미지 업로드용 프리뷰
+            // this.filesPreview = [
+            //   ...this.filesPreview,
+            //   { file: URL.createObjectURL(this.$refs.files.files[i]), number: i }
+            // ];
+        }
+        this.uploadImageIndex = num + 1; //이미지 index의 마지막 값 + 1 저장
+        console.log(this.files);
+        // console.log(this.filesPreview);
+    },
+
+    imageAddUpload() {
+        console.log(this.$refs.files.files);
+
+        // this.files = [...this.files, this.$refs.files.files];
+        //하나의 배열로 넣기c
+        let num = -1;
+        for (let i = 0; i < this.$refs.files.files.length; i++) {
+            console.log(this.uploadImageIndex);
+            this.files = [
+                ...this.files,
+                //이미지 업로드
+                {
+                    //실제 파일
+                    file: this.$refs.files.files[i],
+                    //이미지 프리뷰
+                    preview: URL.createObjectURL(this.$refs.files.files[i]),
+                    //삭제및 관리를 위한 number
+                    number: i + this.uploadImageIndex
+                }
+            ];
+            num = i;
+        }
+        this.uploadImageIndex = this.uploadImageIndex + num + 1;
+
+        console.log(this.files); // console.log(this.filesPreview);
+    },
+    fileDeleteButton(e) {
+        const name = e.target.getAttribute('name');
+        this.files = this.files.filter(data => data.number !== Number(name));
+        // console.log(this.files);
     },
 
 
@@ -366,19 +362,20 @@ methods: {
     //게시글 등록
     uploadImage() {
       let self = this;
+
+      //1. 받은 해시태그 배열에 담기
       this.model.forEach((hashtag) => {
         console.log("push hashtag: " + hashtag.text);
         this.getHashtag.push(hashtag.text);
       });
 
-
-      //hashtag배열 스트링화
+      //2. hashtag배열 스트링화
       const hashtags = this.getHashtag.join();
       console.log("hashtags" + hashtags);
       feedInsert.hashtag.value = hashtags;
 
+      //폼객체 생성해서 form태그인 feedInsert 담기
       const formData = new FormData(feedInsert);   // 파일을 전송할때는 FormData 형식으로 전송
-      console.log(feedInsert);
       console.log(document.getElementsByName("memberId")); //아이디 확인 완.
 
       this.axios.post('/sns/myfeed', formData, { // 게시글 저장

@@ -51,25 +51,20 @@
             <!-- 검색컴포넌트 
                 검색결과가 있을땐 show를 트루로 바꿔서 HotList가 안보이게되도록.
             -->
-
-
-
-
-
+            <!-- 검색페이지 -->
             <div id="searchResult" v-if="showSearch == true">
                 <div id="nonuserFeeds">
                     <h3>검색페이지입니다</h3>
                     <NoneUser :feeds="feedResult" />
                 </div>
             </div>
-
-
+            <!-- HOT강의리스트 -->
             <div v-if="showHot == true">
                 <div id="hotLecturers">
                     <h3>추천 만능 재주꾼들 피드</h3>
                     <HotLecturer name="this.items" />
                 </div>
-
+                <!-- ALL랜덤피드 -->
                 <div v-if="showAll == true" id="nonuserFeeds">
                     <h3>재주 견습생들 피드</h3>
                     <NoneUser :feeds="feeds" />
@@ -171,8 +166,8 @@
       },
 
       methods: {
-        search() {
         //AllList조회
+        search() {
         this.axios('/sns/main/allFeeds').then(res => {
             console.log(res);
             this.feeds = res.data;
@@ -210,6 +205,7 @@
               });
           },
 
+          //유저검색
           searchMem(keyword){
             this.searchResult = this.keyword; //props로 보낼 값 바인딩
             console.log(this.searchResult);
