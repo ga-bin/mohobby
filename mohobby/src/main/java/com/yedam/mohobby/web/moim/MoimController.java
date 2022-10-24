@@ -397,7 +397,12 @@ public class MoimController {
 	//소모임 일정 조회
 	@GetMapping("/selectSchedule")
 	public List<MoimScheduleVO> selectSchedule(@Param("moimId")int moimId){
+		System.out.println(moimId);
 		return service.scheduleSelect(moimId);
 	}
+	
+//	//소모임 가입하기
+//	@PostMapping("/")
+//	public 
 }
 
