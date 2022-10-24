@@ -123,9 +123,9 @@ export default {
             moimId: this.$route.params.moimId
           })
           console.log(this.dialog)
-        
+          this.dialog=false
           this.$emit('update:items', vm.items);
-          this.$emit('dialogClose', false);
+          this.$emit('update:dialog', false);
         })
         .catch((error) => {
           console.log(error);

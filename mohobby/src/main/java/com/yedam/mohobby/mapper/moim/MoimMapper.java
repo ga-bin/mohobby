@@ -123,6 +123,7 @@ public interface MoimMapper {
 	//소모임 투표 항목
 	public void insertVoteList(MoimVoteListVO vo);
 	public void insertVoteListFor(MoimVoteListVO vo);
+	
 	//소모임 일정 등록
 	public String scheduleInsert(MoimScheduleVO scheduleVO);
 	

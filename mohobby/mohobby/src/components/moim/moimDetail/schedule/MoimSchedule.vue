@@ -53,7 +53,7 @@
 
     <!-- 다이어로그 띄우기 -->
     <div class="example">
-      <MakeSchedule  :items.sync="items" :dialog="dialog" :calendar="calendar" @dialogClose="dialogClose"></MakeSchedule>
+      <MakeSchedule  :items.sync="items" :dialog="dialog" :calendar="calendar" @dialogClose="dialogClose(dialog)"></MakeSchedule>
     </div>
 
     <!-- 일정 조회 -->
