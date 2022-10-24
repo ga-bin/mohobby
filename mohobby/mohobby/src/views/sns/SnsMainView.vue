@@ -56,10 +56,10 @@
 
 
 
-            <div id="searchResult" v-if="show == true">
+            <div id="searchResult" v-if="showSearch == true">
                 <div id="nonuserFeeds">
                     <h3>검색페이지입니다</h3>
-                    <NoneUser :feeds="feeds" />
+                    <NoneUser :feeds="feedResult" />
                 </div>
             </div>
 
@@ -70,9 +70,9 @@
                     <HotLecturer name="this.items" />
                 </div>
 
-                <div id="nonuserFeeds">
+                <div v-if="showAll == true" id="nonuserFeeds">
                     <h3>재주 견습생들 피드</h3>
-                    <NoneUser />
+                    <NoneUser :feeds="feeds" />
                 </div>
             </div>
             <!-- 유저 검색 페이지 -->
@@ -93,17 +93,37 @@
       name: "snsMain",
       components: { SnsSidebar, SnsSearchbar, HotLecturer, NoneUser, Follow },
      
+      props : {
+        // show : {
+        //     type: Boolean,
+        //     default: false,
+        // },
+        // showAll : {
+        //     type: Boolean,
+        //     default: true,
+        // },
+        // showHot : {
+        //     type: Boolean,
+        //     default: true,
+        // },
+        // showResult : {
+        //     type : Boolean,
+        //     default : false,
+        // }
+    },
       data() {
           return {
             feeds: [],//해시검색에 받아온
+            feedResult: [],
             searchResult: "",//검색창에서 받아온 결과
             keyword: "",
             //   noneuser : false,
             items: [], //HOT해시태그
             member : this.$store.state.id,
-            show: false, //1:검색 페이지
-            showHot: true, //howLectureList
-            showResult: false, //user검색 페이지
+            showSearch : false, //
+            showResult : false, //유저검색페이지
+            showHot : false, //HOT LIST
+            showAll : false, //ALL LIST
             // showHashtag : "",
               //자동검색
             ctg: [
@@ -130,12 +150,37 @@
 
       created() {
           this.getHotHashtags();//함수실행
-          this.searchResult=this.$route.params.hashtagResult; //피드디테일에서 받아옴 -> searchPage
+          this.feedResult=this.$route.params.hashtagResult;
+           //피드디테일에서 받아옴 -> searchPage
           console.log(this.$route.params.hashtagResult);//(없을시 undefined)
-          this.show=this.$route.params.showing
+          //디테일에서 해시태그 키워드 검색값 들어올 때
+          if(this.$route.params.hashtagResult) {
+            this.showSearch=true;
+            this.showAll=false;
+            this.showHot=false;
+            this.showResult=false;
+            console.log("여기맞음?");
+            //기본 설정값
+          } else {
+            this.showAll=true;
+            this.showHot=true;
+            this.showSearch=false;
+            this.showResult=false;
+          }
+          this.search();
       },
 
       methods: {
+        search() {
+        //AllList조회
+        this.axios('/sns/main/allFeeds').then(res => {
+            console.log(res);
+            this.feeds = res.data;
+            console.log("noneUser 로드 성공");
+          }).catch(err =>{
+            console.log(err);
+          });
+      },
           //상단바에 표시되는 top6해시태그
           getHotHashtags() {
               this.axios('/sns/main/hashtag').then(res => {
@@ -154,16 +199,12 @@
                       hashtag : getHashtag
                   }
               }).then(res => {
-                  this.feeds = res.data;
+                  this.feedResult = res.data;
+                  this.showSearch = true;
+                  this.showHot = false;
+                  this.showAll = false;
+                  this.showResult = false;
                   console.log("피드받기 성공!");
-                //   this.showHashtag = getHashtag;
-                  this.show = true;
-                  this.main = false;
-                  if (this.feeds.length === 0){
-                    this.noResult = true;
-                    this.main = false;
-                  }
-                  
               }).catch(err =>{
                   console.log(err);
               });
@@ -172,10 +213,10 @@
           searchMem(keyword){
             this.searchResult = this.keyword; //props로 보낼 값 바인딩
             console.log(this.searchResult);
-            this.show = false;
-            this.showHot = false;
             this.showResult = true;
-            // this.keyword = "";
+            this.showSearch = false;
+            this.showHot = false;
+            this.showAll = false;
           },
 
 

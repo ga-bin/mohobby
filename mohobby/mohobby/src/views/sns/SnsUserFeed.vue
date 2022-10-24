@@ -20,7 +20,7 @@
             <div title="모임을 운영하는 투철한 모험가에게만 주어지는 마크입니다" v-if = "infoes.role == 2 || infoes.role == 3" class="btn profile-settings-btn" aria-label="profile settings"><v-icon color="green">mdi-shield-star</v-icon><i class="fas fa-cog" aria-hidden="true"></i></div>
             
             
-            <!-- 메뉴팝업 -->
+            <!-- 메뉴팝업(신고)-->
             <v-menu v-if = "sessionId && sessionId != infoes.memberId">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn dark icon v-bind="attrs" v-on="on">
@@ -30,7 +30,63 @@
                 <v-list>
                   <v-list-item v-for="(list, i) in lists" :key="i">
                     <v-list-item-title style="cursor: pointer" @click="listBtn(i)">
-                      {{ list.title }}
+                        <v-dialog
+                          v-model="userFlagModal"
+                          scrollable
+                          max-width="300px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <div v-bind="attrs" v-on="on">{{ list.title }}</div>
+                            </template>
+                            <v-card>
+        <v-card-title>Select Country</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text style="height: 300px;">
+          <v-radio-group
+            v-model="selectedCode"
+            column
+          >
+            <v-radio
+              label="부적절한 게시물 개시"
+              value="us1"
+            ></v-radio>
+            <v-radio
+              label="다른 유저에게 욕설, 비방"
+              value="us2"
+            ></v-radio>
+            <v-radio
+              label="게시글, 댓글 도배"
+              value="us3"
+            ></v-radio>
+            <v-radio
+              label="홍보성 게시물 반복적 개시"
+              value="us4"
+            ></v-radio>
+            <v-radio
+              label="기타"
+              value="us5"
+            ></v-radio>
+          </v-radio-group>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="userFlagModal = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="userFlagging()"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -127,8 +183,13 @@
             follow:[
             {"followerCnt": ""},
             {"followingCnt": ""},
-            ]
-
+            ],
+            // 신고
+             selectedCode: '',
+              userFlagModal: false,
+              memberId : this.$store.state.id,
+              flagedUser : 'user11',
+              flagReason : "",
         }
     },
 
@@ -337,6 +398,56 @@
                 console.log(error);
             });
           },
+          // 신고
+          userFlagging() {
+          const vm = this;
+          this.userFlagModal = false;
+          if (this.selectedCode == "us5") {
+            this.$swal.fire({
+                title: '신고 이유를 입력하세요',
+                html: `<input type="text" id="flagReason" class="swal2-input" placeholder="신고 이유">`,
+                confirmButtonText: '제출하기',
+                focusConfirm: false,
+                preConfirm: () => {
+                  const flagReason = this.$swal.getPopup().querySelector('#flagReason').value
+                  if (!flagReason) {
+                    this.$swal.showValidationMessage(`신고이유를 입력해 주세요`)
+                  }
+                  return { flagReason: flagReason }
+                }
+              }).then((result) => {
+                vm.flagReason = result.value.flagReason;
+                console.log(vm.flagReason);
+                this.insertFlag();
+              })
+          } else {
+              this.insertFlag();
+          }
+        },
+        insertFlag() {
+          const vm = this;
+          this.axios({
+            url: "/flagging",
+            method: "post",
+            data : {
+              flagFrom : this.memberId,
+              flagTo : this.flagedUser,
+              flagCode : this.selectedCode,
+              flagReason : this.flagReason,
+            }
+          })
+            .then(function (response) {
+              console.log(vm.flagReason);
+              console.log(response);
+              vm.$swal.fire('유저 신고가 완료되었습니다.');
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+        invite() {
+
+        }
     }
  };
   </script>
