@@ -39,6 +39,8 @@
                 <v-list-item-title v-html="item.title"></v-list-item-title>
                 <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
               </v-list-item-content>
+              <v-icon @click="close()">close</v-icon>
+
             </v-list-item>
           </div>
         </template>
@@ -144,7 +146,7 @@ export default {
               vm.messages.unshift({ divider: true, inset: true });
               vm.messages.unshift({
                 avatar: require(`@/assets/image/user/${res.data[i].avatar}`),
-                title: res.data[i].title + " 님이",
+                title: res.data[i].title,
                 subtitle: res.data[i].subtitle,
                 postId: res.data[i].postId,
                 boardType: res.data[i].boardType,
@@ -194,14 +196,6 @@ export default {
       vm.stompClient.subscribe("/queue/" + this.$store.state.id + "/notice",
         function (res) {
           let resNotice = JSON.parse(res.body);
-          console.log(resNotice.noticeType);
-          console.log(resNotice.noticeType);
-          console.log(resNotice.noticeType);
-          console.log(resNotice.noticeType);
-          console.log(resNotice.noticeType);
-          console.log(resNotice.noticeType);
-          console.log(resNotice.noticeType);
-          console.log(resNotice.noticeType);
           //sns 알림 처리
           if (resNotice.noticeType == 0) {
             //sns - 좋아요 알림 처리

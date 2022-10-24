@@ -58,7 +58,7 @@ public class MessageController {
 			// 상대방이 같은방에 없을때는 알림을 보낸다.
 			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0) {
 				resNotice.setNoticeId(nService.getNoticeId());
-				resNotice.setNickname(mService.getMember(content.getMemberIds().get(i)).getNickName());
+				resNotice.setNickname(mService.getMember(content.getMemberId()).getNickName());
 				resNotice.setNoticeType(2);
 				resNotice.setTargetId(content.getMemberIds().get(i));
 				resNotice.setPostId(content.getRoomNo());

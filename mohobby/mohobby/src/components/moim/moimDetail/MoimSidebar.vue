@@ -102,19 +102,22 @@
       <v-list-item
         v-for="link in links"
         :key="link.text"
+        
         @click="$router.push({ name: link.route })"
         link
       >
         <v-list-item-icon>
           <v-icon>{{ link.icon }}</v-icon>
         </v-list-item-icon>
-
         <v-list-item-content>
           <v-list-item-title>{{ link.text }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+        
     </v-list>
+ 
   </v-navigation-drawer>
+
 </template>
 <script>
 export default {
@@ -136,6 +139,7 @@ export default {
         { icon: "mdi-calendar-text", text: "일정", route: "moimSchedule" },
         { icon: "mdi-chart-gantt", text: "투표", route: "moimVote" },
         { icon: "mdi-chart-pie", text: "N빵", route: "moimNbbang" },
+      
       ],
       memberInfo: [],
       moimMemberCount: 0,
