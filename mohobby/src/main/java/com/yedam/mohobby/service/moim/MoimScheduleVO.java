@@ -12,4 +12,5 @@ public class MoimScheduleVO {
 	private String endTime; //일정 종료시간
 	private String startDate; //시작일자
 	private String endDate; //종료일자
+	private int moimId;
 }

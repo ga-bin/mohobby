@@ -471,7 +471,7 @@ export default {
     //검색페이지 이동
     goSearch(feeds, show) {
       console.log("main->searchPage실행" + feeds);
-      this.$router.push({ name: "snsmain", params: { hashtagResult: feeds, showing: show },
+      this.$router.push({ name: "snsmain", params: { hashtagResult: feeds },
       });
     },
 
@@ -496,6 +496,7 @@ export default {
         });
     },
 
+    
     //좋아요
     like(memberId, postId) {
       //좋아요 알림

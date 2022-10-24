@@ -10,7 +10,7 @@
     <v-spacer />
     <v-col lg="4" cols="12">
       <v-form class="mt-5">
-        <v-text-field v-model="searchText" @keydown.enter.prevent='search' rounded outlined dense placeholder="Search Here" append-icon="mdi-magnify" />
+        <v-text-field v-model="searchText" @keydown.enter.prevent='search()' rounded outlined dense placeholder="Search Here" append-icon="mdi-magnify" />
       </v-form>
     </v-col>
     <v-spacer />
@@ -48,7 +48,7 @@
         <template v-slot:activator="{ on, attrs }">
           <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer; margin-right:30px; margin-left: 30px;">
             <v-badge v-if="noticeCount != 0" offset-x="10" offset-y="10" color="red" :content="noticeMsgCount">
-              <v-icon style="color: #2ac187;">mail</v-icon>
+              <v-icon>mail</v-icon>
             </v-badge>
           </span>
         </template>
@@ -70,7 +70,6 @@
           </template>
         </v-list>
       </v-menu>
-    </v-btn>
     <v-btn v-if="this.$store.state.id" icon>
       <v-icon @click="$router.push('/mypageprofile')">mdi-account</v-icon>
     </v-btn>
@@ -138,11 +137,43 @@ export default {
           for (let i = 0; i < res.data.length; i++) {
             if (res.data[i].noticeType == 2) {
               vm.messages.unshift({ divider: true, inset: true });
-              vm.messages.unshift(res.data[i])
+              vm.messages.unshift({
+                avatar: require(`@/assets/image/user/${res.data[i].avatar}`),
+                title: res.data[i].title + " 님이",
+                subtitle: res.data[i].subtitle,
+                postId: res.data[i].postId,
+                boardType: res.data[i].boardType,
+                moimId: res.data[i].moimId,
+                noticeType: res.data[i].noticeType,
+                noticeId: res.data[i].noticeId,
+              })
             }
             else {
+              if (res.data[i].noticeType == 0) {
               vm.items.unshift({ divider: true, inset: true });
-              vm.items.unshift(res.data[i]);
+              vm.items.unshift({
+                avatar: require(`@/assets/image/user/${res.data[i].avatar}`),
+                title: res.data[i].title+ " 님이",
+                subtitle: res.data[i].subtitle,
+                postId: res.data[i].postId,
+                boardType: res.data[i].boardType,
+                moimId: res.data[i].moimId,
+                noticeType: res.data[i].noticeType,
+                noticeId: res.data[i].noticeId,
+              })
+            }else if(res.data[i].noticeType == 0) {
+              vm.items.unshift({ divider: true, inset: true });
+              vm.items.unshift({
+                avatar: require(`@/assets/image/moim/${res.data[i].avatar}`),
+                title: res.data[i].title+ " 님이",
+                subtitle: res.data[i].subtitle,
+                postId: res.data[i].postId,
+                boardType: res.data[i].boardType,
+                moimId: res.data[i].moimId,
+                noticeType: res.data[i].noticeType,
+                noticeId: res.data[i].noticeId,
+              })
+            }
             }
           }
           vm.noticeMsgCount = (vm.messages.length-1)/2;
@@ -177,7 +208,7 @@ export default {
               }
               vm.items.unshift({
                 avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-                title: resNotice.nickname,
+                title: resNotice.nickname+ " 님이",
                 subtitle: vm.subtitle,
                 postId: resNotice.postId,
                 noticeType: resNotice.noticeType,
@@ -197,7 +228,7 @@ export default {
               }
               vm.items.unshift({
                 avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
-                title: resNotice.nickname,
+                title: resNotice.nickname+ " 님이",
                 subtitle: vm.subtitle,
                 postId: resNotice.postId,
                 boardType: resNotice.boardType,
@@ -205,17 +236,17 @@ export default {
                 noticeType: resNotice.noticeType,
                 noticeId: resNotice.noticeId,
               });
-             
               ++vm.noticeCount;
             }
             //메신저 알림 처리
             else if (resNotice.noticeType == 2) {
               if (vm.$store.state.isRoomNo != resNotice.postId) {
+
                 vm.messages.unshift({ divider: true, inset: true });
                 vm.subtitle = "새로운 메세지가 도착했습니다.";
                 vm.messages.unshift({
                   avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-                  title: resNotice.nickname,
+                  title: resNotice.nickname+ " 님이",
                   subtitle: vm.subtitle,
                   postId: resNotice.postId,
                   boardType: resNotice.boardType,
@@ -241,6 +272,7 @@ export default {
         }
         console.log("11");
         console.log(this.items);
+        console.log("배히열")
         --this.noticeCount;
 
         this.axios
@@ -289,5 +321,9 @@ export default {
 <style scoped>
 #bellspan {
   width: 3px;
+}
+
+.v-input__slot {
+  background: white;
 }
 </style>
