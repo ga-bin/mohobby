@@ -51,9 +51,9 @@
       </v-col> 
     </v-row>
 
-    <!-- 다이어로그 띄우기 -->
-    <div class="example">
-      <MakeSchedule  :items.sync="items" :dialog="dialog" :calendar="calendar" @dialogClose="dialogClose(dialog)"></MakeSchedule>
+   <!-- 다이어로그 띄우기 -->
+   <div class="example">
+      <MakeSchedule  :items.sync="items" :dialog="dialog" :calendar="calendar" @dialogClose="dialogClose"></MakeSchedule>
     </div>
 
     <!-- 일정 조회 -->
@@ -64,11 +64,13 @@
       outlined
       v-for="(item, idx) in items"
       :key="item.writeDate"
+     
       >
       <v-list-item three-line>
         <v-list-item-content>
           <div class="text-overline mt-6">
-            {{ item.title }}
+            {{ item.title }}  <v-btn x-small outlined color="error"  @click="deleteSchedule(item.skedId)">
+              삭제</v-btn>
             <hr />
             {{ item.startDate }} {{item.startTime}} ~ {{item.endDate}} {{item.endTime}}
           </div>
@@ -76,7 +78,9 @@
             {{ item.info }}</v-list-item-subtitle
           >
         </v-list-item-content>
+      
       </v-list-item>
+      
     </v-card> 
   </template>
   </div>
@@ -113,6 +117,22 @@ export default {
   },
   components: { MakeSchedule },
   methods: {
+
+    deleteSchedule(skedId){
+      let vm =this
+      this.axios.delete("/deleteSchedule",{
+        params:{
+          skedId : skedId
+        },
+      })
+      .then(function(res){
+        console.log("삭제성송")
+        vm.getSchedule();
+      })
+      .catch(function(res){
+        console.log("실패")
+      })
+    },
       getSchedule() {
       this.axios
         .get("/selectSchedule", {
@@ -124,6 +144,7 @@ export default {
           console.log(resp);
           console.log(this.items);
           this.items = resp.data;
+   
         })
         .catch((err) => {
           console.log(this.items);
@@ -145,7 +166,7 @@ export default {
       this.dialog = true;
     },
     dialogClose(dialog) {
-      console.log(dialog);
+      this.getSchedule();
       this.dialog = false;
     },
     prev () {

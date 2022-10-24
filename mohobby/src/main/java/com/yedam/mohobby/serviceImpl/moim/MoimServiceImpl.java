@@ -310,4 +310,10 @@ public class MoimServiceImpl implements MoimService {
 	public List<MoimScheduleVO> scheduleSelect(int moimId) {
 		return mapper.scheduleSelect(moimId);
 	}
+
+	//소모임 일정 삭제
+	@Override
+	public int deleteSchedule(int skedId) {
+		return mapper.deleteSchedule(skedId);
+	}
 }

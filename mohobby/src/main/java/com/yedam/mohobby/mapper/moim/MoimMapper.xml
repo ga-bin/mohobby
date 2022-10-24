@@ -455,4 +455,8 @@
   <select id="scheduleSelect" resultType="com.yedam.mohobby.service.moim.MoimScheduleVO">
      SELECT * FROM moim_schedule where moim_id = #{moimId} order by sked_id DESC
   </select>
+  <!-- 소모임 일정 삭제 -->
+  <delete id="deleteSchedule" parameterType="Integer">
+  delete from moim_schedule where sked_id=#{skedId}
+  </delete>
 </mapper>

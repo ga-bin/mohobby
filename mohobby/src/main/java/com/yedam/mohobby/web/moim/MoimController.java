@@ -404,5 +404,11 @@ public class MoimController {
 //	//소모임 가입하기
 //	@PostMapping("/")
 //	public 
+	
+	//소모임 일정 삭제
+	@DeleteMapping("/deleteSchedule")
+	public int deleteSchedule(@Param("skedId")int skedId) {
+		return service.deleteSchedule(skedId);
+	}
 }
 

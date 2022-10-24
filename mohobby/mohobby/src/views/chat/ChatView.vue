@@ -311,6 +311,8 @@ export default {
     //채팅방 리스트출력
     getRoom() {
       var vm = this;
+
+      vm.roomList=[]
       //1:1
       this.axios
         .get("/ChatRoom/" + this.memberId, {})
@@ -357,6 +359,9 @@ export default {
             "/queue/" + this.$store.state.id,
             function (res) {
               let resContent = JSON.parse(res.body);
+          
+              if(vm.roomList.findIndex(i=>i.roomNo==resContent.roomNo)<0){
+               vm.getRoom();}
               for (let i = 0; i < vm.roomList.length; i++) {
                 if (vm.roomList[i].roomNo == resContent.roomNo) {
                   vm.roomList[i].content = resContent.content;

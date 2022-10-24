@@ -223,10 +223,21 @@
 						)
 		}
 	</update>
+	<!-- 체크인 여부 조회 -->
 	<select id="getCheckIn" parameterType="com.yedam.mohobby.service.chat.ChatUserVO" resultType="Integer">
 	select check_in 
 	from room 
 	where room_no=#{roomId}
 	and member_id=#{memberId}
 	</select>
+	
+	<!-- 1:1 1:m 채팅 여부 조회 -->
+	<select id="checkMoimId" parameterType="Integer" resultType="Integer">
+ select moim_id
+	from room
+	where room_no=#{roomNo}
+    group by moim_id
+
+	</select>
+	
 </mapper>
