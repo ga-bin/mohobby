@@ -118,7 +118,7 @@ public interface MoimMapper {
 	public int dutchMemberInsert(MoimDutchPtpSoloVO vo);
 	
 	//소모임 n빵 디테일 조회
-	public List<MoimDutchVO> nbbangSelect(int moimId);
+	public List<MoimDutchVO> nbbangSelect(MoimDutchVO moimDutchVO);
 	
 	//소모임 투표 항목
 	public void insertVoteList(MoimVoteListVO vo);

@@ -425,12 +425,13 @@
    </insert>
    
   <!-- n빵 디테일 조회 -->
-  <select id="nbbangSelect" resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
-  select a.dutch_id, a.member_id, a.write_date, a.total_price, 
-         a.people, b.member_id as money_target, b.calc_price, b.calc_check
-  from moim_dutch a, moim_dutch_ptp b
-  where a.dutch_id(+) = b.dutch_id
-  and a.moim_id = #{moimId}
+  <select id="nbbangSelect" resultType="com.yedam.mohobby.service.moim.MoimDutchVO" parameterType="com.yedam.mohobby.service.moim.MoimDutchVO">
+select a.profile_img, b.dutch_id, b.member_id, b.write_date, b.total_price, b.people, c.member_id as money_target, c.calc_price, c.calc_check
+from member a join moim_dutch b
+on a.member_id = b.member_id
+join moim_dutch_ptp c
+on b.dutch_id = c.dutch_id
+where b.moim_id = #{moimId} and b.dutch_id = #{dutchId}
   </select>
   
   <!-- 소모임 일정 등록 -->

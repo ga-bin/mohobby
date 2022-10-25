@@ -32,7 +32,6 @@ import com.yedam.mohobby.service.user.MemberVO;
  * @author 이휘동, 최현정
  * @title 소모임
  */
-
 @RestController
 @CrossOrigin(origins = "*")
 public class MoimController {
@@ -371,9 +370,12 @@ public class MoimController {
 	}
 	
 	//소모임 n빵 디테일 조회
-	@GetMapping("/nbbangDetail")
-	public List<MoimDutchVO> getNbbangDetail(@Param("moimId")int moimId) {
-		return service.nbbangSelect(moimId);
+	@GetMapping("/nbbangDetail/{moimId}/{dutchId}")
+	public List<MoimDutchVO> getNbbangDetail(@PathVariable int moimId, @PathVariable int dutchId) {
+		MoimDutchVO moimDutchVO = new MoimDutchVO();
+		moimDutchVO.setMoimId(moimId);
+		moimDutchVO.setDutchId(dutchId);
+		return service.nbbangSelect(moimDutchVO);
 	}
 	
 	//소모임 투표 항목

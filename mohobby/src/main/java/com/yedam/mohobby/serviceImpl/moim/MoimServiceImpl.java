@@ -269,8 +269,8 @@ public class MoimServiceImpl implements MoimService {
 
 	//소모임 n빵 디테일 조회
 	@Override
-	public List<MoimDutchVO> nbbangSelect(int moimId) {
-		return mapper.nbbangSelect(moimId);
+	public List<MoimDutchVO> nbbangSelect(MoimDutchVO moimDutchVO) {
+		return mapper.nbbangSelect(moimDutchVO);
 	}
 	
 	//소모임 투표 항목

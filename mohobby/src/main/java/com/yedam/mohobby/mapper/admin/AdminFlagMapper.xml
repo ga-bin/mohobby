@@ -39,4 +39,8 @@ delete from flagging where flag_id = #{flagId}
 update moim set moim_open = #{moimOpen} where moim_id = #{moimId}
 </update>
 
+<!-- 신고 코드에 따라서 검색  -->
+<select id="getFlagByCode" parameterType="String" resultType="com.yedam.mohobby.service.admin.FlaggingVO">
+
+</select>
 </mapper>
