@@ -129,4 +129,13 @@ public interface MoimMapper {
 	
 	//소모임 일정 전체 조회
 	public List<MoimScheduleVO> scheduleSelect(@Param("moimId")int moimId);
+	  
+	//소모임 일정 삭제
+	public int deleteSchedule(@Param("skedId")int skedId);
+	
+	//소모임 가입 멤버 등록
+	public String insertMember(MoimMemberVO momemVO);
+
+	//소모임 가입조건 수정
+	public String updateSetting(MoimVO moimVO);
 }

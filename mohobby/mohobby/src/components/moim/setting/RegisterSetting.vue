@@ -23,8 +23,10 @@
             <v-spacer />
             <v-col cols="3">
               <v-select
-                :items="gender"
-                label="선택"
+                :items="sex"
+                v-model="selected"
+                @change="select()"
+                label="성별"
                 dense
               ></v-select>
             </v-col>
@@ -49,16 +51,18 @@
           <v-row justify="space-around" no-gutters>
             <v-col cols="3">
               <v-select
-                :items="items"
+                :items="age"
                 label="최소나이"
+                v-model="min"
                 dense
               ></v-select>
             </v-col>
 
             <v-col cols="3">
               <v-select
-                :items="items"
+                :items="age"
                 label="최대나이"
+                v-model="max"
                 dense
               ></v-select>
             </v-col>
@@ -87,6 +91,7 @@
               <v-select
                 :items="count"
                 label="선택"
+                v-model="count"
                 dense
               ></v-select>
             </v-col>
@@ -98,31 +103,60 @@
     
     <v-card-actions class="mr-5 mb-5 mt-5">
     <v-spacer />
-    <v-btn>저장</v-btn>
+    <v-btn @click="updateSetting()">저장</v-btn>
     </v-card-actions>
  
   </div>
 </template>
 <script>
+import { min } from 'moment';
+
 export default {
   data: () => ({
     panel: [0, 1, 2],
-    radioGroup: '',
-    count: ['10명', '30명', '50명', '100명'],
-    items: [],
-    trip: {
-        member: null,
-        start: null,
-        end: null,
-      },
-    gender: ['남성','여성','모두']
+    moimId: 1,
+    selected:'',
+    gender: '',
+    sex: ['남성','여성','모두'],
+    count: [10, 30, 50, 100],
+    age: [],
+    max: '',
+    min: ''
     }),
     methods: {
-      selectAge: function () {
+      selectAge() {
         for(let i=2022; i>=1923; i--){
-            this.items.push(i);
+            this.age.push(i);
         }
       },
+      updateSetting(){
+
+          if(this.selected == "남성"){
+            this.gender = 1
+          } else if(this.selected == "여성"){
+            this.gender = 2
+          } else {
+            this.gender = 0
+          }
+   
+        this.axios.put("/updateSetting",{
+          gender : this.gender,
+          maxAge : this.max,
+          minAge : this.min,
+          maxPeople : this.count,
+          moimId : this.moimId
+        }).then(function (resp) {
+          console.log(resp)
+          console.log('gender '+this.gender)
+          console.log('maxAge '+this.maxAge)
+          console.log('minAge '+this.minAge)
+          console.log('maxPeople '+this.maxPeople)
+          console.log('moimId '+this.moimId)  
+          this.$swal('변경이 완료되었습니다!')
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
     },
     created() {
       this.selectAge()

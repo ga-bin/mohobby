@@ -125,5 +125,13 @@ public interface MoimService {
 	//소모임 투표 항목
 	public void insertVoteList(MoimVoteListVO vo);
 	
+	//소모임 일정 삭제
+	public int deleteSchedule(int skedId);
+	
+	//소모임 가입 멤버 등록
+	public String insertMember(MoimMemberVO momemVO);
+
+	//소모임 가입조건 수정
+	public String updateSetting(MoimVO moimVO);
 }
 
