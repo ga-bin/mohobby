@@ -178,7 +178,7 @@ export default {
             {
               text: "클래스 개설",
               items: [
-                { id: 26, text: "개설신청", route: "", catg: "" },
+                { id: 26, text: "개설신청", route: "/class/open", catg: "/" },
                 { id: 27, text: "심사확인", route: "", catg: "" },
               ],
             },
