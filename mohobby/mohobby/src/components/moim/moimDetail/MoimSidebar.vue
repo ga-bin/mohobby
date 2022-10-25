@@ -34,7 +34,7 @@
       <template v-slot:activator="{ on, attrs }">
         <div class="right" v-if="memberId != '비회원'" v-bind="attrs"
                 v-on="on">
-              <v-btn text @click="moimFlagging">
+              <v-btn text>
                 <v-icon small color="white">mdi-plus-circle-outline</v-icon>
                 <div style="color: white">신고하기</div>
               </v-btn>

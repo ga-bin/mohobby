@@ -2,6 +2,80 @@
   <main>
     <AdminSidebar></AdminSidebar>
     <div style="margin-left: 60px; width: 1000px">
+        <v-card
+    max-width="475"
+    class="mx-auto"
+  >
+    <v-toolbar
+      color="teal"
+      dark
+    >
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+      <v-toolbar-title>신고코드</v-toolbar-title>
+    </v-toolbar>
+
+
+
+      <v-list-item-group
+        v-model="settings"
+      >
+        <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>mo1</v-list-item-title>
+              <v-list-item-subtitle>부적절한 게시물 개시</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+
+        <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>mo2</v-list-item-title>
+              <v-list-item-subtitle>홍보성 초대 반복</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+
+        <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>mo3</v-list-item-title>
+              <v-list-item-subtitle>청소년에게 음란성 초대글 유포</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+
+        <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>mo4</v-list-item-title>
+              <v-list-item-subtitle>다른 소모임에 대한 욕설, 비방</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+
+         <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>mo5</v-list-item-title>
+              <v-list-item-subtitle>사이트 목적과 맞지 않는 소모임</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+
+         <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>mo6</v-list-item-title>
+              <v-list-item-subtitle>기타</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
       <br />
       <h3>신고된 소모임</h3>
       <br />

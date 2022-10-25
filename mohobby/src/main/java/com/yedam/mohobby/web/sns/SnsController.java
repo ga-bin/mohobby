@@ -116,23 +116,27 @@ public class SnsController {
     public SnsProfileVO getProfile(@PathVariable("memberId") String memberId) {
            return service.getProfile(memberId);//컬럼명과 컬럼값이 키와 값으로 매핑이 된다.
     }
+    
     //유저피드조회 - 테스트완료
     @GetMapping("/user/user_feeds/{memberId}")
     public List<SnsPostVO> getUserFeed(@PathVariable("memberId") String memberId) {
         return service.getUserFeed(memberId);
     }
+    
    //피드상세조회 - 테스트완료
     @GetMapping("/user/feed_detail/{postId}")
     public SnsFeedVO getFeedDetail(@PathVariable("postId") int postId, @RequestParam String memberId) {
            System.out.println("프로필조회 성공");
             return service.getFeedDetail(postId, memberId);
     }
+    
    //피드상세이미지로드(컴포넌트)
     @GetMapping("/user/feed_detail_img/{postId}")
     public List<SnsMediaVO> getFeedImg(@PathVariable("postId") int postId) {
            System.out.println("상세이미지 로딩 성공");
            return service.getFeedImg(postId);
     }
+    
     
     /*
      * 해시태그
@@ -151,6 +155,7 @@ public class SnsController {
         }
     }
     
+    
     /*
      * 팔로우
      */
@@ -167,6 +172,7 @@ public class SnsController {
             return "fail";        
         }
     }
+    
    //언팔로우 - 테스트완료
     @DeleteMapping("/follow/{followerId}/{followingId}")
     public String unfollow(@PathVariable String followerId, @PathVariable String followingId) {
@@ -180,6 +186,7 @@ public class SnsController {
             return "fail";        
         }
     }
+    
    //팔로잉 조회 - 테스트완료
     @GetMapping("/follow/search/following/{followerId}")
     public List<SnsFollowVO> getFollowingList(@PathVariable String followerId){
@@ -222,6 +229,7 @@ public class SnsController {
         return service.searchHashtag(hashtag);
     }
     
+    
     /*
      * 좋아요
      */
@@ -230,6 +238,7 @@ public class SnsController {
     public int sumLikes(@RequestBody JjimVO jjimVO) {
         return service.sumLikes(jjimVO);
     }
+    
     
     /*
      * 댓글
@@ -241,6 +250,7 @@ public class SnsController {
         System.out.println("댓글입력 완료");
         return "success";
     }
+    
    //댓글수정
     @PutMapping("/cmt/{commId}")
     public String updateCmt(@PathVariable int commId, @RequestBody CommentsVO commentsVO) {
@@ -255,6 +265,7 @@ public class SnsController {
             return "fail";
         }
     }
+    
    //댓글삭제 - 테스트완료
     @DeleteMapping("/cmt/{commId}/{targetId}")
     public String deleteCmt(@PathVariable("commId") int commId, @PathVariable("targetId") int targetId){
@@ -269,11 +280,13 @@ public class SnsController {
             return "fail";
         }
     }
+    
    //댓글조회 - 테스트완료
     @GetMapping("/cmt/{postId}")
     public List<CommentsVO> getCmtLists(@PathVariable int postId) {
         return service.getCmtLists(postId);
     }
+    
     
     /*
      * 대댓글
@@ -291,6 +304,8 @@ public class SnsController {
             return "fail";
         }
     }
+    
+    
     /*
      * 북마크
      */
@@ -307,6 +322,7 @@ public class SnsController {
              return "fail";
           }
     }
+    
     //컬렉션이름수정
     @PutMapping("/collection")
     public String updateReCmt(@RequestBody SnsBookmarkVO bmCtgVO) {
@@ -320,6 +336,7 @@ public class SnsController {
             return "fail";
         }
     }
+    
     //컬렉션삭제(안의 게시물도 전부 삭제되도록)
     @DeleteMapping("/collection/{catgId}")
     public String deleteBookmarkCtg(@PathVariable int catgId) {
@@ -333,6 +350,7 @@ public class SnsController {
             return "fail";
         }
     }
+    
     //컬렉션리스트 호출
     @GetMapping("/collection/{memberId}")
     public List<SnsBookmarkVO> getCollectionList(@PathVariable String memberId){
@@ -354,6 +372,7 @@ public class SnsController {
          return "fail";
       }
     }
+    
     //북마크 삭제
     @DeleteMapping("/collection/bookmark/{postId}/{memberId}")
     public String deleteBookmark(@PathVariable int postId, @PathVariable String memberId) {
@@ -367,17 +386,27 @@ public class SnsController {
          return "fail";
       }
     }
+    
     //북마크상태조회
     @GetMapping("/collection/bookmark/isBookmark/{postId}")
     public int isBookmark(@PathVariable int postId, @RequestParam String memberId) {
            return service.isBookmark(postId, memberId);
     }
+    
     //컬렉션별 북마크 조회
     @GetMapping("/collection/bookmark/{catgId}")
     public List<SnsBookmarkVO> getBookmarks(@PathVariable int catgId){
          System.out.println("북마크조회 완료");
          return service.getBookmarks(catgId);
     }
+    
+    //전체 북마크 조회
+    @GetMapping("/collection/allBookmarks")
+    public List<SnsBookmarkVO> getAllBookmarks(@RequestParam String memberId){
+        System.out.println("북마크 전체조회 완/collection/bookmarkAll료");
+        return service.getAllBookmarks();
+    }
+    
     
     /*
      * 검색기록

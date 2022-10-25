@@ -19,6 +19,8 @@ import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
+import com.yedam.mohobby.service.moim.MoimImageVO;
+import com.yedam.mohobby.service.moim.MoimInfoRequestVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimScheduleVO;
 import com.yedam.mohobby.service.moim.MoimService;
@@ -32,7 +34,6 @@ import com.yedam.mohobby.service.user.MemberVO;
  * @author 이휘동, 최현정
  * @title 소모임
  */
-
 @RestController
 @CrossOrigin(origins = "*")
 public class MoimController {
@@ -371,9 +372,12 @@ public class MoimController {
 	}
 	
 	//소모임 n빵 디테일 조회
-	@GetMapping("/nbbangDetail")
-	public List<MoimDutchVO> getNbbangDetail(@Param("moimId")int moimId) {
-		return service.nbbangSelect(moimId);
+	@GetMapping("/nbbangDetail/{moimId}/{dutchId}")
+	public List<MoimDutchVO> getNbbangDetail(@PathVariable int moimId, @PathVariable int dutchId) {
+		MoimDutchVO moimDutchVO = new MoimDutchVO();
+		moimDutchVO.setMoimId(moimId);
+		moimDutchVO.setDutchId(dutchId);
+		return service.nbbangSelect(moimDutchVO);
 	}
 	
 	//소모임 투표 항목
@@ -400,6 +404,29 @@ public class MoimController {
 		System.out.println(moimId);
 		return service.scheduleSelect(moimId);
 	}
+	
+	   //html 파일 생성
+	   @PostMapping("/saveMoimInfo")
+	   public void saveClassInfo(@RequestBody MoimInfoRequestVO req) {
+	      service.saveClassInfo(req);
+	   }
+	   //에디터 이미지 저장
+	   @PostMapping("/uploadMoimImage")
+	   public void uploadMoimImage(@RequestBody MoimImageVO req) {
+	       service.uploadMoimImage(req);
+	   }
+	   
+	   //html 파일 불러오기
+	   @GetMapping("/readMoimInfo")
+	   public String readClassInfo(@RequestParam int boardId) {
+		       return service.readMoimInfo(boardId);
+	   }
+	   
+	   @PostMapping("/insertBoard")
+	   public int insertBoard(@RequestBody MoimBoardVO vo) {
+	   service.insertBoard(vo);
+	   return vo.getBoardId();
+	   }
 	
 //	//소모임 가입하기
 //	@PostMapping("/")

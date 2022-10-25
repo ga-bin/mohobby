@@ -11,7 +11,7 @@
               <v-img
                 aspect-ratio="30"
                 :src="require(`@/assets/image/user/${items.profileImg}`)"
-                @click="goMyFeed(items.memberId)"
+                @click="goMyProfile(items.memberId)"
               />
             </v-avatar>
             <div class="user text-overline">
@@ -63,8 +63,8 @@
               </v-btn>
               <!-- 카카오톡 공유 끝 -->
 
-            <!-- 북마크아이콘 -->
-            
+              
+              <!-- 북마크아이콘 -->
               <v-btn v-if="mark === 1" @click="bookmarkDel(items.postId, memberId)" icon>
                 <v-icon size="25" color="#2ac187">mdi-bookmark</v-icon>
               </v-btn>
@@ -99,11 +99,12 @@
         </v-row>
         <!-- 좋아요, 댓글, 메세지 끝 -->
 
+
         <!-- 
 
                 북마크dialog
                 
-             -->
+        -->
         <v-dialog v-model="dialog2" max-width="500px">
           <v-card>
             <v-card-title class="justify-space-around">
@@ -424,7 +425,7 @@ export default {
         .delete("/sns/myfeed/" + postId)
         .then((res) => {
           console.log("댓글 삭제 성공! " + res);
-          this.goMyFeed(this.items.memberId);
+          this.goMyProfile(this.items.memberId);
         })
         .catch((err) => {
           alert(err);
@@ -447,31 +448,15 @@ export default {
     },
 
     
-    //해시태그 클릭 검색
+    //해시태그 키워드 검색
     search(e) {
       let getHashtag = e.target.innerText; //선택한 해시태그
-      let hashtag = getHashtag.slice(1); //# 잘라내기
-      console.log(hashtag);
-      this.axios("/sns/search/hashtag", {
-        params: {
-          hashtag: hashtag,
-        },
-      })
-        .then((res) => {
-          this.feeds = res.data; //해시태그 검색결과 담기
-          console.log("AXIOS SUCCESS");
-          this.goSearch(this.feeds, this.show); // 메인 ->검색컴포넌트
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-
-
-    //검색페이지 이동
-    goSearch(feeds, show) {
-      console.log("main->searchPage실행" + feeds);
-      this.$router.push({ name: "snsmain", params: { hashtagResult: feeds },
+      console.log(getHashtag)
+      console.log(getHashtag)
+      console.log(getHashtag)
+      console.log(getHashtag)
+      console.log(getHashtag)
+      this.$router.push({ name: "snsmain", params: { detailHashtag : getHashtag },
       });
     },
 
@@ -517,6 +502,8 @@ export default {
           console.log(res);
         }
       );
+
+
       //좋아요 유저검증
       if(this.confirmMember(memberId) == false){
         this.loginConfirm();
@@ -566,7 +553,6 @@ export default {
     },
 
 
-
     //북마크상태조회
     getBookmarkStatus(postId) {
       this.axios("sns/collection/bookmark/isBookmark/" + postId, {
@@ -606,7 +592,8 @@ export default {
     },
 
 
-    //컬렉션 리스트 호출
+    //컬렉션 리스트 호출 호출했는데
+    //-----------------------------> 리스트.length가 0이면 생성되도록,,
     getCollectionList(memberId) {
       this.axios("/sns/collection/" + memberId)
         .then((res) => {
@@ -690,8 +677,8 @@ export default {
     },
 
 
-    //유저 피드로 이동
-    async goMyFeed(userId) {
+    //유저 프로필로 이동
+    async goMyProfile(userId) {
       await this.getOneUser(userId);
       if (this.userOneInfo.role == 4) {
         this.$swal.fire("관리자에 의해 접근 금지된 유저 프로필입니다.");

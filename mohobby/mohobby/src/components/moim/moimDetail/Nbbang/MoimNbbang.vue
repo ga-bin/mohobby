@@ -14,7 +14,7 @@
       outlined
       v-for="item in items"
       :key="item.dutchId"
-      @click="Nbbangdetail()"
+      @click="Nbbangdetail(item.dutchId)"
     >
       <v-list-item three-line>
         <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
@@ -48,7 +48,8 @@ export default {
       //moimRight : 비회원 0 회원 1
       moim: 1,
       moimRight: 1,
-      writeDate: this.$moment().format('YY-MM-DD')
+      writeDate: this.$moment().format('YY-MM-DD'),
+      dutchId: 0,
     };
   },
   methods: {
@@ -72,12 +73,23 @@ export default {
     makeNbbang: function () {
       this.$router.push({ path: "makeNbbang" , params : { moimId : this.moimId } });
     },
-    Nbbangdetail: function(idx){
-      this.$router.push({ path: "nBBangDetail", params : { moimId : this.moimId }})
+    Nbbangdetail: function(dutchId){
+      this.dutchId = dutchId,
+      console.log(dutchId);
+      console.log(dutchId);
+      console.log(dutchId);
+      console.log(dutchId);
+      console.log(dutchId);
+      console.log(this.dutchId);
+      console.log(this.dutchId);
+      console.log(this.dutchId);
+      console.log(this.dutchId);
+      console.log(this.dutchId);
+      this.$router.push({ name: "nBBangDetail", params : { moimId : this.moimId, "dutchId" : this.dutchId }})
     }
   },
   created(){
-    this.getNbbangList()
+    this.getNbbangList();
   },
 };
 </script>

@@ -23,17 +23,18 @@
       </v-col>
     </v-row>
     <h3>인기 SNS피드</h3>
-    <snsHighLikesList :snsHighLikesList="snsHighLikesList"></snsHighLikesList>
+    <MainSnsList :snsHighLikesList="snsHighLikesList"></MainSnsList>
   </main>
 </template>
 s
 <script>
 import AdminSidebar from "../../components/admin/AdminSidebar.vue";
 import snsHighLikesList from "../../components/main/SnsHighLikesList.vue";
+import MainSnsList from "../../components/main/MainSnsList.vue";
 
 export default {
   name: "",
-  components: { AdminSidebar, snsHighLikesList },
+  components: { AdminSidebar, snsHighLikesList, MainSnsList},
   data() {
     return {
       hashtagList: [],

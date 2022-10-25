@@ -4,7 +4,7 @@
       <v-col lg="4" cols="12" style="margin-left: 100px; width: 100%;"></v-col>
       <v-form class="mt-5">
         <h3>검색된 sns</h3>
-          <snsHighLikesList :snsHighLikesList="searchSnsList"></snsHighLikesList>
+          <MainSnsList :snsHighLikesList="searchSnsList"></MainSnsList>
           <h3>검색된 모임</h3>
           <moimPopularList :moimPopularList="searchMoimList"></moimPopularList>
           <h3>검색된 클래스</h3>
@@ -17,12 +17,14 @@
 import collectClassList from "../../components/main/CollectClassList.vue";
 import moimPopularList from "../../components/main/MoimPopularList.vue";
 import snsHighLikesList from "../../components/main/SnsHighLikesList.vue";
+import MainSnsList from "../../components/main/MainSnsList.vue";
 
 export default {
     components: {
         moimPopularList,
         snsHighLikesList,
         collectClassList,
+        MainSnsList
   },
     data() {
         return {
@@ -49,11 +51,6 @@ export default {
     unmounted() {},
     methods: {
         getSearchSnsList() {
-          console.log(this.searchText);
-          console.log(this.searchText);
-          console.log(this.searchText);
-          console.log(this.searchText);
-          console.log(this.searchText);
           const vm = this;
           this.axios({
             url: "/searchSnskeyword/" + this.searchText,
@@ -61,11 +58,6 @@ export default {
           })
             .then(function (response) {
               vm.searchSnsList = response;
-              console.log(vm.searchSnsList);
-              console.log(vm.searchSnsList);
-              console.log(vm.searchSnsList);
-              console.log(vm.searchSnsList);
-              console.log(vm.searchSnsList);
             })
             .catch(function (error) {
               console.log(error);
@@ -82,11 +74,6 @@ export default {
                 response.data[i].show = false;
               }
               vm.searchMoimList = response;
-              console.log(vm.searchMoimList);
-              console.log(vm.searchMoimList);
-              console.log(vm.searchMoimList);
-              console.log(vm.searchMoimList);
-              console.log(vm.searchMoimList);
             })
             .catch(function (error) {
               console.log(error);

@@ -15,20 +15,22 @@
                     <div class="mx-auto" style="width:500px;">
                     <v-text-field class="rounded-xl mx-auto"
                             v-model="keyword"
-                            :items="ctg" 
-                            item-text="tag" 
-                            item-value="tag" 
                             label="해시태그나 유저 아이디를 검색해보세요!"
                             dense
                             outlined
-                            :search-input.sync="userInput" 
-                            @input="userInput=null"
-                            menu-props="{'closeOnContentClick': true}"
-                            append-icon="mdi-magnify"
-                            @change="searchMem(keyword)"
-                            @keydown.enter="searchMem(keyword)"
-                            style="height:50px" />
                             
+                            append-icon="mdi-magnify"
+                           
+                            @keydown.enter="search(keyword)"
+                            style="height:50px" />
+                            <!-- 
+                                :items="ctg" 
+                                item-text="tag" 
+                                item-value="tag"
+                                :search-input.sync="userInput" 
+                                @input="userInput=null"
+                                menu-props="{'closeOnContentClick': true}"
+                            -->
 
                     <!-- 상단바 HOT해시태그 (키워드검색) -->
                     <div id="chip" style="width:500px;">
@@ -51,169 +53,284 @@
             <!-- 검색컴포넌트 
                 검색결과가 있을땐 show를 트루로 바꿔서 HotList가 안보이게되도록.
             -->
-            <!-- 검색페이지 -->
-            <div id="searchResult" v-if="showSearch == true">
-                <div id="nonuserFeeds">
-                    <h3>검색페이지입니다</h3>
-                    <NoneUser :feeds="feedResult" />
-                </div>
-            </div>
+
             <!-- HOT강의리스트 -->
-            <div v-if="showHot == true">
-                <div id="hotLecturers">
+            <div v-if="hotLectureFeeds == true">
+                <div>
                     <h3>추천 만능 재주꾼들 피드</h3>
                     <HotLecturer name="this.items" />
                 </div>
-                <!-- ALL랜덤피드 -->
-                <div v-if="showAll == true" id="nonuserFeeds">
+
+                <!-- 피드 -->
+                <div v-if="randomFeeds == true" id="nonuserFeeds">
                     <h3>재주 견습생들 피드</h3>
+                    <h3>나의 팔로워 피드</h3>
                     <NoneUser :feeds="feeds" />
                 </div>
             </div>
-            <!-- 유저 검색 페이지 -->
-            <div v-if="showResult == true">
-                <Follow :searchResult="searchResult" />
+
+
+            <!-- 해시태그 검색페이지 : 해시태그 검색-->
+            <div v-if="tagSearch == true">
+                <div>
+                    <h3>검색페이지입니다</h3>
+                    <NoneUser :feeds="hashResult" :keyword="temp" />
+                </div>
             </div>
+
+
+            <!-- 유저 검색 페이지-->
+            <div v-if="userSearch == true">
+                <UserResult :userResult="userResult" :keyword="temp" />
+            </div>
+
+            <div v-if="noResult == true">
+                <NoResult :keyword="temp" />
+            </div>
+
         </v-container> 
     </div>
   </template>
   <script>
-    import SnsSearchbar from "@/components/sns/Common/Searchbar.vue"
+
     import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
     import HotLecturer from "@/components/sns/Main/HotLecturer.vue";
     import NoneUser from "@/components/sns/Main/Noneuser.vue";
-    import Follow from "@/components/sns/Management/Follower.vue";
-  
+    import UserResult from "@/components/sns/Management/User.vue";
+    import NoResult from "@/components/sns/Search/NoResult.vue";
+
     export default {
+
       name: "snsMain",
-      components: { SnsSidebar, SnsSearchbar, HotLecturer, NoneUser, Follow },
-     
-      props : {
-        // show : {
-        //     type: Boolean,
-        //     default: false,
-        // },
-        // showAll : {
-        //     type: Boolean,
-        //     default: true,
-        // },
-        // showHot : {
-        //     type: Boolean,
-        //     default: true,
-        // },
-        // showResult : {
-        //     type : Boolean,
-        //     default : false,
-        // }
-    },
+
+      components: { SnsSidebar, HotLecturer, NoneUser, UserResult, NoResult },
+      
       data() {
           return {
-            feeds: [],//해시검색에 받아온
-            feedResult: [],
-            searchResult: "",//검색창에서 받아온 결과
-            keyword: "",
-            //   noneuser : false,
+            feeds: [],
+            hashResult: [],
+            userResult: [],
             items: [], //HOT해시태그
+            
+            // searchResult: "",//검색창에서 받아온 결과
+
+            keyword: "", //v-model키워드값
+            temp: "", //임시 키워드 저장소
             member : this.$store.state.id,
-            showSearch : false, //
-            showResult : false, //유저검색페이지
-            showHot : false, //HOT LIST
-            showAll : false, //ALL LIST
-            // showHashtag : "",
-              //자동검색
-            ctg: [
-                { tag: '운동' },
-                { tag: '공예' },
-                { tag: '연극' },
-                { tag: '독서' },
-            ],
-            userInput: null,
-            temp:"", //검색한 단어
+
+            //컴포넌트 v-if조건
+            tagSearch : false, //해시태그검색페이지
+            userSearch : false, //유저검색페이지
+            hotLectureFeeds : false, //HOT LIST 페이지
+            randomFeeds : false, //ALL LIST 페이지
+            noResult : false, //검색결과 없음 페이지
           }
       },
 
       watch: {
-
         //검색창
-        userInput(val) {
-            if (!val) {
-                return
-            }
-            this.fetchEntriesDebounced()
-        },
+        // userInput(val) {
+        //     if (!val) {
+        //         return
+        //     }
+        //     this.fetchEntriesDebounced()
+        // },
       },
 
       created() {
-          this.getHotHashtags();//함수실행
-          this.feedResult=this.$route.params.hashtagResult;
-           //피드디테일에서 받아옴 -> searchPage
-          console.log(this.$route.params.hashtagResult);//(없을시 undefined)
-          //디테일에서 해시태그 키워드 검색값 들어올 때
-          if(this.$route.params.hashtagResult) {
-            this.showSearch=true;
-            this.showAll=false;
-            this.showHot=false;
-            this.showResult=false;
-            console.log("여기맞음?");
-            //기본 설정값
-          } else {
-            this.showAll=true;
-            this.showHot=true;
-            this.showSearch=false;
-            this.showResult=false;
+          this.getHotHashtags();// 상단바 Hot해시태그
+          this.hotLectureFeeds = true;
+          this.randomFeeds = true;
+
+          //로그인 아이디 있으면 팔로워리스트, 없으면 전체랜덤리스트
+           if(this.member){
+
+            this.getFollowingList();
+            console.log("회원 팔로잉리스트호출");
+
+           } else{
+
+            this.getAllList();
+            console.log("비회원 전체리스트 호출");
+
+           }
+
+
+          //디테일에서 해시태그 검색 키워드 들어오면 실행
+          if(this.$route.params.detailHashtag) {
+
+            this. keyword= this.$route.params.detailHashtag; //디테일에서 받아온 해시태그 키워드
+            this.search(this.keyword); //키워드 있으면 해시태그검색 실행
+
+            this.tagSearch = true;
+            this.hotLectureFeeds = false;
+            this.randomFeeds = false;
+            this.userSearch = false;
+
           }
-          this.search();
+
       },
 
       methods: {
+
         //AllList조회
-        search() {
-        this.axios('/sns/main/allFeeds').then(res => {
-            console.log(res);
-            this.feeds = res.data;
-            console.log("noneUser 로드 성공");
-          }).catch(err =>{
-            console.log(err);
-          });
-      },
-          //상단바에 표시되는 top6해시태그
+        getAllList() {
+
+            this.axios('/sns/main/allFeeds')
+            .then(res => {
+                console.log(res);
+                this.feeds = res.data;
+                console.log("전체랜덤피드 호출 성공");
+            }).catch(err =>{
+                console.log(err);
+            });
+
+        },
+
+
+        //FollowingList조회
+        getFollowingList() {
+
+            this.axios('/sns/main/followingFeeds/' + this.member)
+            .then(res => {
+                console.log(res.data);
+                this.feeds = res.data;
+                if (this.feeds.length < 1){ //피드값이 없으면 전체리스트 호출
+                    this.getAllList();
+                }
+                console.log("팔로잉목록 호출 성공");
+            }).catch(err =>{
+                console.log(err);
+            });
+
+        },
+
+
+          //상단바 - top6해시태그 리스트
           getHotHashtags() {
-              this.axios('/sns/main/hashtag').then(res => {
+            
+              this.axios('/sns/main/hashtag')
+              .then(res => {
               this.items = res.data;
             }).catch(err =>{
               console.log(err);
             });
+
           },
 
-          //키워드 해시태그 검색
-          searchHashtag(getHashtag){
-              console.log("받아온 해시태그 ->");
-              console.log(getHashtag);
-              this.axios('/sns/search/hashtag', {
-                  params : {
-                      hashtag : getHashtag
-                  }
-              }).then(res => {
-                  this.feedResult = res.data;
-                  this.showSearch = true;
-                  this.showHot = false;
-                  this.showAll = false;
-                  this.showResult = false;
-                  console.log("피드받기 성공!");
-              }).catch(err =>{
-                  console.log(err);
-              });
+
+          //검색창 - 유저, 해시태그
+          search(keyword){
+
+            console.log("받아온 검색어!!!!!!!!!!!!!!!!!"+ keyword);
+
+            if(keyword.includes("#")){ //'#'가 포함된 검색어가 들어오면 다음 연산을 실행
+
+                let hashtag = keyword.slice(1); // #잘라내기
+                this.searchHashtag(hashtag);//해시태그 검색 실행
+                console.log("해시태그 검색 실행")
+               
+                this.userSearch = false; //유저결과 show
+                this.tagSearch = true; //해시태그결과 hide
+                this.hotLectureFeeds = false; //main hide
+                this.randomFeeds = false; //main hide
+
+            }else{ //나머지 - 유저검색 실행
+
+                this.searchMem(keyword); //유저검색 실행
+                
+                this.userSearch = true; //유저결과 show
+                this.tagSearch = false; //해시태그결과 hide
+                this.hotLectureFeeds = false; //main hide
+                this.randomFeeds = false; //main hide
+                
+
+            }
           },
 
-          //유저검색
-          searchMem(keyword){
-            this.searchResult = this.keyword; //props로 보낼 값 바인딩
-            console.log(this.searchResult);
-            this.showResult = true;
-            this.showSearch = false;
-            this.showHot = false;
-            this.showAll = false;
+          
+          //1. 해시태그 검색
+          searchHashtag(hashtag){
+            this.temp = hashtag;
+            console.log("받아온 해시태그 ->");
+            console.log(hashtag);
+            this.axios('/sns/search/hashtag', {
+                params : {
+                    hashtag : hashtag
+                }
+            }).then(res => {
+
+                this.hashResult = res.data; //->해시태그검색 컴포넌트로
+                this.keyword="";
+                console.log(this.hashResult);
+
+                if(this.hashResult.length < 1){
+
+                    this.noResult = true; // 검색결과 없음페이지 show
+                    this.tagSearch = false; //해시태그결과 hide
+                    this.userSearch = fals//검색결과 없음페이지 hide
+                    this.hotLectureFeeds = false; //main hide
+                    this.randomFeeds = false; //main hide
+                    
+                    console.log("해시태그 검색결과 없음!");
+                }else{
+                    this.tagSearch = true; //해시태그결과 show
+                    this.noResult = false; //검색결과 없음페이지 hide
+                    this.userSearch = false; //유저결과 show
+                    this.hotLectureFeeds = false; //main hide
+                    this.randomFeeds = false; //main hide
+
+                }
+
+                console.log("해시태그검색 성공!");
+
+            }).catch(err =>{
+                console.log(err);
+            });
           },
+
+
+          //2. 유저검색
+          searchMem(keyword) {
+            console.log("검색 키워드: "+ keyword);
+            this.temp = keyword;
+            this.axios('/sns/search/user', {
+                params : {
+                    memberId : keyword
+                }
+            }).then(res => {
+
+                this.userResult = res.data; //유저검색페이지 컴포넌트로
+                this.keyword="";
+
+                console.log(this.userResult[0]);
+
+                if(this.userResult.length < 1){
+
+                    this.noResult = true;
+                    this.userSearch = false;
+                    this.tagSearch = false;
+                    this.hotLectureFeeds = false;
+                    this.randomFeeds = false;
+
+                    console.log("유저검색 성공!");
+
+                } else {
+                    this.userSearch = true;
+                    this.tagSearch = false;
+                    this.hotLectureFeeds = false;
+                    this.randomFeeds = false;
+                    this.noResult = false;
+
+                    console.log("유저검색 성공!");
+                }
+
+            }).catch(err =>{
+                console.log(err);
+            });
+        },
+
+
 
 
 
@@ -273,6 +390,7 @@
             //   }).catch(err =>{
             //       console.log(err);
             //   });
+
 
           //글 등록 이동
           select : function() {

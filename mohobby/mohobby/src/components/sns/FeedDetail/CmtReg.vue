@@ -67,7 +67,7 @@
           <!-- 댓글 버튼 끝 -->
 
 
-          <!-- 대댓 유저소환 -->
+          <!-- 대댓폼 (유저소환) -->
           <v-card-actions>
             <div class="content">
               <div v-if="cmt.parentCommId != ''">
@@ -76,7 +76,9 @@
                   <strong>@{{ cmt.parentMemberId }}</strong></span>
                 {{ cmt.content }}
               </div>
-              <div v-if="cmt.parentCommId == '' && cmt.commId != editForm && !formValue">
+              <!-- 상위댓글이 없으면 -->
+              <!-- <div v-if="cmt.parentCommId == '' && cmt.commId != editForm && !formValue"> -->
+              <div v-if="originContentFrm == true">
                 {{ cmt.content }}
               </div>
               <!-- 유저소환 끝 -->
@@ -89,7 +91,6 @@
               </div>
             </div>
           </v-card-actions>
-
 
           <!-- showRegReCmt(cmt.commId) 대댓글 입력창 -->
           <div v-show="cmt.commId == reCmt">
@@ -122,6 +123,7 @@ export default {
 
   },
 
+
   data() {
     return {
       cmtCount: "",
@@ -131,10 +133,13 @@ export default {
       originContent: "", //원댓글
       memberId: this.$store.state.id,
       comments: [], //cmt리스트
+      editCmtId: "",
       reCmt: "", //대댓등록창 show여부
-      editForm: "", //댓글수정창
       cmtMemberId: "", //소환된 회원
-      formValue: false, //form 노출여부
+      // formValue: false, //form 노출여부
+      originContentFrm: false, //원댓폼
+      editForm: false, //댓글수정창
+      replyBtn: false, //답장버튼
       saveBtn: false, //저장버튼
       editBtn: false, //수정버튼
       deleteBtn: false, //삭제버튼
@@ -142,6 +147,7 @@ export default {
       replyBtn: false //답장 버튼
     };
   },
+
 
   created() {
     this.getCmtList() //댓글리스트
@@ -166,8 +172,7 @@ export default {
     },
 
     //로그인 검증 모달
-    loginConfirm() {
-
+    loginConfirm(){
       this.$swal({
         title: "로그인하셔야 가능하세요🙏",
         text: "🙏로그인화면으로 이동부탁드립니다🙏",
@@ -186,20 +191,16 @@ export default {
     },
 
 
-    //date처리
+    //date filter
     writeDate(writeDate) {
-
       return this.$moment(writeDate).fromNow();
-
     },
 
-
     //댓글리스트upload
-    getCmtList() {
 
+    getCmtList() {
       this.axios("/sns/cmt/" + this.postid)
         .then((res) => {
-          console.log(res.data);
           this.comments = res.data;
           this.cmtCount = res.data.length
           this.$emit('cmtCount', this.cmtCount)
@@ -212,9 +213,10 @@ export default {
 
 
     //댓글등록 - 입력창
-    regCmt() {
+
 
       if (this.confirmMember(this.memberId) == false) { //유효성검사 - 회원 id, 내용값
+
         this.loginConfirm();
 
       } else if (this.inputCmt == "") {
@@ -252,6 +254,7 @@ export default {
           .catch((err) => {
             console.log(err);
           });
+
       }
 
     },
@@ -273,7 +276,6 @@ export default {
         });
 
     },
-
     //댓글 수정폼 호출
     showEditForm(commId, content) {
 
@@ -299,8 +301,11 @@ export default {
     },
 
     //댓글 수정
+
     editCmt(commId) {
-      this.checkLogin();//로그인검증
+      
+      this.editedContent = this.cmt.content; //변경된 내용으로 교체
+
       this.axios
         .put("/sns/cmt/" + commId, {
           content: this.editedContent,
@@ -308,11 +313,14 @@ export default {
         .then((res) => {
           this.editForm = "";
           console.log("댓글수정 성공! " + res);
+
+          this.showEditForm();
+          
+
           this.getCmtList();
-          this.formValue = !this.formValue;
         })
         .catch((err) => {
-          console.log(err);
+          alert("댓글수정 실패: "+err);
         });
     },
 
@@ -322,8 +330,10 @@ export default {
     showRegReCmt(cmtId, cmtmemId) {
       if (this.confirmMember(this.memberId) == false) { //유효성검사 - 회원 id, 내용값
         this.loginConfirm();
+
       } else {
         this.inputReCmt = ""; //대댓 입력창 초기화
+
         if (cmtId == this.reCmt) {
           //댓글창닫기
           this.reCmt = -1; //reCmt 에 임의로 -1을 줘서 같을 수 없도록
@@ -340,6 +350,7 @@ export default {
           this.deleteBtn = false
           this.cancelBtn =true
         }
+
       }
     },
     cancleEdit(){
@@ -390,6 +401,7 @@ export default {
           });
       }
     },
+
     //댓글 삭제버튼 추가하기
     // onAdd(){
     //   const input = documnet.querySelector('.input');

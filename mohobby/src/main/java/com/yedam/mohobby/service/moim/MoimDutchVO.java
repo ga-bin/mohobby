@@ -17,4 +17,5 @@ public class MoimDutchVO {
 	private String moneyTarget; // n빵할 대상
 	private int calcPrice; // n빵된 돈
 	private int calcCheck; // 확인 여부
+	private String profileImg; // 멤버 프로필 이미지 
 }
