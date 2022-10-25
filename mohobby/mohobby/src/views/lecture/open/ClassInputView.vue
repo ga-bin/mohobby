@@ -1,0 +1,913 @@
+<template>
+  <v-container fluid style="padding: 30px 40px;">
+    <div>
+      <h1 class="mb-10">강의 개설 신청</h1>
+
+    </div>
+    <form id="classInput" name="classInput" v-on:submit.prevent>
+      <div class="fill-height">
+        <div class="contents-box">
+          <div class="contents">
+            <br />
+            <!-- 1/7 -->
+            <span class="no">1/7</span>
+            <h2>클래스에 대한 간략한 정보를 남겨 주세요</h2>
+            <br />
+            <!-- className -->
+            <span class="label">클래스 명</span>
+            <input
+              type="text"
+              class="input"
+              placeholder="예) 수학 강의, 고양이 교실, 편집 강의, 텃밭 가꾸기"
+              name="className"
+              v-model="className"
+            />
+            <!-- classType -->
+            <span class="label">클래스 방식</span>
+            <v-radio-group v-model="classType" row name="classType">
+              <v-radio
+                style="margin-right: 50px"
+                label="ONLINE"
+                value="0"
+              ></v-radio>
+              <v-radio label="OFFLINE" value="1"></v-radio>
+            </v-radio-group>
+            <!-- region -->
+            <div v-if="classType == 1">
+              <span class="label">지역</span>
+              <v-radio-group row v-model="regionId" name="regionId">
+                <div v-for="(item, index) in regionList" :key="index">
+                  <v-radio
+                    style="margin-right: 50px"
+                    :label="item.keywordName"
+                    :value="item.keywordId"
+                  ></v-radio>
+                </div>
+              </v-radio-group>
+            </div>
+            <!-- jobName -->
+            <span class="label">직업</span>
+            <input type="text" class="input" name="jobName" v-model="jobName" placeholder="강사님의 직업을 알려주세요."/>
+            <!-- keywordName(카테고리이름)  -->
+            <span class="label">재주 분야</span>
+            <v-radio-group
+              row
+              v-model="selectedKeywordId"
+              name="selectedKeywordId"
+            >
+              <div v-for="(item, index) in catg" :key="index">
+                <v-radio
+                  style="margin-right: 50px"
+                  :label="item.keywordName"
+                  :value="item.keywordId"
+                ></v-radio>
+              </div>
+            </v-radio-group>
+            <!-- 금액-->
+            <span class="label">금액(VAT포함)</span>
+            <input
+              type="text"
+              class="input"
+              placeholder="숫자만입력"
+              style="width: 1150px; margin-right: 10px"
+              name="classPrice"
+              v-model="classPrice"
+            />
+            <span style="font-size: 20px; margin-right: 10px">원</span>
+          </div>
+        </div>
+        <br />
+        <br />
+        <div class="contents-box">
+          <div class="contents">
+            <br />
+            <span class="no">2/7</span>
+            <h2>전문가 인증을 해주세요</h2>
+            <br />
+            <span 
+              class="label" 
+              style="display: inline-block; margin-right: 85px"
+            >
+              실명
+            </span>
+            <input
+              type="text"
+              class="input"
+              readonly
+              style="width: 400px; margin: 0 10px 0 10px"
+              v-model="certName"
+            />
+            <span 
+              class="label" 
+              style="display: inline-block; margin-right: 25px"
+            >
+              생년월일
+            </span>
+            <input
+              type="text"
+              class="input"
+              readonly
+              style="width: 400px; margin: 0 10px 0 10px"
+              v-model="certBirth"
+            />
+            <button @click.stop="CertBtn">인증</button>
+            <br />
+            <br />
+            <span class="label" style="display: inline-block"
+              >수익금 출금 은행</span
+            >
+            <select
+              class="input"
+              style="width: 400px; margin: 0 10px 0 10px"
+              name="bankCode"
+              v-model="bankCode"
+            >
+              <option value="" selected>--- 은행을 선택하세요 ---</option>
+              <option v-for="(item, i) in bankList" :key="i" :value="item.code">{{ item.name }}</option>
+            </select>
+            <span class="label" style="display: inline-block"
+              >수익금 출금 계좌</span
+            >
+            <input
+              type="text"
+              class="input"
+              placeholder="숫자만 입력"
+              style="width: 400px; margin: 0 10px 0 10px"
+              name="account"
+              v-model="account"
+            />
+            <button @click.stop="accountCheck">인증</button>
+            <br />
+            <br />
+          </div>
+        </div>
+        <br />
+        <br />
+        <div class="contents-box">
+          <div class="contents">
+            <br />
+            <span class="no">3/7</span>
+            <h2>클래스를 설명해 주세요.</h2>
+            <br />
+            <!-- 에디터 -->
+            <div class="example" style="width: 1300px" name="classInfo">
+              <quill-editor
+                class="editor"
+                style="height: 500px; padding-bottom: 65px;"
+                ref="myTextEditor"
+                :disabled="false"
+                :value="content"
+                :options="editorOption"
+                @change="onEditorChange"
+                @blur="onEditorBlur($event)"
+                @focus="onEditorFocus($event)"
+                @ready="onEditorReady($event)"
+                name="classInfo"
+              />
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <div class="contents-box">
+          <div class="contents">
+            <br />
+            <span class="no">4/7</span>
+            <h2>클래스를 잘 나타낼 수 있도록 이미지를 등록하세요.</h2>
+            <br />
+            <span class="label">메인이미지등록(필수)</span>
+
+            <!-- 파일등록부 -->
+            <v-file-input
+              class="mx-auto"
+              label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)"
+              type="file"
+              filled
+              prepend-icon="mdi-camera"
+              counter
+              show-size
+              dense
+              multiple
+              @change="mainImageChange"
+              name="mainFileList"
+              accept="image/*"
+            />
+            <!-- 파일이름, 개수 -->
+            <div v-for="(list, i) in mainFileList" :key="i">
+              {{ list.name }}
+            </div>
+
+            <!-- 이미지 미리보기 -->
+            <div style="display: inline-flex; margin-left: 10px">
+              <v-img
+                v-for="(item, i) in mainUploadimageurl"
+                :key="i"
+                :src="item.url"
+                aspect-ratio="4/3"
+                height="150px"
+                width="200px"
+                lazy-src
+                error
+                style="margin-right: 10px"
+              />
+            </div>
+            <span class="label">추가이미지등록(선택)</span>
+            <!-- 파일등록부 -->
+            <v-file-input
+              class="mx-auto"
+              label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)"
+              type="file"
+              filled
+              prepend-icon="mdi-camera"
+              counter
+              show-size
+              dense
+              multiple
+              @change="subImageChange"
+              name="subFileList"
+              accept="image/*"
+            />
+            <!-- 파일이름, 개수 -->
+            <div v-for="(list, i) in subFileList" :key="i">
+              {{ list.name }}
+            </div>
+
+            <!-- 이미지 미리보기 -->
+            <div style="display: inline-flex; margin-left: 10px">
+              <v-img
+                v-for="(item, i) in subUploadimageurl"
+                :key="i"
+                :src="item.url"
+                aspect-ratio="4/3"
+                height="150px"
+                width="200px"
+                lazy-src
+                error
+                style="margin-right: 10px"
+              />
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <div class="contents-box">
+          <div class="contents">
+            <br />
+            <span class="no">5/7</span>
+            <h2>커리큘럼을 등록하세요</h2>
+            <br />
+            <span class="label">챕터를 등록하세요</span>
+            <div v-for="(item, i) in chapList">
+              <span
+                style="padding: 10px 15px 10px 15px; display: inline-block;
+                  border: 1px solid black;
+                  margin-right: 20px;"
+                >{{ i+1 }}</span
+              >
+              <input
+                class="input"
+                placeholder="챕터 제목을 입력하세요"
+                style="width: 1100px"
+                type="text"
+                v-model="item.name"
+              />
+              <button 
+                style="margin: 0px 20px 0px; border: 1px solid red; color: red"
+                @click.stop="delChapList(i)"
+              >
+                -
+              </button>
+              <button 
+                style="border: 1px solid green; color: green"
+                @click.stop="addChapList"
+              >
+                +
+              </button>
+            </div>
+            <span class="label">회차를 등록하세요</span>
+            <div 
+              v-for="(curr, i) in currList"
+              :key="i"
+            >
+              <span
+                style="padding: 10px 15px 10px 15px; display: inline-block; border: 1px solid black; margin-right: 20px;"
+              >
+                {{ i+1 }}
+              </span>
+              <select
+                class="input"
+                style="width: 450px; margin: 0 20px 0 10px"
+                name="color2"
+                v-model="curr.chap"
+              >
+                <option value="" selected>--- 챕터를 선택하세요 ---</option>
+                <option 
+                  v-for="(chap, i) in chapList" 
+                  :key="i" 
+                  :value="chap.name" 
+                  v-if="chap.name != ''"
+                >
+                  {{ chap.name }}
+                </option>
+              </select>
+              <input
+                class="input"
+                type="text"
+                placeholder="강의 제목을 입력하세요"
+                style="width: 620px"
+                v-model="curr.title"
+              />
+              <button
+                style="margin: 0px 20px 0px; border: 1px solid red; color: red"
+                @click="delCurrList(i)"
+              >
+                -
+              </button>
+              <button 
+                style="border: 1px solid green; color: green"
+                @click="addCurrList"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <div class="contents-box">
+          <div class="contents">
+            <br />
+            <span class="no">6/7</span>
+            <h2>수업에 필요한 자료를 등록하세요.</h2>
+            <br />
+            <span style="display: inline-block" class="label">회차</span>
+            <span style="margin-left: 30px; display: inline-block" class="label"
+              >영상 등록</span
+            >
+            <span style="margin-left: 490px; display: inline-block" class="label"
+              >교안 등록</span
+            >
+            <div v-for="(curr, i) in currList" :key="i">
+              <span
+                style="padding: 10px 15px 10px 15px;
+                  display: inline-block;
+                  border: 1px solid black;
+                  margin-right: 20px;"
+                > {{ i+1 }} </span
+              >
+              <input
+                class="input"
+                placeholder="챕터 제목을 입력하세요"
+                style="width: 530px; display: inline-block"
+              />
+              <input
+                type="file"
+                class="input"
+                style="width: 540px; margin-left: 20px"
+                accept="image/jpeg,.txt,.mp4"
+              />
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <div class="contents-box">
+          <div class="contents">
+            <br />
+            <span class="no">7/7</span>
+            <h2>수업을 듣기 전 필요한 준비물을 등록하세요</h2>
+            <span class="label"
+              >필요한 물품만 등록해주면 판매 연계는 모하비가 도와드립니다!</span
+            >
+            <br />
+            <br />
+            <span class="label">준비물을 등록하세요.</span>
+            <input
+              type="text"
+              class="input"
+              placeholder="준비물을 입력하세요"
+              style="width: 1150px; margin-right: 10px"
+            />
+          </div>
+        </div>
+        <br />
+        <br />
+        <button
+          style="
+            border: none;
+            background-color: lightgrey;
+            width: 1350px;
+            font-weight: bold;
+          "
+        >
+          신청
+        </button>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+    </form>
+  </v-container>
+</template>
+<script>
+const { IMP } = window;
+IMP.init("imp46541776");
+
+// editor
+import hljs from "highlight.js";
+import debounce from "lodash/debounce";
+import { quillEditor } from "vue-quill-editor";
+import Quill from "quill";
+
+import { ImageDrop } from "quill-image-drop-module";
+
+import { ImagePaste } from "@/imagePasteClass";
+
+import Im from "@/ResizeImage/ImageResize";
+
+Quill.register("modules/imageDrop", ImageDrop);
+Quill.register("modules/imagePaste", ImagePaste);
+Quill.register("modules/imageResize", Im);
+
+// highlight.js style
+import "highlight.js/styles/tomorrow.css";
+
+// import theme style
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+
+
+export default {
+  name: "",
+  components: {
+    quillEditor,
+  },
+  props:['toolbarText','toolbarVideo','toolbarImage','toolbarLink','imagePaste','imageDrop','placeholder','value'],
+  data() {
+    return {
+      currList: [
+        {
+          title: '',
+          chap: '',
+        },
+      ],
+      chapList: [
+        {
+          name: '',
+        },
+      ],
+      bankCode : '',
+      account : '',
+      bankList: [
+        {name: '농협은행', code: '011'},
+        {name: '산업은행', code: '002'},
+        {name: '기업은행', code: '003'},
+        {name: '국민은행', code: '004'},
+        {name: 'KEB하나은행', code: '081'},
+        {name: '우리은행', code: '020'},
+        {name: 'SC제일은행', code: '023'},
+        {name: '시티은행', code: '027'},
+        {name: '대구은행', code: '032'},
+        {name: '광주은행', code: '034'},
+        {name: '제주은행', code: '035'},
+        {name: '전북은행', code: '037'},
+        {name: '경남은행', code: '039'},
+        {name: '새마을금고', code: '045'},
+        {name: '신한은행', code: '088'},
+        {name: '카카오뱅크', code: '090'},
+      ],
+      certName: '',
+      certBirth: '',
+      sampleData: "",
+      phoneNum: "",
+      catg: [],
+      keywordCount: 0,
+      regionList: [],
+      selectedKeywordId: "",
+      regionId: "",
+      memberId: "",
+      className: "",
+      classPrice: 0,
+      classInfo: "",
+      imgAmount: 0,
+      classType: 0,
+      certAble: 0,
+      certStandard: "",
+      postcode: "",
+      address: "",
+      addressDetail: "",
+      startDate: 0,
+      accountHolder: "",
+      // editor
+      editorOption: {
+        placeholder: "텍스트와 이미지를 이용하여 적절하게 꾸며보세요!",
+        modules: {
+          imageDrop: true,
+          imagePaste: true,
+          toolbar: [
+            ["bold", "italic", "underline", "strike"], // <strong>, <em>, <u>, <s>
+            [{ header: 1 }, { header: 2 }], // <h1>, <h2>
+            [{ size: ["small", false, "large", "huge"] }], //class 제어 - html로 되도록 확인
+            [{ header: [1, 2, 3, 4, 5, 6, false] }], // <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, normal
+            [{ font: [] }], // 글꼴 class로 제어
+            [{ color: [] }, { background: [] }], //style="color: rgb(230, 0, 0);", style="background-color: rgb(230, 0, 0);"
+            ["image"],
+          ],
+          imageResize: {
+            displayStyles: {
+              backgroundColor: "black",
+              border: "none",
+              color: "white"
+            },
+            modules: ["Resize", "DisplaySize"]
+          }
+        },
+      },
+      //이미지Data
+      mainUploadimageurl: [], //미리보기 이미지url
+      subUploadimageurl: [], //미리보기 이미지url
+      imagecnt: 0, //업로드한 이미지개수 axious시에 넘겨줌
+      subFileList: [],
+      mainFileList: [],
+      file: {},
+      formData: {},
+      content: "",
+      sampleData: "",
+      imgList: [],
+      files: [],
+    };
+  },
+  setup() {},
+  created() {},
+  mounted() {
+    this.getAllCatg();
+    this.getAllRegion();
+  },
+  computed: {
+    editor() {
+      return this.$refs.myTextEditor.quill;
+    },
+    contentCode() {
+      return hljs.highlightAuto(this.content).value;
+    },
+  },
+  unmounted() {},
+  methods: {
+    // 지역 전체 가져오기
+    getAllRegion() {
+      const vm = this;
+      this.axios({
+        url: "http://localhost:8088/java/regionAll",
+        method: "get",
+      })
+        .then(function (response) {
+          console.log(response);
+          if (response.data != "") {
+            console.log(response.data);
+            vm.regionList = response.data;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    // 관심사 전체 목록 가져오기
+    getAllCatg() {
+      const vm = this;
+      this.axios({
+        url: "http://localhost:8088/java/allCatg",
+        method: "get",
+      })
+        .then(function (response) {
+          console.log(response.data);
+          if (response.data != "") {
+            console.log(vm.catg);
+            vm.catg = response.data;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    // 에디터
+    onEditorChange: debounce(function (value) {
+      this.content = value.html;
+    }, 466),
+    onEditorBlur(editor) {
+      //console.log("editor blur!", editor);
+    },
+    onEditorFocus(editor) {
+      //console.log("editor focus!", editor);
+    },
+    onEditorReady(editor) {
+      //console.log("editor ready!", editor);
+    },
+    async clickSave() {
+      document.querySelector(".ql-editor").style.display = "none";
+
+      let step = 0;
+
+      let len = document
+        .querySelector(".ql-editor")
+        .querySelectorAll("img").length;
+      let classId = 1;
+      if (len != 0) {
+        for (let i = 0; i < len; i++) {
+          let src = document
+            .querySelector(".ql-editor")
+            .getElementsByTagName("img")[i].src;
+          step = await this.uploadImage(classId, i, src, step);
+        }
+      }
+
+      if (step == len) {
+        this.saveEditor();
+      }
+    },
+    
+    //이미지 미리보기
+    mainImageChange(file) {
+      // v-file-input @OnChange
+      if (!file) return;
+      file.forEach((getFile) => {
+        //파일등 정보 forEach문으로 빼오기
+        console.log("item.name: " + getFile.name); //name:파일명, size:바이트(인듯),type:(image/)png
+        const fileReader = new FileReader(); //파일리더기 생성
+        fileReader.onload = (e) => {
+          //파일 성공적으로 읽어오면 이벤트 실행
+          this.mainUploadimageurl.push({ url: e.target.result }); // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
+          if (this.mainUploadimageurl.length > 1) {
+            this.mainUploadimageurl.shift();
+          }
+          console.log({ url: e.target.result });
+        };
+        fileReader.readAsDataURL(getFile); //바이너리 파일을 Base64 Encode 문자열로 반환 Ex.) data:image/jpeg; base64, ….
+      });
+    },
+    //이미지 미리보기
+    subImageChange(file) {
+      // v-file-input @OnChange
+      this.subUploadimageurl = [];
+      if (!file) return;
+
+      file.forEach((getFile) => {
+        //파일등 정보 forEach문으로 빼오기
+        console.log("item.name: " + getFile.name); //name:파일명, size:바이트(인듯),type:(image/)png
+        const fileReader = new FileReader(); //파일리더기 생성
+        fileReader.onload = (e) => {
+          //파일 성공적으로 읽어오면 이벤트 실행
+          this.subUploadimageurl.push({ url: e.target.result }); // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
+          console.log({ url: e.target.result });
+        };
+        fileReader.readAsDataURL(getFile); //바이너리 파일을 Base64 Encode 문자열로 반환 Ex.) data:image/jpeg; base64, ….
+      });
+    },
+    //게시글 등록
+    //미리보기에서 사진 삭제돼야함 ->
+    uploadImage() {
+      const formData = new FormData(classInput); // 파일을 전송할때는 FormData 형식으로 전송
+      this.axios.post("/sns/myfeed", formData, {
+        // 게시글 저장
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }).then(function (res) {
+        console.log("게시글저장 성공!");
+        // this.goUserFeed(this.memberId);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    CertBtn: function() {
+      IMP.certification({
+        //merchant_uid: "ORD20180131-0010013" // 주문 번호
+      }, rsp => {
+        console.log(rsp.imp_uid);
+        const imp_uid = rsp.imp_uid;
+        if (rsp.success) {
+          // 인증 정보 받기
+          this.axios.get('/iamport/cert/'+imp_uid)
+          .then(result => {
+            let name = result.data.name;
+            let birth = result.data.birthday;
+            let memberName = this.$store.state.user.memberName;
+            let memberBirth = this.$moment(this.$store.state.user.birth).format('YYYY-MM-DD');
+
+            if(name == memberName && birth == memberBirth) {
+              this.certName = name;
+              this.certBirth = birth;
+            } else {
+              this.$swal('로그인 정보와 일치하지 않습니다!', '', 'error');
+            }
+          });
+        }
+        else {
+          console.log("인증 실패");
+        }
+      })
+    },
+    accountCheck: function() {
+      console.log(this.$store.state.user);
+      this.axios.get('/bankRealName', {
+          params: {
+              Bncd: this.bankCode,
+              Acno: this.account
+          }
+      }).then( result => {
+          if(result.data.dpnm == this.$store.state.user.memberName) {
+              alert('조회성공');
+          } else {
+              this.$swal('로그인 정보와 일치하지 않습니다!', '', 'error');
+              this.bankCode = '';
+              this.account = '';
+          }
+      })
+    },
+    addChapList() {
+      this.chapList.push({
+        name: '',
+      });
+    },
+    delChapList(i) {
+      if(this.chapList.length == 1) {
+        this.chapList[0].name = '';
+      } else {
+        this.chapList.splice(i, 1);
+      }
+    },
+    addCurrList() {
+      this.currList.push({
+        title: '',
+        chap: '',
+      })
+    },
+    delCurrList(i) {
+      if(this.currList.length == 1) {
+        this.currList[0].title = '';
+        this.currList[0].chap = '';
+      } else {
+        this.currList.splice(i, 1);
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+.container {
+  margin-left: 40px;
+}
+
+.contents-box {
+  width: 1350px;
+  border: 0.5px solid grey;
+}
+
+.contents {
+  margin-left: 20px;
+}
+
+.no {
+  color: #2ac187;
+  font-size: 20px;
+}
+
+.label {
+  font-size: 17px;
+  display: block;
+}
+
+.input {
+  padding: 10px;
+  width: 1200px;
+  border: 1px solid lightgrey;
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+
+button {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px 17px 10px 17px;
+}
+
+form {
+  display: inline-block;
+}
+.authBox {
+  padding: 20px;
+  width: 400px;
+  text-align: left;
+  border: 1px solid gray;
+}
+.tokenBox {
+  padding: 20px;
+  width: 400px;
+  text-align: left;
+  border: 1px solid gray;
+}
+
+.v-input {
+  margin: 0px;
+}
+
+
+
+/* 텍스트 에디터 */
+.ql-stroke {
+  stroke: #4f748e;
+  fill: transparent;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5px;
+}
+
+.ql-stroke-active {
+  stroke: #333;
+  fill: transparent;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2px;
+}
+
+.ql-stroke-mitter {
+  stroke: #4f748e;
+  fill: transparent;
+}
+
+.ql-stroke-mitter-active {
+  stroke: #333;
+  fill: transparent;
+}
+
+.ql-fill {
+  fill: #4f748e;
+}
+
+.ql-fill-active {
+  fill: #333;
+}
+
+.ql-even {
+  stroke: #4f748e;
+  fill: #fff;
+}
+
+.ql-even-active {
+  stroke: #333;
+  fill: #fff;
+}
+
+/*
+  .ql-color-label {
+    fill: red;
+  }
+*/
+
+.ql-transparent {
+  opacity: 0.2;
+}
+
+.ql-thin {
+  stroke: #4f748e;
+  fill: transparent;
+  stroke-width: 1;
+}
+
+.ql-thin-active {
+  stroke: #333;
+  fill: transparent;
+  stroke-width: 2;
+}
+
+.toolbar-item {
+  width: 25px;
+  height: 25px;
+  margin: 5px;
+}
+
+.toolbar-item-active {
+  width: 25px;
+  height: 25px;
+  margin: 4px;
+  border: 1px solid #2e4453;
+}
+
+.toolbar-select {
+  display: inline-block;
+  margin-right: 3px;
+}
+
+.editor {
+  padding: 5px;
+  margin: 5px 10px 5px 5px;
+}
+
+.toolbar-item-disable > * {
+  stroke: #ccc;
+  cursor: not-allowed;
+}
+</style>

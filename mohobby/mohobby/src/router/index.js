@@ -331,6 +331,11 @@ const routes = [
         component: () => import("./../views/lecture/mycourse/classAttdLogin"),
         props: true,
       },
+      {
+        path: "/class/open",
+        name: "classOpenUp",
+        component: () => import("./../views/lecture/open/ClassInputView")
+      },
     ],
   },
   // 강의 영상
@@ -350,7 +355,7 @@ const routes = [
   // moim
   {
     path: "/moimMain",
-    name: "moimMain",
+    name: "moimMain", 
     component: () => import("./../views/moim/MoimMainView"),
   },
   {
