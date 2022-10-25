@@ -19,11 +19,9 @@
   </div>
 </template>
 <script>
-import listCmp from "../../components/sns/SnsListView.vue";
 export default {
   name: "snsMain",
   components: {
-    listCmp
   },
 
   data() {

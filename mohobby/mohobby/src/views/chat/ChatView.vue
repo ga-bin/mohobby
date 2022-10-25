@@ -9,8 +9,8 @@
                 <v-list-item-group>
                   <template v-for="(item, index) in roomList">
                     {{item.roomNo}}
-                    <v-list-item v-on:click="openRoom(item.roomNo)">
-                      <v-list-item>
+                    <v-list-item v-on:click="openRoom(item.roomNo)" style="background-color: gray;">
+                     
                         <v-avatar>
                           <v-img :src="
                             require(`@/assets/image/user/${item.profileImg}`)
@@ -29,7 +29,7 @@
                             chat_bubble
                           </v-icon>
                         </v-list-item-icon>
-                      </v-list-item>
+                     
                     </v-list-item>
                     <v-divider class="my-0" />
                   </template>
@@ -93,7 +93,7 @@ export default {
       message: "",
       roomId: "", //방번호
       roomList: [], //방목록정보
-      stompClient: "", //소켓서버
+      
       hour: "", //메세지시간
       subscribeRoot: "", //구독정보
       targetId: [], //상대방 정보
@@ -108,20 +108,20 @@ export default {
     this.getRoom()
     this.sortRoom()
     this.CheckIn(this.roomId)
+    document.addEventListener('beforeunload', this.handler)
   },
-  mounted() {
-    window.addEventListener('beforeunload', this.unLoadEvent);
-  },
-  beforeUnmount() {
-    window.removeEventListener('beforeunload', this.unLoadEvent);
-  },
+  // mounted() {
+  //   window.addEventListener('beforeunload', this.unLoadEvent);
+  // },
+  // beforeUnmount() {
+  //   window.removeEventListener('beforeunload', this.unLoadEvent);
+  // },
  
   methods: {
-    unLoadEvent: function (event) {
-      event.preventDefault();
-      event.returnValue = '';
+    handler: function handler(event) {
       this.CheckOut(this.roomId);
-    },
+},
+  
     //채팅내역 정렬
     sortRoom() {
       this.roomList.sort(function (a, b) {
@@ -205,8 +205,8 @@ export default {
     },
     // 채팅방에 채팅내역 출력
     openRoom(roomNo) {
-      this.$store.state.isRoomNo=roomNo;
-      console.log(this.$store.state.isRoomNo)
+   console.log("roomId : " + this.roomId)
+   console.log("roomNo : " + roomNo)
       var vm = this;
       if (this.roomId != roomNo) {
         this.CheckInOut(this.roomId, roomNo)
@@ -311,6 +311,8 @@ export default {
     //채팅방 리스트출력
     getRoom() {
       var vm = this;
+
+      vm.roomList=[]
       //1:1
       this.axios
         .get("/ChatRoom/" + this.memberId, {})
@@ -345,18 +347,13 @@ export default {
         });
     },
     connect() {
-      const serverURL = "http://localhost:8088/java/sock";
-      let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
-      let vm = this;
-      this.stompClient.connect(
-        {},
-        (frame) => {
-          console.log("소켓 연결 성공", frame);
+      let vm =this
           vm.stompClient.subscribe(
             "/queue/" + this.$store.state.id,
             function (res) {
               let resContent = JSON.parse(res.body);
+              if(vm.roomList.findIndex(i=>i.roomNo==resContent.roomNo)<0){
+               vm.getRoom();}
               for (let i = 0; i < vm.roomList.length; i++) {
                 if (vm.roomList[i].roomNo == resContent.roomNo) {
                   vm.roomList[i].content = resContent.content;
@@ -370,15 +367,12 @@ export default {
             }
           );
         },
-      );
-    },
   },
   watch: {
     messages() {
             // 화면에 추가된 후 동작하도록
             this.$nextTick(() => {
                 let messages = this.$refs.messages;
-
                 messages.scrollTo({ top: messages.scrollHeight, behavior: 'smooth' });
             });
         }

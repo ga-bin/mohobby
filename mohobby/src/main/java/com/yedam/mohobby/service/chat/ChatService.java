@@ -27,6 +27,6 @@ public int updateCheckInOut(int preRoomId,int currentRoomId,String memberId);
 //체크인 여부 조회
 public int getCheckIn(int roomId, String memberId);
 //안읽은 전체 메세지수
-
+public int checkMoimId(int roomNo);
 }
 

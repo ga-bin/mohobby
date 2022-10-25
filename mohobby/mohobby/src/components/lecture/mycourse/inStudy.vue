@@ -75,6 +75,13 @@ export default {
         
             
         },
+        goDetail(item) {
+            if(item.classType === 0) {
+                this.$router.push({ path: '/class/on/'+item.classId+'/info', }).catch(()=>{$router.go(0)});
+            } else if(item.classType === 1) {
+                this.$router.push({ path: '/class/off/'+item.classId+'/info', }).catch(()=>{$router.go(0)});
+            }
+        },
     },
 }
 </script>

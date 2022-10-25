@@ -85,6 +85,7 @@
       where b.board_id = c.target_id(+)
       and moim_id = #{moimId}
       and board_type = #{boardType}
+      order by board_id desc
 
    </select>
 
@@ -425,12 +426,13 @@
    </insert>
    
   <!-- n빵 디테일 조회 -->
-  <select id="nbbangSelect" resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
-  select a.dutch_id, a.member_id, a.write_date, a.total_price, 
-         a.people, b.member_id as money_target, b.calc_price, b.calc_check
-  from moim_dutch a, moim_dutch_ptp b
-  where a.dutch_id(+) = b.dutch_id
-  and a.moim_id = #{moimId}
+  <select id="nbbangSelect" resultType="com.yedam.mohobby.service.moim.MoimDutchVO" parameterType="com.yedam.mohobby.service.moim.MoimDutchVO">
+select a.profile_img, b.dutch_id, b.member_id, b.write_date, b.total_price, b.people, c.member_id as money_target, c.calc_price, c.calc_check
+from member a join moim_dutch b
+on a.member_id = b.member_id
+join moim_dutch_ptp c
+on b.dutch_id = c.dutch_id
+where b.moim_id = #{moimId} and b.dutch_id = #{dutchId}
   </select>
   
   <!-- 소모임 일정 등록 -->
@@ -460,6 +462,7 @@
   <delete id="deleteSchedule" parameterType="Integer">
   delete from moim_schedule where sked_id=#{skedId}
   </delete>
+
   
   <!-- 소모임 멤버 가입 등록 -->
   <insert id="insertMember">
@@ -487,4 +490,15 @@
                 max_people = #{maxPeople}
   where moim_id = #{moimId}
   </update>
+
+
+    <!-- 소모임 게시글 등록 -->
+  <insert id="insertBoard">
+  <selectKey resultType="Integer" keyProperty="boardId" order="BEFORE">
+  SELECT NVL(MAX(board_id), 0)+1 FROM moim_board
+  </selectKey>
+  INSERT INTO moim_board 
+  VALUES (#{boardId}, #{memberId}, #{title}, #{boardId}, #{boardType}, current_date,#{moimId})
+  </insert>
+
 </mapper>

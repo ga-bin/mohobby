@@ -80,5 +80,10 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 	public int getCheckIn(int roomId,String memberId) {
 		return mapper.getCheckIn(roomId,memberId);
 	}
+//1:1 1:m 여부
+	@Override
+	public int checkMoimId(int roomNo) {
+		return mapper.checkMoimId(roomNo);
+	}
 	
 }

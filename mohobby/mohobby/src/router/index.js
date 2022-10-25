@@ -320,6 +320,22 @@ const routes = [
           },
         ],
       },
+      {
+        path: "attd",
+        name: "myattd",
+        component: () => import("./../views/lecture/mycourse/classAttdMain.vue"),
+      },
+      {
+        path: "/class/attd/login",
+        name: "attdLogin",
+        component: () => import("./../views/lecture/mycourse/classAttdLogin"),
+        props: true,
+      },
+      {
+        path: "/class/open",
+        name: "classOpenUp",
+        component: () => import("./../views/lecture/open/ClassInputView")
+      },
     ],
   },
   // 강의 영상
@@ -329,10 +345,17 @@ const routes = [
     component: () => import("./../views/lecture/video/learnMainView"),
     props: true,
   },
+  // 수료증 프린트
+  {
+    path: "/class/my/cert/print",
+    name: "certificatePrint",
+    component: () => import("./../views/lecture/mycourse/certificatePrint"),
+    props: true,
+  },
   // moim
   {
     path: "/moimMain",
-    name: "moimMain",
+    name: "moimMain", 
     component: () => import("./../views/moim/MoimMainView"),
   },
   {

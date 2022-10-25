@@ -157,7 +157,7 @@ export default {
               text: "학습 관리",
               items: [
                 { id: 20, text: "내 학습", route: "/class/my/instudy", catg: "/" },
-                { id: 21, text: "출석관리", route: "", catg: "" },
+                { id: 21, text: "출석관리", route: "/class/attd", catg: "/" },
                 { id: 22, text: "강의노트", route: "", catg: "" },
                 { id: 23, text: "작성한 글 목록", route: "", catg: "" },
               ],
@@ -178,7 +178,7 @@ export default {
             {
               text: "클래스 개설",
               items: [
-                { id: 26, text: "개설신청", route: "", catg: "" },
+                { id: 26, text: "개설신청", route: "/class/open", catg: "/" },
                 { id: 27, text: "심사확인", route: "", catg: "" },
               ],
             },

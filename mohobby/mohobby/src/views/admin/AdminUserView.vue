@@ -2,6 +2,70 @@
   <main>
     <AdminSidebar></AdminSidebar>
     <div style="margin-left: 60px; width: 1000px">
+      <v-card
+    max-width="475"
+    class="mx-auto"
+  >
+    <v-toolbar
+      color="teal"
+      dark
+    >
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+      <v-toolbar-title>신고코드</v-toolbar-title>
+    </v-toolbar>
+
+
+
+      <v-list-item-group @click="getSelectedCode()" v-model="selectedCode">
+        <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>us1</v-list-item-title>
+              <v-list-item-subtitle>부적절한 게시물 개시</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+
+        <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>us2</v-list-item-title>
+              <v-list-item-subtitle>다른 유저에게 욕설, 비방</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+
+        <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>us3</v-list-item-title>
+              <v-list-item-subtitle>게시글, 댓글 도배</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+
+        <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>us4</v-list-item-title>
+              <v-list-item-subtitle>홍보성 게시물 반복적 개시</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+
+         <v-list-item>
+          <template>
+            <v-list-item-content>
+              <v-list-item-title>us5</v-list-item-title>
+              <v-list-item-subtitle>기타</v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+
       <br />
       <h3>신고된 유저</h3>
       <br />
@@ -72,6 +136,8 @@ export default {
       flagUserList: [],
       userOneInfo: [],
       role : 0,
+      settings: [],
+      selectedCode : "",
     };
   },
   beforeCreate() {},
@@ -79,7 +145,8 @@ export default {
     this.getFlagedUser();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+  },
   beforeUpdate() {},
   updated() {},
   beforeUnmount() {},
@@ -89,7 +156,13 @@ export default {
   watch: {},
 
   methods: {
-    getFlagedUser() {
+    getSelectedCode() {
+      console.log(this.selectedCode);
+    }
+    ,showSettings() {
+      console.log(this.settings);
+    }
+    ,getFlagedUser() {
       const vm = this;
       this.axios({
         url: "/admimflaguser",
@@ -165,11 +238,6 @@ export default {
       })();
     },
     updateUserBlock(memberId) {
-      console.log(memberId);
-      console.log(memberId);
-      console.log(memberId);
-      console.log(memberId);
-      console.log(memberId);
       this.axios({
         url: "/memberupdaterole",
         method: "put",
