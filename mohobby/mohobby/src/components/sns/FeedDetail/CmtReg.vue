@@ -214,7 +214,7 @@ export default {
 
     //댓글등록 - 입력창
 
-
+    regCmt() {
       if (this.confirmMember(this.memberId) == false) { //유효성검사 - 회원 id, 내용값
 
         this.loginConfirm();

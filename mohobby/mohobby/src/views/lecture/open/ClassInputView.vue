@@ -28,41 +28,38 @@
               <v-radio
                 style="margin-right: 50px"
                 label="ONLINE"
-                value="0"
+                :value="0"
               ></v-radio>
-              <v-radio label="OFFLINE" value="1"></v-radio>
+              <v-radio label="OFFLINE" :value="1"></v-radio>
             </v-radio-group>
             <!-- region -->
-            <div v-if="classType == 1">
-              <span class="label">지역</span>
-              <v-radio-group row v-model="regionId" name="regionId">
-                <div v-for="(item, index) in regionList" :key="index">
-                  <v-radio
-                    style="margin-right: 50px"
-                    :label="item.keywordName"
-                    :value="item.keywordId"
-                  ></v-radio>
-                </div>
-              </v-radio-group>
+            <div v-if="classType == 1" class="mb-5">
+              <span class="label">강의 장소</span>
+              <input type="text" id="address" placeholder="주소를 검색하세요." readonly v-model="address" />
+              <button class="button" @click="searchAddress">주소 찾기</button>
+              <div v-show="mapShow" class="kmap" style="width:500px;height:400px;" ref="map"></div>
+            </div>
+            <!-- 강의일자 -->
+            <div v-if="classType == 1" class="mb-5">
+              <span class="label">강의 시작 일자</span>
+              <b-form-group id="move_right" label-for="input-10">
+                <b-form-input id="input-11" type="date" :min="$moment().add(60, 'd').format('YYYY-MM-DD')"></b-form-input>
+              </b-form-group>
             </div>
             <!-- jobName -->
             <span class="label">직업</span>
             <input type="text" class="input" name="jobName" v-model="jobName" placeholder="강사님의 직업을 알려주세요."/>
             <!-- keywordName(카테고리이름)  -->
             <span class="label">재주 분야</span>
-            <v-radio-group
-              row
-              v-model="selectedKeywordId"
-              name="selectedKeywordId"
+            <select
+              class="input mb-5"
+              style="width: 400px; margin: 0 10px 0 10px"
+              name="keyword"
+              v-model="keyword"
             >
-              <div v-for="(item, index) in catg" :key="index">
-                <v-radio
-                  style="margin-right: 50px"
-                  :label="item.keywordName"
-                  :value="item.keywordId"
-                ></v-radio>
-              </div>
-            </v-radio-group>
+              <option value="" selected>--- 키워드를 선택하세요 ---</option>
+              <option v-for="(item, i) in catg" :key="i" :value="item.keywordId">{{ item.keywordName }}</option>
+            </select>
             <!-- 금액-->
             <span class="label">금액(VAT포함)</span>
             <input
@@ -151,19 +148,10 @@
             <br />
             <!-- 에디터 -->
             <div class="example" style="width: 1300px" name="classInfo">
-              <quill-editor
-                class="editor"
-                style="height: 500px; padding-bottom: 65px;"
-                ref="myTextEditor"
-                :disabled="false"
-                :value="content"
-                :options="editorOption"
-                @change="onEditorChange"
-                @blur="onEditorBlur($event)"
-                @focus="onEditorFocus($event)"
-                @ready="onEditorReady($event)"
-                name="classInfo"
-              />
+              <QuillEditor
+                @editorEmit="getContent"
+                ref="editor_content"
+              ></QuillEditor>
             </div>
           </div>
         </div>
@@ -256,14 +244,22 @@
             <span class="no">5/7</span>
             <h2>커리큘럼을 등록하세요</h2>
             <br />
+            <div v-if="classType==1">
+              <span class="label">수업일수를 등록하세요</span>
+              <span class="mr-5">주</span>
+              <input class="input" type="number" v-model="times" min="1" max="7" id="times" style="width: 70px"/>
+              <span class="ml-1">회</span>
+              <span class="mx-5">X</span>
+              <input class="input" type="number" v-model="weeks" min="3" id="weeks" style="width: 70px"/>
+              <span class="ml-1">주</span>
+            </div>
             <span class="label">챕터를 등록하세요</span>
             <div v-for="(item, i) in chapList">
               <span
-                style="padding: 10px 15px 10px 15px; display: inline-block;
-                  border: 1px solid black;
-                  margin-right: 20px;"
-                >{{ i+1 }}</span
+                style="padding: 10px 15px 10px 15px; display: inline-block; border: 1px solid black; margin-right: 20px;"
               >
+                {{ i+1 }}
+              </span>
               <input
                 class="input"
                 placeholder="챕터 제목을 입력하세요"
@@ -277,7 +273,7 @@
               >
                 -
               </button>
-              <button 
+              <button
                 style="border: 1px solid green; color: green"
                 @click.stop="addChapList"
               >
@@ -318,12 +314,14 @@
                 v-model="curr.title"
               />
               <button
+                v-if="classType != 1"
                 style="margin: 0px 20px 0px; border: 1px solid red; color: red"
                 @click="delCurrList(i)"
               >
                 -
               </button>
               <button 
+                v-if="classType != 1"
                 style="border: 1px solid green; color: green"
                 @click="addCurrList"
               >
@@ -415,39 +413,23 @@
 const { IMP } = window;
 IMP.init("imp46541776");
 
-// editor
-import hljs from "highlight.js";
-import debounce from "lodash/debounce";
-import { quillEditor } from "vue-quill-editor";
-import Quill from "quill";
-
-import { ImageDrop } from "quill-image-drop-module";
-
-import { ImagePaste } from "@/imagePasteClass";
-
-import Im from "@/ResizeImage/ImageResize";
-
-Quill.register("modules/imageDrop", ImageDrop);
-Quill.register("modules/imagePaste", ImagePaste);
-Quill.register("modules/imageResize", Im);
-
-// highlight.js style
-import "highlight.js/styles/tomorrow.css";
-
-// import theme style
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-
+import QuillEditor from "@/components/common/TextEditor.vue";
 
 export default {
   name: "",
   components: {
-    quillEditor,
+    QuillEditor,
   },
   props:['toolbarText','toolbarVideo','toolbarImage','toolbarLink','imagePaste','imageDrop','placeholder','value'],
   data() {
     return {
+      startDate: '',
+      times: 1,
+      weeks: 3,
+      mapShow: false,
+      posX: 0,
+      posY: 0,
+      address: '',
       currList: [
         {
           title: '',
@@ -486,7 +468,7 @@ export default {
       catg: [],
       keywordCount: 0,
       regionList: [],
-      selectedKeywordId: "",
+      keyword: "",
       regionId: "",
       memberId: "",
       className: "",
@@ -497,35 +479,8 @@ export default {
       certAble: 0,
       certStandard: "",
       postcode: "",
-      address: "",
-      addressDetail: "",
       startDate: 0,
       accountHolder: "",
-      // editor
-      editorOption: {
-        placeholder: "텍스트와 이미지를 이용하여 적절하게 꾸며보세요!",
-        modules: {
-          imageDrop: true,
-          imagePaste: true,
-          toolbar: [
-            ["bold", "italic", "underline", "strike"], // <strong>, <em>, <u>, <s>
-            [{ header: 1 }, { header: 2 }], // <h1>, <h2>
-            [{ size: ["small", false, "large", "huge"] }], //class 제어 - html로 되도록 확인
-            [{ header: [1, 2, 3, 4, 5, 6, false] }], // <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, normal
-            [{ font: [] }], // 글꼴 class로 제어
-            [{ color: [] }, { background: [] }], //style="color: rgb(230, 0, 0);", style="background-color: rgb(230, 0, 0);"
-            ["image"],
-          ],
-          imageResize: {
-            displayStyles: {
-              backgroundColor: "black",
-              border: "none",
-              color: "white"
-            },
-            modules: ["Resize", "DisplaySize"]
-          }
-        },
-      },
       //이미지Data
       mainUploadimageurl: [], //미리보기 이미지url
       subUploadimageurl: [], //미리보기 이미지url
@@ -547,9 +502,6 @@ export default {
     this.getAllRegion();
   },
   computed: {
-    editor() {
-      return this.$refs.myTextEditor.quill;
-    },
     contentCode() {
       return hljs.highlightAuto(this.content).value;
     },
@@ -591,41 +543,6 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    },
-    // 에디터
-    onEditorChange: debounce(function (value) {
-      this.content = value.html;
-    }, 466),
-    onEditorBlur(editor) {
-      //console.log("editor blur!", editor);
-    },
-    onEditorFocus(editor) {
-      //console.log("editor focus!", editor);
-    },
-    onEditorReady(editor) {
-      //console.log("editor ready!", editor);
-    },
-    async clickSave() {
-      document.querySelector(".ql-editor").style.display = "none";
-
-      let step = 0;
-
-      let len = document
-        .querySelector(".ql-editor")
-        .querySelectorAll("img").length;
-      let classId = 1;
-      if (len != 0) {
-        for (let i = 0; i < len; i++) {
-          let src = document
-            .querySelector(".ql-editor")
-            .getElementsByTagName("img")[i].src;
-          step = await this.uploadImage(classId, i, src, step);
-        }
-      }
-
-      if (step == len) {
-        this.saveEditor();
-      }
     },
     
     //이미지 미리보기
@@ -750,6 +667,90 @@ export default {
         this.currList[0].chap = '';
       } else {
         this.currList.splice(i, 1);
+      }
+    },
+    searchAddress() {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          var roadAddr = data.roadAddress; // 도로명 주소 변수
+          // 주소 정보를 해당 필드에 넣는다.
+          this.address = roadAddr;
+          // 지도 띄우기
+          this.floatingMap();
+        }
+      }).open();
+      this.mapShow = true;
+    },
+    floatingMap() {
+      let kakao = window.kakao;
+
+      var mapContainer = this.$refs.map, // 지도를 표시할 div 
+          mapOption = {
+              center: new kakao.maps.LatLng(128.5932793, 35.8690334), // 지도의 중심좌표
+              level: 2 // 지도의 확대 레벨
+          };  
+
+      // 지도를 생성합니다    
+      var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+      // 주소-좌표 변환 객체를 생성합니다
+      var geocoder = new kakao.maps.services.Geocoder();
+
+      // 주소로 좌표를 검색합니다
+      geocoder.addressSearch(this.address, function(result, status) {
+
+          // 정상적으로 검색이 완료됐으면 
+          if (status === kakao.maps.services.Status.OK) {
+              var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+              // 결과값으로 받은 위치를 마커로 표시합니다
+              var marker = new kakao.maps.Marker({
+                  map: map,
+                  position: coords
+              });
+
+              // 인포윈도우로 장소에 대한 설명을 표시합니다
+              var infowindow = new kakao.maps.InfoWindow({
+                  content: '<div style="width:150px;text-align:center;padding:6px 0;">강의 장소</div>'
+              });
+              infowindow.open(map, marker);
+
+              // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+              map.setCenter(coords);
+          } 
+      });
+
+    },
+    offlineCurrList() {
+      let total = (this.times * this.weeks) - this.currList.length;
+
+      for(let i=0; i<total; i++) {
+        this.currList.push({
+          title: '',
+          chap: '',
+        })
+      }
+    },
+    getContent(editorContent) {
+      console.log("emit_success", editorContent);
+      this.content = editorContent;
+      console.log("겟 콘탠트 내용", this.content);
+    },
+  },
+  watch: {
+    times() {
+      if(this.classType == 1) {
+        this.offlineCurrList();
+      }
+    },
+    weeks() {
+      if(this.classType == 1) {
+        this.offlineCurrList();
+      }
+    },
+    classType() {
+      if(this.classType == 1) {
+        this.offlineCurrList();
       }
     },
   },
