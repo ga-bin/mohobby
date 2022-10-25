@@ -254,6 +254,19 @@
 		and member_id = #{memberId}
 	</update>
 	
+	<!-- 오프라인 강의 출석 -->
+	<insert id="insertOffAttd">
+		insert into class_attendance (member_id, curr_id, attd_date)
+		values (#{memberId}, #{currId}, current_date)
+	</insert>
+	
+	<!-- 오프라인 강의 상태 업데이트 -->
+	<update id="updateOffAttd">
+		update class_attendance set #{type} = current_date
+		where member_id = #{memberId}
+		and curr_id = #{currId}
+	</update>
+	
 	<!-- 강의 결제내역 단건추가 -->
 	<insert id="insertClassPayOne" parameterType="com.yedam.mohobby.service.classes.ClassPayVO">
 		<selectKey keyProperty="payId" resultType="java.lang.Integer" order="BEFORE">
