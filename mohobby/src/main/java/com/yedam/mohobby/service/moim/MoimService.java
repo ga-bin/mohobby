@@ -125,5 +125,16 @@ public interface MoimService {
 	//소모임 투표 항목
 	public void insertVoteList(MoimVoteListVO vo);
 	
+    //html저장
+    public void saveClassInfo(MoimInfoRequestVO req);
+    
+    //에디터 이미지 저장
+    public void uploadMoimImage(MoimImageVO vo);
+    
+    //게시글 저장
+    public int insertBoard(MoimBoardVO vo);
+
+	public String readMoimInfo(int boardId);
+	
 }
 

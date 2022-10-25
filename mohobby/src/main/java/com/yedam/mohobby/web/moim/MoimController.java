@@ -19,6 +19,8 @@ import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
+import com.yedam.mohobby.service.moim.MoimImageVO;
+import com.yedam.mohobby.service.moim.MoimInfoRequestVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimScheduleVO;
 import com.yedam.mohobby.service.moim.MoimService;
@@ -400,6 +402,29 @@ public class MoimController {
 		System.out.println(moimId);
 		return service.scheduleSelect(moimId);
 	}
+	
+	   //html 파일 생성
+	   @PostMapping("/saveMoimInfo")
+	   public void saveClassInfo(@RequestBody MoimInfoRequestVO req) {
+	      service.saveClassInfo(req);
+	   }
+	   //에디터 이미지 저장
+	   @PostMapping("/uploadMoimImage")
+	   public void uploadMoimImage(@RequestBody MoimImageVO req) {
+	       service.uploadMoimImage(req);
+	   }
+	   
+	   //html 파일 불러오기
+	   @GetMapping("/readMoimInfo")
+	   public String readClassInfo(@RequestParam int boardId) {
+		       return service.readMoimInfo(boardId);
+	   }
+	   
+	   @PostMapping("/insertBoard")
+	   public int insertBoard(@RequestBody MoimBoardVO vo) {
+	   service.insertBoard(vo);
+	   return vo.getBoardId();
+	   }
 	
 //	//소모임 가입하기
 //	@PostMapping("/")

@@ -85,6 +85,7 @@
       where b.board_id = c.target_id(+)
       and moim_id = #{moimId}
       and board_type = #{boardType}
+      order by board_id desc
 
    </select>
 
@@ -455,4 +456,12 @@
   <select id="scheduleSelect" resultType="com.yedam.mohobby.service.moim.MoimScheduleVO">
      SELECT * FROM moim_schedule where moim_id = #{moimId} order by sked_id DESC
   </select>
+    <!-- 소모임 게시글 등록 -->
+  <insert id="insertBoard">
+  <selectKey resultType="Integer" keyProperty="boardId" order="BEFORE">
+  SELECT NVL(MAX(board_id), 0)+1 FROM moim_board
+  </selectKey>
+  INSERT INTO moim_board 
+  VALUES (#{boardId}, #{memberId}, #{title}, #{boardId}, #{boardType}, current_date,#{moimId})
+  </insert>
 </mapper>

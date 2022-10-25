@@ -129,4 +129,7 @@ public interface MoimMapper {
 	
 	//소모임 일정 전체 조회
 	public List<MoimScheduleVO> scheduleSelect(@Param("moimId")int moimId);
+	
+	//게시물 등록
+	public int insertBoard(MoimBoardVO vo);
 }
