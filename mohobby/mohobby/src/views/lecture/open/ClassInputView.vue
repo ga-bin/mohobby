@@ -6,7 +6,7 @@
     </div>
     <form id="classInput" name="classInput" v-on:submit.prevent>
       <div class="fill-height">
-        <div class="contents-box">
+        <div id="step1" class="contents-box">
           <div class="contents">
             <br />
             <!-- 1/7 -->
@@ -37,14 +37,19 @@
               <span class="label">강의 장소</span>
               <input type="text" id="address" placeholder="주소를 검색하세요." readonly v-model="address" />
               <button class="button" @click="searchAddress">주소 찾기</button>
+              <input type="text" id="addressDetail" placeholder="상세 주소를 입력하세요" v-model="addressDetail" v-if="address != ''" />
               <div v-show="mapShow" class="kmap" style="width:500px;height:400px;" ref="map"></div>
             </div>
             <!-- 강의일자 -->
             <div v-if="classType == 1" class="mb-5">
               <span class="label">강의 시작 일자</span>
-              <b-form-group id="move_right" label-for="input-10">
-                <b-form-input id="input-11" type="date" :min="$moment().add(60, 'd').format('YYYY-MM-DD')"></b-form-input>
-              </b-form-group>
+              <input type="date" :min="$moment().add(60, 'd').format('YYYY-MM-DD')" v-model="startDate" />
+            </div>
+            <!-- 수업시간 -->
+            <div v-if="classType == 1" class="mb-5">
+              <span class="label">수업 시간</span>
+              <input type="number" min="8" max="16" id="startTime" v-model="startTime" class="mr-1" /> 시 ~
+              <input type="number" min="12" max="22" id="endTime" v-model="endTime" class="ml-5 mr-1" />시   
             </div>
             <!-- jobName -->
             <span class="label">직업</span>
@@ -54,8 +59,8 @@
             <select
               class="input mb-5"
               style="width: 400px; margin: 0 10px 0 10px"
-              name="keyword"
-              v-model="keyword"
+              name="keywordId"
+              v-model="keywordId"
             >
               <option value="" selected>--- 키워드를 선택하세요 ---</option>
               <option v-for="(item, i) in catg" :key="i" :value="item.keywordId">{{ item.keywordName }}</option>
@@ -72,10 +77,10 @@
             />
             <span style="font-size: 20px; margin-right: 10px">원</span>
           </div>
+        <br />
+        <br />
         </div>
-        <br />
-        <br />
-        <div class="contents-box">
+        <div id="step2" v-show="step2" class="contents-box">
           <div class="contents">
             <br />
             <span class="no">2/7</span>
@@ -137,10 +142,10 @@
             <br />
             <br />
           </div>
+        <br />
+        <br />
         </div>
-        <br />
-        <br />
-        <div class="contents-box">
+        <div id="step3" v-show="step3" class="contents-box">
           <div class="contents">
             <br />
             <span class="no">3/7</span>
@@ -154,10 +159,10 @@
               ></QuillEditor>
             </div>
           </div>
+        <br />
+        <br />
         </div>
-        <br />
-        <br />
-        <div class="contents-box">
+        <div id="step4" v-show="step4" class="contents-box">
           <div class="contents">
             <br />
             <span class="no">4/7</span>
@@ -175,30 +180,10 @@
               counter
               show-size
               dense
-              multiple
-              @change="mainImageChange"
+              v-model="thumbnailImage"
               name="mainFileList"
               accept="image/*"
             />
-            <!-- 파일이름, 개수 -->
-            <div v-for="(list, i) in mainFileList" :key="i">
-              {{ list.name }}
-            </div>
-
-            <!-- 이미지 미리보기 -->
-            <div style="display: inline-flex; margin-left: 10px">
-              <v-img
-                v-for="(item, i) in mainUploadimageurl"
-                :key="i"
-                :src="item.url"
-                aspect-ratio="4/3"
-                height="150px"
-                width="200px"
-                lazy-src
-                error
-                style="margin-right: 10px"
-              />
-            </div>
             <span class="label">추가이미지등록(선택)</span>
             <!-- 파일등록부 -->
             <v-file-input
@@ -235,10 +220,10 @@
               />
             </div>
           </div>
+        <br />
+        <br />
         </div>
-        <br />
-        <br />
-        <div class="contents-box">
+        <div id="step5" v-show="step5" class="contents-box">
           <div class="contents">
             <br />
             <span class="no">5/7</span>
@@ -254,7 +239,7 @@
               <span class="ml-1">주</span>
             </div>
             <span class="label">챕터를 등록하세요</span>
-            <div v-for="(item, i) in chapList">
+            <div v-for="(item, i) in chapList" :key="i">
               <span
                 style="padding: 10px 15px 10px 15px; display: inline-block; border: 1px solid black; margin-right: 20px;"
               >
@@ -266,6 +251,7 @@
                 style="width: 1100px"
                 type="text"
                 v-model="item.name"
+                @change="checkStep5"
               />
               <button 
                 style="margin: 0px 20px 0px; border: 1px solid red; color: red"
@@ -295,6 +281,7 @@
                 style="width: 450px; margin: 0 20px 0 10px"
                 name="color2"
                 v-model="curr.chap"
+                @change="checkStep5"
               >
                 <option value="" selected>--- 챕터를 선택하세요 ---</option>
                 <option 
@@ -312,6 +299,7 @@
                 placeholder="강의 제목을 입력하세요"
                 style="width: 620px"
                 v-model="curr.title"
+                @change="checkStep5"
               />
               <button
                 v-if="classType != 1"
@@ -329,10 +317,10 @@
               </button>
             </div>
           </div>
+        <br />
+        <br />
         </div>
-        <br />
-        <br />
-        <div class="contents-box">
+        <div id="step6" v-show="step6" class="contents-box">
           <div class="contents">
             <br />
             <span class="no">6/7</span>
@@ -345,7 +333,7 @@
             <span style="margin-left: 490px; display: inline-block" class="label"
               >교안 등록</span
             >
-            <div v-for="(curr, i) in currList" :key="i">
+            <div class="d-flex justify-center" v-for="(curr, i) in currList" :key="i">
               <span
                 style="padding: 10px 15px 10px 15px;
                   display: inline-block;
@@ -353,23 +341,27 @@
                   margin-right: 20px;"
                 > {{ i+1 }} </span
               >
-              <input
-                class="input"
-                placeholder="챕터 제목을 입력하세요"
-                style="width: 530px; display: inline-block"
-              />
-              <input
+              <v-file-input
                 type="file"
                 class="input"
+                style="width: 530px;"
+                accept="video/*"
+                v-model="curr.video"
+                @change="checkStep6"
+              />
+              <v-file-input
+                type="file"
+                class="input"
+                v-model="curr.file"
                 style="width: 540px; margin-left: 20px"
                 accept="image/jpeg,.txt,.mp4"
               />
             </div>
           </div>
+        <br />
+        <br />
         </div>
-        <br />
-        <br />
-        <div class="contents-box">
+        <div id="step7" v-show="step7" class="contents-box">
           <div class="contents">
             <br />
             <span class="no">7/7</span>
@@ -387,24 +379,12 @@
               style="width: 1150px; margin-right: 10px"
             />
           </div>
+        <br />
+        <br />
         </div>
-        <br />
-        <br />
-        <button
-          style="
-            border: none;
-            background-color: lightgrey;
-            width: 1350px;
-            font-weight: bold;
-          "
-        >
+        <v-btn outlined @click="submitBtn" class="my-10">
           신청
-        </button>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        </v-btn>
       </div>
     </form>
   </v-container>
@@ -423,6 +403,15 @@ export default {
   props:['toolbarText','toolbarVideo','toolbarImage','toolbarLink','imagePaste','imageDrop','placeholder','value'],
   data() {
     return {
+      thumbnailImage: '',
+      step2: false,
+      step3: false,
+      step4: false,
+      step5: false,
+      step6: false,
+      step7: false,
+      startTime: 8,
+      endTime: 17,
       startDate: '',
       times: 1,
       weeks: 3,
@@ -430,10 +419,14 @@ export default {
       posX: 0,
       posY: 0,
       address: '',
+      addressDetail: '',
+      postcode: '',
       currList: [
         {
           title: '',
           chap: '',
+          video: '',
+          file: '',
         },
       ],
       chapList: [
@@ -443,6 +436,7 @@ export default {
       ],
       bankCode : '',
       account : '',
+      accountCert: false,
       bankList: [
         {name: '농협은행', code: '011'},
         {name: '산업은행', code: '002'},
@@ -468,7 +462,7 @@ export default {
       catg: [],
       keywordCount: 0,
       regionList: [],
-      keyword: "",
+      keywordId: "",
       regionId: "",
       memberId: "",
       className: "",
@@ -544,26 +538,6 @@ export default {
           console.log(error);
         });
     },
-    
-    //이미지 미리보기
-    mainImageChange(file) {
-      // v-file-input @OnChange
-      if (!file) return;
-      file.forEach((getFile) => {
-        //파일등 정보 forEach문으로 빼오기
-        console.log("item.name: " + getFile.name); //name:파일명, size:바이트(인듯),type:(image/)png
-        const fileReader = new FileReader(); //파일리더기 생성
-        fileReader.onload = (e) => {
-          //파일 성공적으로 읽어오면 이벤트 실행
-          this.mainUploadimageurl.push({ url: e.target.result }); // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
-          if (this.mainUploadimageurl.length > 1) {
-            this.mainUploadimageurl.shift();
-          }
-          console.log({ url: e.target.result });
-        };
-        fileReader.readAsDataURL(getFile); //바이너리 파일을 Base64 Encode 문자열로 반환 Ex.) data:image/jpeg; base64, ….
-      });
-    },
     //이미지 미리보기
     subImageChange(file) {
       // v-file-input @OnChange
@@ -627,21 +601,29 @@ export default {
       })
     },
     accountCheck: function() {
-      console.log(this.$store.state.user);
-      this.axios.get('/bankRealName', {
-          params: {
-              Bncd: this.bankCode,
-              Acno: this.account
-          }
-      }).then( result => {
-          if(result.data.dpnm == this.$store.state.user.memberName) {
-              alert('조회성공');
-          } else {
-              this.$swal('로그인 정보와 일치하지 않습니다!', '', 'error');
-              this.bankCode = '';
-              this.account = '';
-          }
-      })
+      if(this.certName != '' && this.certBirth != '') {
+
+        this.axios.get('/bankRealName', {
+            params: {
+                Bncd: this.bankCode,
+                Acno: this.account
+            }
+        }).then( result => {
+            if(result.data.dpnm == this.$store.state.user.memberName) {
+              this.$swal('로그인 정보와 일치합니다!', '', 'success');
+              this.accountCert = true;
+              this.step3=true;
+            } else {
+                this.$swal('로그인 정보와 일치하지 않습니다!', '', 'error');
+                this.bankCode = '';
+                this.account = '';
+                this.accountCert = false;
+            }
+        })
+      } else {
+        this.$swal('실명인증을 먼저 진행해주세요!', '', 'info');
+      }
+
     },
     addChapList() {
       this.chapList.push({
@@ -659,12 +641,16 @@ export default {
       this.currList.push({
         title: '',
         chap: '',
+        video: '',
+        file: '',
       })
     },
     delCurrList(i) {
       if(this.currList.length == 1) {
         this.currList[0].title = '';
         this.currList[0].chap = '';
+        this.currList[0].video = '';
+        this.currList[0].file = '';
       } else {
         this.currList.splice(i, 1);
       }
@@ -672,9 +658,8 @@ export default {
     searchAddress() {
       new window.daum.Postcode({
         oncomplete: (data) => {
-          var roadAddr = data.roadAddress; // 도로명 주소 변수
-          // 주소 정보를 해당 필드에 넣는다.
-          this.address = roadAddr;
+          this.address = data.roadAddress; // 도로명 주소 변수
+          this.postcode = data.zonecode;
           // 지도 띄우기
           this.floatingMap();
         }
@@ -736,6 +721,68 @@ export default {
       this.content = editorContent;
       console.log("겟 콘탠트 내용", this.content);
     },
+    checkStep1() {
+      if(this.classType == 0 && this.className != '' && this.jobName != '' && this.keywordId != '' && this.classPrice != 0) {
+        this.step2=true;
+        return;
+      }
+      if(this.classType == 1 && this.className != '' && this.jobName != '' && this.keywordId != '' && this.classPrice != 0 && this.address != '' && this.startDate != null) {
+        this.step2=true;
+        return;
+      }
+      this.step2=false;
+    },
+    checkStep5() {
+      let sum = 0;
+
+      for(let chap of this.chapList) {
+        if(chap.name == '') {
+          sum += 1;
+        }
+      }
+
+      if(sum != 0) {
+        this.step6 = false;
+        console.log('sum', sum);
+        return;
+      }
+
+      for(let curr of this.currList) {
+        if(curr.chap == '' || curr.title == '') {
+          sum += 1;
+        }
+      }
+
+      if(sum != 0) {
+        this.step6 = false;
+        console.log('sum', sum);
+        return;
+      }
+
+      this.step6 = true;
+      console.log('sum', sum);
+    },
+    checkStep6() {
+      let sum = 0;
+
+      for(let curr of this.currList) {
+        if(curr.video == '' || curr.video == null) {
+          sum += 1;
+        }
+      }
+
+      if(sum != 0) {
+        this.step7 = false;
+      } else {
+        this.step7 = true;
+      }
+    },
+    submitBtn() {
+      if(!this.step2 || !this.step3 || !this.step4 || !this.step5 || !this.step6 || !this.step7) {
+        this.$swal('작성 양식을 완료해주세요!', '', 'info');
+        return;
+      }
+    },
   },
   watch: {
     times() {
@@ -752,7 +799,51 @@ export default {
       if(this.classType == 1) {
         this.offlineCurrList();
       }
+      this.checkStep1();
     },
+    className() {
+      this.checkStep1();
+    },
+    jobName() {
+      this.checkStep1();
+    },
+    keywordId() {
+      this.checkStep1();
+    },
+    classPrice() {
+      this.checkStep1();
+    },
+    bankCode() {
+      this.step3 = false;
+    },
+    account() {
+      this.step3 = false;
+    },
+    content() {
+      if(this.content != '') {
+        this.step4 = true;
+      } else {
+        this.step4 = false;
+      }
+    },
+    thumbnailImage() {
+      if(this.thumbnailImage != '' || this.thumbnailImage != null) {
+        this.step5 = true;
+      } else {
+        this.step5 = false;
+      }
+    },
+    chapList() {
+      this.checkStep5();
+    },
+    currList() {
+      this.checkStep5();
+    },
+    step2() { if(this.step2 == false) this.step3 = false; },
+    step3() { if(this.step3 == false) this.step4 = false; },
+    step4() { if(this.step4 == false) this.step5 = false; },
+    step5() { if(this.step5 == false) this.step6 = false; },
+    step6() { if(this.step6 == false) this.step7 = false; },
   },
 };
 </script>
