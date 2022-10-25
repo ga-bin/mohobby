@@ -319,13 +319,25 @@ public class MoimServiceImpl implements MoimService {
 	public List<MoimScheduleVO> scheduleSelect(int moimId) {
 		return mapper.scheduleSelect(moimId);
 	}
-
+	
 	//소모임 일정 삭제
 	@Override
 	public int deleteSchedule(int skedId) {
-		return mapper.deleteSchedule(skedId);
+	   return mapper.deleteSchedule(skedId);
 	}
-	
+
+	//소모임 가입 멤버 등록
+	@Override
+	public String insertMember(MoimMemberVO momemVO) {
+		return mapper.insertMember(momemVO);
+	}
+
+	//소모임 가입조건 수정
+	@Override
+	public String updateSetting(MoimVO moimVO) {
+		return mapper.updateSetting(moimVO);
+	}
+
 	   // html 저장
 	   @Override
 	   public void saveClassInfo(MoimInfoRequestVO req) {
@@ -447,5 +459,4 @@ public class MoimServiceImpl implements MoimService {
 	        return res;
 	    }
 	
-
 }

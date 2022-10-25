@@ -457,11 +457,40 @@ where b.moim_id = #{moimId} and b.dutch_id = #{dutchId}
   <select id="scheduleSelect" resultType="com.yedam.mohobby.service.moim.MoimScheduleVO">
      SELECT * FROM moim_schedule where moim_id = #{moimId} order by sked_id DESC
   </select>
-
+  
   <!-- 소모임 일정 삭제 -->
   <delete id="deleteSchedule" parameterType="Integer">
   delete from moim_schedule where sked_id=#{skedId}
   </delete>
+
+  
+  <!-- 소모임 멤버 가입 등록 -->
+  <insert id="insertMember">
+  <selectKey resultType="Integer" keyProperty="moimMemberId" order="BEFORE"> 
+      SELECT NVL(MAX(moim_member_id), 0)+1 FROM moim_member
+   </selectKey>
+        INSERT INTO moim_member(MEMBER_ID,
+								  MOIM_ID,
+								  MEMBER_ROLE,
+								  PROFILE_YN,
+								  MOIM_MEMBER_ID)	
+        VALUES(#{memberId},
+        	   #{moimId},
+        	   0,
+        	   0,
+        	   #{moimMemberId})
+  </insert>
+  
+  <!-- 소모임 가입조건 수정 -->
+  <update id="updateSetting"
+  		  parameterType="com.yedam.mohobby.service.moim.MoimVO">
+  update moim set max_age = #{maxAge},
+                min_age = #{minAge},
+                gender = #{gender},
+                max_people = #{maxPeople}
+  where moim_id = #{moimId}
+  </update>
+
 
     <!-- 소모임 게시글 등록 -->
   <insert id="insertBoard">

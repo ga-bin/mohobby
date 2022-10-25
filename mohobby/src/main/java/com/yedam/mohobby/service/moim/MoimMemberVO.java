@@ -9,4 +9,5 @@ public class MoimMemberVO {
 	private int memberRole; //권한 0:일반회원 1:관리자
 	private int profileYn; //0: 공개 1:비공개
 	private int moimMemberId; //인조식별키
+	
 }

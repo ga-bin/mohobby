@@ -126,6 +126,7 @@ export default {
   },
   data() {
     return {
+      moimId: this.$route.params.Id,
       memberId: "",
       profileImg: "comfuck.jpg",
       dialog: false,
@@ -342,8 +343,17 @@ export default {
     var age = monthDay < birthdaymd ? year - birthdayy - 1 : year - birthdayy;
     return age;
     },  
-    // 모임 가입하기 로직(axios만들자)
-    insertMoim() {},
+    // 모임 가입하기 로직
+    insertMoim() {
+      this.axios.post('/insertMoMember',{
+        memberId: this.$store.state.id,
+        moimId: this.moimId,
+      }).then((resp) => {
+        console.log(resp);
+      }).catch((error) => {
+        console.log(error);
+      });
+    },
     // 모임 신고하기
     moimFlagging() {
           const vm = this;

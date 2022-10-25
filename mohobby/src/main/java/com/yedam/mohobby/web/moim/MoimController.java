@@ -405,6 +405,34 @@ public class MoimController {
 		return service.scheduleSelect(moimId);
 	}
 	
+
+	//소모임 일정 삭제
+	@DeleteMapping("/deleteSchedule")
+	public int deleteSchedule(@Param("skedId")int skedId) {
+	   return service.deleteSchedule(skedId);
+	}
+	
+	//소모임 가입 멤버 등록
+	@PostMapping("/insertMoMember")
+	public String insertMoimMember(@RequestBody MoimMemberVO momemVO){
+		try {
+			service.insertMember(momemVO);
+			return "success";
+		} catch (Exception e) {
+			return "fail"+e;
+		}
+	}
+	
+	//소모임 가입조건 수정
+	@PutMapping("/updateSetting")
+	public String updateMoimSet(@RequestBody MoimVO moimVO) {
+		try {
+			service.updateSetting(moimVO);
+			return "success";
+		} catch (Exception e) {
+			return "fail"+e;
+		}
+
 	   //html 파일 생성
 	   @PostMapping("/saveMoimInfo")
 	   public void saveClassInfo(@RequestBody MoimInfoRequestVO req) {
@@ -432,10 +460,7 @@ public class MoimController {
 //	@PostMapping("/")
 //	public 
 	
-	//소모임 일정 삭제
-	@DeleteMapping("/deleteSchedule")
-	public int deleteSchedule(@Param("skedId")int skedId) {
-		return service.deleteSchedule(skedId);
+
 	}
 }
 
