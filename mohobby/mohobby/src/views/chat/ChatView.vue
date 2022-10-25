@@ -93,7 +93,7 @@ export default {
       message: "",
       roomId: "", //방번호
       roomList: [], //방목록정보
-      stompClient: "", //소켓서버
+      
       hour: "", //메세지시간
       subscribeRoot: "", //구독정보
       targetId: [], //상대방 정보
@@ -347,19 +347,11 @@ export default {
         });
     },
     connect() {
-      const serverURL = "http://localhost:8088/java/sock";
-      let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
-      let vm = this;
-      this.stompClient.connect(
-        {},
-        (frame) => {
-          console.log("소켓 연결 성공", frame);
+      let vm =this
           vm.stompClient.subscribe(
             "/queue/" + this.$store.state.id,
             function (res) {
               let resContent = JSON.parse(res.body);
-          
               if(vm.roomList.findIndex(i=>i.roomNo==resContent.roomNo)<0){
                vm.getRoom();}
               for (let i = 0; i < vm.roomList.length; i++) {
@@ -375,15 +367,12 @@ export default {
             }
           );
         },
-      );
-    },
   },
   watch: {
     messages() {
             // 화면에 추가된 후 동작하도록
             this.$nextTick(() => {
                 let messages = this.$refs.messages;
-
                 messages.scrollTo({ top: messages.scrollHeight, behavior: 'smooth' });
             });
         }

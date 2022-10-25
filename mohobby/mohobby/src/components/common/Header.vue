@@ -103,14 +103,16 @@ export default {
   },
   setup() { },
   created() {
-    this.avatar = "comfuck.jpg";
+    this.avatar = "comfuck.jpg"
+    if(this.$store.state.id!=''){
+    this.getAllNotice()}
   },
   mounted() {
     this.$store.watch(
       () => this.$store.getters.getId,
       (n) => {
-        this.noticeRes();
-        this.getAllNotice();
+        this.noticeRes()
+        this.getAllNotice()
       }
     );
   },
@@ -130,6 +132,15 @@ export default {
   methods: {
     //알림정보 가져오기
     getAllNotice() {
+      console.log("!!!!!!!!!!!!!!")
+      console.log("!!!!!!!!!!!!!!")
+      console.log("!!!!!!!!!!!!!!")
+      console.log("!!!!!!!!!!!!!!")
+      console.log("!!!!!!!!!!!!!!")
+      console.log("!!!!!!!!!!!!!!")
+      this.items=[]
+      this.messages=[]
+ 
       let vm = this;
       console.log(this.$store.state.id)
 
@@ -183,6 +194,8 @@ export default {
               }
             }
           }
+          this.items.unshift( [{ header: this.$moment().format("YYYY-MM-DD") }])
+      this.messages.unshift( [{ header: this.$moment().format("YYYY-MM-DD") }])
           vm.noticeMsgCount = (vm.messages.length - 1) / 2;
           vm.noticeCount = (vm.items.length - 1) / 2;
         })
