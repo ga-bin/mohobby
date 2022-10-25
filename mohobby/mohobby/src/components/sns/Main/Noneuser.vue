@@ -29,35 +29,24 @@ export default {
   name: "NoneUser",
   props: {
     feeds : [],
+    keyword : String,
   },
   data() {
       return {
       };
     },
     created() {
-      this.search();  
-      this.feeds = this.feeds;
-      if(this.searchResult){
-        this.feeds = this.searchResult;
-      };
+      // this.search(); 
+      // this.feeds = this.feeds;
+      console.log(this.feeds);
+
     }, 
     
-    mounted () {
-      window.addEventListener('scroll', this.handleScroll);
-    },
+    // mounted () {
+    //   window.addEventListener('scroll', this.handleScroll);
+    // },
 
     methods : {
-      //AllList조회
-      search() {
-        this.axios('/sns/main/allFeeds').then(res => {
-            console.log(res);
-            this.feeds = res.data;
-            console.log("noneUser 로드 성공")
-          }).catch(err =>{
-            console.log(err);
-          });
-      },
-
 
       //디테일피드 테스트버튼
       goFeedDetail(postId, memberId) {

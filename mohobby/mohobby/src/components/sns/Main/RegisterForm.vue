@@ -209,6 +209,7 @@ data() {
   search: null,
   x: 0,
   y: 0,
+
   //이미지Data
   uploadimageurl: [], //미리보기 이미지url
   imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
@@ -216,17 +217,14 @@ data() {
   file : {},
   postId : "1",
   formData : {},
+
   //sns글등록Data
   memberId : this.$store.state.id,
   content: "",
   getHashtag:[],//내가 추가한 해시태그
   hashtag:"",//스트링화 해시태그
 
-
-
-
-
-  //
+  
   files: [], //업로드용 파일
   filesPreview: [],
   uploadImageIndex: 0 // 이미지 업로드를 위한 변수
@@ -311,6 +309,7 @@ methods: {
         // console.log(this.filesPreview);
     },
 
+    //이미지 미리보기
     imageAddUpload() {
         console.log(this.$refs.files.files);
 
@@ -319,6 +318,8 @@ methods: {
         let num = -1;
         for (let i = 0; i < this.$refs.files.files.length; i++) {
             console.log(this.uploadImageIndex);
+            
+            //files 에 객체로 담음
             this.files = [
                 ...this.files,
                 //이미지 업로드
@@ -337,6 +338,8 @@ methods: {
 
         console.log(this.files); // console.log(this.filesPreview);
     },
+    
+    //미리보기 이미지 삭제
     fileDeleteButton(e) {
         const name = e.target.getAttribute('name');
         this.files = this.files.filter(data => data.number !== Number(name));
@@ -377,7 +380,7 @@ methods: {
       //폼객체 생성해서 form태그인 feedInsert 담기
       const formData = new FormData(feedInsert);   // 파일을 전송할때는 FormData 형식으로 전송
       console.log(document.getElementsByName("memberId")); //아이디 확인 완.
-
+      console.log(formData);
       this.axios.post('/sns/myfeed', formData, { // 게시글 저장
           headers: {
             'Content-Type': 'multipart/form-data'

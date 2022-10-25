@@ -135,12 +135,24 @@
    
    <!-- 팔로잉 피드 조회 -->
    <select id="getFollowingFeeds" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+       SELECT post_id, member_id, thumbnail, likes, cmts
+         FROM sns_post
+        WHERE member_id in (
+					         SELECT following_id
+					           FROM follow
+					          WHERE follower_id = #{ memberId } 
+	          				)
+   </select>
+   
+   
+   <!-- 팔로잉 피드 제외한 나머지 피드 조회 -->
+<!--    <select id="getFollowingFeeds" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
    	  SELECT s.post_id, f.following_id, s.thumbnail, s.likes, s.cmts
    	    FROM sns_post s, follow f
    	   WHERE s.member_id = f.follower_id
    	     AND s.member_id = #{ memberId }
    	   ORDER BY post_id DESC
-   </select>
+   </select> -->
    
    <!-- 취미쪼개기 -->
    
@@ -330,7 +342,7 @@
 	</select>
 	
 	
-	<!-- 유저포함검색 -->
+	<!-- 유저검색 -->
 	<select id="searchUser" parameterType="String" resultType="com.yedam.mohobby.service.user.MemberVO">
 		SELECT member_id, profile_img, nickname
 		  FROM member
@@ -338,13 +350,6 @@
 	</select>
 	
 	
-
-	<!-- 유저단건조회 -->
-<!--<select id="selectOneUser" resultType="com.yedam.mohobby.service.user.MemberVO">
-		SELECT member_id, profile_img, nickname
-		FROM member
-		WHERE member_id = LOWER(#{ memberId })
-	</select> -->
    <!-- 유저닉네임검색(단어포함 - 프로필사진, 아이디, 닉네임) -->
 <!-- <select id="getUsersByNick" resultType="com.yedam.mohobby.service.user.MemberVO">
       SELECT profile_img, member_id, nickname
@@ -411,6 +416,7 @@
 		    IF v_status = 0 THEN
 			  INSERT INTO jjim (target_id, target_type, member_id) VALUES(v_target_id, 2, v_member_id);
 			  UPDATE sns_post SET likes = likes + 1 WHERE post_id = v_target_id;
+			  
 	     ELSIF v_status = 1 THEN 
 			  DELETE FROM jjim WHERE target_id= v_target_id AND target_type=2 AND member_id = v_member_id;
 			  UPDATE sns_post SET likes = likes - 1 WHERE post_id = v_target_id;
@@ -478,8 +484,6 @@
             UPDATE sns_post SET cmts = cmts-1
              WHERE post_id = v_target_id;
         END;
-           
-           
 	</delete>
 	
 	
@@ -487,13 +491,13 @@
 	<select id="getCmtLists" resultType="com.yedam.mohobby.service.communal.CommentsVO">
 		SELECT m.profile_img, c.target_type, c.target_id, c.parent_comm_id, c.comm_id, c.member_id, c.content, c.write_date, c.parent_member_id
 		  FROM member m, (  SELECT * FROM comments
-				          WHERE target_id = #{ targetId }
-				          AND target_type = 2
-				        ) c
-		WHERE m.member_id = c.member_id
-	    START WITH parent_comm_id IS NULL
-	  CONNECT BY PRIOR comm_id = parent_comm_id
-		ORDER SIBLINGS BY comm_id
+				             WHERE target_id = #{ targetId }
+				               AND target_type = 2
+				          ) c
+		 WHERE m.member_id = c.member_id
+	     START WITH parent_comm_id IS NULL
+	   CONNECT BY PRIOR comm_id = parent_comm_id
+		 ORDER SIBLINGS BY comm_id
 	</select>
 	
 	
@@ -649,12 +653,13 @@
 	</select>
 	
 	
-	<!-- 전체 북마크 -->
+	<!-- 전체북마크조회 -->
 	<select id="getAllBookmarks" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
-		SELECT c.catg_id, c.member_id, b.post_id  
-		FROM sns_bookmark_catg c, sns_bookmark b
-		WHERE c.catg_id = b.catg_id
-		AND c.member_id = #{ memberId }
+		SELECT c.catg_id, b.post_id, b.thumbnail, s.member_id
+		  FROM sns_bookmark b, sns_post s
+		 WHERE b.post_id = s.post_id 
+		   AND c.member_id = #{ memberId }
+      ORDER BY post_id DESC
 	</select>
 	
 	
