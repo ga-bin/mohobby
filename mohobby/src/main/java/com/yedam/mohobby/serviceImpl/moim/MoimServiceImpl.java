@@ -1,7 +1,12 @@
 package com.yedam.mohobby.serviceImpl.moim;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +20,8 @@ import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpSoloVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
+import com.yedam.mohobby.service.moim.MoimImageVO;
+import com.yedam.mohobby.service.moim.MoimInfoRequestVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimScheduleVO;
 import com.yedam.mohobby.service.moim.MoimService;
@@ -22,6 +29,8 @@ import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
 import com.yedam.mohobby.service.user.MemberVO;
+import com.yedam.mohobby.web.classes.ClassController;
+import com.yedam.mohobby.web.moim.MoimController;
 
 @Service
 public class MoimServiceImpl implements MoimService {
@@ -310,4 +319,127 @@ public class MoimServiceImpl implements MoimService {
 	public List<MoimScheduleVO> scheduleSelect(int moimId) {
 		return mapper.scheduleSelect(moimId);
 	}
+	
+	   // html 저장
+	   @Override
+	   public void saveClassInfo(MoimInfoRequestVO req) {
+	        String path = MoimController.class.getResource("/").getPath();
+	        path = path.substring(0, path.lastIndexOf("mohobby"));
+	        path = path.substring(0, path.lastIndexOf("mohobby") + "mohobby".length());
+
+	        path += "/mohobby/mohobby/src/assets/html/moimInfo/";
+	        
+	        File dir = new File(path);
+	        if (!dir.exists()) {
+	            dir.mkdir();
+	        }
+	        path += req.getFilename();
+	        path += ".html";
+	        System.out.println(path);
+
+	        File file = new File(path);
+	        
+
+	        try {
+	            FileOutputStream fos = new FileOutputStream(file);
+	            fos.write(req.getContent().getBytes());
+	            fos.flush();
+	            fos.close();
+	        } catch (FileNotFoundException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	      
+	   }
+	    
+	   // 에디터 이미지 저장
+	    @Override
+	    public void uploadMoimImage(MoimImageVO vo) {
+	    	System.out.println(vo);
+	        File file = null;
+	        
+	        String path = ClassController.class.getResource("/").getPath();
+	        path = path.substring(0, path.lastIndexOf("mohobby"));
+	        path = path.substring(0, path.lastIndexOf("mohobby") + "mohobby".length());
+
+	        path += "/mohobby/mohobby/src/assets/image/moim/board/";
+	        //path += String.valueOf(vo.getFoldername());
+	        //path += "/";
+	        
+	        File dir = new File(path);
+	        if (!dir.exists()) {
+	            dir.mkdir();
+	        }
+	        
+	        byte[] targetBytes = null;
+	        FileOutputStream fos = null;
+	        
+	        if(vo.getSrc().contains("base64")) {
+	        	System.out.println(vo.getSrc().split(",")[1]);
+	        	String data = vo.getSrc().split(",")[1];
+	        	targetBytes = data.getBytes();
+	        	byte[] bytes = Base64.getDecoder().decode(targetBytes);
+	        	
+	            try {
+	            	file = new File(path + "/" + vo.getFilename() + ".jpg");
+	            	fos = new FileOutputStream(file);
+	            	fos.write(bytes);
+	            	fos.close();
+	            } catch(Exception e) {
+	            	e.printStackTrace();
+	            } finally {
+	            	if (fos != null) {
+	            		try {
+	            			fos.close();
+	            		} catch (IOException e) {
+	            			e.printStackTrace();
+	            		}
+	            	}
+	            }
+	        } else {
+	        	System.out.println("기존파일");
+	        }
+	        
+	        
+	    }
+	    
+	   //게시판 작성
+	   @Override
+	   public int insertBoard(MoimBoardVO vo) {
+	      return mapper.insertBoard(vo);
+	   }
+	   
+	    @Override
+	    public String readMoimInfo(int boardId) {
+	        String path = ClassController.class.getResource("/").getPath();
+	        path = path.substring(0, path.lastIndexOf("mohobby"));
+	        path = path.substring(0, path.lastIndexOf("mohobby") + "mohobby".length());
+
+	        path += "/mohobby/mohobby/src/assets/html/moimInfo/";
+	        path += String.valueOf(boardId);
+	        path += ".html";
+	        
+	        File file = new File(path);
+	        String res = "";
+	        
+	        try {
+	            BufferedReader br = new BufferedReader(new FileReader(file));
+	            
+	            String str;
+	            
+	            while ((str = br.readLine()) != null) {
+	                res += str;
+	            }
+	        } catch (FileNotFoundException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        
+	        
+	        return res;
+	    }
+	
+	
 }
