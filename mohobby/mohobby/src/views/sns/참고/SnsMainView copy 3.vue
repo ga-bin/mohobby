@@ -15,13 +15,13 @@
   </div>
 </template>
 <script>
-  import SnsSearchbar from "../../components/sns/Common/Searchbar"
+
   import HotLecturerSpace from "../../components/sns/Main/HotLecturerList";
   import NoneUser from "../../components/sns/Main/Noneuser";
 
   export default {
     name: "snsMain",
-    components: { SnsSearchbar, HotLecturerSpace, NoneUser, SnsSearchbar },
+    components: { SnsSearchbar, HotLecturerSpace, NoneUser },
     data() {
       return {
         items: [],

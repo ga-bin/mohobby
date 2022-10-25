@@ -70,59 +70,75 @@
            -->
           <div class="btn">
             <v-btn
+              v-if="replyBtn == true"
+              @click="showReCmtForm(cmt.commId, cmt.memberId)"
               x-small
               outlined
               color="dark-grey"
               class="mr-3"
-              @click="showRegReCmt(cmt.commId, cmt.memberId)"
               >답장</v-btn>
 
-            <v-btn
-            v-if="cmt.memberId == memberId && saveBtn == true"
-              x-small
-              outlined
-              color="success"
-              class="mr-3"
-              @click="editCmt(cmt.commId)"
-              >저장</v-btn>
+
 
             <v-btn
-            v-if="cmt.memberId == memberId && editBtn == true"
+              v-if="cmt.memberId == memberId && editBtn == true"
+              @click="showEditForm(cmt.commId)"
               x-small
               outlined
               color="success"
               class="mr-3"
-              @click="showEditForm(cmt.commId)"
               >수정</v-btn>
 
               <v-btn
-              v-if="cmt.memberId == memberId && deleteBtn == true"
-              x-small
-              outlined
-              color="error"
-              @click="deleteCmt(cmt.commId, cmt.targetId)">
-              삭제</v-btn>
+                v-if="cmt.memberId == memberId && deleteBtn == true"
+                @click="deleteCmt(cmt.commId, cmt.targetId)"
+                x-small
+                outlined
+                color="error"
+                >삭제</v-btn>
+
+              <v-btn
+                v-if="cmt.memberId == memberId && saveBtn == true"
+                @click="editCmt(cmt.commId)"
+                x-small
+                outlined
+                color="success"
+                class="mr-3"
+                >저장</v-btn>
+
+                <v-btn
+                v-if="cmt.memberId == memberId && cancelBtn == true"
+                @click="cancleEdit(cmt.commId)"
+                x-small
+                outlined
+                color="success"
+                class="mr-3"
+                >취소</v-btn>
           </div>
           <!-- 댓글 버튼 끝 -->
 
 
-          <!-- 대댓 유저소환 -->
+          <!-- 대댓폼 (유저소환) -->
           <v-card-actions>
             <div class="content">
-              <div v-if="cmt.parentCommId != ''">
+              <!-- 상위댓글이 있으면 -->
+              <div v-if="cmt.parentCommId != '' && originContentFrm == true">
                 <span class="member_id" 
                       @click="$router.push({path: '/snsUserFeed?userId=' + cmt.parentMemberId,}).catch(() => {$router.go(0);})">
                 <strong>@{{ cmt.parentMemberId }}</strong></span>
                 {{ cmt.content }}
               </div>
-              <div v-if="cmt.parentCommId == '' && cmt.commId != editForm && !formValue">
+              <!-- 상위댓글이 없으면 -->
+              <!-- <div v-if="cmt.parentCommId == '' && cmt.commId != editForm && !formValue"> -->
+              <div v-if="originContentFrm == true">
                 {{ cmt.content }}
               </div>
               <!-- 유저소환 끝 -->
 
 
-              <!-- 댓글 수정창 -->
-              <div v-if="cmt.commId == editForm && cmt.commId != reCmt && formValue">
+              <!-- 댓글 수정폼 -->
+              <!-- <div v-if="cmt.commId == editForm && cmt.commId != reCmt && formValue"> -->
+              <div v-if="cmt.commId == editCmtId && editForm == true">
                 <v-textarea
                   name="editContent"
                   auto-grow
@@ -136,7 +152,7 @@
           </v-card-actions>
 
 
-          <!-- showRegReCmt(cmt.commId) 대댓글 입력창 -->
+          <!-- showReCmtForm(cmt.commId) 대댓글 입력창 -->
           <div v-if="cmt.commId == reCmt">
             <v-card-actions>
               <v-col cols="10">
@@ -176,6 +192,7 @@ export default {
  
   },
 
+
   data() {
     return {
       cmtCount:"",
@@ -185,20 +202,26 @@ export default {
       originContent: "", //원댓글
       memberId: this.$store.state.id,
       comments: [], //cmt리스트
+      editCmtId: "",
       reCmt: "", //대댓등록창 show여부
-      editForm: "", //댓글수정창
       cmtMemberId: "", //소환된 회원
-      formValue: false, //form 노출여부
+      // formValue: false, //form 노출여부
+      originContentFrm: false, //원댓폼
+      editForm: false, //댓글수정창
+      replyBtn: false, //답장버튼
       saveBtn: false, //저장버튼
       editBtn: false, //수정버튼
       deleteBtn: false, //삭제버튼
+      cancelBtn: false, //취소버튼
     };
   },
+
 
   created() {
     this.getCmtList(); //댓글리스트
     this.editBtn = true;
     this.deleteBtn = true;
+    this.replyBtn = true;
   },
 
   methods: {
@@ -218,7 +241,6 @@ export default {
 
     //로그인 검증 모달
     loginConfirm(){
-
       this.$swal({
         title: "로그인하셔야 가능하세요🙏",
         text: "🙏로그인화면으로 이동부탁드립니다🙏",
@@ -237,20 +259,16 @@ export default {
     },
 
 
-    //date처리
+    //date filter
     writeDate(writeDate) {
-
       return this.$moment(writeDate).fromNow();
-
     },
 
     
-    //댓글리스트upload
+    //댓글리스트
     getCmtList() {
-
       this.axios("/sns/cmt/" + this.postid)
         .then((res) => {
-          console.log(res.data);
           this.comments = res.data;
           this.cmtCount=res.data.length
           this.$emit('cmtCount',  this.cmtCount)
@@ -264,7 +282,6 @@ export default {
 
     //댓글등록 - 입력창
     regCmt() {
-
       if(this.confirmMember(this.memberId) == false){ //유효성검사 - 회원 id, 내용값
         this.loginConfirm();
 
@@ -295,13 +312,14 @@ export default {
             "/app/Notice",
             JSON.stringify(noticeContent),
             (res) => {
-              console.log(res);
+              console.log("알림성공");
             }
           );
         })
         
         .catch((err) => {
-          console.log(err);
+          console.log();
+          alert("댓글등록실패: "+err);
         });
       }
 
@@ -325,25 +343,40 @@ export default {
         
     },
 
-    //댓글 수정폼 호출
-    showEditForm(commId, content) {
-      
-      this.formValue = !this.formValue;
-      
-      if (commId == this.editForm) {
-        //수정창닫기
-        this.editForm = -1;
-      } else {
-        //댓글창열기
-        this.editForm = commId;
-        this.originContent = content;
+
+    //댓글 수정버튼
+    showEditForm(cmtId, content) {
+      //수정폼 닫기
+      if (this.editForm) { //수정폼 열린상태면
+        this.editForm = false; //닫고
+        this.editCmtId = -1;
+        this.originContentFrm = true; //원댓폼
+        this.saveBtn = false; //저장버튼 숨김
+        this.cancelBtn = false; //취소버튼 숨김
+        this.replyBtn = true;//답장버튼 노출
+        this.editBtn = true; //수정버튼 노출
+        this.deleteBtn = true; //삭제버튼 노출
+
+      //수정폼 열기
+      } else { //수정폼 닫힌 상태면
+        this.editForm = true; //수정폼 열기
+        this.editCmtId = cmtId;
+        this.originContentFrm = false; //원댓폼
+        this.replyBtn = false; //답장버튼 숨김
+        this.editBtn = false; //수정버튼 숨김
+        this.deleteBtn = false; //삭제버튼 숨김
+        this.saveBtn = true; //저장버튼 노출
+        this.cancelBtn = true; //취소버튼 노출
       }
 
     },
     
-    //댓글 수정
+
+    //댓글 수정 저장
     editCmt(commId) {
-      this.checkLogin();//로그인검증
+      
+      this.editedContent = this.cmt.content; //변경된 내용으로 교체
+
       this.axios
         .put("/sns/cmt/" + commId, {
           content: this.editedContent,
@@ -351,37 +384,51 @@ export default {
         .then((res) => {
           this.editForm = "";
           console.log("댓글수정 성공! " + res);
+
+          this.showEditForm();
+          
+
           this.getCmtList();
-          this.formValue = !this.formValue;
         })
         .catch((err) => {
-          console.log(err);
+          alert("댓글수정 실패: "+err);
         });
     },
 
-    //답장버튼 -> 대댓글 입력창 열기(닫기)
-    //답장 click -> 인자 comm_id-> 데이터변수 reCmt에 바인딩 -> v-if에서 비교 조건으로 사용
-    showRegReCmt(cmtId, cmtmemId) {
+    //댓글 취소
+    cancleEdit(cmtId){
+      this.showEditForm();
+      return;
+    },
+
+
+    //대댓 등록창
+    //답장버튼 -> 세션 정보 있으면 대댓글 입력창 열리게
+    //v-if 인자 comm_id == reCmt -> 열림 / comm_id != reCmt ->닫힘
+    showReCmtForm(cmtId, cmtmemId) {
       if(this.confirmMember(this.memberId) == false){ //유효성검사 - 회원 id, 내용값
         this.loginConfirm();
+
       } else {
         this.inputReCmt = ""; //대댓 입력창 초기화
+
         if (cmtId == this.reCmt) {
-          //댓글창닫기
-          this.reCmt = -1; //reCmt 에 임의로 -1을 줘서 같을 수 없도록
-        } else {
-          //댓글창열기
-          this.reCmt = cmtId;
-          if (cmtId == this.reCmt) this.cmtMemberId = "@" + cmtmemId;
+          this.reCmt = -1; //댓글창닫기
+
+        } else {        
+          this.reCmt = cmtId; //댓글창열기
+          if (cmtId == this.reCmt) this.cmtMemberId = "@" + cmtmemId; //대댓 달 유저 아이디 호출
         }
+
       }
     },
-    //대댓글등록
+
+
+    //대댓글등록 - 회원아이디가 있고, 내용 있을 때
     regReCmt(commId, parentMemberId) {
-      if(this.confirmMember(this.memberId) == false){ //유효성검사 - 회원 id, 내용값
-        this.loginConfirm();
-      } else if (this.inputCmt == ""){ 
+      if (this.inputCmt == ""){ 
         this.$swal("내용 입력하셔야 등록 가능하세요🙏")
+        return;
       } else{
       let vm =this
       this.axios
@@ -395,9 +442,12 @@ export default {
         })
         .then((res) => {
           console.log("대댓글등록 성공! " + res)
-          this.inputReCmt = ""
-          this.reCmt = !this.reCmt
-          this.getCmtList()
+          this.inputReCmt = "" //입력창 초기화
+          this.reCmt = -1 //대댓글창 닫히게
+          this.getCmtList(); //리스트 재호출
+
+
+          //대댓글 알림
           const noticeContent = {  
             myId: this.$store.state.id,
             targetId: parentMemberId,
@@ -410,15 +460,16 @@ export default {
             "/app/Notice",
             JSON.stringify(noticeContent),
             (res) => {
-              console.log(res);
+              console.log("대댓글 알림 성공");
             }
           );
         })
         .catch((err) => {
-          console.log(err);
+          console.log("대댓글 등록 실패"+err);
         });
       }
     },
+
     //댓글 삭제버튼 추가하기
     // onAdd(){
     //   const input = documnet.querySelector('.input');

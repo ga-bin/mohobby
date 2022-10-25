@@ -126,14 +126,12 @@
     </div>
   </template>
   <script>
-    import SearchPage from "@/views/sns/SnsSearchPage.vue";
-    import SnsSearchbar from "@/components/sns/Common/Searchbar"
     import HotLecturer from "@/components/sns/Main/HotLecturer";
     import NoneUser from "@/components/sns/Main/Noneuser";
   
     export default {
       name: "snsMain",
-      components: { SnsSearchbar, HotLecturer, NoneUser, SnsSearchbar, SearchPage },
+      components: { SnsSearchbar, HotLecturer, NoneUser,   },
      
       data() {
           return {
