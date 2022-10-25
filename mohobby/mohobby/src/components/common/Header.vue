@@ -108,14 +108,19 @@ export default {
     this.getAllNotice()}
   },
   mounted() {
+    let vm =this
     this.$store.watch(
       () => this.$store.getters.getId,
       (n) => {
         this.noticeRes()
         this.getAllNotice()
+        vm.stompClient.unsubscribe(this.$store.state.isUser)
       }
     );
   },
+  watch: {
+   
+   },
   unmounted() { },
   // watch: {
   //   $route: function(to, from, next) {
@@ -132,12 +137,6 @@ export default {
   methods: {
     //알림정보 가져오기
     getAllNotice() {
-      console.log("!!!!!!!!!!!!!!")
-      console.log("!!!!!!!!!!!!!!")
-      console.log("!!!!!!!!!!!!!!")
-      console.log("!!!!!!!!!!!!!!")
-      console.log("!!!!!!!!!!!!!!")
-      console.log("!!!!!!!!!!!!!!")
       this.items=[]
       this.messages=[]
  
@@ -202,12 +201,21 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+        this.stompClient.send("/app/SubscribeId", this.$store.state.id, (res) => { console.log(res)});
     },
     //알림 처리
     noticeRes() {
       let vm = this;
       vm.stompClient.subscribe("/queue/" + this.$store.state.id + "/notice",
         function (res) {
+    console.log( "1 : "+vm.$store.state.isUser)
+          if(typeof res.body=="string"){
+            vm.$store.state.isUser = res.headers.subscription;
+            console.log( "2 : "+vm.$store.state.isUser)
+          }else
+          console.log( "3 : "+vm.$store.state.isUser)
+          console.log(res)
+          console.log(typeof res.body)
           let resNotice = JSON.parse(res.body);
           //sns 알림 처리
           if (resNotice.noticeType == 0) {
@@ -259,7 +267,6 @@ export default {
           //메신저 알림 처리
           
           else if (resNotice.noticeType == 2) {
-            console.log("?????????????????????????")
               vm.messages.unshift({ divider: true, inset: true });
               vm.subtitle = "새로운 메세지가 도착했습니다.";
               vm.messages.unshift({
@@ -288,7 +295,6 @@ export default {
           }
         }
         --this.noticeCount;
-
         this.axios
           .delete("/deleteNotice", {
             params: {
