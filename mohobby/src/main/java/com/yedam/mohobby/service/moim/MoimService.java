@@ -125,6 +125,10 @@ public interface MoimService {
 	//소모임 투표 항목
 	public void insertVoteList(MoimVoteListVO vo);
 	
+
+	//소모임 일정 삭제
+	public int deleteSchedule(int skedId);
+  
     //html저장
     public void saveClassInfo(MoimInfoRequestVO req);
     
@@ -135,6 +139,7 @@ public interface MoimService {
     public int insertBoard(MoimBoardVO vo);
 
 	public String readMoimInfo(int boardId);
+
 	
 }
 

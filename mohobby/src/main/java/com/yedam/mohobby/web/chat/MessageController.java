@@ -6,6 +6,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
+import com.beust.jcommander.internal.Console;
 import com.yedam.mohobby.service.chat.ChatListContentResVO;
 import com.yedam.mohobby.service.chat.ChatService;
 import com.yedam.mohobby.service.chat.ContentVO;
@@ -45,6 +46,10 @@ public class MessageController {
 		// 실시간 메시지 보내기
 		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
 
+		System.out.println("++++++++++++++++=========");
+		System.out.println(content);
+		System.out.println("++++++++++++++++=========");
+
 		ChatListContentResVO res = new ChatListContentResVO();
 		for (int i = 0; i < content.getMemberIds().size(); i++) {
 			System.out.println("content:" + content.getMemberIds().get(i));
@@ -53,20 +58,27 @@ public class MessageController {
 			// 상대방이 같은방에 없을때는 알림을 보낸다.
 			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0) {
 				resNotice.setNoticeId(nService.getNoticeId());
-				resNotice.setProfileImge(mService.getMember(content.getMemberIds().get(i)).getProfileImg());
-				resNotice.setNickname(mService.getMember(content.getMemberIds().get(i)).getNickName());
+				resNotice.setNickname(mService.getMember(content.getMemberId()).getNickName());
 				resNotice.setNoticeType(2);
 				resNotice.setTargetId(content.getMemberIds().get(i));
 				resNotice.setPostId(content.getRoomNo());
-
+				if (cService.checkMoimId(content.getRoomNo()) == 0) {
+					resNotice.setContentType(0);
+					resNotice.setProfileImge(mService.getMember(content.getMemberIds().get(i)).getProfileImg());
+				} else {
+					resNotice.setContentType(1);
+					resNotice.setProfileImge(moService.getMoimInfo(content.getRoomNo()).getMoimImg());
+				}
 				// db에 담을 정보
 				noticeVO.setMemberId(content.getMemberIds().get(i));
-				noticeVO.setAvatar("require(`@/assets/image/user/" + resNotice.getProfileImge() + "`)");
-				noticeVO.setTitle(resNotice.getNickname());
+				noticeVO.setAvatar(resNotice.getProfileImge());
+				noticeVO.setTitle(resNotice.getNickname()+"님으로 부터");
 				noticeVO.setSubtitle("새로운 메세지가 도착했습니다.");
 				noticeVO.setPostId(content.getRoomNo());
 				noticeVO.setNoticeType(2);
-
+				System.out.println("++++++++++++++++=========");
+				System.out.println(resNotice);
+				System.out.println("++++++++++++++++=========");
 				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i) + "/notice", resNotice);
 				nService.insertNotice(noticeVO);
 			}

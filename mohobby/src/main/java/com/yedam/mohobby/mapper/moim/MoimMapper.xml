@@ -457,6 +457,12 @@ where b.moim_id = #{moimId} and b.dutch_id = #{dutchId}
   <select id="scheduleSelect" resultType="com.yedam.mohobby.service.moim.MoimScheduleVO">
      SELECT * FROM moim_schedule where moim_id = #{moimId} order by sked_id DESC
   </select>
+
+  <!-- 소모임 일정 삭제 -->
+  <delete id="deleteSchedule" parameterType="Integer">
+  delete from moim_schedule where sked_id=#{skedId}
+  </delete>
+
     <!-- 소모임 게시글 등록 -->
   <insert id="insertBoard">
   <selectKey resultType="Integer" keyProperty="boardId" order="BEFORE">
@@ -465,4 +471,5 @@ where b.moim_id = #{moimId} and b.dutch_id = #{dutchId}
   INSERT INTO moim_board 
   VALUES (#{boardId}, #{memberId}, #{title}, #{boardId}, #{boardType}, current_date,#{moimId})
   </insert>
+
 </mapper>
