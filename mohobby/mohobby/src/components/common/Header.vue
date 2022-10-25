@@ -306,7 +306,7 @@ export default {
     search() {
       console.log(this.searchText);
       this.$router.push({name: 'mainsearch', query: {searchText: this.searchText}});
-      this.$router.go(0);
+      // this.$router.go(0);
       
     },
     logout() {

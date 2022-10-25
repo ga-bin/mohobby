@@ -73,12 +73,6 @@ export default {
       })
         .then(function (response) {
           vm.snsHighLikesList = response;
-          console.log(vm.snsHighLikesList);
-          console.log(vm.snsHighLikesList);
-          console.log(vm.snsHighLikesList);
-          console.log(vm.snsHighLikesList);
-          console.log(vm.snsHighLikesList);
-          console.log(vm.snsHighLikesList);
         })
         .catch(function (error) {
           console.log(error);

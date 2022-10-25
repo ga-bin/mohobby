@@ -26,6 +26,20 @@
 		<property name="configLocation"
 			value="classpath:mybatis-config.xml" />
 		<property name="dataSource" ref="dataSource" />
+		<property name="plugins">
+	    <array>
+	      <bean class="com.github.pagehelper.PageInterceptor">
+	        <property name="properties">
+	          <value>
+	           	helperDialect=oracle
+	           	params=count=countSql
+	           	keepsSubSelectOrderBy=true
+	           	keepOrderBy=true
+	          </value>
+	        </property>
+	      </bean>
+	    </array>
+  </property>
 	</bean>
 
      

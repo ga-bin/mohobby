@@ -42,10 +42,12 @@ where rownum <![CDATA[<=]]> 10
 
 <!-- sns키워드 검색 조회  -->
 <select id="searchSnsKeyword" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-select * from sns_post
-where hashtag like '%' || #{searchText} || '%' 
-or content like '%' || #{searchText} || '%'
-or member_id like #{searchText}
+select a.post_id, a.member_id, a.hashtag, a.content, a.write_date, a.thumbnail, a.likes, a.cmts, b.profile_img
+from sns_post a join member b
+on a.member_id = b.member_id
+where a.hashtag like '%' || #{searchText} || '%' 
+or a.content like '%' || #{searchText} || '%'
+or a.member_id like #{searchText}
 </select>
 
 <!-- moim키워드 검색 조회  -->

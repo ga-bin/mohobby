@@ -1,12 +1,9 @@
 <template>
   <main>
     <AdminSidebar></AdminSidebar>
+    <h3>Q&A게시판 질문 내역</h3>
+    <h3>지급 내역</h3>
     <h3>강의 목록</h3>
-    <v-chip-group mandatory active-class="primary--text">
-      <v-chip v-for="tag in tags" :key="tag">
-        {{ tag }}
-      </v-chip>
-    </v-chip-group>
     <v-row>
       <v-col lg="12">
         <v-data-table

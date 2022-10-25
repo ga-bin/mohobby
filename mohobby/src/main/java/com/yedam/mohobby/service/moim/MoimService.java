@@ -114,7 +114,7 @@ public interface MoimService {
 	public String dutchMemberInsert(MoimDutchPtpVO dutptpVO);
 
 	//소모임 n빵 디테일 조회
-	public List<MoimDutchVO> nbbangSelect(int moimId);
+	public List<MoimDutchVO> nbbangSelect(MoimDutchVO moimDutchVO);
 
 	//소모임 일정 등록
 	public String scheduleInsert(MoimScheduleVO scheduleVO);
