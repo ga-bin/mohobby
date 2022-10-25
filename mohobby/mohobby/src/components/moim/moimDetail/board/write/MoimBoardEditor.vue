@@ -161,7 +161,7 @@
 
       let res = await this.axios.post('/uploadMoimImage', {
         foldername: folder,
-        filename: file,
+        filename: folder + "-" +  file,
         src: img
       })
     }
