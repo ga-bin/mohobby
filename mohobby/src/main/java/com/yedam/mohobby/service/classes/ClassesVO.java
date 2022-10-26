@@ -41,4 +41,8 @@ public class ClassesVO {
 	private int totalViewProgress;	//진행율
 	private int lastCurrId;		//이어보기 할 커리큘럼 아이디
 	private String certyn;	//수료증 발급 여부
+	private int weekTimes;	//주 몇회 수업인지
+	private int weeks;	//몇 주 수업인지
+	private int startTime;
+	private int endTime;
 }

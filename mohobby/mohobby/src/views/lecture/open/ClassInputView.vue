@@ -4,9 +4,9 @@
       <h1 class="mb-10">강의 개설 신청</h1>
 
     </div>
-    <form id="classInput" name="classInput" v-on:submit.prevent>
-      <div class="fill-height">
-        <div id="step1" class="contents-box">
+    <div class="fill-height">
+        <form id="classInput" name="classInput" v-on:submit.prevent>
+        <div id="step1" class="contents-box mb-5">
           <div class="contents">
             <br />
             <!-- 1/7 -->
@@ -35,21 +35,22 @@
             <!-- region -->
             <div v-if="classType == 1" class="mb-5">
               <span class="label">강의 장소</span>
-              <input type="text" id="address" placeholder="주소를 검색하세요." readonly v-model="address" />
+              <input type="text" id="address" placeholder="주소를 검색하세요." readonly v-model="address" name="address" />
               <button class="button" @click="searchAddress">주소 찾기</button>
-              <input type="text" id="addressDetail" placeholder="상세 주소를 입력하세요" v-model="addressDetail" v-if="address != ''" />
+              <input type="text" id="addressDetail" placeholder="상세 주소를 입력하세요" v-model="addressDetail" v-if="address != ''" name="addressDetail" />
+              <input type="text" readonly v-show="false" v-model="postcode" name="postcode" />
               <div v-show="mapShow" class="kmap" style="width:500px;height:400px;" ref="map"></div>
             </div>
             <!-- 강의일자 -->
             <div v-if="classType == 1" class="mb-5">
               <span class="label">강의 시작 일자</span>
-              <input type="date" :min="$moment().add(60, 'd').format('YYYY-MM-DD')" v-model="startDate" />
+              <input type="date" :min="$moment().add(60, 'd').format('YYYY-MM-DD')" v-model="startDate" name="startDate" />
             </div>
             <!-- 수업시간 -->
             <div v-if="classType == 1" class="mb-5">
               <span class="label">수업 시간</span>
-              <input type="number" min="8" max="16" id="startTime" v-model="startTime" class="mr-1" /> 시 ~
-              <input type="number" min="12" max="22" id="endTime" v-model="endTime" class="ml-5 mr-1" />시   
+              <input type="number" min="8" max="16" id="startTime" v-model="startTime" class="mr-1" name="startTime" /> 시 ~
+              <input type="number" min="12" max="22" id="endTime" v-model="endTime" class="ml-5 mr-1" name="endTime" />시   
             </div>
             <!-- jobName -->
             <span class="label">직업</span>
@@ -77,10 +78,10 @@
             />
             <span style="font-size: 20px; margin-right: 10px">원</span>
           </div>
-        <br />
-        <br />
         </div>
-        <div id="step2" v-show="step2" class="contents-box">
+        
+        <div id="step2" v-show="step2" class="contents-box mb-5">
+        <!-- <div id="step2" class="contents-box mb-5"> -->
           <div class="contents">
             <br />
             <span class="no">2/7</span>
@@ -98,7 +99,9 @@
               readonly
               style="width: 400px; margin: 0 10px 0 10px"
               v-model="certName"
+              name="account_holder"
             />
+            <input type="text" readonly v-show="false" v-model="memberId" name="memberId" />
             <span 
               class="label" 
               style="display: inline-block; margin-right: 25px"
@@ -142,10 +145,10 @@
             <br />
             <br />
           </div>
-        <br />
-        <br />
         </div>
-        <div id="step3" v-show="step3" class="contents-box">
+      
+        <div id="step3" v-show="step3" class="contents-box mb-5">
+        <!-- <div id="step3" class="contents-box mb-5"> -->
           <div class="contents">
             <br />
             <span class="no">3/7</span>
@@ -159,10 +162,9 @@
               ></QuillEditor>
             </div>
           </div>
-        <br />
-        <br />
         </div>
-        <div id="step4" v-show="step4" class="contents-box">
+        <div id="step4" v-show="step4" class="contents-box mb-5">
+        <!-- <div id="step4" class="contents-box mb-5"></div> -->
           <div class="contents">
             <br />
             <span class="no">4/7</span>
@@ -181,7 +183,7 @@
               show-size
               dense
               v-model="thumbnailImage"
-              name="mainFileList"
+              id="mainImage"
               accept="image/*"
             />
             <span class="label">추가이미지등록(선택)</span>
@@ -196,34 +198,14 @@
               show-size
               dense
               multiple
-              @change="subImageChange"
-              name="subFileList"
+              id="subImageList"
               accept="image/*"
             />
-            <!-- 파일이름, 개수 -->
-            <div v-for="(list, i) in subFileList" :key="i">
-              {{ list.name }}
-            </div>
-
-            <!-- 이미지 미리보기 -->
-            <div style="display: inline-flex; margin-left: 10px">
-              <v-img
-                v-for="(item, i) in subUploadimageurl"
-                :key="i"
-                :src="item.url"
-                aspect-ratio="4/3"
-                height="150px"
-                width="200px"
-                lazy-src
-                error
-                style="margin-right: 10px"
-              />
-            </div>
           </div>
-        <br />
-        <br />
         </div>
-        <div id="step5" v-show="step5" class="contents-box">
+      </form>
+        <div id="step5" v-show="step5" class="contents-box mb-5">
+        <!-- <div id="step5" class="contents-box mb-5"> -->
           <div class="contents">
             <br />
             <span class="no">5/7</span>
@@ -266,7 +248,14 @@
                 +
               </button>
             </div>
-            <span class="label">회차를 등록하세요</span>
+            <v-row>
+              <v-col class="d-flex justify-start align-center">
+                <div>회차를 등록하세요</div>
+              </v-col>
+              <v-col v-if="classType==1" class="d-flex justify-end align-center mr-10">
+                <div>수업일자를 등록하세요</div>
+              </v-col>
+            </v-row>
             <div 
               v-for="(curr, i) in currList"
               :key="i"
@@ -311,16 +300,16 @@
               <button 
                 v-if="classType != 1"
                 style="border: 1px solid green; color: green"
-                @click="addCurrList"
+                @click="addCurrList(i)"
               >
                 +
               </button>
+              <input v-if="classType == 1" type="date" :min="curr.minDate" v-model="curr.classDate" @change="currDateChange(i)" />
             </div>
           </div>
-        <br />
-        <br />
         </div>
-        <div id="step6" v-show="step6" class="contents-box">
+        <div id="step6" v-show="step6" class="contents-box mb-5">
+        <!-- <div id="step6" class="contents-box mb-5"> -->
           <div class="contents">
             <br />
             <span class="no">6/7</span>
@@ -335,12 +324,10 @@
             >
             <div class="d-flex justify-center" v-for="(curr, i) in currList" :key="i">
               <span
-                style="padding: 10px 15px 10px 15px;
-                  display: inline-block;
-                  border: 1px solid black;
-                  margin-right: 20px;"
-                > {{ i+1 }} </span
+                style="padding: 10px 15px 10px 15px; display: inline-block; border: 1px solid black; margin-right: 20px;"
               >
+                {{ i+1 }}
+              </span>
               <v-file-input
                 type="file"
                 class="input"
@@ -358,10 +345,9 @@
               />
             </div>
           </div>
-        <br />
-        <br />
         </div>
-        <div id="step7" v-show="step7" class="contents-box">
+        <div id="step7" v-show="step7" class="contents-box mb-5">
+        <!-- <div id="step7" class="contents-box mb-5"> -->
           <div class="contents">
             <br />
             <span class="no">7/7</span>
@@ -379,14 +365,11 @@
               style="width: 1150px; margin-right: 10px"
             />
           </div>
-        <br />
-        <br />
         </div>
         <v-btn outlined @click="submitBtn" class="my-10">
           신청
         </v-btn>
       </div>
-    </form>
   </v-container>
 </template>
 <script>
@@ -427,6 +410,8 @@ export default {
           chap: '',
           video: '',
           file: '',
+          minDate: this.startDate,
+          classDate: '',
         },
       ],
       chapList: [
@@ -464,7 +449,7 @@ export default {
       regionList: [],
       keywordId: "",
       regionId: "",
-      memberId: "",
+      memberId: this.$store.state.id,
       className: "",
       classPrice: 0,
       classInfo: "",
@@ -472,15 +457,14 @@ export default {
       classType: 0,
       certAble: 0,
       certStandard: "",
-      postcode: "",
       startDate: 0,
       accountHolder: "",
       //이미지Data
       mainUploadimageurl: [], //미리보기 이미지url
       subUploadimageurl: [], //미리보기 이미지url
       imagecnt: 0, //업로드한 이미지개수 axious시에 넘겨줌
-      subFileList: [],
-      mainFileList: [],
+      subImageList: [],
+      mainImage: '',
       file: {},
       formData: {},
       content: "",
@@ -537,40 +521,6 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    },
-    //이미지 미리보기
-    subImageChange(file) {
-      // v-file-input @OnChange
-      this.subUploadimageurl = [];
-      if (!file) return;
-
-      file.forEach((getFile) => {
-        //파일등 정보 forEach문으로 빼오기
-        console.log("item.name: " + getFile.name); //name:파일명, size:바이트(인듯),type:(image/)png
-        const fileReader = new FileReader(); //파일리더기 생성
-        fileReader.onload = (e) => {
-          //파일 성공적으로 읽어오면 이벤트 실행
-          this.subUploadimageurl.push({ url: e.target.result }); // e.target.result를 통해 이미지 url을 가져와서 uploadimageurl에 저장
-          console.log({ url: e.target.result });
-        };
-        fileReader.readAsDataURL(getFile); //바이너리 파일을 Base64 Encode 문자열로 반환 Ex.) data:image/jpeg; base64, ….
-      });
-    },
-    //게시글 등록
-    //미리보기에서 사진 삭제돼야함 ->
-    uploadImage() {
-      const formData = new FormData(classInput); // 파일을 전송할때는 FormData 형식으로 전송
-      this.axios.post("/sns/myfeed", formData, {
-        // 게시글 저장
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }).then(function (res) {
-        console.log("게시글저장 성공!");
-        // this.goUserFeed(this.memberId);
-      }).catch(function (error) {
-        console.log(error);
-      });
     },
     CertBtn: function() {
       IMP.certification({
@@ -637,12 +587,14 @@ export default {
         this.chapList.splice(i, 1);
       }
     },
-    addCurrList() {
+    addCurrList(i) {
       this.currList.push({
         title: '',
         chap: '',
         video: '',
         file: '',
+        minDate: this.$moment(this.currList[i-1].classDate).add(1, "d"),
+        classDate: '',
       })
     },
     delCurrList(i) {
@@ -651,6 +603,8 @@ export default {
         this.currList[0].chap = '';
         this.currList[0].video = '';
         this.currList[0].file = '';
+        this.currList[0].minDate = this.startDate;
+        this.currList[0].classDate = '';
       } else {
         this.currList.splice(i, 1);
       }
@@ -713,8 +667,14 @@ export default {
         this.currList.push({
           title: '',
           chap: '',
+          video: '',
+          file: '',
+          minDate: this.startDate,
+          classDate: '',
         })
       }
+
+      this.currDateChange(total-1);
     },
     getContent(editorContent) {
       console.log("emit_success", editorContent);
@@ -782,6 +742,38 @@ export default {
         this.$swal('작성 양식을 완료해주세요!', '', 'info');
         return;
       }
+
+      //classes
+      const formData = new FormData(classInput);
+      let subImageInput = document.getElementById('subImageList');
+      let subImages = subImageInput.files;
+      formData.append("imgAmount", subImages.length+1);
+
+      //chap
+
+      //curr
+
+      //main-image
+
+      //sub-images
+
+      //videos
+
+      //files
+
+    },
+    currDateChange(idx) {
+
+      for(let i = (idx+1); i<this.currList.length; i++) {
+
+        console.log('i.minDate', this.currList[i].minDate);
+        console.log('idx.classDate', this.currList[idx].classDate);
+        console.log('idx.classDate+1',this.$moment(this.currList[idx].classDate).add(1,"d").format('YYYY-MM-DD') );
+
+        this.currList[i].minDate = this.$moment(this.currList[idx].classDate).add(1,"d").format('YYYY-MM-DD');
+
+        console.log('i.minDate', this.currList[i].minDate);
+      }
     },
   },
   watch: {
@@ -844,6 +836,12 @@ export default {
     step4() { if(this.step4 == false) this.step5 = false; },
     step5() { if(this.step5 == false) this.step6 = false; },
     step6() { if(this.step6 == false) this.step7 = false; },
+    startDate() {
+      for(let curr of this.currList) {
+        curr.minDate = this.startDate;
+      }
+    },
+
   },
 };
 </script>

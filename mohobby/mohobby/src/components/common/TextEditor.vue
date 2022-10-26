@@ -115,6 +115,7 @@ export default {
 .quill-editor {
   height: 350px;
   min-height: 700px;
+  padding-bottom: 65px;
 }
 .limit {
   height: 30px;
