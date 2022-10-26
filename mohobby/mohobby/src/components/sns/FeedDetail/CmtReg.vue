@@ -158,6 +158,7 @@ export default {
 
   methods: {
 
+    
     //세션유무 검증
     confirmMember(memberId) {
       if (memberId) {
@@ -170,6 +171,7 @@ export default {
       }
 
     },
+
 
     //로그인 검증 모달
     loginConfirm(){
@@ -196,8 +198,8 @@ export default {
       return this.$moment(writeDate).fromNow();
     },
 
-    //댓글리스트upload
 
+    //댓글리스트upload
     getCmtList() {
       this.axios("/sns/cmt/" + this.postid)
         .then((res) => {
@@ -213,7 +215,7 @@ export default {
 
 
     //댓글등록 - 입력창
-
+    regCmt(){
 
       if (this.confirmMember(this.memberId) == false) { //유효성검사 - 회원 id, 내용값
 

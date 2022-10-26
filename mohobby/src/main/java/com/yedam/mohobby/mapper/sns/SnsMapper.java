@@ -46,6 +46,9 @@ public interface SnsMapper {
     //전체피드조회
     public List<SnsPostVO> allList();
     
+    //전체피드조회페이징
+    public List<SnsPostVO> allListPaging();
+    
     //최신피드조회
     public List<SnsPostVO> newList();
     
@@ -170,7 +173,7 @@ public interface SnsMapper {
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     
     //북마크 전체조회
-    public List<SnsBookmarkVO> getAllBookmarks();
+    public List<SnsBookmarkVO> getAllBookmarks(String memberId);
    
    
    /*

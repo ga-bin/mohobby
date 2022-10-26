@@ -167,7 +167,7 @@ public interface SnsService {
     public List<SnsBookmarkVO> getBookmarks(int catgId);
     
     //북마크 전체조회
-    public List<SnsBookmarkVO> getAllBookmarks();
+    public List<SnsBookmarkVO> getAllBookmarks(String memberId);
    
     
    /*

@@ -4,8 +4,8 @@
             <v-spacer></v-spacer>
                 <!-- 로그인버튼-->
                 <v-btn text @click="regFeedForm(member)">
-                    <v-chip color="#2ac187" class="mx-auto white--text font-weight-bold">
-                        <v-icon left>mdi-plus</v-icon>글쓰기
+                    <v-chip color="white" class="mx-auto black--text font-weight-bold" style="color:">
+                        <v-icon left>mdi-pencil-plus</v-icon>
                     </v-chip>
                 </v-btn>
                 <!-- 로그인버튼 끝 -->
@@ -42,7 +42,7 @@
                                         :key="i"
                                         color="#2ac187"
                                         class="mx-auto white--text font-weight-bold">
-                                    {{ item.hashtag }}
+                                    #{{ item.hashtag }}
                                 </v-chip>
                             </v-chip-group>
                         </v-sheet>
@@ -63,8 +63,8 @@
 
                 <!-- 피드 -->
                 <div v-if="randomFeeds == true" id="nonuserFeeds">
-                    <h3>재주 견습생들 피드</h3>
-                    <h3>나의 팔로워 피드</h3>
+                    <h3 v-if="!member">재주 견습생들 피드</h3>
+                    <h3 v-else>나의 팔로워 피드</h3>
                     <NoneUser :feeds="feeds" />
                 </div>
             </div>
@@ -230,19 +230,19 @@
                 this.searchHashtag(hashtag);//해시태그 검색 실행
                 console.log("해시태그 검색 실행")
                
-                this.userSearch = false; //유저결과 show
-                this.tagSearch = true; //해시태그결과 hide
-                this.hotLectureFeeds = false; //main hide
-                this.randomFeeds = false; //main hide
+                // this.userSearch = false; //유저결과 show
+                // this.tagSearch = true; //해시태그결과 hide
+                // this.hotLectureFeeds = false; //main hide
+                // this.randomFeeds = false; //main hide
 
             }else{ //나머지 - 유저검색 실행
 
                 this.searchMem(keyword); //유저검색 실행
                 
-                this.userSearch = true; //유저결과 show
-                this.tagSearch = false; //해시태그결과 hide
-                this.hotLectureFeeds = false; //main hide
-                this.randomFeeds = false; //main hide
+                // this.userSearch = true; //유저결과 show
+                // this.tagSearch = false; //해시태그결과 hide
+                // this.hotLectureFeeds = false; //main hide
+                // this.randomFeeds = false; //main hide
                 
 
             }
@@ -252,7 +252,7 @@
           //1. 해시태그 검색
           searchHashtag(hashtag){
             this.temp = hashtag;
-            console.log("받아온 해시태그 ->");
+            console.log("해시태그검색 ->");
             console.log(hashtag);
             this.axios('/sns/search/hashtag', {
                 params : {
@@ -268,7 +268,7 @@
 
                     this.noResult = true; // 검색결과 없음페이지 show
                     this.tagSearch = false; //해시태그결과 hide
-                    this.userSearch = fals//검색결과 없음페이지 hide
+                    this.userSearch = false//검색결과 없음페이지 hide
                     this.hotLectureFeeds = false; //main hide
                     this.randomFeeds = false; //main hide
                     
@@ -292,7 +292,7 @@
 
           //2. 유저검색
           searchMem(keyword) {
-            console.log("검색 키워드: "+ keyword);
+            console.log("유저검색: "+ keyword);
             this.temp = keyword;
             this.axios('/sns/search/user', {
                 params : {

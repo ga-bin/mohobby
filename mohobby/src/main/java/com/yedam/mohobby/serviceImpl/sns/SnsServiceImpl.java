@@ -387,8 +387,8 @@ public class SnsServiceImpl implements SnsService{
     }
     
     //전체 북마크
-    public List<SnsBookmarkVO> getAllBookmarks(){
-       return mapper.getAllBookmarks();
+    public List<SnsBookmarkVO> getAllBookmarks(String memberId){
+       return mapper.getAllBookmarks(memberId);
     }
     
     

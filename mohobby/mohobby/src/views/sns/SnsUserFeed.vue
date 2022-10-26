@@ -105,6 +105,7 @@
                 <FollowModal :text="followertext" :dataList="follower" :follow="follow" />
               </li>
             </ul>
+
             <!-- 내 게시물 정보 끝 -->
             <ul>
                 <!-- 소개 -->
@@ -113,8 +114,8 @@
                 <!-- 소개 끝 -->
             </ul>
           </div>
-          <!-- 버튼 컴포넌트: 유저본인이냐에 따라 버튼 바뀜 -->
 
+          <!-- 버튼 컴포넌트: 유저본인이냐에 따라 버튼 바뀜 -->
           <div class="profile-bio">
             <ul v-if="sessionId && sessionId == infoes.memberId">
               <button class="btn profile-edit-btn" @click="goMypage(sessionId)">
@@ -124,17 +125,16 @@
             <ul v-else>
               <button
                 v-if="followStatus === 0"
+
                 @click="follow(sessionId, infoes.memberId)"
-                class="btn profile-edit-btn2"
-              >
+                class="btn profile-edit-btn2">
                 Follow
               </button>
               <button
                 v-else
                 style="background-color: #2ac187; color: white"
                 @click="unfollow(sessionId, infoes.memberId)"
-                class="btn profile-edit-btn2"
-              >
+                class="btn profile-edit-btn2">
                 Unfollow
               </button>
               <button class="btn profile-edit-btn2" @click="send(sessionId)">

@@ -140,4 +140,5 @@ public interface MoimMapper {
 	public String updateSetting(MoimVO moimVO);
 		
 	//게시물 등록
+	public int insertBoard(MoimBoardVO vo);
 }

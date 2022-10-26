@@ -1,10 +1,10 @@
 <!-- none_user random postlist component in the list -->
 <template>
   <div>
-    <v-container fluid>
+    <v-container fluid max-width="1400">
       <v-row>
         <v-col v-for="(feed,i) in feeds" :key="i" class="d-flex child-flex" cols="3">
-          <div @click="goFeedDetail(feed.postId, feed.memberId)"> 
+          <div style="cursor:pointer;" @click="goFeedDetail(feed.postId, feed.memberId)"> 
             <v-img :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)"
                   class="white--text align-end rounded-sm" aspect-ratio="1.2"
                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)">

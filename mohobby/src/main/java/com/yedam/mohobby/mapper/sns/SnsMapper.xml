@@ -117,6 +117,20 @@
         FROM sns_post
    </select>
    
+   
+   <!-- 전체피드페이징 -->
+   <select id="allListPaging" parameterType="Integer" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+<![CDATA[ SELECT *
+	        FROM
+	            ( SELECT ROWNUM AS RNUM, s.*
+	                FROM sns_post s
+	               WHERE ROWNUM < #{ num }+6
+	            )
+	       WHERE #{ num } < RNUM ]]>
+   </select>
+   
+   
+   
    <!-- 최신피드조회 -->
    <select id="newList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
       SELECT post_id, member_id, thumbnail, likes, cmts 

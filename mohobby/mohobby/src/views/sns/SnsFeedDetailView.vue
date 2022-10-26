@@ -24,7 +24,11 @@
 
         <!-- 이미지 -->
         <v-row>
-          <v-col cols="12" id="image_box">
+          <v-col cols="12" id="image_box" style="position:relative">
+            <v-icon v-show="imgsLength == 2" class="image_icon">mdi-numeric-2-box-multiple</v-icon>
+            <v-icon v-show="imgsLength == 3" class="image_icon">mdi-numeric-3-box-multiple</v-icon>
+            <v-icon v-show="imgsLength == 4" class="image_icon">mdi-numeric-4-box-multiple</v-icon>
+            <v-icon v-show="imgsLength == 5" class="image_icon">mdi-numeric-5-box-multiple</v-icon>
             <v-carousel ref="myCarousel" hide-delimiters :touchless="true">
               <v-carousel-item
                 v-for="(img, i) in imgs"
@@ -116,7 +120,7 @@
               <!-- 컬렉션 선택 select_box -->
               <v-select
                 @click="getCollectionList(memberId)"
-                :items="select" item-text="catgName" item-value="catgId" label="저장할 컬렉션을 선택하세요" v-model="selectedCollection" />
+                :items="isCollections" item-text="catgName" item-value="catgId" label="저장할 컬렉션을 선택하세요" v-model="selectedCollection" />
             </v-card-text>
             <v-row class="ma-4 justify-space-around">
               <v-btn color="white" dense rounded dark @click="dialog3 = !dialog3">
@@ -230,6 +234,7 @@ export default {
       drag: false,
       touch: false,
       imgs: [], //이미지 저장
+      imgsLength: Number,
       width: 800,
       
 
@@ -259,12 +264,14 @@ export default {
       catgName: "", //카테고리이름
       thumbnail: "", //썸네일
       mark: 0, //북마크 아이콘
-      select: [], //유저의 기존 컬렉션,
+      isCollections: [], //유저의 기존 컬렉션,
+      catgNames:[], //이미 존재하는 컬렉션 이름들
       selectedCollection: "", //북마크를 저장할 컬렉션
       catgName: "", //새로 생성할 컬렉션 이름
       notifications: false,
       sound: true,
       widgets: false,
+
       cmtCount:"",
       userOneInfo : [],
     };
@@ -289,6 +296,7 @@ export default {
 
   },
   sendLink() {
+    Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); // 사용하려는 앱의 JavaScript 키 입력
     Kakao.Link.sendDefault({
       objectType: 'feed',
       content: {
@@ -314,7 +322,7 @@ export default {
       ],
     })
   },
-  //   // Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); // 사용하려는 앱의 JavaScript 키 입력
+     
 
 
 
@@ -387,6 +395,7 @@ export default {
       this.axios("/sns/user/feed_detail_img/" + postId)
         .then((res) => {
           this.imgs = res.data;
+          this.imgsLength = this.imgs.length;
           console.log("이미지 로딩 성공!");
         })
         .catch((err) => {
@@ -498,7 +507,7 @@ export default {
         "/app/Notice",
         JSON.stringify(noticeContent),
         (res) => {
-          console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!"),
+          console.log("좋아요 알림 전송"),
           console.log(res);
         }
       );
@@ -595,11 +604,30 @@ export default {
     //컬렉션 리스트 호출 호출했는데
     //-----------------------------> 리스트.length가 0이면 생성되도록,,
     getCollectionList(memberId) {
+
       this.axios("/sns/collection/" + memberId)
         .then((res) => {
-          this.select = res.data;
-          console.log(this.select);
-          console.log("컬렉션리스트 호출 성공!");
+
+          if(res.data.length == 0){//리스트 불러올 데이터가 없으면 디폴트 컬렉션 생성
+                  this.createDefaultCollection(memberId);
+
+            }else{
+
+              for(let i=0; i<res.data.length; i++){
+                let isCatgName = res.data[i].catgName; //컬렉션 이름만 뽑아서 바인딩
+                this.catgNames.push(isCatgName);
+
+              }
+
+                console.log("내 컬렉션들--> ");
+                console.log(this.catgNames);
+
+                this.isCollections = res.data;//or not 생성되어있는 리스트 호출
+
+                console.log("컬렉션리스트 호출 성공!");
+
+            }
+
         })
         .catch((err) => {
           alert("컬렉션호출 실패" + err);
@@ -650,6 +678,24 @@ export default {
           alert(err);
         });
     },
+
+    //디폴트 컬렉션 생성 - 해당 유저 아이디에 생성된 컬렉션이 없으면 기본컬렉션 생성됨
+    createDefaultCollection(memberId){
+        const thumbnail = 'bookmark_default.png'
+
+        this.axios.post('/sns/collection', {
+            memberId : memberId,
+            catgName : 'default',
+            thumbnail : thumbnail,
+        }).then(res => {
+            console.log("디폴트컬렉션생성 성공!"+res);
+            this.getCollectionList(memberId);
+        }).catch(err => {
+            alert(err);
+        });
+      },
+
+
 
 
     //사진 넘기기
