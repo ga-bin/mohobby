@@ -47,4 +47,9 @@ public class AdminFlagServiceImpl implements AdminFlagService {
 		public void updateMoimOpen(MoimVO moimVO) {
 			mapper.updateMoimOpen(moimVO);
 		}
+		
+		//  신고 코드에 따라서 검색
+		public List<FlaggingVO> getFlagByCode(String flagCode) {
+			return mapper.getFlagByCode(flagCode);
+		}
 }
