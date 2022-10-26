@@ -140,11 +140,3 @@ node_modules/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-mohobby/src/main/webapp/css/
-mohobby/src/main/webapp/js/
-mohobby/src/main/webapp/fonts/
-mohobby/src/main/webapp/img/
-mohobby/src/main/webapp/media/
-mohobby/src/main/webapp/index.html
-mohobby/src/main/webapp/favicon.ico
