@@ -66,4 +66,11 @@ public class AdminFlagController {
 		}
 		
 		// 신고된 유저 block
+		
+		
+		//  신고 코드에 따라서 검색
+		@GetMapping("/searchCodeList/{flagCode}")
+			public List<FlaggingVO> getFlagByCode(@PathVariable String flagCode) {
+				return service.getFlagByCode(flagCode);
+			}
 }

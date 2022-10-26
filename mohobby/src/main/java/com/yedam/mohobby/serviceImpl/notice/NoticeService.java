@@ -31,8 +31,13 @@ public class NoticeService implements com.yedam.mohobby.service.notice.NoticeSer
 	public int delectNotice(int noticeId) {
 		return nMapper.delectNotice(noticeId);
 	}
-	
+	//알림 전체 삭제
+	@Override
+	public int delectAllNotice(String memberId) {
+		return nMapper.delectAllNotice(memberId);
+	}
 	//알림번호 조회
+	@Override
 	public int getNoticeId() {
 		return nMapper.getNoticeId();
 	}
@@ -42,4 +47,11 @@ public class NoticeService implements com.yedam.mohobby.service.notice.NoticeSer
 	public int getNonReadAllChat(String memberId) {
 		return nMapper.getNonReadAllChat(memberId);
 	}
+
+	//메신저 알림 전체 삭제
+	@Override
+	public int delectAllMsgNotice(String memberId) {
+		return nMapper.delectAllMsgNotice(memberId);
+	}
+
 }

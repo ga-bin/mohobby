@@ -15,7 +15,6 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/sock").setAllowedOriginPatterns("*").withSockJS();
     }
 
-
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
 

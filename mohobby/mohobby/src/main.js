@@ -33,7 +33,6 @@ stompClient.connect(
 );
 
 
-
 Vue.use(VueSweetalert2);
 
 Vue.use(BootstrapVue);
