@@ -102,28 +102,12 @@ export default {
           memberId: this.$store.state.id,
           moimId: this.$route.params.moimId
         }).then((resp) => {
-          console.log('======================================')
-          console.log('startDate:' + this.calendar.startDate)
-          console.log('startTime:' + this.calendar.startTime)
-          console.log('info:' + this.calendar.info)
-          console.log('endDate:' + this.calendar.endDate)
-          console.log('endTime:' + this.calendar.endTime)
-          console.log('title:' + this.calendar.title)
-          console.log('memberId ' + this.$store.state.id)
-          console.log('moimId' + this.$route.params.moimId)
-          console.log('======================================')
-          // vm.items.unshift({
-          //   startDate: this.calendar.startDate,
-          //   startTime: this.calendar.startTime,
-          //   info: this.calendar.info,
-          //   endDate: this.calendar.endDate,
-          //   endTime: this.calendar.endTime,
-          //   title: this.calendar.title,
-          //   memberId: this.$store.state.id,
-          //   moimId: this.$route.params.moimId
-          // })
-  
-          //this.$emit('update:items', vm.items);
+          this.calendar.startDate = '',
+          this.calendar.startTime = '',
+          this.calendar.info = '',
+          this.calendar.endDate = '',
+          this.calendar.endTime = '',
+          this.calendar.title = ''
           this.$emit('dialogClose', false);
         })
         .catch((error) => {

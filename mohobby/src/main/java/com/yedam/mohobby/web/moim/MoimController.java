@@ -432,35 +432,43 @@ public class MoimController {
 		} catch (Exception e) {
 			return "fail"+e;
 		}
-
-	   //html 파일 생성
-	   @PostMapping("/saveMoimInfo")
-	   public void saveClassInfo(@RequestBody MoimInfoRequestVO req) {
-	      service.saveClassInfo(req);
-	   }
-	   //에디터 이미지 저장
-	   @PostMapping("/uploadMoimImage")
-	   public void uploadMoimImage(@RequestBody MoimImageVO req) {
-	       service.uploadMoimImage(req);
-	   }
-	   
-	   //html 파일 불러오기
-	   @GetMapping("/readMoimInfo")
-	   public String readClassInfo(@RequestParam int boardId) {
-		       return service.readMoimInfo(boardId);
-	   }
-	   
-	   @PostMapping("/insertBoard")
-	   public int insertBoard(@RequestBody MoimBoardVO vo) {
-	   service.insertBoard(vo);
-	   return vo.getBoardId();
-	   }
-	
-//	//소모임 가입하기
-//	@PostMapping("/")
-//	public 
-	
-
 	}
+	
+	//html 파일 생성
+	@PostMapping("/saveMoimInfo")
+	public void saveClassInfo(@RequestBody MoimInfoRequestVO req) {
+	    service.saveClassInfo(req);
+	}
+	//에디터 이미지 저장
+	@PostMapping("/uploadMoimImage")
+	public void uploadMoimImage(@RequestBody MoimImageVO req) {
+	    service.uploadMoimImage(req);
+	}
+
+	//html 파일 불러오기
+	@GetMapping("/readMoimInfo")
+	public String readClassInfo(@RequestParam int boardId) {
+		 return service.readMoimInfo(boardId);
+	}
+	   
+	@PostMapping("/insertBoard")
+	public int insertBoard(@RequestBody MoimBoardVO vo) {
+	service.insertBoard(vo);
+		return vo.getBoardId();
+	}
+	
+//	//소모임 삭제하기
+//	@DeleteMapping("/")
+//	public String delMoim(@Param ("moimId") int moimId, @Param("memberId") String memberId) {
+//		try {
+//			service.deleteMoim(moimId, memberId);
+//			return "succes";
+//		} catch(Exception e) {
+//			return "fail"+e;
+//		}
+//	}
+
+	
 }
+
 

@@ -458,5 +458,11 @@ public class MoimServiceImpl implements MoimService {
 	        
 	        return res;
 	    }
+
+//	    //소모임 삭제
+//		@Override
+//		public String deleteMoim(int moimId, String memberId) {
+//			return mapper.delMoim(moimId, memberId);
+//		}
 	
 }

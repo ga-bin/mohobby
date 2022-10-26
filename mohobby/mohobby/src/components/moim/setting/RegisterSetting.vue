@@ -130,7 +130,7 @@ export default {
         }
       },
       updateSetting(){
-
+          const vm = this;
           if(this.selected == "남성"){
             this.gender = 1
           } else if(this.selected == "여성"){
@@ -146,13 +146,9 @@ export default {
           maxPeople : this.count,
           moimId : this.moimId
         }).then(function (resp) {
-          console.log(resp)
-          console.log('gender '+this.gender)
-          console.log('maxAge '+this.maxAge)
-          console.log('minAge '+this.minAge)
-          console.log('maxPeople '+this.maxPeople)
-          console.log('moimId '+this.moimId)  
-          this.$swal('변경이 완료되었습니다!')
+          console.log(resp)                                                                                                                                                                                                                                          
+          vm.$swal('변경이 완료되었습니다!')
+          vm.$router.push({name : "moimBoard"})
         }).catch(function (error) {
           console.log(error)
         })

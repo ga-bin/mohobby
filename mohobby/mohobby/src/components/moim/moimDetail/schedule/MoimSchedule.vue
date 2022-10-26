@@ -68,9 +68,8 @@
       >
       <v-list-item three-line>
         <v-list-item-content>
-          <div class="text-overline mt-6">
-            {{ item.title }}  <v-btn x-small outlined color="error"  @click="deleteSchedule(item.skedId)">
-              삭제</v-btn>
+          <div class="text-overline mt-6" id="delete">
+            {{ item.title }} 
             <hr />
             {{ item.startDate }} {{item.startTime}} ~ {{item.endDate}} {{item.endTime}}
           </div>
@@ -78,7 +77,8 @@
             {{ item.info }}</v-list-item-subtitle
           >
         </v-list-item-content>
-      
+        <v-btn x-small outlined color="error"  @click="deleteSchedule(item.skedId)">
+              삭제</v-btn>
       </v-list-item>
       
     </v-card> 
@@ -119,19 +119,25 @@ export default {
   methods: {
 
     deleteSchedule(skedId){
-      let vm =this
-      this.axios.delete("/deleteSchedule",{
-        params:{
-          skedId : skedId
-        },
-      })
-      .then(function(res){
-        console.log("삭제성송")
-        vm.getSchedule();
-      })
-      .catch(function(res){
-        console.log("실패")
-      })
+      this.$swal('정말 삭제하시겠습니까?')
+      if(this.$swal.value == true){
+        let vm =this
+        this.axios.delete("/deleteSchedule",{
+          params:{
+            skedId : skedId
+          },
+        })
+        .then(function(res){
+          this.$swal("삭제가 완료되었습니다.")
+
+          vm.getSchedule();
+        })
+        .catch(function(res){
+          console.log("실패")
+        })
+      } else {
+        this.$swal('삭제가 취소되었습니다.')
+      }
     },
       getSchedule() {
       this.axios
@@ -199,5 +205,11 @@ this.calendar.title = new Date()
 <style>
 .smallCal{
   width: 200px;
+}
+
+#delete{
+  float: right;
+  margin-right: 3%;
+  margin-top: 5%;
 }
 </style>

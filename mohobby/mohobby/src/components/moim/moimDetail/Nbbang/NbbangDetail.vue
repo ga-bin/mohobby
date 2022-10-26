@@ -11,7 +11,7 @@
             >
             </v-img>
           </v-avatar>
-          <div class="user text-overline">{{ user }}<br />{{ date }}</div>
+          <div class="user text-overline">{{ writer }}<br />{{ date | moment('YYYY-MM-DD HH:mm')}}</div>
         </div>
       </div>
 
@@ -42,7 +42,7 @@
                       >mdi-chart-pie</v-icon
                     >
                     {{ item.header }}
-                    {{ money }}/{{ person }}명
+                    {{ totalPrice}}/{{ people }}명
                   </v-subheader>
                   <v-divider
                     v-else-if="item.divider"
@@ -55,14 +55,14 @@
                     </v-list-item-avatar>
 
                     <v-list-item-content>
-                      <v-list-item-title v-html="item.name"></v-list-item-title>
+                      <v-list-item-title v-html="item.moneyTarget"></v-list-item-title>
                       <v-list-item-subtitle
                         v-html="item.money"
                       ></v-list-item-subtitle>
                     </v-list-item-content>
-
+                    
                     <div class="checkBox">
-                      <v-checkbox v-if="item.memberId === memberId"
+                      <v-checkbox v-if="item.writer == memberId || item.calcCheck == 0"
                         v-model="item.checked"
                         color="light-green"
                       ></v-checkbox>
@@ -87,9 +87,7 @@
               </template>
               <v-card>
                 <v-card-title>
-                  N빵을 완료하면 변경할 수 없습니다.
-                  <br />
-                  계속하시겠습니까?
+                  n빵 체크가 완료되었습니다.
                 </v-card-title>
                 <v-card-actions>
                   <v-spacer></v-spacer>
@@ -116,35 +114,38 @@ export default {
       memberId : this.$store.state.id,
       dialog: false,
       writer: 0,
-      user: "IU",
-      date: "2022-10-06 오전 10:22",
-      money: "9,000",
-      person: 3,
       dutchId: this.$route.params.dutchId,
       moimId : this.$route.params.moimId,
       items : [],
       oneNbbangList : [],
       checkbox: [],
       checked : false,
+      totalPrice : "",
+      people : "",
+      calcCheck: ''
     };
   },
   created() {},
   mounted() {
-    this.getOneNbbangList();
-    console.log(this.memberId);
-    console.log(this.memberId);
-    console.log(this.memberId);
-    console.log(this.memberId);
-    console.log(this.memberId);
+    this.getOneNbbangList()
   },
   methods: {
-    complateNbbang() {
-      this.dialog = false;
-      this.$router.push('moimNbbang');
-    },
+    completeNbbang() {
+      this.dialog = false
+      this.axios.put("/",{
+        params: {
+          calcCheck : this.calcCheck,
+          dutchId : this.dutchId
+        }
+      }).then((resp) => {
+          console.log(resp)
+      }).catch((err) => {
+          console.log(err);
+      });
+      this.$router.push('moimNbbang')
+  },
     changeCheck() {
-
-      this.complateNbbang();
+      this.completeNbbang();
     },
     getOneNbbangList() {
       const vm = this;
@@ -155,6 +156,12 @@ export default {
         .then(function (response) {
           console.log(response.data);
           vm.oneNbbangList = response.data;
+          vm.totalPrice = response.data[1].totalPrice;
+          vm.people = response.data[1].people;
+          vm.writer = response.data[1].memberId;
+          vm.date = response.data[1].writeDate;
+          vm.calcCheck = response.data[1].calcCheck;
+
           vm.makeShowList();
         })
         .catch(function (error) {
@@ -165,23 +172,19 @@ export default {
       this.items.push({ header: "N빵" });
       for(let i = 0; i < this.oneNbbangList.length; i++) {
         if (this.oneNbbangList[i].calcCheck == 0) {
-          this.checked = false;
+          this.checked = 1;
         } else {
-          this.checked = true;
+          this.checked = 0;
         }
         this.items.push({
           avatar: require(`@/assets/image/user/${this.oneNbbangList[i].profileImg}`),
-          name: this.oneNbbangList[i].moneyTarget,
+          writeDate: this.oneNbbangList[i].writeDate,
+          writer: this.oneNbbangList[i].memberId,
           money: this.oneNbbangList[i].calcPrice,
-          memberId : this.oneNbbangList[i].memberId,
+          moneyTarget : this.oneNbbangList[i].moneyTarget,
           checked : this.checked,
         },)
       }
-      console.log(this.items);
-      console.log(this.items);
-      console.log(this.items);
-      console.log(this.items);
-      console.log(this.items);
     }
   },
   
