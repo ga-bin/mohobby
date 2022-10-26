@@ -113,9 +113,8 @@ export default {
 
 <style scoped>
 .quill-editor {
-  height: 350px;
+  height: 700px;
   min-height: 700px;
-  padding-bottom: 65px;
 }
 .limit {
   height: 30px;
