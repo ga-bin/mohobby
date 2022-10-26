@@ -18,7 +18,7 @@
           <v-col cols="12" sm="6" md="8">
             <span>소개글</span><br><br>
             <v-textarea name="input-7-1" no-resize filled height="245"
-              placeholder="함께하고 싶은 소모임 활동을 자세히 소개해주세요. (50자 이상)" value=""></v-textarea>
+              placeholder="함께하고 싶은 소모임 활동을 자세히 소개해주세요. (50자 이상)" v-model="intro"></v-textarea>
           </v-col>
         </v-row>
         <v-row class="mt-12">
@@ -55,7 +55,8 @@ import somoimregion from "@/components/moim/setting/somoimregion.vue"
 export default {
   data() {
     return {
-      dialog: false
+      dialog: false,
+      intro: ''
     };
   },
   components: { somoimtopic, somoimregion }

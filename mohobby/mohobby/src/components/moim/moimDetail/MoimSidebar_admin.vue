@@ -80,7 +80,7 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn @click="dialog = false"> 취소 </v-btn>
-                  <v-btn color="error" @click="dialog = false"> 삭제 </v-btn>
+                  <v-btn color="error" @click="[dialog = false, delmoim()]"> 삭제 </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -108,7 +108,8 @@
 export default {
   data() {
     return {
-      memberId: "",
+      memberId: '',
+      moimId: this.$route.params.moimId,
       profileImg: "comfuck.jpg",
       dialog: false,
       links: [
@@ -173,6 +174,20 @@ export default {
           console.log(error);
         });
     },
+    //소모임 삭제
+    delmoim(){
+      this.axios.delete("/",{
+        params: {
+          moimId : this.moimId,
+          memberId : this.memberId
+        }.then(function (resp) {
+            console.log(resp);
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+      })
+    }
   },
 };
 </script>

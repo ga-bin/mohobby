@@ -145,5 +145,8 @@ public interface MoimService {
 
 	public String readMoimInfo(int boardId);
 
+//	//소모임 삭제하기
+//	public String deleteMoim(int moimId, String memberId);
+
 }
 

@@ -406,61 +406,69 @@ public class MoimController {
    }
    
 
-   //소모임 일정 삭제
-   @DeleteMapping("/deleteSchedule")
-   public int deleteSchedule(@Param("skedId")int skedId) {
-      return service.deleteSchedule(skedId);
-   }
-   
-   //소모임 가입 멤버 등록
-   @PostMapping("/insertMoMember")
-   public String insertMoimMember(@RequestBody MoimMemberVO momemVO){
-      try {
-         service.insertMember(momemVO);
-         return "success";
-      } catch (Exception e) {
-         return "fail"+e;
-      }
-   }
-   
-   //소모임 가입조건 수정
-   @PutMapping("/updateSetting")
-   public String updateMoimSet(@RequestBody MoimVO moimVO) {
-      try {
-         service.updateSetting(moimVO);
-         return "success";
-      } catch (Exception e) {
-         return "fail"+e;
-      }
-   }
-   //html 파일 생성
-   @PostMapping("/saveMoimInfo")
-   public void saveClassInfo(@RequestBody MoimInfoRequestVO req) {
-      service.saveClassInfo(req);
-   }
-   //에디터 이미지 저장
-   @PostMapping("/uploadMoimImage")
-   public void uploadMoimImage(@RequestBody MoimImageVO req) {
-       service.uploadMoimImage(req);
-   }
+	//소모임 일정 삭제
+	@DeleteMapping("/deleteSchedule")
+	public int deleteSchedule(@Param("skedId")int skedId) {
+	   return service.deleteSchedule(skedId);
+	}
+	
+	//소모임 가입 멤버 등록
+	@PostMapping("/insertMoMember")
+	public String insertMoimMember(@RequestBody MoimMemberVO momemVO){
+		try {
+			service.insertMember(momemVO);
+			return "success";
+		} catch (Exception e) {
+			return "fail"+e;
+		}
+	}
+	
+	//소모임 가입조건 수정
+	@PutMapping("/updateSetting")
+	public String updateMoimSet(@RequestBody MoimVO moimVO) {
+		try {
+			service.updateSetting(moimVO);
+			return "success";
+		} catch (Exception e) {
+			return "fail"+e;
+		}
+	}
+	
+	//html 파일 생성
+	@PostMapping("/saveMoimInfo")
+	public void saveClassInfo(@RequestBody MoimInfoRequestVO req) {
+	    service.saveClassInfo(req);
+	}
+	//에디터 이미지 저장
+	@PostMapping("/uploadMoimImage")
+	public void uploadMoimImage(@RequestBody MoimImageVO req) {
+	    service.uploadMoimImage(req);
+	}
 
-   //html 파일 불러오기
-   @GetMapping("/readMoimInfo")
-   public String readClassInfo(@RequestParam int boardId) {
-          return service.readMoimInfo(boardId);
-   }
-      
-   @PostMapping("/insertBoard")
-   public int insertBoard(@RequestBody MoimBoardVO vo) {
-   service.insertBoard(vo);
-   return vo.getBoardId();
-      }
-   
-//   //소모임 가입하기
-//   @PostMapping("/")
-//   public 
-   
+	//html 파일 불러오기
+	@GetMapping("/readMoimInfo")
+	public String readClassInfo(@RequestParam int boardId) {
+		 return service.readMoimInfo(boardId);
+	}
+	   
+	@PostMapping("/insertBoard")
+	public int insertBoard(@RequestBody MoimBoardVO vo) {
+	service.insertBoard(vo);
+		return vo.getBoardId();
+	}
+	
+//	//소모임 삭제하기
+//	@DeleteMapping("/")
+//	public String delMoim(@Param ("moimId") int moimId, @Param("memberId") String memberId) {
+//		try {
+//			service.deleteMoim(moimId, memberId);
+//			return "succes";
+//		} catch(Exception e) {
+//			return "fail"+e;
+//		}
+//	}
 
-   
+	
 }
+
 
