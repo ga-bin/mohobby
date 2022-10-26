@@ -44,9 +44,18 @@ export default {
       moimRight: 1,
       Id: this.$route.params.moimId,
       boardType: 1,
+      boardList : []
     };
   },
   methods: {
+    makeShowList() {
+      this.items.push({ header: "게시판" });
+      for(let i = 0; i < this.items.length; i++) {
+        this.items.push({
+          avatar: require(`@/assets/image/user/${this.items[i].profileImg}`),
+        },)
+      }
+    },
     goPost(idx) {
       this.$router.push({
         name: "moimPost",
