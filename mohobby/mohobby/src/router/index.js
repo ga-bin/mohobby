@@ -4,12 +4,6 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
 const routes = [
-  // imageUpload
-  {
-    path: "/imageUpload",
-    name: "imageUpload",
-    component: () => import("./../components/common/ImgUpload"),
-  },
   // admin
   {
     path: "/adminuser",
@@ -307,8 +301,7 @@ const routes = [
       {
         path: "my",
         name: "mycourse",
-        component: () =>
-          import("./../views/lecture/mycourse/classMycourseMain"),
+        component: () => import("./../views/lecture/mycourse/classMycourseMain"),
         children: [
           {
             path: "instudy",
@@ -318,22 +311,19 @@ const routes = [
           {
             path: "endstudy",
             name: "endstudy",
-            component: () =>
-              import("./../components/lecture/mycourse/endStudy"),
+            component: () => import("./../components/lecture/mycourse/endStudy"),
           },
           {
             path: "certificate",
             name: "certificatestudy",
-            component: () =>
-              import("./../components/lecture/mycourse/certificate"),
+            component: () => import("./../components/lecture/mycourse/certificate"),
           },
         ],
       },
       {
         path: "attd",
         name: "myattd",
-        component: () =>
-          import("./../views/lecture/mycourse/classAttdMain.vue"),
+        component: () => import("./../views/lecture/mycourse/classAttdMain.vue"),
       },
       {
         path: "/class/attd/login",
@@ -344,7 +334,7 @@ const routes = [
       {
         path: "/class/open",
         name: "classOpenUp",
-        component: () => import("./../views/lecture/open/ClassInputView"),
+        component: () => import("./../views/lecture/open/ClassInputView")
       },
     ],
   },
@@ -365,7 +355,7 @@ const routes = [
   // moim
   {
     path: "/moimMain",
-    name: "moimMain",
+    name: "moimMain", 
     component: () => import("./../views/moim/MoimMainView"),
   },
   {
