@@ -18,12 +18,11 @@
 
 
       <v-list-item-group
-        v-model="settings"
       >
         <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>mo1</v-list-item-title>
+              <v-list-item-title @click="getSelectedCode($event)">mo1</v-list-item-title>
               <v-list-item-subtitle>부적절한 게시물 개시</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -32,7 +31,7 @@
         <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>mo2</v-list-item-title>
+              <v-list-item-title @click="getSelectedCode($event)">mo2</v-list-item-title>
               <v-list-item-subtitle>홍보성 초대 반복</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -41,7 +40,7 @@
         <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>mo3</v-list-item-title>
+              <v-list-item-title @click="getSelectedCode($event)">mo3</v-list-item-title>
               <v-list-item-subtitle>청소년에게 음란성 초대글 유포</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -50,7 +49,7 @@
         <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>mo4</v-list-item-title>
+              <v-list-item-title @click="getSelectedCode($event)">mo4</v-list-item-title>
               <v-list-item-subtitle>다른 소모임에 대한 욕설, 비방</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -59,7 +58,7 @@
          <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>mo5</v-list-item-title>
+              <v-list-item-title @click="getSelectedCode($event)">mo5</v-list-item-title>
               <v-list-item-subtitle>사이트 목적과 맞지 않는 소모임</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -68,7 +67,7 @@
          <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>mo6</v-list-item-title>
+              <v-list-item-title @click="getSelectedCode($event)">mo6</v-list-item-title>
               <v-list-item-subtitle>기타</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -94,7 +93,7 @@
         small
 
         <template v-slot:no-data>
-          <v-btn color="primary" @click="initialize"> Reset </v-btn>
+          <v-btn color="primary"> Reset </v-btn>
         </template>
         <template v-slot:item.showDetail="{ item }">
           <v-icon @click="goToMoim(item)"> mdi-arrow-right-bold-box </v-icon>
@@ -102,7 +101,7 @@
         small
 
         <template v-slot:no-data>
-          <v-btn color="primary" @click="initialize"> Reset </v-btn>
+          <v-btn color="primary"> Reset </v-btn>
         </template>
       </v-data-table>
     </div>
@@ -163,6 +162,34 @@ export default {
   watch: {},
 
   methods: {
+    getSelectedCode(event) {
+      console.log(event.target.textContent);
+      const vm = this;
+      this.axios({
+        url: "/searchCodeList/" + event.target.textContent,
+        method: "get",
+      })
+        .then(function (response) {
+          console.log(response);
+          for (let i = 0; i < response.data.length; i++) {
+            if (response.data[i].adminConfirm == 0) {
+              response.data[i].adminConfirm = "미승인";
+            } else if (response.data[i].adminConfirm == 1) {
+              response.data[i].adminConfirm = "승인";
+            }
+            if (response.data[i].flagResult == 0) {
+              response.data[i].flagResult = "통과";
+            } else if (response.data[i].flagResult == 1) {
+              response.data[i].flagResult = "패널티";
+            }
+          }
+          vm.moimFlagList = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+    ,
     getFlagedMoim() {
       const vm = this;
       this.axios({
