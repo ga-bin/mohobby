@@ -4,8 +4,8 @@
       <h1 class="mb-10">강의 개설 신청</h1>
 
     </div>
+    <form id="classInput" name="classInput" v-on:submit.prevent>
     <div class="fill-height">
-        <form id="classInput" name="classInput" v-on:submit.prevent>
         <div id="step1" class="contents-box mb-5">
           <div class="contents">
             <br />
@@ -185,6 +185,7 @@
               v-model="thumbnailImage"
               id="mainImage"
               accept="image/*"
+              name="mainImage"
             />
             <span class="label">추가이미지등록(선택)</span>
             <!-- 파일등록부 -->
@@ -200,10 +201,12 @@
               multiple
               id="subImageList"
               accept="image/*"
+              v-model="subImageList"
+              name="subImageList"
             />
           </div>
         </div>
-      </form>
+      
         <div id="step5" v-show="step5" class="contents-box mb-5">
         <!-- <div id="step5" class="contents-box mb-5"> -->
           <div class="contents">
@@ -232,7 +235,7 @@
                 placeholder="챕터 제목을 입력하세요"
                 style="width: 1100px"
                 type="text"
-                v-model="item.name"
+                v-model="item.chapName"
                 @change="checkStep5"
               />
               <button 
@@ -276,10 +279,10 @@
                 <option 
                   v-for="(chap, i) in chapList" 
                   :key="i" 
-                  :value="chap.name" 
-                  v-if="chap.name != ''"
+                  :value="chap.chapName" 
+                  v-if="chap.chapName != ''"
                 >
-                  {{ chap.name }}
+                  {{ chap.chapName }}
                 </option>
               </select>
               <input
@@ -287,7 +290,7 @@
                 type="text"
                 placeholder="강의 제목을 입력하세요"
                 style="width: 620px"
-                v-model="curr.title"
+                v-model="curr.partName"
                 @change="checkStep5"
               />
               <button
@@ -330,10 +333,11 @@
               </span>
               <v-file-input
                 type="file"
-                class="input"
+                class="input currVideo"
                 style="width: 530px;"
                 accept="video/*"
                 v-model="curr.video"
+                name="videoList"
                 @change="checkStep6"
               />
               <v-file-input
@@ -363,6 +367,7 @@
               class="input"
               placeholder="준비물을 입력하세요"
               style="width: 1150px; margin-right: 10px"
+              name="needs"
             />
           </div>
         </div>
@@ -370,6 +375,7 @@
           신청
         </v-btn>
       </div>
+    </form>
   </v-container>
 </template>
 <script>
@@ -406,7 +412,7 @@ export default {
       postcode: '',
       currList: [
         {
-          title: '',
+          partName: '',
           chap: '',
           video: '',
           file: '',
@@ -416,7 +422,7 @@ export default {
       ],
       chapList: [
         {
-          name: '',
+          chapName: '',
         },
       ],
       bankCode : '',
@@ -577,29 +583,29 @@ export default {
     },
     addChapList() {
       this.chapList.push({
-        name: '',
+        chapName: '',
       });
     },
     delChapList(i) {
       if(this.chapList.length == 1) {
-        this.chapList[0].name = '';
+        this.chapList[0].chapName = '';
       } else {
         this.chapList.splice(i, 1);
       }
     },
     addCurrList(i) {
       this.currList.push({
-        title: '',
+        partName: '',
         chap: '',
         video: '',
         file: '',
-        minDate: this.$moment(this.currList[i-1].classDate).add(1, "d"),
+        minDate: this.$moment(this.currList[i].minDate).add(1, "d").format('YYYY-MM-DD'),
         classDate: '',
       })
     },
     delCurrList(i) {
       if(this.currList.length == 1) {
-        this.currList[0].title = '';
+        this.currList[0].partName = '';
         this.currList[0].chap = '';
         this.currList[0].video = '';
         this.currList[0].file = '';
@@ -665,7 +671,7 @@ export default {
 
       for(let i=0; i<total; i++) {
         this.currList.push({
-          title: '',
+          partName: '',
           chap: '',
           video: '',
           file: '',
@@ -696,7 +702,7 @@ export default {
       let sum = 0;
 
       for(let chap of this.chapList) {
-        if(chap.name == '') {
+        if(chap.chapName == '') {
           sum += 1;
         }
       }
@@ -708,7 +714,7 @@ export default {
       }
 
       for(let curr of this.currList) {
-        if(curr.chap == '' || curr.title == '') {
+        if(curr.chap == '' || curr.partName == '') {
           sum += 1;
         }
       }
@@ -726,7 +732,10 @@ export default {
       let sum = 0;
 
       for(let curr of this.currList) {
-        if(curr.video == '' || curr.video == null) {
+        if(this.classType == 0 && (  curr.video == '' || curr.video == null)) {
+          sum += 1;
+        }
+        if(this.classType == 1 && (  curr.video == '' || curr.video == null || curr.classDate == '' || curr.classDate == null)) {
           sum += 1;
         }
       }
@@ -748,18 +757,28 @@ export default {
       let subImageInput = document.getElementById('subImageList');
       let subImages = subImageInput.files;
       formData.append("imgAmount", subImages.length+1);
+      if(this.classType == 1) {
+        let endDate = this.$moment(this.currList[this.currList.length-1].classDate).format('YYYY/MM/DD');
+        formData.append("endDate", endDate);
+      }
 
-      //chap
+      //html
+      formData.append("content", this.content);
 
-      //curr
+      //chapter
+      formData.append("chapListJson", JSON.stringify(this.chapList));
 
-      //main-image
+      //curriculum - video
+      
 
-      //sub-images
-
-      //videos
-
-      //files
+      this.axios.post('class/open', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+      }).then(res => {
+        console.log('multipart axios 결과')
+        console.log(res);
+      })
 
     },
     currDateChange(idx) {
