@@ -28,7 +28,7 @@
 	     <beans:property name="maxInMemorySize" value="1000000000"/>
          <!-- 인코딩 -->
    	</beans:bean>
-	
+   	
 	
 	<context:component-scan base-package="com.yedam.mohobby" />
 	<context:annotation-config />
@@ -36,4 +36,7 @@
 	<context:annotation-config />
 	<context:component-scan base-package="com.yedam.mohobby.**.**/**" />
 	<context:annotation-config />
+	
 </beans:beans>
+
+

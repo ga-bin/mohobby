@@ -17,11 +17,11 @@
 
 
 
-      <v-list-item-group @click="getSelectedCode()" v-model="selectedCode">
+      <v-list-item-group>
         <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>us1</v-list-item-title>
+              <v-list-item-title value="us1" @click="getSelectedCode($event)">us1</v-list-item-title>
               <v-list-item-subtitle>부적절한 게시물 개시</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -30,7 +30,7 @@
         <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>us2</v-list-item-title>
+              <v-list-item-title value="us2" @click="getSelectedCode($event)">us2</v-list-item-title>
               <v-list-item-subtitle>다른 유저에게 욕설, 비방</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -39,7 +39,7 @@
         <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>us3</v-list-item-title>
+              <v-list-item-title value="us3" @click="getSelectedCode($event)">us3</v-list-item-title>
               <v-list-item-subtitle>게시글, 댓글 도배</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -48,7 +48,7 @@
         <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>us4</v-list-item-title>
+              <v-list-item-title value="us4" @click="getSelectedCode($event)">us4</v-list-item-title>
               <v-list-item-subtitle>홍보성 게시물 반복적 개시</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -57,7 +57,7 @@
          <v-list-item>
           <template>
             <v-list-item-content>
-              <v-list-item-title>us5</v-list-item-title>
+              <v-list-item-title value="us5" @click="getSelectedCode($event)">us5</v-list-item-title>
               <v-list-item-subtitle>기타</v-list-item-subtitle>
             </v-list-item-content>
           </template>
@@ -84,7 +84,7 @@
         small
 
         <template v-slot:no-data>
-          <v-btn color="primary" @click="initialize"> Reset </v-btn>
+          <v-btn color="primary"> Reset </v-btn>
         </template>
         <template v-slot:item.showDetail="{ item }">
           <v-icon @click="goToUserProfile(item)"> mdi-arrow-right-bold-box </v-icon>
@@ -92,7 +92,7 @@
         small
 
         <template v-slot:no-data>
-          <v-btn color="primary" @click="initialize"> Reset </v-btn>
+          <v-btn color="primary"> Reset </v-btn>
         </template>
       </v-data-table>
     </div>
@@ -134,6 +134,7 @@ export default {
         protein: 0,
       },
       flagUserList: [],
+      selectedFlagUserList : [],
       userOneInfo: [],
       role : 0,
       settings: [],
@@ -156,8 +157,32 @@ export default {
   watch: {},
 
   methods: {
-    getSelectedCode() {
-      console.log(this.selectedCode);
+    getSelectedCode(event) {
+      console.log(event.target.textContent);
+      const vm = this;
+      this.axios({
+        url: "/searchCodeList/" + event.target.textContent,
+        method: "get",
+      })
+        .then(function (response) {
+          console.log(response);
+          for (let i = 0; i < response.data.length; i++) {
+            if (response.data[i].adminConfirm == 0) {
+              response.data[i].adminConfirm = "미승인";
+            } else if (response.data[i].adminConfirm == 1) {
+              response.data[i].adminConfirm = "승인";
+            }
+            if (response.data[i].flagResult == 0) {
+              response.data[i].flagResult = "통과";
+            } else if (response.data[i].flagResult == 1) {
+              response.data[i].flagResult = "패널티";
+            }
+          }
+          vm.flagUserList = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
     ,showSettings() {
       console.log(this.settings);
