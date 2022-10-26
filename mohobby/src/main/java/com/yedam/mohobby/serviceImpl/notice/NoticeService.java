@@ -54,4 +54,9 @@ public class NoticeService implements com.yedam.mohobby.service.notice.NoticeSer
 		return nMapper.delectAllMsgNotice(memberId);
 	}
 
+	@Override
+	public int delectMsgNotice(int postId) {
+		return nMapper.delectMsgNotice(postId);
+	}
+
 }

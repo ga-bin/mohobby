@@ -57,6 +57,11 @@
 		and (notice_type=0
 		or notice_type=1)
 	</delete>
+		<!-- 메신저 알림 삭제 -->
+	<delete id="delectMsgNotice" parameterType="integer">
+		delete from notice 
+		where post_id=#{postId}
+	</delete>
 		<!-- 메신저 알림 전체 삭제 -->
 	<delete id="delectAllMsgNotice" parameterType="String">
 		delete from notice 

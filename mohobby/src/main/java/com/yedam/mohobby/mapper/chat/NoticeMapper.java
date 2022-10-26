@@ -14,10 +14,12 @@ public interface NoticeMapper {
 	//알림 등록
 	public int insertNotice(NoticeVO notice);
 	//알림 단건 삭제
-	public int delectNotice(int noticeId);
+	public int delectNotice(@Param("noticeId")int noticeId);
+	//메세지 알림 단건 삭제
+	public int delectMsgNotice(@Param("postId")int postId);
 	//알림 전체 삭제
 	public int delectAllNotice(@Param("memberId")String memberId);
-	//알림 전체 삭제
+	//메세지 알림 전체 삭제
 	public int delectAllMsgNotice(@Param("memberId")String memberId);
 	//알림 번호 조회
 	public int getNoticeId();

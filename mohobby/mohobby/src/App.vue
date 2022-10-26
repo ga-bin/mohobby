@@ -19,15 +19,8 @@ export default {
     menu5: "asd",
   }),
   mounted() {
-    // this.logout();
   },
   methods: {
-    //  logout() {
-    //   this.$store.commit("setIsLoginFalse");
-    //   this.$store.commit("logout");
-    //   this.$store.commit("setUserData", null);
-    //   this.$router.push("/");
-    // },
     //채팅방 inout 감지
     CheckOut() {
       this.axios
@@ -40,6 +33,19 @@ export default {
     },
   },
   created() {
+    this.stompClient.connect(
+        {},
+        frame => {
+          // 소켓 연결 성공
+          this.connected = true;
+          console.log('소켓 연결 성공', frame);
+        },
+        error => {
+          // 소켓 연결 실패
+          console.log('소켓 연결 실패', error);
+          this.connected = false;
+        }
+      );      
   
   },
   watch: {

@@ -21,16 +21,6 @@ Vue.prototype.stompClient = stompClient;
 
 moment.locale("ko");
 
-stompClient.connect(
-  {},
-  (frame) => {
-    console.log("소켓 연결 성공!!!", frame);
-
-  },
-  (error) => {
-    console.log("소켓 연결 실패", error);
-  }
-);
 
 
 Vue.use(VueSweetalert2);
@@ -46,7 +36,9 @@ Vue.prototype.axios = axios;
 Vue.prototype.$ = $;
 axios.defaults.baseURL = "http://localhost:8088/java";
 moment.locale('ko');
-
+console.warn = console.error = () => {};
+// or IIFE
+(() => { console.warn = console.error = () => {}} )();
 
 Vue.filter("toFixed", (val, num) => {
   let result;

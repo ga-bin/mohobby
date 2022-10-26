@@ -38,8 +38,14 @@ public class NoticeController {
 	}
 	// 메신저 알림 전체 삭제
 	@DeleteMapping("/deleteAllMsgNotice")
-	public int deleteMsgNotice(@RequestParam String memberId) {
+	public int deleteMsgAllNotice(@RequestParam String memberId) {
 		return nService.delectAllMsgNotice(memberId);
+	}
+	// 메신저 알림 단건 삭제
+	@DeleteMapping("/deleteMsgNotice")
+	public int deleteMsgNotice(@RequestParam int postId) {
+		System.out.println(postId);
+		return nService.delectMsgNotice(postId);
 	}
 
 }
