@@ -309,10 +309,10 @@
 		
 		<!-- pagehelper -->
 		<dependency>
-		    <groupId>com.github.pagehelper</groupId>
-		    <artifactId>pagehelper</artifactId>
-		    <version>5.3.2</version>
-		</dependency>
+	    <groupId>com.github.pagehelper</groupId>
+	    <artifactId>pagehelper</artifactId>
+	    <version>5.3.2</version>
+	</dependency>
 		
 	</dependencies>
 	<build>

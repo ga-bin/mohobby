@@ -404,7 +404,7 @@ public class SnsController {
     @GetMapping("/collection/allBookmarks")
     public List<SnsBookmarkVO> getAllBookmarks(@RequestParam String memberId){
         System.out.println("북마크 전체조회 완/collection/bookmarkAll료");
-        return service.getAllBookmarks();
+        return service.getAllBookmarks(memberId);
     }
     
     

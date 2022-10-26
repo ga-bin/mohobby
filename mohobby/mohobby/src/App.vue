@@ -8,7 +8,6 @@
     </v-main>
   </v-app>
 </template>
-
 <script>
 
 import Header from "./components/common/Header";
@@ -31,8 +30,6 @@ export default {
     // },
     //채팅방 inout 감지
     CheckOut() {
-      console.log("isRoomNo" + this.$store.state.isRoomNo),
-      console.log("isId" + this.$store.state.id)
       this.axios
       .get("/updateCheckOut", {
         params: {
@@ -47,7 +44,9 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if(from.name=='chat')this.CheckOut();
+      if(from.name=='chat'){
+      this.CheckOut();
+      this.stompClient.unsubscribe(this.$store.state.isRoomNo);}
     }
   },
 };

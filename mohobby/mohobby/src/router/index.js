@@ -128,9 +128,9 @@ const routes = [
     component: () => import("@/views/sns/SnsUserFeed"),
   },
   {
-    path: "/snsManagement",
-    name: "snsManagement",
-    component: () => import("@/views/sns/management/SnsManagementView"),
+    path: "/snsFollowingMgmnt",
+    name: "snsFollowingMgmnt",
+    component: () => import("@/views/sns/management/FollowingMgmntView"),
   },
   {
     path: "/snsBookmark",

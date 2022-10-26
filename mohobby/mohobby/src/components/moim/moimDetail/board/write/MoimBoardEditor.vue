@@ -14,18 +14,10 @@
           </v-col>
     </div>
     <div class="example">
-    <quill-editor
-      class="editor"
-      ref="myTextEditor"
-      :disabled="false"
-      :value="content"
-      :style="styleEditor"
-      :options="editorOption"
-      @change="onEditorChange"
-      @blur="onEditorBlur($event)"
-      @focus="onEditorFocus($event)"
-      @ready="onEditorReady($event)"
-    />
+      <QuillEditor
+                @editorEmit="getContent"
+                ref="editor_content"
+              ></QuillEditor>
   </div>
   <div class="center">
       <v-btn>취소</v-btn>
@@ -35,23 +27,14 @@
 </template>
 -
 <script>
-  import hljs from "highlight.js";
-  import debounce from "lodash/debounce";
-  import { quillEditor } from "vue-quill-editor";
-  
-  // highlight.js style
-  import "highlight.js/styles/tomorrow.css";
-  
-  // import theme style
-  import "quill/dist/quill.core.css";
-  import "quill/dist/quill.snow.css";
+import QuillEditor from "@/components/common/TextEditor.vue";
   
   export default {
     name: "quill-example-snow",
     title: "Theme: snow",
-    components: {
-      quillEditor,
-    },
+      components: {
+    QuillEditor,
+  },
     data() {
       return {
         styleEditor : {
@@ -89,18 +72,11 @@
       };
     },
     methods: {
-      onEditorChange: debounce(function(value) {
-        this.content = value.html;
-      }, 466),
-      onEditorBlur(editor) {
-        console.log("editor blur!", editor);
-      },
-      onEditorFocus(editor) {
-        console.log("editor focus!", editor);
-      },
-      onEditorReady(editor) {
-        console.log("editor ready!", editor);
-      },
+      getContent(editorContent) {
+      console.log("emit_success", editorContent);
+      this.content = editorContent;
+      console.log("겟 콘탠트 내용", this.content);
+    },
       async clickSave(boardId) {
       document.querySelector(".ql-editor").style.display ='none';
 
@@ -167,15 +143,11 @@
     }
     },
     computed: {
-      editor() {
-        return this.$refs.myTextEditor.quill;
-      },
       contentCode() {
         return hljs.highlightAuto(this.content).value;
       },
     },
     mounted() {
-      console.log("this is Quill instance:", this.editor);
     },
   };
   </script>

@@ -49,11 +49,13 @@
     props:{
       userResult: [], //유저검색 결과
       keyword : String, //키워드
+
+      followingLists : [], //팔로잉 목록 조회 페이지,
     },
     data() {
       return {
 
-          users: [], //유저검색결과 props 담을 변수
+          users: [], //props 담을 변수
 
           // noResult: false,
           // user: true,
@@ -64,8 +66,16 @@
     created() {
       console.log("User page");
       console.log(this.userResult);
+
+      //유저검색
       this.users = this.userResult;
-      console.log(this.users);
+      console.log(this.user);
+
+      //팔로잉 리스트
+      if(this.followingLists){
+        this.users = this.followingLists;
+      };
+
       // this.userSearch();
       // this.keyword = this.searchResult;
         // this.searchMem(this.keyword);
@@ -76,15 +86,7 @@
       userResult(){
         this.users=this.userResult
       }
-      // searchResult() {
-      //   this.searchMem(this.searchResult);
-      //   }
-
-        // userSearch(){
-          
-        // }
-
-      },
+    },
 
         
     methods: {

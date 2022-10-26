@@ -89,6 +89,12 @@ public class MessageController {
 	public void rev(String RoomNo) {
 		sendTemplate.convertAndSend("/topic/room/" + RoomNo, RoomNo);
 	}
+	@MessageMapping("/SubscribeId")
+	public void res(String memberId) {
+
+		System.out.println(memberId);
+		sendTemplate.convertAndSend("/queue/" + memberId+"/notice", memberId);
+	}
 
 	// 알림
 	@MessageMapping("Notice")

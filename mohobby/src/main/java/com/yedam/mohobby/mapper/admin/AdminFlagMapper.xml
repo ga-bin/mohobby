@@ -41,6 +41,8 @@ update moim set moim_open = #{moimOpen} where moim_id = #{moimId}
 
 <!-- 신고 코드에 따라서 검색  -->
 <select id="getFlagByCode" parameterType="String" resultType="com.yedam.mohobby.service.admin.FlaggingVO">
-
+select flag_id, flag_from, flag_to, flag_code, flag_reason, admin_confirm, flag_result
+from flagging
+where flag_code = #{flag_code}
 </select>
 </mapper>

@@ -10,6 +10,8 @@ public interface NoticeService {
 	public List<NoticeVO> getAllNotice(String memberId);
 	public int insertNotice(NoticeVO notice);
 	public int delectNotice(int noticeId);
+	public int delectAllNotice(String memberId);
+	public int delectAllMsgNotice(String memberId);
 	public int getNoticeId();
 	public int getNonReadAllChat(String memberId);
 }

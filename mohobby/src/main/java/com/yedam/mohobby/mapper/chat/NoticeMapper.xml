@@ -46,7 +46,24 @@
 	</insert>
 	<!-- 알림 삭제 -->
 	<delete id="delectNotice" parameterType="integer">
-		delete from notice where notice_id=#{noticeId}
+		delete from notice 
+		where notice_id=#{noticeId}
+	</delete>
+	<!-- 일반 알림 전체 삭제 -->
+	<delete id="delectAllNotice" parameterType="String">
+		delete from notice 
+		where 1=1 
+		and member_id=#{memberId}
+		and (notice_type=0
+		or notice_type=1)
+	</delete>
+		<!-- 메신저 알림 전체 삭제 -->
+	<delete id="delectAllMsgNotice" parameterType="String">
+		delete from notice 
+		where 1=1 
+		and member_id=#{memberId}
+		and notice_type=2
+	
 	</delete>
 
 	<!-- 알림번호 조회 -->

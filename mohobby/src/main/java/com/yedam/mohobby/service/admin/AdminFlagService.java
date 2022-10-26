@@ -25,4 +25,7 @@ public interface AdminFlagService {
 		
 		// 신고된 소모임 block
 		public void updateMoimOpen(MoimVO moimVO);
+		
+		//  신고 코드에 따라서 검색
+		public List<FlaggingVO> getFlagByCode(String flagCode);
 }

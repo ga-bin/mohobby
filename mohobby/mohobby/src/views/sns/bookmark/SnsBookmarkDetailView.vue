@@ -42,14 +42,15 @@
 
       isBookmark: false,//북마크 있을때
   }),
+
   created(){
       this.catgId = this.$route.query.catgId;
       this.catgName= this.$route.query.catgName;
 
       if(this.catgName != "default"){
-        getBookmarkList();
+        this.getBookmarkList(this.catgId);
       }else{
-        getAllBookmarks();
+        this.getAllBookmarks();
       }
 
       console.log("북마크 디테일뷰 입장" + this.catgId + ", " + this.catgName);
@@ -65,8 +66,9 @@
                     }
 
                 }).then(res => {
-                    console.log("북마크 리스트 호출 성공!");
 
+                    console.log("북마크 리스트 호출 성공!");
+                    console.log(res.data.length);
                     if(res.data.length < 1){  //북마크 리스트가 없으면
                         this.isBookmark = false; //북마크 저장 권유
 
@@ -90,6 +92,8 @@
 
             }).then(res => {
               console.log("북마크 리스트 호출 성공!");
+              console.log(res.data.length);
+
               this.bookmarks = res.data;
               if(res.data.length < 1){  //북마크 리스트가 없으면
                   this.isBookmark = false; //북마크 저장 권유
