@@ -235,14 +235,16 @@ public class ClassController {
 			,List<MultipartFile> subImageList
 			,ClassInfoRequestVO contentVO
 			,String chapListJson
+			,String currListJson
 			,List<MultipartFile> videoList
 			) {
 		
 		
 		Gson gson = new Gson();
 		List<ClassChapterVO> chapList = gson.fromJson(chapListJson, new TypeToken<List<ClassChapterVO>>(){}.getType());
+		List<ClassCurriculumVO> currList = gson.fromJson(currListJson, new TypeToken<List<ClassCurriculumVO>>(){}.getType());
 		
-		classService.openClassForm(classVO, mainImage, subImageList, contentVO, chapList, videoList);
+		classService.openClassForm(classVO, mainImage, subImageList, contentVO, chapList, currList, videoList);
 	}
 
 }

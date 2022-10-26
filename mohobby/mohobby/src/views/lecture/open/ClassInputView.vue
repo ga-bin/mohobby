@@ -217,10 +217,10 @@
             <div v-if="classType==1">
               <span class="label">수업일수를 등록하세요</span>
               <span class="mr-5">주</span>
-              <input class="input" type="number" v-model="times" min="1" max="7" id="times" style="width: 70px"/>
+              <input class="input" type="number" v-model="times" min="1" max="7" id="times" style="width: 70px" name="weekTimes" />
               <span class="ml-1">회</span>
               <span class="mx-5">X</span>
-              <input class="input" type="number" v-model="weeks" min="3" id="weeks" style="width: 70px"/>
+              <input class="input" type="number" v-model="weeks" min="3" id="weeks" style="width: 70px" name="weeks" />
               <span class="ml-1">주</span>
             </div>
             <span class="label">챕터를 등록하세요</span>
@@ -277,10 +277,10 @@
               >
                 <option value="" selected>--- 챕터를 선택하세요 ---</option>
                 <option 
+                  v-if="chap.chapName != ''"
                   v-for="(chap, i) in chapList" 
                   :key="i" 
                   :value="chap.chapName" 
-                  v-if="chap.chapName != ''"
                 >
                   {{ chap.chapName }}
                 </option>
@@ -322,9 +322,9 @@
             <span style="margin-left: 30px; display: inline-block" class="label"
               >영상 등록</span
             >
-            <span style="margin-left: 490px; display: inline-block" class="label"
+            <!-- <span style="margin-left: 490px; display: inline-block" class="label"
               >교안 등록</span
-            >
+            > -->
             <div class="d-flex justify-center" v-for="(curr, i) in currList" :key="i">
               <span
                 style="padding: 10px 15px 10px 15px; display: inline-block; border: 1px solid black; margin-right: 20px;"
@@ -338,15 +338,15 @@
                 accept="video/*"
                 v-model="curr.video"
                 name="videoList"
-                @change="checkStep6"
+                @change="checkStep6(i)"
               />
-              <v-file-input
+              <!-- <v-file-input
                 type="file"
                 class="input"
                 v-model="curr.file"
                 style="width: 540px; margin-left: 20px"
                 accept="image/jpeg,.txt,.mp4"
-              />
+              /> -->
             </div>
           </div>
         </div>
@@ -500,9 +500,7 @@ export default {
         method: "get",
       })
         .then(function (response) {
-          console.log(response);
           if (response.data != "") {
-            console.log(response.data);
             vm.regionList = response.data;
           }
         })
@@ -518,9 +516,7 @@ export default {
         method: "get",
       })
         .then(function (response) {
-          console.log(response.data);
           if (response.data != "") {
-            console.log(vm.catg);
             vm.catg = response.data;
           }
         })
@@ -532,7 +528,6 @@ export default {
       IMP.certification({
         //merchant_uid: "ORD20180131-0010013" // 주문 번호
       }, rsp => {
-        console.log(rsp.imp_uid);
         const imp_uid = rsp.imp_uid;
         if (rsp.success) {
           // 인증 정보 받기
@@ -683,9 +678,7 @@ export default {
       this.currDateChange(total-1);
     },
     getContent(editorContent) {
-      console.log("emit_success", editorContent);
       this.content = editorContent;
-      console.log("겟 콘탠트 내용", this.content);
     },
     checkStep1() {
       if(this.classType == 0 && this.className != '' && this.jobName != '' && this.keywordId != '' && this.classPrice != 0) {
@@ -709,7 +702,6 @@ export default {
 
       if(sum != 0) {
         this.step6 = false;
-        console.log('sum', sum);
         return;
       }
 
@@ -721,14 +713,14 @@ export default {
 
       if(sum != 0) {
         this.step6 = false;
-        console.log('sum', sum);
         return;
       }
 
       this.step6 = true;
-      console.log('sum', sum);
     },
-    checkStep6() {
+    checkStep6(i) {
+      this.uploadVideo(i);
+
       let sum = 0;
 
       for(let curr of this.currList) {
@@ -745,6 +737,31 @@ export default {
       } else {
         this.step7 = true;
       }
+    },
+    uploadVideo(i) {
+      let vm = this;
+      let file = this.currList[i].video;
+
+      let video = document.createElement('video');
+      video.preload = 'metadata';
+
+      video.onloadedmetadata = function() {
+
+        window.URL.revokeObjectURL(video.src);
+        file.duration = video.duration;
+        
+        if (video.duration < 1) {
+          return;
+        }
+
+        vm.getDuration(i, video.duration);
+
+      }
+      
+      video.src = URL.createObjectURL(file);
+    },
+    getDuration(i, duration) {
+      this.currList[i].duration = Math.floor(duration);
     },
     submitBtn() {
       if(!this.step2 || !this.step3 || !this.step4 || !this.step5 || !this.step6 || !this.step7) {
@@ -768,7 +785,20 @@ export default {
       //chapter
       formData.append("chapListJson", JSON.stringify(this.chapList));
 
-      //curriculum - video
+      //curriculum
+      let currList = [];
+      this.currList.forEach((curr, i) => {
+        currList.push({
+          partNo: (i+1),
+          partName: curr.partName,
+          chapName: curr.chap,
+          videoLength: curr.duration,
+        })
+        if(this.classType == 1) {
+          currList[i].classDate = curr.classDate;
+        }
+      });
+      formData.append("currListJson", JSON.stringify(currList));
       
 
       this.axios.post('class/open', formData, {
@@ -776,22 +806,16 @@ export default {
           'Content-Type': 'multipart/form-data'
         },
       }).then(res => {
-        console.log('multipart axios 결과')
-        console.log(res);
+        if(res.status == 200) {
+          //to-do 신청 성공 페이지
+        }
       })
 
     },
     currDateChange(idx) {
 
       for(let i = (idx+1); i<this.currList.length; i++) {
-
-        console.log('i.minDate', this.currList[i].minDate);
-        console.log('idx.classDate', this.currList[idx].classDate);
-        console.log('idx.classDate+1',this.$moment(this.currList[idx].classDate).add(1,"d").format('YYYY-MM-DD') );
-
         this.currList[i].minDate = this.$moment(this.currList[idx].classDate).add(1,"d").format('YYYY-MM-DD');
-
-        console.log('i.minDate', this.currList[i].minDate);
       }
     },
   },

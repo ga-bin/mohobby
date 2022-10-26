@@ -149,7 +149,74 @@ export default {
             },
           ],
         },
-        {
+        // {
+        //   icon: "mdi-ab-testing",
+        //   text: "테스트",
+        //   subheaders: [
+        //     {
+        //       text: "",
+        //       items: [
+        //         {
+        //           id: 32,
+        //           text: "오픈뱅킹테스트",
+        //           route: "/class/test/OpenBankingTest",
+        //           catg: "/",
+        //         },
+        //         {
+        //           id: 33,
+        //           text: "에디터테스트",
+        //           route: "/class/test/QuillEditorTest",
+        //           catg: "/",
+        //         },
+        //         {
+        //           id: 34,
+        //           text: "iamport테스트",
+        //           route: "/class/test/iamportTest",
+        //           catg: "/",
+        //         },
+        //         {
+        //           id: 35,
+        //           text: "계좌 실명 조회 테스트",
+        //           route: "/class/test/AccountRealNameTest",
+        //           catg: "/",
+        //         },
+        //         {
+        //           id: 36,
+        //           text: "QR코드 생성 테스트",
+        //           route: "/class/test/AttdQRTest",
+        //           catg: "/",
+        //         },
+        //         {
+        //           id: 37,
+        //           text: "카카오 맵 테스트",
+        //           route: "/class/test/KakaoMapTest",
+        //           catg: "/",
+        //         },
+        //         {
+        //           id: 38,
+        //           text: "비디오 테스트",
+        //           route: "/class/test/VideoTest",
+        //           catg: "/",
+        //         },
+        //         {
+        //           id: 39,
+        //           text: "프린트 테스트",
+        //           route: "/class/test/printTest",
+        //           catg: "/",
+        //         },
+        //       ],
+        //     },
+        //   ],
+        // },
+      ],
+    };
+  },
+  watch: {},
+  created() {
+    this.setMemberInfo();
+
+    if(this.$store.state.id) {
+      this.links.push({
           icon: "mdi-account",
           text: "내 클래스",
           subheaders: [
@@ -192,72 +259,8 @@ export default {
               ],
             },
           ],
-        },
-        {
-          icon: "mdi-ab-testing",
-          text: "테스트",
-          subheaders: [
-            {
-              text: "",
-              items: [
-                {
-                  id: 32,
-                  text: "오픈뱅킹테스트",
-                  route: "/class/test/OpenBankingTest",
-                  catg: "/",
-                },
-                {
-                  id: 33,
-                  text: "에디터테스트",
-                  route: "/class/test/QuillEditorTest",
-                  catg: "/",
-                },
-                {
-                  id: 34,
-                  text: "iamport테스트",
-                  route: "/class/test/iamportTest",
-                  catg: "/",
-                },
-                {
-                  id: 35,
-                  text: "계좌 실명 조회 테스트",
-                  route: "/class/test/AccountRealNameTest",
-                  catg: "/",
-                },
-                {
-                  id: 36,
-                  text: "QR코드 생성 테스트",
-                  route: "/class/test/AttdQRTest",
-                  catg: "/",
-                },
-                {
-                  id: 37,
-                  text: "카카오 맵 테스트",
-                  route: "/class/test/KakaoMapTest",
-                  catg: "/",
-                },
-                {
-                  id: 38,
-                  text: "비디오 테스트",
-                  route: "/class/test/VideoTest",
-                  catg: "/",
-                },
-                {
-                  id: 39,
-                  text: "프린트 테스트",
-                  route: "/class/test/printTest",
-                  catg: "/",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-  },
-  watch: {},
-  created() {
-    this.setMemberInfo();
+        });
+    }
   },
   methods: {
     clickList(idx) {
