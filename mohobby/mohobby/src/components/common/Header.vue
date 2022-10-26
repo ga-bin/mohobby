@@ -27,11 +27,20 @@
         </span>
       </template>
       <v-list three-line width="400" height="400">
+        <v-toolbar color="#2ac187" dark>
+          <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+          <v-toolbar-title>{{ this.$moment().format("YYYY-MM-DD") }}</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn color="white" class="black--text" rounded @click.prevent.stop="deleteAllNotice()">
+            전체삭제
+          </v-btn>
+        </v-toolbar>
+
         <template v-for="(item, index) in items">
-          <div @click="pageMove(item)" style="background-color: white">
-            <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
-            <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
-            <v-list-item v-else :key="item.title">
+          <div style="background-color: white">
+            <!-- <v-subheader v-if="item.header" :key="item.header" v-text="item.header,item.test"></v-subheader> -->
+            <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
+            <v-list-item v-else :key="item.title" @click="pageMove(item)">
               <v-list-item-avatar>
                 <v-img :src="item.avatar"></v-img>
               </v-list-item-avatar>
@@ -39,8 +48,7 @@
                 <v-list-item-title v-html="item.title"></v-list-item-title>
                 <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
               </v-list-item-content>
-              <v-icon @click="close()">close</v-icon>
-
+              <v-icon @click.prevent.stop="deleteNotice(item)" style="hover">close</v-icon>
             </v-list-item>
           </div>
         </template>
@@ -60,9 +68,22 @@
         </span>
       </template>
       <v-list three-line width="400" height="400">
+        <v-toolbar color="#2ac187" dark>
+          <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+          <v-toolbar-title>{{ this.$moment().format("YYYY-MM-DD") }}</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn color="white" class="black--text" rounded @click.prevent.stop="deleteAllMsgNotice()">
+            전체삭제
+          </v-btn>
+        </v-toolbar>
         <template v-for="(item, index) in messages">
           <div @click="pageMove(item)" style="background-color: white">
-            <v-subheader v-if="item.header" :key="item.header" v-text="item.header"></v-subheader>
+            <v-subheader v-if="item.header" :key="item.header">
+              <v-text> v-text="item.header"</v-text>
+              <v-btn>asd</v-btn>
+            </v-subheader>
+            <!-- <v-text @click.prevent.stop="deleteAllNotice()">전체삭제</v-text> -->
+
             <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
             <v-list-item v-else :key="item.title">
               <v-list-item-avatar>
@@ -72,6 +93,11 @@
                 <v-list-item-title v-html="item.title"></v-list-item-title>
                 <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
               </v-list-item-content>
+              <v-badge style="cursor: pointer;" v-if="item.count != 0" offset-x="10" offset-y="10" color="red"
+            :content="item.count">
+            <v-icon style="cursor: pointer; ">mdi-bell</v-icon>
+          </v-badge>
+              <v-icon @click.prevent.stop="deleteNotice(item)" style="hover">close</v-icon>
             </v-list-item>
           </div>
         </template>
@@ -104,11 +130,12 @@ export default {
   setup() { },
   created() {
     this.avatar = "comfuck.jpg"
-    if(this.$store.state.id!=''){
-    this.getAllNotice()}
+    if (this.$store.state.id != '') {
+      this.getAllNotice()
+    }
   },
   mounted() {
-    let vm =this
+    let vm = this
     this.$store.watch(
       () => this.$store.getters.getId,
       (n) => {
@@ -119,27 +146,19 @@ export default {
     );
   },
   watch: {
-   
-   },
+
+  },
   unmounted() { },
-  // watch: {
-  //   $route: function(to, from, next) {
-  //     this.$router.go(0);
-  //   },
-  // },
-  //  before(to, from, next) {
-  //   // next();
-  //   // this.$router.go(0);
-  // },
+
   afterEach() {
     this.$router.go(0);
   },
   methods: {
     //알림정보 가져오기
     getAllNotice() {
-      this.items=[]
-      this.messages=[]
- 
+      this.items = []
+      this.messages = []
+
       let vm = this;
       console.log(this.$store.state.id)
 
@@ -153,6 +172,8 @@ export default {
 
           for (let i = 0; i < res.data.length; i++) {
             if (res.data[i].noticeType == 2) {
+              let idx=vm.messages.findIndex(obj => obj.postId == resdata[i].postId)
+            if(idx<0){
               vm.messages.unshift({ divider: true, inset: true });
               vm.messages.unshift({
                 avatar: require(`@/assets/image/user/${res.data[i].avatar}`),
@@ -163,8 +184,13 @@ export default {
                 moimId: res.data[i].moimId,
                 noticeType: res.data[i].noticeType,
                 noticeId: res.data[i].noticeId,
+                count:0
               })
             }
+            else{
+              vm.messages(idx).count=vm.messages(idx).count+1
+            }
+          }
             else {
               if (res.data[i].noticeType == 0) {
                 vm.items.unshift({ divider: true, inset: true });
@@ -193,27 +219,25 @@ export default {
               }
             }
           }
-          this.items.unshift( [{ header: this.$moment().format("YYYY-MM-DD") }])
-      this.messages.unshift( [{ header: this.$moment().format("YYYY-MM-DD") }])
-          vm.noticeMsgCount = (vm.messages.length - 1) / 2;
-          vm.noticeCount = (vm.items.length - 1) / 2;
+
+          vm.noticeMsgCount = ((vm.messages.length) / 2)  
+          vm.noticeCount = ((vm.items.length) / 2) 
         })
         .catch((err) => {
           console.log(err);
         });
-        this.stompClient.send("/app/SubscribeId", this.$store.state.id, (res) => { console.log(res)});
+      this.stompClient.send("/app/SubscribeId", this.$store.state.id, (res) => { console.log(res) });
     },
     //알림 처리
     noticeRes() {
       let vm = this;
       vm.stompClient.subscribe("/queue/" + this.$store.state.id + "/notice",
         function (res) {
-    console.log( "1 : "+vm.$store.state.isUser)
-          if(typeof res.body=="string"){
+          console.log("1 : " + vm.$store.state.isUser)
+          if (typeof res.body == "string") {
             vm.$store.state.isUser = res.headers.subscription;
-            console.log( "2 : "+vm.$store.state.isUser)
-          }else
-          console.log( "3 : "+vm.$store.state.isUser)
+          } else
+            console.log("3 : " + vm.$store.state.isUser)
           console.log(res)
           console.log(typeof res.body)
           let resNotice = JSON.parse(res.body);
@@ -265,36 +289,46 @@ export default {
             ++vm.noticeCount;
           }
           //메신저 알림 처리
-          
+
           else if (resNotice.noticeType == 2) {
-              vm.messages.unshift({ divider: true, inset: true });
-              vm.subtitle = "새로운 메세지가 도착했습니다.";
-              vm.messages.unshift({
-                avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-                title: resNotice.nickname + "님으로 부터",
-                subtitle: vm.subtitle,
-                postId: resNotice.postId,
-                boardType: resNotice.boardType,
-                moimId: resNotice.moimId,
-                noticeType: resNotice.noticeType,
-                noticeId: resNotice.noticeId,
-              })
-              console.log("?????")
-              ++vm.noticeMsgCount;
+            let idx=vm.messages.findIndex(obj => obj.postId == resNotice.postId)
+            if(idx<0){
+            vm.messages.unshift({ divider: true, inset: true });
+            vm.subtitle = "새로운 메세지가 도착했습니다.";
+            vm.messages.unshift({
+              avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
+              title: resNotice.nickname + "님으로 부터",
+              subtitle: vm.subtitle,
+              postId: resNotice.postId,
+              boardType: resNotice.boardType,
+              moimId: resNotice.moimId,
+              noticeType: resNotice.noticeType,
+              noticeId: resNotice.noticeId,
+              count:0
+            })}
+            else{
+vm.messages(idx).count=vm.messages(idx).count+1
+            }
+            console.log("?????")
+            ++vm.noticeMsgCount;
           }
         }
       );
     },
-
-    //알림 클릭 이벤트
-    pageMove(item) {
+    //알림 삭제
+    deleteNotice(item) {
+      console.log("deleteNotice")
+      console.log("deleteNotice")
+      console.log("deleteNotice")
+      console.log("deleteNotice")
+      console.log("deleteNotice")
+      console.log("deleteNotice")
       if (item.noticeType != 2) {
         for (let i = 0; i < this.items.length; i++) {
           if (this.items[i].noticeId == item.noticeId) {
             this.items.splice(i, 2);
           }
         }
-        --this.noticeCount;
         this.axios
           .delete("/deleteNotice", {
             params: {
@@ -307,6 +341,54 @@ export default {
           .catch((err) => {
             console.log(err);
           });
+        --this.noticeCount;
+      }
+    },
+    //일반 알림 전체 삭제
+    deleteAllNotice() {
+      this.axios
+        .delete("/deleteAllNotice", {
+          params: {
+            memberId: this.$store.state.id,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      this.noticeCount = 0
+      this.items = []
+    },
+    //메신저 알림 전체 삭제
+    deleteAllMsgNotice(){
+      this.axios
+        .delete("/deleteAllMsgNotice", {
+          params: {
+            memberId: this.$store.state.id,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      this.noticeCount = 0
+      this.messages = []
+    },
+
+    //알림 클릭 이벤트
+    pageMove(item) {
+      console.log("d")
+      console.log("de")
+      console.log("dice")
+      console.log("dce")
+      console.log("dtice")
+      console.log("dotice")
+      if (item.noticeType != 2) {
+        this.deleteNotice(item)
         if (item.noticeType == 0) {
           this.$router.push("/snsFeedDetail?writer=" + item.targetId + "&postId=" + item.postId);
         } else if (item.noticeType == 1) {

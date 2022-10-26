@@ -77,11 +77,7 @@ public class ChatController {
 	public int updateCheckTime(@RequestBody ChatUserVO chatUser) {
 		return cService.updateCheckTime(chatUser);
 	}
-	// 알림 삭제
-	@DeleteMapping("/deleteNotice")
-	public int deleteNotice(@RequestParam int noticeId) {
-		return nService.delectNotice(noticeId);
-	}
+	
 	// 체크인
 	@GetMapping("/updateCheckIn")
 	public int updateCheckIn(@RequestParam int roomId,@RequestParam String memberId) {
@@ -97,5 +93,6 @@ public class ChatController {
 	public int updateCheckInOut(@RequestParam int preRoomId,@RequestParam int currentRoomId,@RequestParam String memberId) {
 		return cService.updateCheckInOut(preRoomId,currentRoomId,memberId);
 	}
-	// 
+
+	
 }

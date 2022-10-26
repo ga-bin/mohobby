@@ -60,7 +60,7 @@
           </v-card-text>
           <v-card-text class="flex-shrink-1">
             <div class="messages" ref="messages">
-              <v-text-field class="fixed" v-model="message" label="메시지를 입려해주세요" type="text" no-details outlined
+              <v-text-field class="fixed" v-model="message" label="메시지를 입력해주세요" type="text" no-details outlined
                 append-outer-icon="send" @keyup.enter="send()" hide-details />
             </div>
           </v-card-text>
@@ -283,11 +283,9 @@ export default {
       vm.stompClient.subscribe("/topic/room/" + roomNo, function (res) {
         let rev = JSON.parse(res.body);
 
-        if (typeof res.body == "string") {
+ 
           vm.$store.state.isRoomNo = res.headers.subscription;
-        } else {
-
-
+        
           if (rev.memberId == vm.memberId) {
             rev.memberId = true;
           } else {
@@ -301,7 +299,7 @@ export default {
               rev.hour.substr(11, 2) + ":" + rev.hour.substr(14, 2) + " am";
           }
           vm.messages.push(rev);
-        }
+        
       });
       //구독취소헤더값 가져오기
       this.stompClient.send("/app/getSubscribeId", vm.roomId, (res) => { });
