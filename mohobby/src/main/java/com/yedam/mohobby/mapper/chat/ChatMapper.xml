@@ -189,6 +189,11 @@
 		#{myId,mode=IN},#{targetId,mode=IN},#{vRoomNo,mode=OUT,jdbcType=INTEGER})
 		}
 	</select>
+	<!-- moim채팅방 조회 -->
+	<select id="getMoimChatRoomNo" >
+	
+	</select>
+	
 	<update id="updateCheckTime"
 		parameterType="com.yedam.mohobby.service.chat.ChatUserVO">
 		update room set check_time = sysdate
