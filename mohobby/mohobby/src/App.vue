@@ -52,7 +52,10 @@ export default {
     '$route' (to, from) {
       if(from.name=='chat'){
       this.CheckOut();
-      this.stompClient.unsubscribe(this.$store.state.isRoomNo);}
+      this.stompClient.unsubscribe(this.$store.state.isRoomNo);
+      console.log("this.$store.state.isUser : " + this.$store.state.isUser)
+      this.stompClient.unsubscribe(this.$store.state.isUser);
+    }
     }
   },
 };

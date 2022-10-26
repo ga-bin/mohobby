@@ -45,11 +45,6 @@ public class MessageController {
 		ResNoticeVO resNotice = new ResNoticeVO();
 		// 실시간 메시지 보내기
 		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
-
-		System.out.println("++++++++++++++++=========");
-		System.out.println(content);
-		System.out.println("++++++++++++++++=========");
-
 		ChatListContentResVO res = new ChatListContentResVO();
 		for (int i = 0; i < content.getMemberIds().size(); i++) {
 			System.out.println("content:" + content.getMemberIds().get(i));
@@ -86,14 +81,18 @@ public class MessageController {
 	}
 
 	@MessageMapping("/getSubscribeId")
-	public void rev(String RoomNo) {
+	public void getSubscribeId(String RoomNo) {
 		sendTemplate.convertAndSend("/topic/room/" + RoomNo, RoomNo);
 	}
 	@MessageMapping("/SubscribeId")
-	public void res(String memberId) {
-
+	public void SubscribeId(String memberId) {
 		System.out.println(memberId);
 		sendTemplate.convertAndSend("/queue/" + memberId+"/notice", memberId);
+	}
+	@MessageMapping("/SubscribeIds")
+	public void SubscribeIds(String memberId) {
+		System.out.println("memberId : "+ memberId);
+		sendTemplate.convertAndSend("/queue/" + memberId, memberId);
 	}
 
 	// 알림

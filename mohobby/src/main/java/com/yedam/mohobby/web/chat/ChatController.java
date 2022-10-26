@@ -86,6 +86,12 @@ public class ChatController {
 	// 체크아웃
 	@GetMapping("/updateCheckOut")
 	public int updateCheckOut(@RequestParam int roomId,@RequestParam String memberId) {
+		System.out.println("============================");
+		System.out.println("roomId :" + roomId);
+		System.out.println("============================");
+		
+		System.out.println("memberId :" + memberId);
+		System.out.println("============================");
 		return cService.updateCheckOut(roomId,memberId);
 	}
 	// 체크인아웃
