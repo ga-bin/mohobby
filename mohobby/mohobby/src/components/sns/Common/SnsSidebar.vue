@@ -38,7 +38,7 @@ export default {
         { icon: "mdi-account", text: "내피드", route: "snsUserFeed?userId=" + this.$store.state.id },
         { icon: "mdi-ab-testing", text: "내피드관리", route: "snsUserFeed?userId=" + this.$store.state.id }, //관리페이지 추가 필요
         { icon: "mdi-crown", text: "팔로우관리", route: "/snsmain" },
-        { icon: "mdi-format-list-bulleted", text: "저장된 게시글", route: "/snsBookmark" },
+        { icon: "mdi-book-outline", text: "저장된 게시글", route: "/snsBookmark" },
       ],
     };
   },
