@@ -1,5 +1,7 @@
 package com.yedam.mohobby.service.classes;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -14,4 +16,6 @@ public class ClassCurriculumVO {
     private String fileExtension; //파일 확장자
     private int viewProgress;	//커리큘럼 진행율
     private int classId;	//강의id
+    private MultipartFile video;
+    private MultipartFile file;
 }

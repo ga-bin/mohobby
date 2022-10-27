@@ -2,7 +2,15 @@
   <div id="container">
     <SnsSidebar />
     <h1>피드디테일</h1>
-    <v-container fluid>
+
+    <br>
+    <!-- 뒤로가기 -->
+    <v-btn  @click="goback()"
+                      color="grey" icon class="mx-auto black--text font-weight-bold">
+            <v-icon xx-large>mdi-keyboard-backspace</v-icon>
+    </v-btn>
+    <div id="wrap">
+    <v-container fluid style="margin-top: 0px">
       <v-card class="mx-auto" min-width="600">
         <!-- 프로필 -->
         <div>
@@ -29,7 +37,7 @@
             <v-icon v-show="imgsLength == 3" class="image_icon">mdi-numeric-3-box-multiple</v-icon>
             <v-icon v-show="imgsLength == 4" class="image_icon">mdi-numeric-4-box-multiple</v-icon>
             <v-icon v-show="imgsLength == 5" class="image_icon">mdi-numeric-5-box-multiple</v-icon>
-            <v-carousel ref="myCarousel" hide-delimiters :touchless="true">
+            <v-carousel v-model="model" ref="myCarousel" :touchless="true">
               <v-carousel-item
                 v-for="(img, i) in imgs"
                 :key="i"
@@ -39,6 +47,10 @@
             </v-carousel>
           </v-col>
         </v-row>
+
+
+
+
 
         <!-- 좋아요, 댓글, 메세지 -->
         <v-row>
@@ -218,6 +230,7 @@
       </v-card>
     </v-container>
   </div>
+  </div>
 </template>
 <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script>
@@ -230,9 +243,14 @@ export default {
   data() {
     return {
       //carousel
+      model: 0,
+
+
       move: [],
       drag: false,
       touch: false,
+
+
       imgs: [], //이미지 저장
       imgsLength: Number,
       width: 800,
@@ -290,6 +308,10 @@ export default {
   },
 
   methods: {
+    goback() {
+      this.$router.go(-1);
+    },
+
   //카카오톡 공유하기
   cmtAllCount(cmtCount){
     this.cmtCount =cmtCount

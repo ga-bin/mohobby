@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yedam.mohobby.service.classes.ClassAttendanceVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassChapterVO;
@@ -222,6 +225,24 @@ public class ClassController {
 	@GetMapping("/class/my/cert")
     public List<ClassesVO> getMyCourseCertificate(@RequestParam String memberId) {
 		return classService.getMyCourseCertificate(memberId);
+	}
+	
+	//강의 개설 신청
+	@PostMapping(value="/class/open", consumes= {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	public void openClassForm(
+			ClassesVO classVO
+			,MultipartFile mainImage
+			,List<MultipartFile> subImageList
+			,ClassInfoRequestVO contentVO
+			,String chapListJson
+			,List<MultipartFile> videoList
+			) {
+		
+		
+		Gson gson = new Gson();
+		List<ClassChapterVO> chapList = gson.fromJson(chapListJson, new TypeToken<List<ClassChapterVO>>(){}.getType());
+		
+		classService.openClassForm(classVO, mainImage, subImageList, contentVO, chapList, videoList);
 	}
 
 }

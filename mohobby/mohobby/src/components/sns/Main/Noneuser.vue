@@ -4,7 +4,8 @@
     <v-container fluid max-width="1400">
       <v-row>
         <v-col v-for="(feed,i) in feeds" :key="i" class="d-flex child-flex" cols="3">
-          <div style="cursor:pointer;" @click="goFeedDetail(feed.postId, feed.memberId)"> 
+          <div class="photo_wrap" style="cursor:pointer;" @click="goFeedDetail(feed.postId, feed.memberId)">
+            <v-icon v-show="feed.imgs > 1" class="image_icon">mdi-checkbox-multiple-blank</v-icon>
             <v-img :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)"
                   class="white--text align-end rounded-sm" aspect-ratio="1.2"
                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)">
@@ -69,3 +70,17 @@ export default {
 };
 
 </script>
+<style scoped>
+    .photo_wrap{
+      position:relative;
+    }
+
+    .image_icon {
+      position: absolute;
+      z-index: 1;
+      top: 2px;
+      left:2px;
+      color: white;
+    }
+
+</style>

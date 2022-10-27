@@ -1,14 +1,25 @@
 <template>
     <div id = "container" align-center>
         <v-container>
+
             <v-spacer></v-spacer>
-                <!-- 로그인버튼-->
-                <v-btn text @click="regFeedForm(member)">
-                    <v-chip color="white" class="mx-auto black--text font-weight-bold" style="color:">
-                        <v-icon left>mdi-pencil-plus</v-icon>
-                    </v-chip>
+            <div style="float:right">
+                <!-- 내 피드 버튼 -->
+                <v-btn  @click="goMyFeed(member)"
+                        color="grey" icon class="mx-auto black--text font-weight-bold">
+                        <v-icon left>mdi-account</v-icon>
                 </v-btn>
-                <!-- 로그인버튼 끝 -->
+                <!-- 내 피드 버튼 끝 -->
+
+
+                <!-- 글쓰기 버튼 -->
+                <v-btn  @click="regFeedForm(member)"
+                        color="grey" icon class="mx-auto black--text font-weight-bold">
+                        <v-icon left>mdi-lead-pencil</v-icon>
+                </v-btn>
+                <!-- 글쓰기 버튼 끝 -->
+            </div>
+
 
 
                     <!-- 검색창 끝 -->

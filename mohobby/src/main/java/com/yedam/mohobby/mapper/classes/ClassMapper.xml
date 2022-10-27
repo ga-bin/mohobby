@@ -44,12 +44,12 @@
 		and c.curr_id = #{currId}
 	</select>
 
-
+	<!-- 강의 개설 -->
 	<insert id="insertClass" parameterType="com.yedam.mohobby.service.classes.ClassesVO">
 		<selectKey keyProperty="classId" resultType="java.lang.Integer" order="BEFORE">
-		select NVL(MAX(class_id), 0) + 1 from classes	
+		select NVL(MAX(class_id), 0) + 1 from class	
 		</selectKey>
-		insert into classes (
+		insert into class (
 								class_id,
 								keyword_id,
 								region_id,
@@ -68,29 +68,58 @@
 								address_detail,
 								start_date,
 								end_date,
-								account_holder
+								account_holder,
+								job_name,
+								week_times,
+								start_time,
+								end_time,
+								weeks,
+								needs
 							) 
 		values (
 					#{classId},
 					#{keywordId, jdbcType=VARCHAR},
-					#{regionId},
+					#{regionId, jdbcType=VARCHAR},
 					#{memberId},
 					#{className},
 					#{classPrice},
-					#{classInfo, jdbcType=VARCHAR},
+					#{classId}||'.html',
 					#{imgAmount, jdbcType=INTEGER},
 					#{classType},
-					#{certAble},
+					#{certAble, jdbcType=INTEGER},
 					#{certStandard, jdbcType=INTEGER},
 					#{bankCode},
 					#{account},
-					#{postcode},
-					#{address},
+					#{postcode, jdbcType=VARCHAR},
+					#{address, jdbcType=VARCHAR},
 					#{addressDetail, jdbcType=VARCHAR},
 					#{startDate, jdbcType=DATE},
 					#{endDate, jdbcType=DATE},
-					#{accountHolder}
+					#{account_holder},
+					#{jobName},
+					#{weekTimes, jdbcType=INTEGER},
+					#{startTime, jdbcType=INTEGER},
+					#{endTime, jdbcType=INTEGER},
+					#{weeks, jdbcType=INTEGER},
+					#{needs, jdbcType=VARCHAR}
 				)
+	</insert>
+	
+	<!-- 챕터 생성 -->
+	<insert id="insertChaper">
+		<selectKey keyProperty="chapId" resultType="java.lang.Integer" order="BEFORE">
+			select nvl(max(chap_id),0)+1 from class_chapter
+		</selectKey>
+			insert into class_chapter(
+										chap_id,
+										class_id,
+										chap_name
+										)
+			values (
+					#{chapId},
+					#{classId},
+					#{chapName}
+					)
 	</insert>
 	
 	<!-- 목록조회 -->

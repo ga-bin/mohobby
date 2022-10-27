@@ -45,4 +45,5 @@ public class ClassesVO {
 	private int weeks;	//몇 주 수업인지
 	private int startTime;
 	private int endTime;
+	private String needs;
 }

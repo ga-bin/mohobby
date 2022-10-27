@@ -95,7 +95,6 @@ export default {
       links: [
         { icon: "mdi-plus-box", text: "프로필 관리", route: "mypageprofile" },
         { icon: "mdi-note-text", text: "게시글", route: "moimBoard" },
-        { icon: "mdi-image", text: "사진첩", route: "moimPhoto" },
         { icon: "mdi-clipboard-check", text: "공지사항", route: "moimNotice" },
         { icon: "mdi-calendar-text", text: "일정", route: "moimSchedule" },
         { icon: "mdi-chart-gantt", text: "투표", route: "moimVote" },
