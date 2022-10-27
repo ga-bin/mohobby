@@ -142,6 +142,12 @@ public interface MoimMapper {
 	//게시물 등록
 	public int insertBoard(MoimBoardVO vo);
 	
-//	//소모임 삭제하기
-//	public String delMoim(@Param("moimId")int moimId, @Param("memberId")String memberId);
+	//소모임 삭제하기
+	public String delMoim(@Param("moimId")int moimId);
+	
+	//n방 체크 업데이트
+	public String checkUpdate(int dutchId, int calcCheck);
+	
+	//게시판 검색
+	public List<MoimBoardVO> searchBoard(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title);
 }

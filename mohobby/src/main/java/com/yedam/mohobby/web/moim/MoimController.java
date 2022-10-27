@@ -1,9 +1,11 @@
 package com.yedam.mohobby.web.moim;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
@@ -27,6 +31,7 @@ import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
+import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.user.MemberVO;
 
 /**
@@ -40,6 +45,9 @@ public class MoimController {
 
    @Autowired
    MoimService service;
+   
+	String newFileName;
+	String extension;
    
    /**
     * @title 소모임 단건조회
@@ -450,25 +458,75 @@ public class MoimController {
 	public String readClassInfo(@RequestParam int boardId) {
 		 return service.readMoimInfo(boardId);
 	}
-	   
+	 
+	//게시글 등록하기
 	@PostMapping("/insertBoard")
 	public int insertBoard(@RequestBody MoimBoardVO vo) {
 	service.insertBoard(vo);
 		return vo.getBoardId();
 	}
 	
-//	//소모임 삭제하기
-//	@DeleteMapping("/")
-//	public String delMoim(@Param ("moimId") int moimId, @Param("memberId") String memberId) {
-//		try {
-//			service.deleteMoim(moimId, memberId);
-//			return "succes";
-//		} catch(Exception e) {
-//			return "fail"+e;
-//		}
-//	}
+	//소모임 삭제하기
+	@DeleteMapping("/deleteMoim")
+	public String delMoim(@Param ("moimId") int moimId) {
+		System.out.println("moimId"+moimId);
+		try {
+			service.deleteMoim(moimId);
+			return "succes";
+		} catch(Exception e) {
+			return "fail"+e;
+		}
+	}
 
-	
+	/**
+	 * @title 프로필 이미지 update
+	 */
+    @PostMapping(value = "/moimProfileUpload", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void insertProfile(List<MultipartFile> files, String moimName) {
+    	System.out.println(moimName);
+    	System.out.println(files);
+        try {
+          //저장할 경로
+          String path = this.getClass().getResource("/").getPath();
+          System.out.println( path);
+          path = path.substring(0, path.lastIndexOf("mohobby"));
+          path = path.substring(0, path.lastIndexOf("mohobby")+"mohobby".length());
+          path += "/mohobby/mohobby/src/assets/image/moim/";
+          //진짜 진짜 파일 이름
+          path += moimName;
+          path += ".jpg";
+         
+          //새로 path만든 값은 save에 저장
+          for(int i = 0; i < files.size(); i++) {
+              
+              MultipartFile file = files.get(i);
+              File save = new File(path);
+              
+              file.transferTo(save);
+           }
+         
+      } catch (Exception e) {
+         e.printStackTrace();
+         System.out.println("업로드 실패: " + e.getMessage());
+      }
+    }
+    
+    //n빵 체크 업데이트
+    @PutMapping("/update")
+    public String updateCheck(@Param ("dutchId")int dutchId, @Param ("calcCheck")int calcCheck) {
+    	try {
+    		service.checkUpdate(dutchId, calcCheck);
+    		return "success";
+    	} catch(Exception e) {
+    		return "error"+e;
+    	}
+    }
+    
+    //게시글 검색
+    @GetMapping("/boardSearch")
+    public List<MoimBoardVO> boardSearch(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title) {
+    return service.boardSearch(moimId, boardType, title);
+    }
 }
 
 

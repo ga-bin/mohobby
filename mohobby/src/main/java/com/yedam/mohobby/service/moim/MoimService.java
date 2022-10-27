@@ -145,8 +145,13 @@ public interface MoimService {
 
 	public String readMoimInfo(int boardId);
 
-//	//소모임 삭제하기
-//	public String deleteMoim(int moimId, String memberId);
+	//n방 체크 업데이트
+	public String checkUpdate(int dutchId, int calcCheck);
 
+	//소모임 삭제하기
+	public String deleteMoim(int moimId);
+
+	//게시판 검색
+	public List<MoimBoardVO> boardSearch(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title);
 }
 
