@@ -152,6 +152,7 @@
       <div>
         <Feeds :userId="userId"/>
       </div>
+
       <!-- 피드 끝 -->
     </div>
   </template>
@@ -204,6 +205,7 @@
       },
 
       methods: {
+        
         //프로필 업로드
         loadUserProfile(userId) {
             this.axios('/sns/user/profile/' + userId)
@@ -367,12 +369,6 @@
               });
             }
           },
-
-          
-        // //채팅방 이동
-        // send() {
-        // this.$router.push({ name: "chat", params: { roomId: this.roomId } });
-        // },
           
           
           /*
@@ -398,6 +394,9 @@
                 console.log(error);
             });
           },
+
+
+
           // 신고
           userFlagging() {
           const vm = this;

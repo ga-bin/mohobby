@@ -88,24 +88,30 @@
    
    <!-- 유저x- 인기강사피드조회 top20 -->
    <select id="hotLecturerList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-      SELECT post_id, profile_img, member_id, content, thumbnail, likes, cmts
-        FROM (
-            SELECT s.post_id
-	              ,s.member_id
-	              ,m.profile_img
-	              ,s.content
-	              ,s.thumbnail
-	              ,s.likes
-	              ,s.cmts
+<![CDATA[ SELECT *
+	        FROM ((
+	            SELECT s.post_id
+		              ,s.member_id
+		              ,m.profile_img
+		              ,s.content
+		              ,s.thumbnail
+		              ,s.likes
+		              ,s.cmts
+		              
+	              FROM sns_post s 
+	              JOIN member m
+	                ON(s.member_id = m.member_id)
 	              
-              FROM sns_post s 
-              JOIN member m
-                ON(s.member_id = m.member_id)
-              
-             WHERE m.role in (1,3)
-             ORDER BY likes DESC
-           )
-      WHERE ROWNUM <![CDATA[ <= ]]> 20
+	             WHERE m.role in (1,3)
+	             ORDER BY likes DESC
+	           ) S JOIN
+	           (
+	            SELECT count(post_id) imgs, post_id
+	              FROM sns_media
+	             GROUP BY post_id 
+	            ) IMGS_CNT
+	        ON (s.post_id=IMGS_CNT.post_id))
+	      WHERE ROWNUM <=  20 ]]>
    </select>
    
    
@@ -113,8 +119,14 @@
 
    <!-- 전체피드조회 -->
    <select id="allList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-      SELECT post_id, member_id, thumbnail, likes, cmts 
-        FROM sns_post
+      SELECT *
+        FROM (	sns_post s
+        		JOIN
+			         (  SELECT count(post_id) imgs, post_id
+			              FROM sns_media
+			             GROUP BY post_id 
+			         ) IMGS_CNT
+	              ON (s.post_id=IMGS_CNT.post_id))
    </select>
    
    
@@ -133,34 +145,61 @@
    
    <!-- 최신피드조회 -->
    <select id="newList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-      SELECT post_id, member_id, thumbnail, likes, cmts 
-        FROM sns_post
-       ORDER BY post_id DESC
+      SELECT *
+        FROM (	sns_post s
+        		JOIN
+			         (  SELECT count(post_id) imgs, post_id
+			              FROM sns_media
+			             GROUP BY post_id 
+			         ) IMGS_CNT
+	              ON (s.post_id=IMGS_CNT.post_id))
+       ORDER BY s.post_id DESC
    </select>
    
    
    <!-- 인기피드조회 -->
    <select id="hotList" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-      SELECT post_id, member_id, thumbnail, likes, cmts
-        FROM sns_post
-       ORDER BY likes DESC
+      SELECT *
+        FROM (	sns_post s
+        		JOIN
+			         (  SELECT count(post_id) imgs, post_id
+			              FROM sns_media
+			             GROUP BY post_id 
+			         ) IMGS_CNT
+	              ON (s.post_id=IMGS_CNT.post_id))
+       ORDER BY s.likes DESC, s.post_id DESC
    </select>
    
    
    <!-- 팔로잉 피드 조회 -->
-   <select id="getFollowingFeeds" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-       SELECT post_id, member_id, thumbnail, likes, cmts
-         FROM sns_post
-        WHERE member_id in (
-					         SELECT following_id
-					           FROM follow
-					          WHERE follower_id = #{ memberId } 
-	          				)
+   <select id="getFollowingFeeds" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+       SELECT * FROM (
+                        SELECT  post_id,
+                                member_id,
+                                thumbnail,
+                                likes,
+                                cmts
+                        FROM sns_post
+                        WHERE
+                            member_id IN (
+                                SELECT following_id
+                                FROM follow
+                                WHERE follower_id = #{ memberId }
+                            )
+                    ) s
+                    JOIN (
+                            SELECT
+                                COUNT(post_id) imgs, post_id  
+                            FROM sns_media
+                            GROUP BY post_id
+                            ) IMGS_CNT
+					  ON (s.post_id=IMGS_CNT.post_id)
+				ORDER BY s.post_id DESC
    </select>
    
    
    <!-- 팔로잉 피드 제외한 나머지 피드 조회 -->
-<!--    <select id="getFollowingFeeds" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+<!--<select id="getFollowingFeeds" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
    	  SELECT s.post_id, f.following_id, s.thumbnail, s.likes, s.cmts
    	    FROM sns_post s, follow f
    	   WHERE s.member_id = f.follower_id
@@ -198,13 +237,49 @@
    
    <!-- 유저피드 조회 -->
    <select id="getUserFeed" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
-      SELECT post_id, member_id, thumbnail, likes, cmts 
-      FROM sns_post
+      SELECT *
+        FROM (	sns_post s
+        		JOIN
+			         (  SELECT count(post_id) imgs, post_id
+			              FROM sns_media
+			             GROUP BY post_id 
+			         ) IMGS_CNT
+	              ON (s.post_id=IMGS_CNT.post_id))
       WHERE member_id = #{ memberId }
+      ORDER BY s.post_id DESC
    </select>
    
    
    <!-- 피드상세조회 -->
+   <select id="getFeedDetail" parameterType="com.yedam.mohobby.service.sns.SnsFeedVO" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
+		SELECT mem.profile_img, mem.role, k.*
+		FROM member mem,
+			(
+			 SELECT nvl2(m.target_id, 1, 0) like_status, c.*
+		       FROM sns_post c,
+			       (	
+		 			SELECT * FROM jjim 
+			        WHERE target_type = 2 
+			        AND member_id = 
+			        <if test="memberId == null"> null</if>
+			        <if test="memberId != null">#{ memberId }</if>
+			        ) m,
+		   		   (
+			   		 SELECT COUNT(*)JJIM, target_id 
+			   		 FROM jjim 
+			   		 WHERE target_type = 2 
+			   		 GROUP BY target_id
+		   		    ) x
+		     WHERE c.post_id = m.target_id(+)
+		     AND c.post_id = x.target_id(+)
+			) k
+			
+		WHERE mem.member_id = k.member_id
+		  AND post_id = #{ postId }
+		ORDER BY post_id
+   </select>
+   
+   
    <select id="getFeedDetail" parameterType="com.yedam.mohobby.service.sns.SnsFeedVO" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
 		SELECT mem.profile_img, mem.role, k.*
 		FROM member mem,

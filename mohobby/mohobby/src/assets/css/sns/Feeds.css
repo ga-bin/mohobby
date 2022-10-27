@@ -53,8 +53,9 @@ img {
     position: absolute !important;
     height: 1px;
     width: 1px;
-    /* overflow: hidden; */
+    overflow: hidden;
     clip: rect(1px, 1px, 1px, 1px);
+    color:white;
 }
 
 /* Gallery Section */
@@ -73,6 +74,14 @@ img {
     color: #fff;
     cursor: pointer;
 }
+
+.image_icon {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 1;
+    color: white;
+  }
 
 .gallery-item:hover .gallery-item-info,
 .gallery-item:focus .gallery-item-info {
@@ -246,6 +255,7 @@ Remove or comment-out the code block below to see how the browser will fall-back
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
         grid-gap: 2rem;
+        padding: 0px;
     }
 
     .profile-image,
@@ -287,5 +297,23 @@ Remove or comment-out the code block below to see how the browser will fall-back
         .profile-stats {
             margin: 0;
         }
+    }
+
+    .no_post{
+        width: 90%;
+        min-height: 650px;
+        margin: auto;
+        text-align: center;
+        border-top: solid #cacaca;
+        /* border-radius: 15px; */
+        color: #a8a6a6
+    }
+    .no_post h2{
+        margin-top: 25px;
+    }
+
+    #no_post_img{
+        margin: 170px auto 0;
+        width: 250px;
     }
 }
