@@ -86,13 +86,6 @@ export default {
   beforeMount() {},
   mounted() {
     console.log("자식컴포넌트", this.dataList);
-    console.log("자식컴포넌트", this.dataList);
-    console.log("자식컴포넌트", this.dataList);
-    console.log("자식컴포넌트", this.dataList);
-    console.log("자식컴포넌트", this.dataList);
-    console.log("text" + this.text);
-    console.log("text" + this.text);
-    console.log("text" + this.text);
     console.log("text" + this.text);
   },
   beforeUpdate() {},

@@ -16,7 +16,9 @@ export default new Vuex.Store({
     id: "",
     user: null,
     isRoomNo : 0,
-    isStay:""
+    isStay:"",
+    isUser:0,
+    stayRoomNo :0
   },
   getters: {
     isLogin(state) {

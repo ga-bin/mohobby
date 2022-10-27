@@ -500,7 +500,7 @@ export default {
           params: { myId: this.$store.state.id, targetId: this.items.memberId },
         })
         .then(function (res) {
-          console.log(res.data.vroomNo);
+          console.log("res.data.vroomNo : "+res.data.vroomNo);
 
           vm.$router.push({
             name: "chat",
