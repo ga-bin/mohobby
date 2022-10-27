@@ -93,7 +93,8 @@ export default {
   },
   created() {
     this.memberId = this.$store.state.id,
-      this.roomId = this.$route.params.getRoomId,
+      this.roomId = this.$route.query.getRoomId,
+      console.log("roomId : "+this.roomId)
       this.connect()
     this.getRoom()
     this.sortRoom()
@@ -101,15 +102,12 @@ export default {
 
   },
   mounted() {
-
-
+    window.addEventListener('beforeunload', this.CheckOut(this.roomId));
   },
-  // mounted() {
-  //   window.addEventListener('beforeunload', this.unLoadEvent);
-  // },
-  // beforeUnmount() {
-  //   window.removeEventListener('beforeunload', this.unLoadEvent);
-  // },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.CheckOut(this.roomId));
+  },
+ 
 
   methods: {
     handler: function handler(event) {
@@ -178,11 +176,11 @@ export default {
         })
     },
     CheckOut(roomId) {
+      console.log("roomID : "+roomId)
       this.axios
         .get("/updateCheckOut", {
           params: {
             roomId: roomId,
-            checkIn: 0,
             memberId: this.memberId
           },
         })
@@ -281,11 +279,10 @@ export default {
         });
       //클릭한 방 접속시 방번호로 구독
       vm.stompClient.subscribe("/topic/room/" + roomNo, function (res) {
+        if(res.body==roomNo){
+        vm.$store.state.isRoomNo = res.headers.subscription;}
+        else{
         let rev = JSON.parse(res.body);
-
- 
-          vm.$store.state.isRoomNo = res.headers.subscription;
-        
           if (rev.memberId == vm.memberId) {
             rev.memberId = true;
           } else {
@@ -299,11 +296,10 @@ export default {
               rev.hour.substr(11, 2) + ":" + rev.hour.substr(14, 2) + " am";
           }
           vm.messages.push(rev);
-        
-      });
+      }});
       //구독취소헤더값 가져오기
       this.stompClient.send("/app/getSubscribeId", vm.roomId, (res) => { });
-      console.log(this.targetId);
+      console.log("roomId : " + this.roomId)
     },
     //채팅방 리스트출력
     getRoom() {
@@ -326,9 +322,6 @@ export default {
             .get("/ChatMoimRoom/" + vm.memberId, {})
             .then(function (res) {
               for (let i = 0; i < res.data.length; i++) {
-                console.log("resDATA")
-                console.log(res.data);
-                console.log("resDATA")
                 vm.roomList.push(res.data[i]);
               }
               console.log(res.data);
@@ -338,16 +331,23 @@ export default {
             })
             .finally(function (ros) {
               vm.sortRoom();
-              vm.openRoom(vm.$route.params.getRoomId);
+              vm.openRoom(vm.$route.query.getRoomId);
             });
         });
     },
     //소켓 구독
     connect() {
       let vm = this
+      console.log("this.roomID : " + this.roomId)
       vm.stompClient.subscribe(
         "/queue/" + this.$store.state.id,
         function (res) {
+          console.log("res.body : " + res.body)
+          console.log("vm.$store.state.id : "+vm.$store.state.id)
+          if(res.body==vm.$store.state.id){
+            vm.$store.state.isUser =res.headers.subscription
+          }
+          else{
           let resContent = JSON.parse(res.body);
           if (vm.roomList.findIndex(i => i.roomNo == resContent.roomNo) < 0) {
             vm.getRoom();
@@ -362,8 +362,11 @@ export default {
             }
           }
           vm.sortRoom();
-        }
+        }}
       );
+      console.log("실행되나요?")
+      vm.stompClient.send("/app/SubscribeIds",vm.$store.state.id, (res) => {console.log(res) })
+      console.log("실행되나요??")
     },
     scrollDown() {
       let scroll = this.$refs.scroll;

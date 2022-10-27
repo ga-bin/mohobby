@@ -504,7 +504,7 @@ export default {
 
           vm.$router.push({
             name: "chat",
-            params: { getRoomId: res.data.vroomNo },
+            query: { getRoomId: res.data.vroomNo },
           });
         })
         .catch(function (err) {
