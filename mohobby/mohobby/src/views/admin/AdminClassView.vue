@@ -37,15 +37,10 @@
           </v-icon>
           <!-- <v-icon @click="deleteFlagUser(item)"> mdi-delete </v-icon> -->
         </template>
-        small
 
         <template v-slot:no-data>
           <v-btn color="primary"> Reset </v-btn>
         </template>
-        <template v-slot:item.showDetail="{ item }">
-          <v-icon @click="goToUserProfile(item)"> mdi-arrow-right-bold-box </v-icon>
-        </template>
-        small
 
         <template v-slot:no-data>
           <v-btn color="primary"> Reset </v-btn>
@@ -58,7 +53,6 @@
       </template> -->
         </v-data-table>
       </template>
-    <h3>지급 내역</h3>
     <h3>강의 목록</h3>
     <v-row>
       <v-col lg="12">
@@ -69,11 +63,17 @@
           class="elevation-1"
         >
           <template v-slot:item.action>
-            <v-btn color="success">View</v-btn>
+            <v-btn color="#2ac187">상세보기</v-btn>
           </template>
+          <template v-slot:item.actions="{ item }">
+          <v-icon small class="mr-2" @click="updateConfirm(item)">
+            mdi-pencil
+          </v-icon>
+        </template>
         </v-data-table>
       </v-col>
     </v-row>
+    <h3>지급 내역</h3>
   </main>
 </template>
 <script>
@@ -97,7 +97,6 @@ export default {
           { text: '답변내용', value: 'content' },
           { text: '답변여부', value: 'replyCheck' },
           { text: "수정하기", value: "actions", sortable: false },
-          { text: "상세보기", value: "showDetail", sortable: false },
         ],
       tags: ["전체", "심사대기", "심사중", "승인", "미승인"],
       classHeaders: [
@@ -112,6 +111,7 @@ export default {
         { text: "강의명", value: "className" },
         { text: "상세보기", value: "action" },
         { text: "관리자승인여부", value: "auditStatus" },
+        { text: "수정하기", value: "actions", sortable: false },
       ],
       classList: [],
       beforeComfirmList: [],
@@ -143,7 +143,6 @@ export default {
         method: "get",
       })
         .then(function (response) {
-          console.log(response.data);
           vm.classList = response.data;
 
           for (let i = 0; i < response.data.length; i++) {
@@ -264,7 +263,10 @@ export default {
           console.log(error);
         });
     })
-}
-  },
-};
+    },
+    updateConfirm() {
+      
+    }
+      },
+    };
 </script>
