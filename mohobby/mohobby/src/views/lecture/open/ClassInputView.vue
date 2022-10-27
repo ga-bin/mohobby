@@ -156,10 +156,11 @@
             <br />
             <!-- 에디터 -->
             <div class="example" style="width: 1300px" name="classInfo">
-              <QuillEditor
-                @editorEmit="getContent"
-                ref="editor_content"
-              ></QuillEditor>
+              <quill-editor
+                class="editor"
+                v-model="content"
+                :style="editorStyle"
+              />
             </div>
           </div>
         </div>
@@ -277,8 +278,7 @@
               >
                 <option value="" selected>--- 챕터를 선택하세요 ---</option>
                 <option 
-                  v-if="chap.chapName != ''"
-                  v-for="(chap, i) in chapList" 
+                  v-for="(chap, i) in chapNames" 
                   :key="i" 
                   :value="chap.chapName" 
                 >
@@ -382,19 +382,21 @@
 const { IMP } = window;
 IMP.init("imp46541776");
 
-import QuillEditor from "@/components/common/TextEditor.vue";
 
 export default {
-  name: "",
+  name: "ClassInputView",
   components: {
-    QuillEditor,
   },
-  props:['toolbarText','toolbarVideo','toolbarImage','toolbarLink','imagePaste','imageDrop','placeholder','value'],
   data() {
     return {
+      editorStyle: {
+        'height': '300px',
+        'padding-bottom': '70px',
+      },
+      content: "",
       thumbnailImage: '',
       step2: false,
-      step3: false,
+      step3: true,
       step4: false,
       step5: false,
       step6: false,
@@ -473,22 +475,22 @@ export default {
       mainImage: '',
       file: {},
       formData: {},
-      content: "",
-      sampleData: "",
       imgList: [],
       files: [],
     };
   },
-  setup() {},
-  created() {},
+  created() {
+    // let test = 'test';
+    // this.$emit('')
+  },
   mounted() {
     this.getAllCatg();
     this.getAllRegion();
   },
   computed: {
-    contentCode() {
-      return hljs.highlightAuto(this.content).value;
-    },
+    chapNames() {
+      return this.chapList.filter(({chapName}) => chapName !== '');
+    }
   },
   unmounted() {},
   methods: {
@@ -498,7 +500,7 @@ export default {
 
       this.$store.state.loading = true;
       this.axios({
-        url: "http://localhost:8088/java/regionAll",
+        url: "/regionAll",
         method: "get",
       })
         .then(function (response) {
@@ -519,7 +521,7 @@ export default {
       const vm = this;
       this.$store.state.loading = true;
       this.axios({
-        url: "http://localhost:8088/java/allCatg",
+        url: "/allCatg",
         method: "get",
       })
         .then(function (response) {
@@ -691,9 +693,6 @@ export default {
       }
 
       this.currDateChange(total-1);
-    },
-    getContent(editorContent) {
-      this.content = editorContent;
     },
     checkStep1() {
       if(this.classType == 0 && this.className != '' && this.jobName != '' && this.keywordId != '' && this.classPrice != 0) {
@@ -909,6 +908,10 @@ export default {
 </script>
 
 <style scoped>
+.ql-editor {
+  height: 300px;
+}
+
 .container {
   margin-left: 40px;
 }
@@ -966,100 +969,4 @@ form {
   margin: 0px;
 }
 
-
-
-/* 텍스트 에디터 */
-.ql-stroke {
-  stroke: #4f748e;
-  fill: transparent;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.5px;
-}
-
-.ql-stroke-active {
-  stroke: #333;
-  fill: transparent;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2px;
-}
-
-.ql-stroke-mitter {
-  stroke: #4f748e;
-  fill: transparent;
-}
-
-.ql-stroke-mitter-active {
-  stroke: #333;
-  fill: transparent;
-}
-
-.ql-fill {
-  fill: #4f748e;
-}
-
-.ql-fill-active {
-  fill: #333;
-}
-
-.ql-even {
-  stroke: #4f748e;
-  fill: #fff;
-}
-
-.ql-even-active {
-  stroke: #333;
-  fill: #fff;
-}
-
-/*
-  .ql-color-label {
-    fill: red;
-  }
-*/
-
-.ql-transparent {
-  opacity: 0.2;
-}
-
-.ql-thin {
-  stroke: #4f748e;
-  fill: transparent;
-  stroke-width: 1;
-}
-
-.ql-thin-active {
-  stroke: #333;
-  fill: transparent;
-  stroke-width: 2;
-}
-
-.toolbar-item {
-  width: 25px;
-  height: 25px;
-  margin: 5px;
-}
-
-.toolbar-item-active {
-  width: 25px;
-  height: 25px;
-  margin: 4px;
-  border: 1px solid #2e4453;
-}
-
-.toolbar-select {
-  display: inline-block;
-  margin-right: 3px;
-}
-
-.editor {
-  padding: 5px;
-  margin: 5px 10px 5px 5px;
-}
-
-.toolbar-item-disable > * {
-  stroke: #ccc;
-  cursor: not-allowed;
-}
 </style>

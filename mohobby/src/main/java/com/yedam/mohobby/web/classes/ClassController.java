@@ -75,10 +75,8 @@ public class ClassController {
 	public @ResponseBody String createCodeImg(
 	        @RequestParam String link
 	){
-	    
+		
 	    return classService.createCodeImg(link);
-	       
-	    
 	}
 	
 	
@@ -245,6 +243,13 @@ public class ClassController {
 		List<ClassCurriculumVO> currList = gson.fromJson(currListJson, new TypeToken<List<ClassCurriculumVO>>(){}.getType());
 		
 		classService.openClassForm(classVO, mainImage, subImageList, contentVO, chapList, currList, videoList);
+	}
+	
+	
+	//출결 정보 조회
+	@GetMapping("/class/attd")
+	public @ResponseBody ClassAttendanceVO getAttendanceInfo(@RequestParam String memberId) {
+		return classService.getAttendanceInfo(memberId);
 	}
 
 }

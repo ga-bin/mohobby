@@ -512,4 +512,106 @@
 		and s.class_id in (select class_id from class where cert_able = 1)
 	</select>
 	
+	
+	<!-- 출결관리 -->
+	 
+	<!-- 오늘 기준 커리큘럼 출결 정보 -->
+	<select id="getTodayAttendanceInfo" resultType="com.yedam.mohobby.service.classes.ClassAttendanceVO">
+		select 
+		        c.class_id, 
+		        c.class_name, 
+		        c.address, 
+		        c.start_date, 
+		        c.end_date, 
+		        c.start_time, 
+		        c.end_time, 
+		        attd.attd_date, 
+		        attd.out_date, 
+		        attd.comeback_date, 
+		        attd.leave_date, 
+		        attd.record_type, 
+		        attd.late_check,
+		        attd.exit_date,
+		        rr.class_date
+		from 
+		        class c, 
+		        class_pay p, 
+		        class_curriculum rr, 
+		        class_attendance attd
+		where 
+		        class_type=1
+		and 
+		        current_date between start_date and end_date
+		and 
+		        p.member_id = #{memberId}
+		and 
+		        c.class_id = p.class_id(+)
+		and 
+		        c.class_id = rr.class_id
+		and
+		        to_char(rr.class_date, 'YYYYMMDD') = to_char(current_date, 'YYYYMMDD')
+		and 
+		        attd.curr_id = rr.curr_id
+	</select>
+	<!-- 오늘 기준 출결 통계 -->
+	<select id="getTodayAttendanceCalc" resultType="com.yedam.mohobby.service.classes.ClassAttendanceVO">
+		select 
+		        c.class_id, 
+		        sum(case when a.record_type=0 then 1 else 0 end)sum_attd, 
+		        sum(case when a.record_type=2 then 1 else 0 end)sum_out, 
+		        sum(case when a.record_type=1 then 1 else 0 end)sum_leave, 
+		        sum(case when a.record_type=3 then 1 else 0 end)sum_absent, 
+		        sum(nvl(a.late_check, 0))sum_late
+		from 
+		        class_attendance a, 
+		        class_curriculum c
+		where 
+		        a.member_id = #{memberId}
+		and 
+		        a.curr_id = c.curr_id(+)
+		and
+		        c.class_id = #{classId}
+		group by 
+		        c.class_id
+	</select>
+	<!-- 오늘 기준 과정 진행율 -->
+	<select id="getTodayClassProgress" resultType="com.yedam.mohobby.service.classes.ClassAttendanceVO">
+		select total, gone, round(gone/total*100, 1) progress
+		from
+		
+		(select count(*) total, class_id
+		from class_curriculum
+		group by class_id) total,
+		
+		(select count(*) gone, class_id
+		from class_curriculum
+		where class_date <![CDATA[<]]> current_date
+		group by class_id) gone
+		
+		where total.class_id = gone.class_id
+		and   total.class_id = #{classId}
+	</select>
+	<!-- 수업없는 날 강의 정보 -->
+	<select id="getNoneClassInfo" resultType="com.yedam.mohobby.service.classes.ClassAttendanceVO">
+		select 
+		        c.class_id, 
+		        c.class_name, 
+		        c.address, 
+		        c.start_date, 
+		        c.end_date, 
+		        c.start_time, 
+		        c.end_time
+		from 
+		        class c, 
+		        class_pay p
+		where 
+		        class_type=1
+		and 
+		        current_date between start_date and end_date
+		and 
+		        p.member_id = #{memberId}
+		and 
+		        c.class_id = p.class_id(+)
+	</select>
+	
 </mapper>
