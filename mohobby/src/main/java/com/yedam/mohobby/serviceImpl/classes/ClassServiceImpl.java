@@ -7,12 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -180,6 +183,111 @@ public class ClassServiceImpl implements ClassService {
     	return classMapper.getMyCourseCertificate(memberId);
     }
     
+    
+    // 강의 개설 신청
+    @Override
+    public void openClassForm(
+			ClassesVO classVO, 
+			MultipartFile mainImage, 
+			List<MultipartFile> subImageList, 
+			ClassInfoRequestVO contentVO,
+			List<ClassChapterVO> chapList, 
+			List<MultipartFile> videoList
+			) {
+    	//강의 정보 인서트
+    	classMapper.insertClass(classVO);
+    	
+    	int classId = classVO.getClassId();
+    	System.out.println("classId : " + classId);
+    	
+    	//강의 소개 html 저장
+    	contentVO.setFilename(String.valueOf(classId));
+    	saveClassInfo(contentVO);
+    	
+    	//강의 썸네일 이미지 저장
+    	saveThumbnail(classId, mainImage, subImageList);
+    	
+    	//강의 챕터 생성
+    	HashMap<String, Integer> chapIdList = new HashMap<>();
+    	for(ClassChapterVO chap : chapList) {
+    		chap.setClassId(classId);
+    		classMapper.insertChaper(chap);
+    		chapIdList.put(chap.getChapName(), chap.getChapId());
+    	}
+    	
+    	
+    	saveVideos(videoList, classId);
+    	
+    	
+    }
+    
+    // 강의 영상 저장
+    @Transactional
+    @Override
+    public void saveVideos(List<MultipartFile> videoList, int classId) {
+    	String path = ClassController.class.getResource("/").getPath();
+        path = path.substring(0, path.lastIndexOf("mohobby"));
+        path = path.substring(0, path.lastIndexOf("mohobby") + "mohobby".length());
+
+        path += "/mohobby/mohobby/src/assets/video/class/curriculum/";
+        path += classId;
+        File dir = new File(path);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        
+        System.out.println(videoList);
+        
+    	
+    	for(int i=0; i<videoList.size(); i++) {
+    		try {
+	    		MultipartFile video = videoList.get(i);
+	    		
+//	    		File save = new File(path + "/" + i + ".mp4");
+//				video.transferTo(save);
+	    		
+	    		
+    		} catch (IllegalStateException e) {
+    			e.printStackTrace();
+    		}
+    	}
+    }
+    
+    // 강의 썸네일 이미지 저장
+    @Transactional
+    @Override
+    public void saveThumbnail(int classId, MultipartFile mainImage, List<MultipartFile> subImageList) {
+        String path = ClassController.class.getResource("/").getPath();
+        path = path.substring(0, path.lastIndexOf("mohobby"));
+        path = path.substring(0, path.lastIndexOf("mohobby") + "mohobby".length());
+
+        path += "/mohobby/mohobby/src/assets/image/class/thumb/";
+        path += String.valueOf(classId);
+        
+        File dir = new File(path);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        
+        try {
+        	
+        	File main = new File(path + "/0.jpg");
+			mainImage.transferTo(main);
+			
+			if(subImageList.size() == 0) return;
+			
+			for(int i=0; i<subImageList.size(); i++) {
+				MultipartFile sub = subImageList.get(i);
+				
+				File save = new File(path + "/" + (i+1) + ".jpg");
+				sub.transferTo(save);
+			}
+			
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+		}
+        
+    }
 
     // html 저장
     @Override

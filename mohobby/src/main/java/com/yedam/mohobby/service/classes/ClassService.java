@@ -1,9 +1,11 @@
 package com.yedam.mohobby.service.classes;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.JjimVO;
 
@@ -77,5 +79,21 @@ public interface ClassService {
     
     //내 수료증 발급 가능한 강의 목록 조회
     public List<ClassesVO> getMyCourseCertificate(String memberId);
+    
+    //강의개설신청
+    public void openClassForm(
+			ClassesVO classVO, 
+			MultipartFile mainImage, 
+			List<MultipartFile> subImageList, 
+			ClassInfoRequestVO contentVO,
+			List<ClassChapterVO> chapList, 
+			List<MultipartFile> videoList
+			);
+    
+    //강의 썸네일 저장
+    public void saveThumbnail(int classId, MultipartFile mainImage, List<MultipartFile> subImageList);
+    
+    //강의 영상 저장
+    public void saveVideos(List<MultipartFile> videoList, int classId);
 
 }
