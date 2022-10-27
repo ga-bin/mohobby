@@ -192,13 +192,13 @@ public class ClassServiceImpl implements ClassService {
 			List<MultipartFile> subImageList, 
 			ClassInfoRequestVO contentVO,
 			List<ClassChapterVO> chapList, 
+			List<ClassCurriculumVO> currList,
 			List<MultipartFile> videoList
 			) {
     	//강의 정보 인서트
     	classMapper.insertClass(classVO);
     	
     	int classId = classVO.getClassId();
-    	System.out.println("classId : " + classId);
     	
     	//강의 소개 html 저장
     	contentVO.setFilename(String.valueOf(classId));
@@ -215,8 +215,18 @@ public class ClassServiceImpl implements ClassService {
     		chapIdList.put(chap.getChapName(), chap.getChapId());
     	}
     	
+    	//강의 커리큘럼 생성
+    	List<Integer> currIdList = new ArrayList<>();
+    	for(ClassCurriculumVO curr : currList) {
+    		int chapId = chapIdList.get(curr.getChapName());
+    		curr.setChapId(chapId);
+    		curr.setClassId(classId);
+    		classMapper.insertCurriculum(curr);
+    		currIdList.add(curr.getCurrId());
+    	}
     	
-    	saveVideos(videoList, classId);
+    	//비디오 저장
+    	saveVideos(videoList, currIdList);
     	
     	
     }
@@ -224,13 +234,12 @@ public class ClassServiceImpl implements ClassService {
     // 강의 영상 저장
     @Transactional
     @Override
-    public void saveVideos(List<MultipartFile> videoList, int classId) {
+    public void saveVideos(List<MultipartFile> videoList, List<Integer> currIdList) {
     	String path = ClassController.class.getResource("/").getPath();
         path = path.substring(0, path.lastIndexOf("mohobby"));
         path = path.substring(0, path.lastIndexOf("mohobby") + "mohobby".length());
 
-        path += "/mohobby/mohobby/src/assets/video/class/curriculum/";
-        path += classId;
+        path += "/mohobby/mohobby/src/assets/video/class/curriculum";
         File dir = new File(path);
         if (!dir.exists()) {
             dir.mkdir();
@@ -242,12 +251,13 @@ public class ClassServiceImpl implements ClassService {
     	for(int i=0; i<videoList.size(); i++) {
     		try {
 	    		MultipartFile video = videoList.get(i);
+	    		String savePath = path + "/" + currIdList.get(i) + ".mp4";
 	    		
-//	    		File save = new File(path + "/" + i + ".mp4");
-//				video.transferTo(save);
+	    		File save = new File(savePath);
+				video.transferTo(save);
 	    		
 	    		
-    		} catch (IllegalStateException e) {
+    		} catch (IllegalStateException | IOException e) {
     			e.printStackTrace();
     		}
     	}

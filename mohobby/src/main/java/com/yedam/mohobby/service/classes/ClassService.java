@@ -86,7 +86,8 @@ public interface ClassService {
 			MultipartFile mainImage, 
 			List<MultipartFile> subImageList, 
 			ClassInfoRequestVO contentVO,
-			List<ClassChapterVO> chapList, 
+			List<ClassChapterVO> chapList,
+			List<ClassCurriculumVO> currList,
 			List<MultipartFile> videoList
 			);
     
@@ -94,6 +95,6 @@ public interface ClassService {
     public void saveThumbnail(int classId, MultipartFile mainImage, List<MultipartFile> subImageList);
     
     //강의 영상 저장
-    public void saveVideos(List<MultipartFile> videoList, int classId);
+    public void saveVideos(List<MultipartFile> videoList, List<Integer> currIdList);
 
 }

@@ -325,7 +325,7 @@ export default {
       items: [],    //전체 커리큘럼
       drawer: false,
       option: {
-        url: require(`@/assets/video/class/curriculum/1.mp4`),
+        url: require(`@/assets/video/class/curriculum/${this.currId}.mp4`),
         volume: 0.5,
         isLive: false,
         muted: false,
@@ -345,16 +345,16 @@ export default {
         theme: '#ffad00',
         quality: [
           {
-            url: require('@/assets/video/class/curriculum/1.mp4'),
+            url: require(`@/assets/video/class/curriculum/${this.currId}.mp4`),
             html: 'SD 480P',
           },
           {
-            url: require('@/assets/video/class/curriculum/1.mp4'),
+            url: require(`@/assets/video/class/curriculum/${this.currId}.mp4`),
             default: true,
             html: 'HD 720P',
           },
           {
-            url: require('@/assets/video/class/curriculum/1.mp4'),
+            url: require(`@/assets/video/class/curriculum/${this.currId}.mp4`),
             html: 'HD 1080P',
           },
         ],

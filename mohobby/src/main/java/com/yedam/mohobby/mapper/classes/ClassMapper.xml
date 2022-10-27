@@ -122,6 +122,37 @@
 					)
 	</insert>
 	
+	<!-- 커리큘럼 생성 -->
+	<insert id="insertCurriculum">
+		<selectKey keyProperty="currId" resultType="java.lang.Integer" order="BEFORE">
+			select nvl(max(curr_id), 0) + 1 from class_curriculum
+		</selectKey>
+		
+			insert into 
+			class_curriculum (
+								curr_id,
+								chap_id,
+								part_no,
+								part_name,
+								video_url,
+								video_length,
+								class_id,
+								class_date,
+								file_extension
+								)
+			values (
+					#{currId},
+					#{chapId},
+					#{partNo},
+					#{partName},
+					#{currId}||'.mp4',
+					#{videoLength},
+					#{classId},
+					#{classDate, jdbcType=DATE},
+					'mp4'
+					)
+	</insert>
+	
 	<!-- 목록조회 -->
 	<select id="listAll" parameterType="com.yedam.mohobby.service.classes.ClassListRequestVO" resultType="com.yedam.mohobby.service.classes.ClassesVO">
 		select * from (
