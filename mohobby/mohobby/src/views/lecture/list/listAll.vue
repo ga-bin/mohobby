@@ -154,6 +154,7 @@ export default {
     },
     methods: {
         initList() {
+            this.$store.state.loading = true;
             this.axios.get('/class/' + this.catg, {
                 params: {
                     memberId: this.$store.state.id
@@ -163,6 +164,9 @@ export default {
                 this.itemList = this.collection;
                 this.selectSort();
                 this.typeSort();
+                this.$store.state.loading = false;
+            }).catch(err => {
+                this.$store.state.loading = false;
             });
         },
         selectType: function() {
@@ -238,6 +242,7 @@ export default {
             };
 
 
+            this.$store.state.loading = true;
             if(this.itemList[itemNum].jjim == 0) {
                 this.axios('/class/jjim', {
                     method: "POST",
@@ -249,7 +254,10 @@ export default {
                         targetType: 1,
                         memberId: this.$store.state.id
                     })
+                }).then(() => {
+                    this.$store.state.loading = false;
                 }).catch(error => {
+                    this.$store.state.loading = false;
                     console.log(error);
                 })
             } else if(this.itemList[itemNum].jjim == 1) {
@@ -263,11 +271,14 @@ export default {
                         targetType: 1,
                         memberId: this.$store.state.id
                     })
+                }).then(() => {
+                    this.$store.state.loading = false;
                 }).catch(error => {
+                    this.$store.state.loading = false;
                     console.log(error);
                 })
             }
-
+            this.$store.state.loading = false;
             
             this.itemList[itemNum].jjim = this.collection[collectionNum].jjim == 1 ? 0 : 1;
             this.collection[collectionNum].jjim = this.itemList[itemNum].jjim;

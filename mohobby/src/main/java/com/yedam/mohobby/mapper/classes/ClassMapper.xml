@@ -164,8 +164,7 @@
 		        select * 
 		        from jjim 
 		        where target_type = 1 
-		        and member_id = <if test="memberId == null">null</if> 
-		        				<if test="memberId != null">#{memberId}</if>
+		        and member_id = #{memberId}
 		        ) m,
 		        (
 		        select count(*)jjim, target_id 
@@ -180,8 +179,9 @@
 		member b, keyword w
 		where k.member_id = b.member_id
 		and k.keyword_id = w.keyword_id)
+		where audit_status = 2
 		<if test='catg != "all"'>
-		where keyword_id = #{catg}
+		and keyword_id = #{catg}
 		</if>
 		order by class_id desc
 	</select>

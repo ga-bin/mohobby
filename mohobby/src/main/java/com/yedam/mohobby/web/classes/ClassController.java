@@ -42,7 +42,7 @@ import com.yedam.mohobby.service.communal.JjimVO;
  *
  */
 @RestController
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT})
+@CrossOrigin(origins = "*")
 public class ClassController {
 	@Autowired
 	ClassService classService;

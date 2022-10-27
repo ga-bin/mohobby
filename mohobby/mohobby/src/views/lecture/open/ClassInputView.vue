@@ -495,6 +495,8 @@ export default {
     // 지역 전체 가져오기
     getAllRegion() {
       const vm = this;
+
+      this.$store.state.loading = true;
       this.axios({
         url: "http://localhost:8088/java/regionAll",
         method: "get",
@@ -503,14 +505,19 @@ export default {
           if (response.data != "") {
             vm.regionList = response.data;
           }
+
+          vm.$store.state.loading = false;
         })
         .catch(function (error) {
           console.log(error);
+
+          vm.$store.state.loading = false;
         });
     },
     // 관심사 전체 목록 가져오기
     getAllCatg() {
       const vm = this;
+      this.$store.state.loading = true;
       this.axios({
         url: "http://localhost:8088/java/allCatg",
         method: "get",
@@ -518,13 +525,16 @@ export default {
         .then(function (response) {
           if (response.data != "") {
             vm.catg = response.data;
+            vm.$store.state.loading = false;
           }
         })
         .catch(function (error) {
           console.log(error);
+          vm.$store.state.loading = false;
         });
     },
     CertBtn: function() {
+      this.$store.state.loading = true;
       IMP.certification({
         //merchant_uid: "ORD20180131-0010013" // 주문 번호
       }, rsp => {
@@ -541,19 +551,22 @@ export default {
             if(name == memberName && birth == memberBirth) {
               this.certName = name;
               this.certBirth = birth;
+              this.$store.state.loading = false;
             } else {
               this.$swal('로그인 정보와 일치하지 않습니다!', '', 'error');
+              this.$store.state.loading = false;
             }
           });
         }
         else {
           console.log("인증 실패");
+          this.$store.state.loading = false;
         }
       })
     },
     accountCheck: function() {
       if(this.certName != '' && this.certBirth != '') {
-
+        this.$store.state.loading = true;
         this.axios.get('/bankRealName', {
             params: {
                 Bncd: this.bankCode,
@@ -570,9 +583,11 @@ export default {
                 this.account = '';
                 this.accountCert = false;
             }
+            this.$store.state.loading = false;
         })
       } else {
         this.$swal('실명인증을 먼저 진행해주세요!', '', 'info');
+        this.$store.state.loading = false;
       }
 
     },
@@ -800,7 +815,7 @@ export default {
       });
       formData.append("currListJson", JSON.stringify(currList));
       
-
+      this.$store.state.loading = true;
       this.axios.post('class/open', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -809,6 +824,10 @@ export default {
         if(res.status == 200) {
           //to-do 신청 성공 페이지
         }
+        this.$store.state.loading = false;
+      }).catch(err => {
+        console.log(err);
+        this.$store.state.loading = false;
       })
 
     },

@@ -1,22 +1,39 @@
 <template>
   <v-app id="inspire">
+    
     <Header></Header>
     <v-main>
       <v-container fluid style="padding: 0px;">
-        <router-view></router-view>
+        <router-view>
+        </router-view>
+        <!-- <div class='loader'>
+            <HashLoader
+              class="custom-class"
+              :loading="$store.state.loading"
+              :color="color"
+              :size="size"
+              :sizeUnit="sizeUnit"
+            />
+          </div> -->
       </v-container>
     </v-main>
   </v-app>
 </template>
 <script>
-
+import { HashLoader } from '@saeris/vue-spinners'
 import Header from "./components/common/Header";
 export default {
 
-  components: { Header },
+  components: { 
+    Header,
+    HashLoader,
+  },
   data: () => ({
     cards: ["Today", "Yesterday"],
     menu5: "asd",
+    color: "#2ac187",
+    size: "150",
+    sizeUnit: "px",
   }),
   mounted() {
   },
@@ -60,3 +77,13 @@ export default {
   },
 };
 </script>
+<style>
+  .loader{
+    display: inline-block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    top: 40%;
+    left: 47%;
+  }
+</style>
