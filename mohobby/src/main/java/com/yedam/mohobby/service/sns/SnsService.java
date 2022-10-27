@@ -2,6 +2,7 @@ package com.yedam.mohobby.service.sns;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,6 +60,8 @@ public interface SnsService {
     //피드이미지조회
     public List<SnsMediaVO> getFeedImg(int postId);
     
+    //피드전체조회 페이징
+    public List<SnsPostVO> allListPaging(int firstIdx);
     
     /*
      * 해시태그

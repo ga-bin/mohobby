@@ -72,21 +72,17 @@ export default {
   components: {},
   props: {
     text: {
-      type: String,
-      required: true, //props 무조건 받아야함.
+      type: String
+      //required: true, //props 무조건 받아야함.
     },
-    dataList: {
-      type: Object,
-    },
-    divider: true,
-    inset: true,
+    dataList : {},
+    // divider: true,
+    // inset: true,
   },
   beforeCreate() {},
   created() {},
   beforeMount() {},
   mounted() {
-    console.log("자식컴포넌트", this.dataList);
-    console.log("text" + this.text);
   },
   beforeUpdate() {},
   updated() {},

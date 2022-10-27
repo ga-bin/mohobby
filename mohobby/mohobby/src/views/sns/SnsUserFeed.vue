@@ -75,10 +75,10 @@
           <ul>
             <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
             <li>
-              <FollowModal :text="followingtext" :dataList="following" :follow="follow" />
+              <FollowModal :text="followertext" :dataList="follower" :follow="follow" />
             </li>
             <li>
-              <FollowModal :text="followertext" :dataList="follower" :follow="follow" />
+              <FollowModal :text="followingtext" :dataList="following" :follow="follow" />
             </li>
           </ul>
 
@@ -145,8 +145,8 @@ export default {
       // userId: this.$store.state.id, //임시(로그인유저프로필)
       follower: [],
       following: [],
-      followertext: "following",
-      followingtext: "follower",
+      followertext: "follower",
+      followingtext: "following",
       lists: [  //메뉴 리스트
         { title: "신고하기" },
       ],
@@ -191,6 +191,7 @@ export default {
       this.axios('/sns/user/profile/' + userId)
         .then(res => {
           this.infoes = res.data;
+          console.log('infoes : ' + this.infoes)
           console.log(this.infoes);
         }).catch(err => {
           console.log(err);
@@ -259,14 +260,8 @@ export default {
             followingId: userId, //피드주인 아이디
           })
           .then((res) => {
-            console.log("팔로우성공 전" + this.followStatus);
             this.followStatus = 1;
-            this.loadUserProfile(userId);
-            this.getFollower();
-            // this.followCheck(memberId, userId);
-            console.log("팔로우성공 후" + this.followStatus);
-            console.log("팔로우 성공! " + res);
-            console.log(this.follower);
+            this.getFollower(userId);
           })
           .catch((err) => {
             console.log(err);
@@ -283,14 +278,8 @@ export default {
         this.axios
           .delete("/sns/follow/" + memberId + "/" + userId)
           .then((res) => {
-            console.log("언팔로우성공 전" + this.followStatus);
             this.followStatus = 0;
-            this.loadUserProfile(userId);
-            // this.followCheck(memberId, userId);
-            console.log("언팔로우성공 후" + this.followStatus);
-            console.log("언팔로우 성공! " + res);
-            this.getFollower();
-            console.log(this.follower);
+            this.getFollower(userId);
           })
           .catch((err) => {
             console.log(err);
@@ -300,17 +289,41 @@ export default {
     // 팔로워 목록 불러오기
     getFollower(userId) {
       const vm = this;
+      vm.follower=[]
       this.axios({
         url: "/mypagefollower/" + userId,
         method: "get",
       })
         .then(function (response) {
-          console.log(response.data);
+          console.log("response.data : " +response.data)
           for (let i = 0; i < response.data.length; i++) {
             vm.follower.push(response.data[i]);
             vm.follower.push({ divider: true, inset: true });
+            console.log("follower : " + response.data[i]);
           }
-          console.log("vm.follower" + vm.follower);
+          console.log("vm.follower : " + vm.follower);
+          console.log("vm.follower length : " + vm.follower.length);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+        // 팔로잉 목록 불러오기
+        getFollowing(userId) {
+      const vm = this;
+      vm.following=[]
+      this.axios({
+        url: "/mypagefollowing/" + userId,
+        method: "get",
+      })
+        .then(function (response) {
+          console.log(response.data);
+          for (let i = 0; i < response.data.length; i++) {
+            vm.following.push(response.data[i]);
+            vm.following.push({ divider: true, inset: true });
+          }
+          console.log("vm.following" + vm.following);
+          console.log("followin")
         })
         .catch(function (error) {
           console.log(error);
@@ -350,25 +363,7 @@ export default {
     * Kim ga bin
     * MyPage followingList 확인하기
     */
-    // 팔로잉 목록 불러오기
-    getFollowing(userId) {
-      const vm = this;
-      this.axios({
-        url: "/mypagefollowing/" + userId,
-        method: "get",
-      })
-        .then(function (response) {
-          console.log(response.data);
-          for (let i = 0; i < response.data.length; i++) {
-            vm.following.push(response.data[i]);
-            vm.following.push({ divider: true, inset: true });
-          }
-          console.log("vm.following" + vm.following);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
+
     // 신고
     userFlagging() {
       const vm = this;
