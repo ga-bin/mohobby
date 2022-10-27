@@ -329,7 +329,6 @@ export default {
               }
               vm.noticeMsgCount=vm.noticeMsgCount+1
             }
-          
         }});
     }},
     //알림 삭제

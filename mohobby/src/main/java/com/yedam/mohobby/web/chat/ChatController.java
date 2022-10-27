@@ -99,6 +99,12 @@ public class ChatController {
 	public int updateCheckInOut(@RequestParam int preRoomId,@RequestParam int currentRoomId,@RequestParam String memberId) {
 		return cService.updateCheckInOut(preRoomId,currentRoomId,memberId);
 	}
+	// 소모임채팅방 생성
+	@GetMapping("/checkMoimChatRoom")
+	public int createChatMoimRoom(@RequestParam int preRoomId,@RequestParam int currentRoomId) {
+		return 1;
+
+	}
 
 	
 }

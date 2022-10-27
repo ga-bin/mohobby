@@ -190,8 +190,12 @@
 		}
 	</select>
 	<!-- moim채팅방 조회 -->
-	<select id="getMoimChatRoomNo" >
-	
+	<select id="getMoimChatRoomNo" parameterType="String" resultType="Integer">
+	{
+	call pr_get_moimRoom_Id(
+	#{memberId,mode=IN},#{moimId,mode=IN},#{roomNo,mode=OUT}
+	)
+	}
 	</select>
 	
 	<update id="updateCheckTime"

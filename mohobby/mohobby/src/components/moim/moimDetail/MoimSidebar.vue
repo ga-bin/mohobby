@@ -101,8 +101,6 @@ export default {
         { icon: "mdi-chart-gantt", text: "투표", route: "moimVote" },
         { icon: "mdi-chart-pie", text: "N빵", route: "moimNbbang" },
         { icon: "mdi-mail", text: "채팅", route: "checkChat" }
-
-
       ],
       memberInfo: [],
       moimMemberCount: 0,
