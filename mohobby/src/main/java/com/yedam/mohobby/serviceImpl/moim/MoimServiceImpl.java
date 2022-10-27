@@ -47,6 +47,11 @@ public class MoimServiceImpl implements MoimService {
 	// 소모임 등록
 	@Override
 	public void moimInsert(MoimVO moimVO) {
+		try {
+			moimVO.setMoimImg(moimVO.getMoimName()+".jpg");
+		}catch (NullPointerException e) {
+			moimVO.setMoimImg("comfuck.jpg");
+		}
 		mapper.moimInsert(moimVO);
 	}
 
@@ -215,31 +220,37 @@ public class MoimServiceImpl implements MoimService {
         return mapper.moimVoteItemlist(moimId);
 	}
 	
+	//투표 아이템 선택
 	@Override
 	public List<MoimVoteListVO> voteItemSelect(int moimId, String memberId) {
 		return mapper.voteItemSelect(moimId, memberId);
 	}
 	
+	//투표결과
 	@Override
 	public List<MoimVoteItemVO> votereulst(int voteId) {
 		return mapper.votereulst(voteId);
 	}
 	
+	//투표
 	@Override
 	public List<MoimVoteListVO> vote(int voteId, String memberId, int itemSelect, int moimId) {
 		return mapper.vote(voteId, memberId, itemSelect, moimId);
 	}
 	
+	//유저 선택 투표 조회
 	@Override
 	public int UserSelectvote(MoimVoteListVO vo) {
 		return mapper.UserSelectvote(vo);
 	}
 
+	//투표 참여 조회
 	@Override
 	public int voteCheck(MoimVoteListVO vo) {
 		return mapper.voteCheck(vo);
 	}
 
+	//투표 선택
 	@Override
 	public List<MoimVoteListVO> selectCheck(int moimId, String memberId) {
 		return mapper.selectCheck(moimId, memberId );
@@ -428,6 +439,7 @@ public class MoimServiceImpl implements MoimService {
 	      return mapper.insertBoard(vo);
 	   }
 	   
+	   //게시글 불러오기
 	    @Override
 	    public String readMoimInfo(int boardId) {
 	        String path = ClassController.class.getResource("/").getPath();
@@ -459,10 +471,21 @@ public class MoimServiceImpl implements MoimService {
 	        return res;
 	    }
 
-//	    //소모임 삭제
-//		@Override
-//		public String deleteMoim(int moimId, String memberId) {
-//			return mapper.delMoim(moimId, memberId);
-//		}
+	//n빵 체크 업데이트
+	@Override
+	public String checkUpdate(int dutchId, int calcCheck) {
+		return mapper.checkUpdate(dutchId, calcCheck);
+	}
+
+	//소모임 삭제
+	@Override
+	public String deleteMoim(int moimId) {
+		return mapper.delMoim(moimId);
+	}
 	
+    //게시글 검색
+   @Override
+   public List<MoimBoardVO> boardSearch(int moimId, int boardType, String title) {
+      return mapper.searchBoard(moimId, boardType, title);
+   }
 }
