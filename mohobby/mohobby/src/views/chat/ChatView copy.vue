@@ -1,13 +1,6 @@
 <template>
-  <!-- <div>
-    <v-container>
-
-
-    </v-container>
-  </div> -->
-
-
   <div id="container">
+
     <v-card class="scroll" ref="scroll" style=" margin: 0 auto; width: 800px;">
       <v-row class="no-gutters elevation-4">
         <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid ">
@@ -63,7 +56,7 @@
                 </div>
               </template>
             </v-card-text>
-
+            
             <!-- 글 입력폼 -->
             <v-card-text class="flex-shrink-1">
               <div class="messages" ref="messages">

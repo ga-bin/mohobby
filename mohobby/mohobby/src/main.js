@@ -45,9 +45,9 @@ Vue.config.productionTip = false;
 Vue.prototype.axios = axios;
 Vue.prototype.$ = $;
 moment.locale('ko');
-console.warn = console.error = () => {};
+// console.warn = console.error = () => {};
 // or IIFE
-(() => { console.warn = console.error = () => {}} )();
+// (() => { console.warn = console.error = () => {}} )();
 
 Vue.filter("toFixed", (val, num) => {
   let result;

@@ -37,6 +37,9 @@ public interface SnsMapper {
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
     
+    //비밀 게시글로 전환
+    public int changeSecPost(SnsPostVO snsPostVO);
+    
     //피드 삭제
     public int deleteFeed(int postId);
     
@@ -58,6 +61,12 @@ public interface SnsMapper {
     //팔로잉피드조회
     public List<SnsPostVO> getFollowingFeeds(String memberId);
     
+    //팔로잉 제외 피드조회
+    public List<SnsPostVO> getNoFollowingFeeds(String memberId);
+    
+    //내 비밀글 모아보기
+    public List<SnsFeedVO> getMyArchive(String memberId);
+    
     //프로필조회
     public SnsProfileVO getProfile(String memberId);
     
@@ -73,6 +82,8 @@ public interface SnsMapper {
     //피드이미지조회
     public List<SnsMediaVO> getFeedImg(int postId);
     
+    //전체조회페이징
+    public List<SnsPostVO> allListPaging(@Param("firstIdx") int firstIdx);
     
     /*
      * 해시태그

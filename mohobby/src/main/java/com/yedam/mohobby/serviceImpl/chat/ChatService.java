@@ -85,5 +85,16 @@ public class ChatService implements com.yedam.mohobby.service.chat.ChatService {
 	public int checkMoimId(int roomNo) {
 		return mapper.checkMoimId(roomNo);
 	}
+//모임 채팅방 생성및 조회
+	@Override
+	public void getMoimChatRoomNo(CreateRoomVO createRoom) {
+		System.out.println("createRoom : "+createRoom);
+		System.out.println("createRoom : "+createRoom);
+		System.out.println("createRoom : "+createRoom);
+		System.out.println("createRoom : "+createRoom);
+		System.out.println("createRoom : "+createRoom);
+		System.out.println("createRoom : "+createRoom);
+	mapper.getMoimChatRoomNo(createRoom);	
+	}
 	
 }
