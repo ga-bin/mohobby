@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.yedam.mohobby.service.admin.AdminClassVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
+import com.yedam.mohobby.service.classes.ClassesVO;
 
 @Mapper
 public interface AdminClassMapper {
@@ -16,7 +17,7 @@ public interface AdminClassMapper {
 		// 승인 신청한 강의 정보(vue에서 상세 설명 경로 가지고오기)
 		
 		// 신청 결과 업로드
-		public void updateAuditStatus();
+		public void updateAuditStatus(ClassesVO classesVO);
 
 		// 강사, 강의, 정산 정보, 지급 여부 등등
 		
