@@ -1,8 +1,7 @@
 <template>
-  <div id="container">
+  <div v-if = "items.secPost == 0 || items.memberId == memberId" id="container">
     <SnsSidebar />
     <h1>피드디테일</h1>
-
     <br>
     <!-- 뒤로가기 -->
     <v-btn  @click="goback()"
@@ -218,6 +217,7 @@
         </v-chip-group>
         <br />
 
+
         <!-- 
 
           댓글
@@ -268,13 +268,13 @@ export default {
       targetId: "",
       colors: ["teal", "orange", "green", "purple", "indigo", "cyan"], //tag color
       nonce: 1,
-      lists: [
-        //메뉴 리스트
-        { title: "수정" },
-        { title: "삭제" },
-        { title: "비밀글로" },
-      ],
+      lists:[], //dot list 목록
+
+      listTitle: "",
+
       roomId: 0, //채팅
+
+      secret: Number, // 비밀글 여부
 
       //북마크
       dialog2: false, //컬렉션 선택 dialog
@@ -297,6 +297,8 @@ export default {
   setup() {},
 
   created() {
+
+
     // Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); //js키 초기화(페이지 로딩시 처음한번만)
     this.writer = this.$route.query.writer;
     this.postId = this.$route.query.postId;
@@ -305,84 +307,92 @@ export default {
     console.log(this.writer);
     console.log(this.memberId);
     console.log(this.postId);
+    console.log(this.lists);
   },
 
-  methods: {
-    goback() {
-      this.$router.go(-1);
+  watch: {
+    //같은 이름의 data나 computed 속성의 data들이 변경될 때 메소드가 실행됨
+    // listTitle() {}
+
     },
 
-  //카카오톡 공유하기
-  cmtAllCount(cmtCount){
-    this.cmtCount =cmtCount
 
-  },
-  sendLink() {
-    Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); // 사용하려는 앱의 JavaScript 키 입력
-    Kakao.Link.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: this.items.memberId + ' 님 모하비 피드',
-        description: this.items.content,
-        imageUrl: 'https://ifh.cc/g/H0FFVT.jpg',   
-        link: {
-          webUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
-        },
+  methods: {
+      goback() {
+        this.$router.go(-1);
       },
-      // social: {
-      //   likeCount: this.items.likes,  //좋아요 수
-      //   commentCount: this.items.cmts,  //댓글 수
-      // },
-      buttons: [
-        {
-          title: '모하비에서 확인하기',  //첫 번째 버튼 
-          link: {
-            mobileWebUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,  //버튼 클릭 시 이동 링크
-            webUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
+
+      //카카오톡 공유하기
+      cmtAllCount(cmtCount){
+        this.cmtCount =cmtCount
+
+      },
+      sendLink() {
+        Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); // 사용하려는 앱의 JavaScript 키 입력
+        Kakao.Link.sendDefault({
+          objectType: 'feed',
+          content: {
+            title: this.items.memberId + ' 님 모하비 피드',
+            description: this.items.content,
+            imageUrl: 'https://ifh.cc/g/H0FFVT.jpg',   
+            link: {
+              webUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
+            },
           },
-        },
-      ],
-    })
-  },
-     
+          // social: {
+          //   likeCount: this.items.likes,  //좋아요 수
+          //   commentCount: this.items.cmts,  //댓글 수
+          // },
+          buttons: [
+            {
+              title: '모하비에서 확인하기',  //첫 번째 버튼 
+              link: {
+                mobileWebUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,  //버튼 클릭 시 이동 링크
+                webUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
+              },
+            },
+          ],
+        })
+      },
+        
 
 
 
-  //세션유무 검증
-  confirmMember(memberId){  
-    if(memberId){
-      console.log("true");
-      return true;
-    }
-    else{
-      console.log("false");
-      return false;
-    }
-  },
-  //로그인 검증 모달
-  loginConfirm(){
-    this.$swal({
-      title: "로그인하셔야 가능하세요🙏",
-      text: "🙏로그인화면으로 이동부탁드립니다🙏",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#2ac187",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "취소",
-      confirmButtonText: "이동",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.$router.push({ path: "login" });
-      }
-    });
-  },
+      //세션유무 검증
+      confirmMember(memberId){  
+        if(memberId){
+          console.log("true");
+          return true;
+        }
+        else{
+          console.log("false");
+          return false;
+        }
+      },
+      //로그인 검증 모달
+      loginConfirm(){
+        this.$swal({
+          title: "로그인하셔야 가능하세요🙏",
+          text: "🙏로그인화면으로 이동부탁드립니다🙏",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#2ac187",
+          cancelButtonColor: "d3#3",
+          cancelButtonText: "취소",
+          confirmButtonText: "이동",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.$router.push({ path: "login" });
+          }
+        });
+      },
 
 
-/*
-    
-    게시글
+    /*
+        
+        게시글
 
-*/
+    */
     //게시글 상세 로드
     showDetail(postId, writer) {
       this.axios("/sns/user/feed_detail/" + postId, {
@@ -398,7 +408,18 @@ export default {
           }
           console.log();
           this.items = res.data;
-          console.log(this.items.likeStatus);
+          console.log("비밀글여부: "+ this.items.secPost);
+
+          //자신의 게시물이면 dot list 세팅
+          this.lists.push({title: "수정"});
+          this.lists.push({title: "삭제"});
+          if(this.items.secPost == 0){
+            this.lists.push({title: "비밀글로"});
+          } else {
+            this.lists.push({title: "비밀글 해제"});
+          }
+
+
           if (this.items.hashtag != null) {
             let str = this.items.hashtag; //%%,%%,%% 형태
             let hashtag = str.split(","); //해시태그 자르기
@@ -427,26 +448,61 @@ export default {
 
 
     //게시글 수정*******************************
-
+    /*
+        //게시글 수정
+        editPost() {
+          console("게시글 수정 실행!");
+          // if (this.editedContent == "" || this.editedContent == undefined){
+          //   this.$swal('내용 입력부터 부탁드립니다🙏')
+          //   return;
+          // }
+          // this.axios.put('/sns/myfeed/' + this.postId, {
+          //       content : this.editedContent,
+          //   }).then(res => {
+          //     console.log("게시글수정 성공! "+res);
+          //   }).catch(err => {
+          //     console.log(err)
+          //   });
+        },
+    */
 
 
     //게시글 삭제 검증
-    feedSwal(postId) {
-      this.$swal({
-        title: "정말 삭제할까요?",
-        text: "삭제된 게시글은 복구가 불가합니다🙏",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#2ac187",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "취소",
-        confirmButtonText: "네, 삭제할게요!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.deletePost(postId);
-          this.$swal("삭제 완료!", "게시글이 삭제되었습니다.", "success");
-        }
-      });
+    feedSwal(postId,n) {
+      if(n == 1){
+        this.$swal({
+          title: "정말 삭제할까요?",
+          text: "삭제된 게시글은 복구가 불가합니다🙏",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#2ac187",
+          cancelButtonColor: "#d33",
+          cancelButtonText: "취소",
+          confirmButtonText: "네, 삭제할게요!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.deletePost(postId);
+            this.$swal("삭제 완료!", "게시글이 삭제되었습니다.", "success");
+          }
+        });
+      }
+      if(n == 2) {
+        this.$swal({
+          title: "비밀글로 전환할까요?",
+          text: "비밀글은 본인만 조회가 가능합니다🙏",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#2ac187",
+          cancelButtonColor: "#d33",
+          cancelButtonText: "취소",
+          confirmButtonText: "네, 전환할래요!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.changeSecPost(postId);
+            this.$swal("전환 완료!", "비밀 게시글로 전환되었습니다!", "success");
+          }
+        });
+      } 
     },
 
 
@@ -463,6 +519,35 @@ export default {
         });
     },
 
+    //비밀글로 전환 or 해제
+    changeSecPost(postId) {
+      console.log(postId);
+      if(this.items.secPost == 0){
+        this.secret  = 1;
+      }else {
+        this.secret = 0;
+      }
+        this.axios.put("/sns/myfeed/secret", {
+          postId : postId,
+          secPost: this.secret,
+        })
+        .then((res) => {
+          if(this.items.secPost == 0){
+            this.items.secPost  = 1;
+            // this.lists.splice(2, 1); //아니면 인덱스번호 잘라내기
+            this.lists[2].title = "비밀글 해제"
+          }else {
+            this.items.secPost = 0;
+            this.lists[2].title = "비밀글로"
+            this.$swal("비밀글이 해제되었습니다!");
+          }
+          console.log(this.items.secPost);
+        })
+        .catch((err) => {
+          alert("비밀글전환 실패" + err);
+        });
+    },
+
 
     //DOT LIST
     listBtn(i) {
@@ -474,7 +559,17 @@ export default {
       if (i == 1) {
         //게시글 삭제
         console.log("삭제하기");
-        this.feedSwal(this.items.postId);
+        this.feedSwal(this.items.postId,1);
+      }
+      if (i == 2 && this.items.secPost == 0) {
+        //비밀글 전환
+        console.log("비밀글로")
+        this.feedSwal(this.postId,2);
+      }
+      if (i == 2 && this.items.secPost == 1) {
+        //비밀글 해제
+        console.log("비밀글 해제")
+        this.changeSecPost(this.postId);
       }
     },
 
@@ -769,22 +864,6 @@ export default {
     },
   },
 };
-/*
-    //게시글 수정
-    editPost() {
-      console("게시글 수정 실행!");
-      // if (this.editedContent == "" || this.editedContent == undefined){
-      //   this.$swal('내용 입력부터 부탁드립니다🙏')
-      //   return;
-      // }
-      // this.axios.put('/sns/myfeed/' + this.postId, {
-      //       content : this.editedContent,
-      //   }).then(res => {
-      //     console.log("게시글수정 성공! "+res);
-      //   }).catch(err => {
-      //     console.log(err)
-      //   });
-    },
-*/
+
 </script>
 <style scoped lang="css" src="@/assets/css/sns/FeedDetail.css" />

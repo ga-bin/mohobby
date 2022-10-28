@@ -99,7 +99,7 @@
             <ul>
               <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
               <li>
-                <FollowModal :text="followingtext" :dataList="following" :followCnt="followCnt" />
+                <FollowModal :text="followingtext" :dataList="following" :follow="follow" />
               </li>
               <li>
                 <FollowModal :text="followertext" :dataList="follower" :follow="follow" />
@@ -126,7 +126,7 @@
               <button
                 v-if="followStatus === 0"
 
-                @click="follow(sessionId, infoes.memberId)"
+                @click="followup(sessionId, infoes.memberId)"
                 class="btn profile-edit-btn2">
                 Follow
               </button>
@@ -181,10 +181,6 @@
             followStatus: Number,
             followerCnt:"",
             followingCnt:"",
-            follow:[
-            {"followerCnt": ""},
-            {"followingCnt": ""},
-            ],
             // 신고
              selectedCode: '',
               userFlagModal: false,
@@ -203,6 +199,14 @@
         this.getFollowing(this.userId);
         this.getFollower(this.userId);
       },
+      //팔로우를 실행하면 follower모달의 다시실행된 getFollowingList값을 받아와 보내줘야함
+      watch: {
+
+        getFollowing() {
+
+        }
+
+      },
 
       methods: {
         
@@ -212,8 +216,6 @@
             .then(res => {
               this.infoes = res.data;
               console.log(this.infoes);
-              this.follow.followerCnt = this.infoes.followerCnt;
-              this.follow.followingCnt = this.infoes.followingCnt;
             }).catch(err => {
               console.log(err);
             });  
@@ -270,7 +272,8 @@
 
 
       //팔로우
-      follow(memberId, userId) {
+      followup(memberId, userId) {
+        console.log(memberId);
         if (this.confirmMember(memberId) == false) {
           this.loginConfirm();
         } else {
@@ -283,9 +286,11 @@
               console.log("팔로우성공 전" + this.followStatus);
               this.followStatus = 1;
               this.loadUserProfile(userId);
+              this.getFollower();
               // this.followCheck(memberId, userId);
               console.log("팔로우성공 후" + this.followStatus);
               console.log("팔로우 성공! " + res);
+              console.log(this.follower);
             })
             .catch((err) => {
               console.log(err);
@@ -308,6 +313,8 @@
             // this.followCheck(memberId, userId);
             console.log("언팔로우성공 후" + this.followStatus);
             console.log("언팔로우 성공! " + res);
+            this.getFollower();
+            console.log(this.follower);
           })
           .catch((err) => {
             console.log(err);
@@ -320,7 +327,7 @@
       getFollower(userId) {
         const vm = this;
         this.axios({
-                url: "http://localhost:8088/java/mypagefollower/" + userId,
+                url: "/mypagefollower/" + userId,
                 method: "get",
                 })
                 .then(function (response) {
@@ -379,7 +386,7 @@
           getFollowing(userId) {
           const vm = this;
           this.axios({
-            url: "http://localhost:8088/java/mypagefollowing/" + userId,
+            url: "/mypagefollowing/" + userId,
             method: "get",
             })
             .then(function (response) {

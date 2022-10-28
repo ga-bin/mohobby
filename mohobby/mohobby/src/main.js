@@ -36,9 +36,9 @@ Vue.prototype.axios = axios;
 Vue.prototype.$ = $;
 axios.defaults.baseURL = "http://localhost:8088/java";
 moment.locale('ko');
-console.warn = console.error = () => {};
+// console.warn = console.error = () => {};
 // or IIFE
-(() => { console.warn = console.error = () => {}} )();
+// (() => { console.warn = console.error = () => {}} )();
 
 Vue.filter("toFixed", (val, num) => {
   let result;

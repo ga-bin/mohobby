@@ -16,6 +16,7 @@ public class SnsFeedVO {
         private int likes; //좋아요 수
         private int cmts; //댓글 수
         private int imgs; //이미지 수
+        private int secPost; //비밀글 여부
         private String profileImg; //프로필이미지
         private String intro; //회원설명
         private String nickName; //닉네임

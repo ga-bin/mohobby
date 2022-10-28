@@ -43,7 +43,7 @@ public class SnsController {
     @Autowired
     SnsService service;
     
-    //게시물 등록 - 파일등록 성공 히히
+    //게시물 등록 - 테스트완료
     @PostMapping(value = "/myfeed", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public String insertFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
        System.out.println(snspostVO); //******해시태그에 값이 들어오지 않음. - 수정중
@@ -66,6 +66,14 @@ public class SnsController {
             return "fail";
         }
     }
+    
+   //비밀게시글로 전환
+    @PutMapping("/myfeed/secret")
+    public int changeSecPost(@RequestBody SnsPostVO snsPostVO) {
+        System.out.println(snsPostVO.getPostId());
+        return service.changeSecPost(snsPostVO);
+    }  
+    
    //피드 삭제 - 테스트완료
     @DeleteMapping("/myfeed/{postId}")
     public int deleteFeed(@PathVariable("postId") int postId){
@@ -93,7 +101,7 @@ public class SnsController {
         return service.newList();
     }
     
-   //인기피드조회 - 테스트완료(좀 느림)
+   //인기피드조회 - 테스트완료(약간 느림)
     @GetMapping("/main/hotFeeds")
     public List<SnsPostVO> hotList() {
         return service.hotList();
@@ -105,19 +113,31 @@ public class SnsController {
         return service.selectHashtagForMain();
     }
     
-   //팔로잉피드조회 - 
+   //팔로잉피드조회 - 테스트완료
     @GetMapping("/main/followingFeeds/{memberId}")
     public List<SnsPostVO> getFollowingFeeds(@PathVariable String memberId) {
         return service.getFollowingFeeds(memberId);
     }
     
-  //프로필조회
+   //팔로잉제외 피드조회 - 테스트완료
+    @GetMapping("/main/nofollowingFeeds/{memberId}")
+    public List<SnsPostVO> getNoFollowingFeeds(@PathVariable String memberId) {
+        return service.getNoFollowingFeeds(memberId);
+    }
+    
+   //내 피드 모아보기
+    @GetMapping("/user/archive/{memberId}")
+    public List<SnsFeedVO> getMyArchive(@PathVariable String memberId) {
+        return service.getMyArchive(memberId);
+    }
+    
+   //프로필조회 - 테스트완료
     @GetMapping("/user/profile/{memberId}")
     public SnsProfileVO getProfile(@PathVariable("memberId") String memberId) {
            return service.getProfile(memberId);//컬럼명과 컬럼값이 키와 값으로 매핑이 된다.
     }
     
-    //유저피드조회 - 테스트완료
+   //유저피드조회 - 테스트완료
     @GetMapping("/user/user_feeds/{memberId}")
     public List<SnsPostVO> getUserFeed(@PathVariable("memberId") String memberId) {
         return service.getUserFeed(memberId);
@@ -193,17 +213,19 @@ public class SnsController {
         return service.getFollowingList(followerId);
     }
     
-   //followCheck
-    @GetMapping("/follow/check")
-    public int followCheck(@RequestParam String myId, @RequestParam String targetId) {
-        return service.followCheck(myId, targetId);
-    }
     
    //팔로워 조회 - 테스트완료
     @GetMapping("/follow/search/follower/{followingId}")
     public List<SnsFollowVO> getFollowerList(@PathVariable String followingId){
         return service.getFollowerList(followingId);
     }
+    
+   //팔로우 상태 체크 - 테스트완료
+    @GetMapping("/follow/check")
+    public int followCheck(@RequestParam String myId, @RequestParam String targetId) {
+        return service.followCheck(myId, targetId);
+    }
+
     
    //유저전체 - 테스트완료
     @GetMapping("/search/allUsers")
