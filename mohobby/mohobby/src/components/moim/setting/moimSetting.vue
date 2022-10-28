@@ -1,4 +1,5 @@
 <template>
+<form id="imgForm" v-on:submit.prevent>
   <div class="container">
     <v-card-text>
       <v-container>
@@ -6,12 +7,11 @@
           <v-col cols="12" sm="6" md="4">
                 <!-- 이미지 미리보기 -->
                 <!-- <v-container fluid> -->
-                  <div style="display: inline-flex; margin-left: 10px">
+                  <div style="display: inline-flex; margin-left: 20px; margin-top: 10px">
                   <v-img
                     :src="uploadimageurl"
                     aspect-ratio="4/3"
-                    height="150px"
-                    width="200px"
+                    height="180px" width="270px"
                     lazy-src
                     error
                     style="margin-right: 10px"
@@ -41,8 +41,8 @@
           </v-col>
           <v-col cols="12" sm="6" md="8">
             <span>소개글</span><br><br>
-            <v-textarea name="input-7-1" no-resize filled height="245"
-              placeholder="함께하고 싶은 소모임 활동을 자세히 소개해주세요. (50자 이상)" v-model="intro"></v-textarea>
+            <v-textarea name="moimInfo" no-resize filled height="245"
+              placeholder="함께하고 싶은 소모임 활동을 자세히 소개해주세요." v-model="intro"></v-textarea>
           </v-col>
         </v-row>
         <v-row class="mt-12">
@@ -50,14 +50,16 @@
             <div class="title">
               <v-icon color="green">mdi-map-marker</v-icon> 주로 어느지역에서 활동 하나요?
             </div><br><br>
-            <somoimregion></somoimregion>
+            <somoimregion @Region="Region"></somoimregion>
+            <input name="moimRegion" type="hidden" :value=Region>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col col="12" sm="3" md="6">
             <div class="title">
               <v-icon color="green">mdi-wifi</v-icon> 주로 어떤 주제로 활동 하나요?
             </div><br><br>
-            <somoimtopic></somoimtopic>
+            <somoimtopic @Catg="Catg"></somoimtopic>
+            <input name="moimCatg" type="hidden" :value=Catg>
           </v-col>
         </v-row>
         <v-row class="mt-16">
@@ -65,13 +67,14 @@
             <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn class="mr-3">취소</v-btn>
-            <v-btn color="success"  @click="uploadImage">저장</v-btn>
+            <v-btn color="success"  @click="uploadImage()">저장</v-btn>
           </v-card-actions>
           </v-col>
         </v-row>
       </v-container>
     </v-card-text>
   </div>
+</form>
 </template>
 <script>
 import somoimtopic from "@/components/moim/setting/somoimtopic.vue"
@@ -82,16 +85,30 @@ export default {
     return {
       dialog: false,
       intro: '',
-      sampleData: "",
-      uploadimageurl: "", //이미지업로드2
+      sampleData: '',
+      uploadimageurl: '', //이미지업로드2
       fileList: [],
       file: {},
       formData: {},
+      moimCatg: '',
+      moimRegion: '',
+      moimInfo : '',
+      moimName : this.$route.params.moimName,
+      moimId : this.$route.params.moimId
     };
   },
   components: { somoimtopic, somoimregion },
   methods: {
-   // 이미지 미리보기
+    Region(moimRegion) {
+      this.moimRegion = moimRegion
+      console.log(moimRegion)
+      console.log('자식에게 받은 값 ' + this.moimRegion)
+    },
+    Catg(moimCatg) {
+      this.moimCatg = moimCatg
+      console.log(this.moimCatg)
+    },
+    // 이미지 미리보기
    onImageChange(file) {
       // v-file-input 변경시
       if (!file) {
@@ -110,17 +127,33 @@ export default {
       };
       reader.readAsDataURL(file);
     },
-    //이미지 업로드
+    //정보 수정
     uploadImage() {
+      console.log(this.intro)
+      const formData = new FormData(imgForm)
+      formData.append("moimName", this.moimName)
       const vm = this;
+      console.log(vm.intro)
+      console.log(vm.moimRegion)
+      console.log(vm.moimCatg)
+      console.log(vm.moimId)
+      console.log(vm.moimName)
       this.axios({
         url: "/memberProfileUpdate", // 이미지 저장을 위해 back서버와 통신
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "multipart/form-data" }, // 이걸 써줘야 formdata 형식 전송가능
-        data: vm.formData,
+        data : {
+          formData : vm.formData,
+          moimInfo : vm.intro,
+          moimRegion : vm.moimRegion,
+          moimCatg : vm.moimCatg,
+          moimName : vm.moimName,
+          moimId : vm.moimId
+        }
       })
         .then((res) => {
-          console.log(res.data);
+          console.log(res)
+          this.$swal("수정이 완료되었습니다.")
         })
         .catch((err) => {
           console.log(err);

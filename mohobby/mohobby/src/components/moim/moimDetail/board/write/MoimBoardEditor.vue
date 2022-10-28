@@ -46,6 +46,11 @@ export default {
     };
   },
   methods: {
+    getContent(editorContent) {
+      console.log("emit_success", editorContent);
+      this.content = editorContent;
+      console.log("겟 콘탠트 내용", this.content);
+    }, 
     async clickSave(boardId) {
       document.querySelector(".ql-editor").style.display = 'none';
 

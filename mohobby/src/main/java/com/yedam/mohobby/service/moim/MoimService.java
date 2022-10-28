@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.user.MemberVO;
@@ -153,5 +154,8 @@ public interface MoimService {
 
 	//게시판 검색
 	public List<MoimBoardVO> boardSearch(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title);
+
+	//소모임 프로필 수정
+	public String updateProfile(MoimVO moimVO, List<MultipartFile> files);
 }
 
