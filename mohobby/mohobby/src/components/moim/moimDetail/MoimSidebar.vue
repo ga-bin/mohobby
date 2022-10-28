@@ -203,7 +203,6 @@ export default {
       console.log(this.moimInfo.maxAge);
       console.log(this.moimInfo.maxAge);
       console.log(this.moimInfo.gender);
-      console.log(this.memberInfo.gender);
       if (this.memberId == "비회원") {
         this.$swal
           .fire({
@@ -276,29 +275,13 @@ export default {
             });
           // 회원 정보 설정이 되어 있는데, 모임 조건과 일치하지 않는 경우
         } else if (
-          this.moimInfo.gender != 0 && this.memberInfo.gender != this.moimInfo.gender ||
+          this.memberInfo.gender != this.moimInfo.gender ||
           this.calcAge(this.calcDate(this.memberInfo.birth)) > this.moimInfo.maxAge ||
           this.calcAge(this.calcDate(this.memberInfo.birth)) < this.moimInfo.minAge
         ) {
           this.$swal.fire({
             icon: "error",
             title: "모임의 가입 기준에 충족하지 않아 가입할 수 없습니다.",
-          });
-        } else {
-          this.$swal
-          .fire({
-            title: "모임에 가입하시겠습니까?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "가입하기",
-            cancelButtonText: "취소하기",
-          })
-          .then((result) => {
-            if (result.isConfirmed) {
-              this.$swal.fire(vm.insertMoim(), "가입이 완료되었습니다.");
-            }
           });
         }
       }
