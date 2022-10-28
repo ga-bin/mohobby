@@ -37,7 +37,7 @@
 
           <!-- 멤버 전체 조회 -->
           <h4 v-if="members.length == 0">일치하는 결과가 없습니다.</h4>
-          <v-row v-for="(member, idx) in members">
+          <v-row v-for="(member, idx) in members" :key="idx">
             <v-col cols="12" sm="6" md="2">
               <v-avatar class="mb-4" color="grey darken-1" size="64">
                 <v-img aspect-ratio="30" :src="src"></v-img>

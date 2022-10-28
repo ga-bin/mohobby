@@ -71,9 +71,10 @@
     <h1>Mo#obby 소모임</h1> 
     <div>
     <!-- 소모임 유저별 모임 리스트 -->
-    <MyMoim_user v-if="moimRight === 1 || moimRight === 0"></MyMoim_user>
+    moimRight : {{moimRight}}
+    <MyMoim_user v-if="(moimRight === 1 || moimRight === 0)"></MyMoim_user>
     <MyMoim_leader v-else-if="moimRight === 2 || moimRight === 3"></MyMoim_leader>
-    <MyMoim_none v-else></MyMoim_none>
+    <MyMoim_none v-else-if="moimRight == ''"></MyMoim_none>
   </div>
     <!-- 소모임 검색창 -->
     <br>
@@ -157,8 +158,8 @@
           '자연/귀농'
         ],
         search : '',
-        moimRight : '',//this.$store.state.user.role,
-        id : '',//this.$store.state.id,
+        moimRight : '',
+        id : '',
         noneuser : false,
       }
     },

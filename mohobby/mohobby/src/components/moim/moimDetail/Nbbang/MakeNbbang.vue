@@ -37,7 +37,7 @@
           </v-col>
         </v-row>
         <hr class="mt-5 mb-5" />
-        <v-row v-for="list in empty">
+        <v-row v-for="(list,idx) in empty" key="idx">
           <v-col cols="12" sm="6" md="1">
             <v-avatar class="mb-4" color="grey darken-1" size="64">
               <v-img aspect-ratio="30" :src="src"></v-img>

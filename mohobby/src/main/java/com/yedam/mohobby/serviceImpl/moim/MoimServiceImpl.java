@@ -486,6 +486,13 @@ public class MoimServiceImpl implements MoimService {
 	}
 	
     //게시글 검색
+
+   @Override
+   public List<MoimBoardVO> boardSearch(int moimId, int boardType, String title) {
+      return mapper.searchBoard(moimId, boardType, title);
+   }
+
+
     @Override
     public List<MoimBoardVO> boardSearch(int moimId, int boardType, String title) {
        return mapper.searchBoard(moimId, boardType, title);
