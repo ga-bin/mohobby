@@ -123,12 +123,25 @@
               </button>
             </ul>
             <ul v-else>
-              <button
+              <!-- <button
                 v-if="followStatus === 0"
 
                 @click="follow(sessionId, infoes.memberId)"
                 class="btn profile-edit-btn2">
                 Follow
+              </button> -->
+              <button
+                v-if="followStatus === 0"
+                @click="follow(sessionId, infoes.memberId)"
+                class="btn profile-edit-btn2">
+                follow
+              </button>
+              <button
+                v-else
+                style="background-color: #2ac187; color: white"
+                @click="unfollow(sessionId, infoes.memberId)"
+                class="btn profile-edit-btn2">
+                Unfollow
               </button>
               <button
                 v-else
@@ -267,7 +280,6 @@
             alert(err);
           });
       },
-
 
       //팔로우
       follow(memberId, userId) {

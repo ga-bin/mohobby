@@ -40,7 +40,10 @@ public class AdminClassController {
 	
 	// 신청 결과 업로드
 	@PutMapping("/adminAuditClass")
-	public void updateAuditStatus(ClassesVO classesVO) {
+	public void updateAuditStatus(@RequestBody ClassesVO classesVO) {
+		System.out.println(classesVO.getClassId());
+		System.out.println(classesVO.getAuditStatus());
+		System.out.println(classesVO.getAuditReturn());
 		service.updateAuditStatus(classesVO);
 	}
 	
