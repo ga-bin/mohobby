@@ -37,8 +37,7 @@ export default {
       };
     },
     created() {
-      // this.search(); 
-      // this.feeds = this.feeds;
+
       console.log(this.feeds);
 
     }, 

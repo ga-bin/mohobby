@@ -1,73 +1,81 @@
 <template>
+  <!-- <div>
+    <v-container>
 
-  <div class="scroll" ref="scroll" style="margin-bottom:100px;">
-    <!-- <v-container class="fill-height" > -->
-    <v-row class="no-gutters elevation-4">
-      <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid #0000001f">
-        <v-responsive class="">
-          <v-list>
-            <v-list-item-group>
-              <template v-for="(item, index) in roomList">
-                {{ item.roomNo }}
-                <v-list-item v-on:click="openRoom(item.roomNo)" style="background-color: gray;">
-                  <v-avatar>
-                    <v-img :src="require(`@/assets/image/user/${item.profileImg}`)" height="100px" width="50px"
-                      border-radius:10px></v-img>
-                  </v-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title v-text="item.nickName" />
-                    <v-list-item-subtitle v-text="item.content" />
-                    <v-list-item-subtitle v-text="item.nonReadChat" />
-                    <v-list-item-subtitle v-text="item.checkIn" />
-                  </v-list-item-content>
-                  <v-list-item-icon>
-                    <v-icon :color="item.active ? 'deep-purple accent-4' : 'grey'">
-                      chat_bubble
-                    </v-icon>
-                  </v-list-item-icon>
-                </v-list-item>
-                <v-divider class="my-0" />
+
+    </v-container>
+  </div> -->
+
+
+  <div id="container">
+    <v-card class="scroll" ref="scroll" style=" margin: 0 auto; width: 800px;">
+      <v-row class="no-gutters elevation-4">
+        <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid ">
+          <v-responsive>
+            <v-list>
+              <v-list-item-group>
+                <template v-for="(item, index) in roomList">
+                  <v-list-item v-on:click="openRoom(item.roomNo)" style="background-color:white">
+                    <v-avatar>
+                      <v-img v-if="item.roomNo > 10000" :src="require(`@/assets/image/user/${item.profileImg}`)"
+                        height="100px" width="50px" border-radius:10px></v-img>
+                      <v-img v-else :src="require(`@/assets/image/moim/${item.profileImg}`)" height="100px" width="50px"
+                        border-radius:10px></v-img>
+                    </v-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title v-text="item.nickName" style="white" />
+                      <v-list-item-subtitle v-text="item.content" />
+                    </v-list-item-content>
+                    <v-badge style="cursor: pointer;" v-if="item.nonReadChat != 0" offset-x="10" offset-y="10" color="red"
+                      :content="item.nonReadChat">
+                    </v-badge>
+                  </v-list-item>
+                  <v-divider class="my-0" />
+                  <hr>
+                </template>
+              </v-list-item-group>
+            </v-list>
+          </v-responsive>
+        </v-col>
+        <v-col cols="auto" class="flex-grow-1 flex-shrink-0  ">
+          <v-card flat class="d-flex flex-column fill-height ">
+            <v-card-title>
+              {{ this.$store.state.user.nickName + " 님의 채팅방입니다" }}
+            </v-card-title>
+            <v-card-text class="flex-grow-1 overflow-y-auto">
+              <v-if roomId="">
+                <v-img :src="require(`@/assets/image/moim/mohobby.png`)">
+                </v-img>
+              </v-if>
+              <template v-for="(msg, i) in messages">
+                <div :class="{ 'd-flex flex-row-reverse': msg.memberId }">
+                  <v-menu offset-y>
+                    <template v-slot:activator="{ on }">
+                      <v-chip :color="msg.memberId ? 'primary' : ''" dark style="height: auto; white-space: normal"
+                        class="pa-4 mb-2" v-on="on">
+                        {{ msg.content }}
+                        <sub class="ml-2" style="font-size: 0.5rem">
+                          {{ msg.hour }}
+                        </sub>
+                      </v-chip>
+                    </template>
+                  </v-menu>
+                </div>
               </template>
-            </v-list-item-group>
-          </v-list>
-        </v-responsive>
-      </v-col>
-      <v-col cols="auto" class="flex-grow-1 flex-shrink-0  ">
-        <v-card flat class="d-flex flex-column fill-height ">
-          <v-card-title>
-            {{ this.$store.state.user.nickName + " 님의 채팅방입니다" }}
-          </v-card-title>
-          <v-card-text class="flex-grow-1 overflow-y-auto">
-            <v-if roomId="">
-              <v-img :src="require(`@/assets/image/moim/mohobby.png`)">
-              </v-img>
-            </v-if>
-            <template v-for="(msg, i) in messages">
-              <div :class="{ 'd-flex flex-row-reverse': msg.memberId }">
-                <v-menu offset-y>
-                  <template v-slot:activator="{ on }">
-                    <v-chip :color="msg.memberId ? 'primary' : ''" dark style="height: auto; white-space: normal"
-                      class="pa-4 mb-2" v-on="on">
-                      {{ msg.content }}
-                      <sub class="ml-2" style="font-size: 0.5rem">
-                        {{ msg.hour }}
-                      </sub>
-                    </v-chip>
-                  </template>
-                </v-menu>
+            </v-card-text>
+
+            <!-- 글 입력폼 -->
+            <v-card-text class="flex-shrink-1">
+              <div class="messages" ref="messages">
+                <v-text-field class="fixed" v-model="message" label="메시지를 입력해주세요" type="text" no-details outlined
+                  append-outer-icon="send" @keyup.enter="send()" hide-details />
               </div>
-            </template>
-          </v-card-text>
-          <v-card-text class="flex-shrink-1">
-            <div class="messages" ref="messages">
-              <v-text-field class="fixed" v-model="message" label="메시지를 입력해주세요" type="text" no-details outlined
-                append-outer-icon="send" @keyup.enter="send()" hide-details />
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <!-- </v-container> -->
+            </v-card-text>
+
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-card>
   </div>
 </template>
 
@@ -94,12 +102,11 @@ export default {
   created() {
     this.memberId = this.$store.state.id,
       this.roomId = this.$route.query.getRoomId,
-      console.log("roomId : "+this.roomId)
-      this.connect()
+   
+    this.connect()
     this.getRoom()
     this.sortRoom()
     this.CheckIn(this.roomId)
-
   },
   mounted() {
     window.addEventListener('beforeunload', this.CheckOut(this.roomId));
@@ -107,13 +114,11 @@ export default {
   beforeUnmount() {
     window.removeEventListener('beforeunload', this.CheckOut(this.roomId));
   },
- 
 
   methods: {
     handler: function handler(event) {
       this.CheckOut(this.roomId);
     },
-
     //채팅내역 정렬
     sortRoom() {
       this.roomList.sort(function (a, b) {
@@ -162,6 +167,8 @@ export default {
       this.message = "";
     },
     CheckIn(roomId) {
+      console.log("checkIn test")
+      console.log(roomId)
       this.axios
         .get("/updateCheckIn", {
           params: {
@@ -171,12 +178,15 @@ export default {
           },
         })
         .then(function (res) {
-          console.log(res
-          )
+          console.log(res)
+          console.log("success")
+        })
+        .catch(function(err){
+          console.log(err)
         })
     },
     CheckOut(roomId) {
-      console.log("roomID : "+roomId)
+    
       this.axios
         .get("/updateCheckOut", {
           params: {
@@ -203,6 +213,7 @@ export default {
         this.CheckInOut(this.roomId, roomNo)
         this.roomId = roomNo
       }
+      this.$store.state.stayRoomNo= roomNo
       this.messages = [];
       this.targetId = [];
       //안읽은 메세지수 추출
@@ -279,10 +290,11 @@ export default {
         });
       //클릭한 방 접속시 방번호로 구독
       vm.stompClient.subscribe("/topic/room/" + roomNo, function (res) {
-        if(res.body==roomNo){
-        vm.$store.state.isRoomNo = res.headers.subscription;}
-        else{
-        let rev = JSON.parse(res.body);
+        if (res.body == roomNo) {
+          vm.$store.state.isRoomNo = res.headers.subscription;
+        }
+        else {
+          let rev = JSON.parse(res.body);
           if (rev.memberId == vm.memberId) {
             rev.memberId = true;
           } else {
@@ -296,10 +308,11 @@ export default {
               rev.hour.substr(11, 2) + ":" + rev.hour.substr(14, 2) + " am";
           }
           vm.messages.push(rev);
-      }});
+        }
+      });
       //구독취소헤더값 가져오기
       this.stompClient.send("/app/getSubscribeId", vm.roomId, (res) => { });
-      console.log("roomId : " + this.roomId)
+ 
     },
     //채팅방 리스트출력
     getRoom() {
@@ -338,39 +351,39 @@ export default {
     //소켓 구독
     connect() {
       let vm = this
-      console.log("this.roomID : " + this.roomId)
+    
       vm.stompClient.subscribe(
         "/queue/" + this.$store.state.id,
         function (res) {
-          console.log("res.body : " + res.body)
-          console.log("vm.$store.state.id : "+vm.$store.state.id)
-          if(res.body==vm.$store.state.id){
-            vm.$store.state.isUser =res.headers.subscription
+ 
+          if (res.body == vm.$store.state.id) {
+            vm.$store.state.isUser = res.headers.subscription
           }
-          else{
-          let resContent = JSON.parse(res.body);
-          if (vm.roomList.findIndex(i => i.roomNo == resContent.roomNo) < 0) {
-            vm.getRoom();
-          }
-          for (let i = 0; i < vm.roomList.length; i++) {
-            if (vm.roomList[i].roomNo == resContent.roomNo) {
-              vm.roomList[i].content = resContent.content;
-              vm.roomList[i].msgTime = resContent.hour;
-              if (vm.roomId != resContent.roomNo)
-                ++vm.roomList[i].nonReadChat;
-              console.log("roomList:" + vm.roomList[i].roomNo)
+          else {
+            let resContent = JSON.parse(res.body);
+            if (vm.roomList.findIndex(i => i.roomNo == resContent.roomNo) < 0) {
+              vm.getRoom();
             }
+            for (let i = 0; i < vm.roomList.length; i++) {
+              if (vm.roomList[i].roomNo == resContent.roomNo) {
+                vm.roomList[i].content = resContent.content;
+                vm.roomList[i].msgTime = resContent.hour;
+                if (vm.roomId != resContent.roomNo)
+                  ++vm.roomList[i].nonReadChat;
+             
+              }
+            }
+            vm.sortRoom();
           }
-          vm.sortRoom();
-        }}
+        }
       );
-      console.log("실행되나요?")
-      vm.stompClient.send("/app/SubscribeIds",vm.$store.state.id, (res) => {console.log(res) })
-      console.log("실행되나요??")
+
+      vm.stompClient.send("/app/SubscribeIds", vm.$store.state.id, (res) => { console.log(res) })
+ 
     },
     scrollDown() {
       let scroll = this.$refs.scroll;
-      let scrol = scroll.scrollHeight + 100
+      let scrol = scroll.scrollHeight + 100000000
       window.scrollTo(0, scrol);
     }
   },
@@ -383,3 +396,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+#container{
+  margin-top: 180px; 
+  height: 1000px;
+}
+</style>

@@ -96,5 +96,8 @@ public interface ClassService {
     
     //강의 영상 저장
     public void saveVideos(List<MultipartFile> videoList, List<Integer> currIdList);
+    
+    //출결 관리 정보 가져오기
+    public ClassAttendanceVO getAttendanceInfo(String memberId);
 
 }

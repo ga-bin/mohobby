@@ -1,7 +1,7 @@
 <template>
-    <div id = "container" align-center>
-        <v-container>
-
+    <div id = "container" align-center  @scroll="handleNotificationListScroll">
+        <v-container id="main">
+          
             <v-spacer></v-spacer>
             <div style="float:right">
                 <!-- 내 피드 버튼 -->
@@ -76,10 +76,13 @@
                 <div v-if="randomFeeds == true" id="nonuserFeeds">
                     <h3 v-if="!member">재주 견습생들 피드</h3>
                     <h3 v-else>나의 팔로워 피드</h3>
-                    <NoneUser :feeds="feeds" />
+                    <!-- <NoneUser :feeds="feeds" /> -->
                 </div>
             </div>
 
+            <!-- 전체 피드 -->
+            <h3>전체 피드</h3>
+            <NoneUser :feeds="allFeed" />
 
             <!-- 해시태그 검색페이지 : 해시태그 검색-->
             <div v-if="tagSearch == true">
@@ -98,9 +101,10 @@
             <div v-if="noResult == true">
                 <NoResult :keyword="temp" />
             </div>
-
+        
         </v-container> 
-    </div>
+        </div>
+    
   </template>
   <script>
 
@@ -109,6 +113,7 @@
     import NoneUser from "@/components/sns/Main/Noneuser.vue";
     import UserResult from "@/components/sns/Management/User.vue";
     import NoResult from "@/components/sns/Search/NoResult.vue";
+    //import AllFeed from "@/components/sns/Main/AllFeed.vue";
 
     export default {
 
@@ -118,7 +123,9 @@
       
       data() {
           return {
+            firstIdx:0,
             feeds: [],
+            allFeed:[],
             hashResult: [],
             userResult: [],
             items: [], //HOT해시태그
@@ -152,7 +159,7 @@
           this.getHotHashtags();// 상단바 Hot해시태그
           this.hotLectureFeeds = true;
           this.randomFeeds = true;
-
+this.getAllListPaging()
           //로그인 아이디 있으면 팔로워리스트, 없으면 전체랜덤리스트
            if(this.member){
 
@@ -165,6 +172,7 @@
             console.log("비회원 전체리스트 호출");
 
            }
+
 
 
           //디테일에서 해시태그 검색 키워드 들어오면 실행
@@ -196,6 +204,23 @@
                 console.log(err);
             });
 
+        },
+        //전체 피드조회
+        getAllListPaging(){
+            let vm =this
+            this.axios.get("/sns/main/allFeed",{
+          params:{
+            firstIdx : this.firstIdx
+          }
+        }).then(function(res){
+            console.log(res.data)
+            for(let i=0;i<res.data.length;i++){
+                vm.allFeed.push(res.data[i])
+            }
+            this.firstIdx = this.firstIdx+20
+        }).catch(function(err){
+            console.log(err)
+        })
         },
 
 
@@ -240,21 +265,10 @@
                 let hashtag = keyword.slice(1); // #잘라내기
                 this.searchHashtag(hashtag);//해시태그 검색 실행
                 console.log("해시태그 검색 실행")
-               
-                // this.userSearch = false; //유저결과 show
-                // this.tagSearch = true; //해시태그결과 hide
-                // this.hotLectureFeeds = false; //main hide
-                // this.randomFeeds = false; //main hide
 
             }else{ //나머지 - 유저검색 실행
 
                 this.searchMem(keyword); //유저검색 실행
-                
-                // this.userSearch = true; //유저결과 show
-                // this.tagSearch = false; //해시태그결과 hide
-                // this.hotLectureFeeds = false; //main hide
-                // this.randomFeeds = false; //main hide
-                
 
             }
           },
@@ -262,7 +276,7 @@
           
           //1. 해시태그 검색
           searchHashtag(hashtag){
-            this.temp = hashtag;
+            this.temp = "'" + hashtag +  "'에 대한 검색결과입니다";
             console.log("해시태그검색 ->");
             console.log(hashtag);
             this.axios('/sns/search/hashtag', {
@@ -304,7 +318,7 @@
           //2. 유저검색
           searchMem(keyword) {
             console.log("유저검색: "+ keyword);
-            this.temp = keyword;
+            this.temp = "'" + keyword +  "'에 대한 검색결과입니다";
             this.axios('/sns/search/user', {
                 params : {
                     memberId : keyword
@@ -427,6 +441,22 @@
             }
             this.$router.push({ name: 'snsUserFeed', query: {userId : member} });
           },
+          handleNotificationListScroll(e) {
+    const { scrollHeight, scrollTop, clientHeight } = e.target;
+    const isAtTheBottom = scrollHeight === scrollTop + clientHeight;
+    // 일정 이상 밑으로 내려오면 함수 실행 / 반복된 호출을 막기위해 1초마다 스크롤 감지 후 실행
+    if(isAtTheBottom) {
+      setTimeout(() => this.handleLoadMore(), 1000)
+    }
+  },
+
+  // 내려오면 api를 호출하여 아래에 더 추가,
+  handleLoadMore() {
+    console.log("리스트 추가")
+    // api를 호출하여 리스트 추가하면 됨, 현재는 pushList에 1개의 index 추가
+   
+  },
+         
 
     }
 };

@@ -12,6 +12,7 @@
 		on (a.room_no=b.room_no)
 		where b.member_id =#{memberId}
 		and	a.msg_time>b.check_time
+		and a.member_id not like #{memberId}
 		group by a.room_no
 	</select>
 
@@ -53,10 +54,10 @@
 							FROM
 									chat
 							WHERE
-									msg_time
+									chat_id
 							IN (
 								SELECT
-										MAX(msg_time)
+										MAX(chat_id)
 								FROM
 										chat
 								WHERE
@@ -186,16 +187,18 @@
 		parameterType="com.yedam.mohobby.service.chat.CreateRoomVO" statementType="CALLABLE">
 		{
 		call pr_get_room_id(
-		#{myId,mode=IN},#{targetId,mode=IN},#{vRoomNo,mode=OUT,jdbcType=INTEGER})
+		#{myId,mode=IN},#{targetId,mode=IN},#{vRoomNo,mode=OUT,jdbcType=INTEGER}
+		)
 		}
 	</select>
 	<!-- moim채팅방 조회 -->
-	<select id="getMoimChatRoomNo" parameterType="String" resultType="Integer">
-	{
-	call pr_get_moimRoom_Id(
-	#{memberId,mode=IN},#{moimId,mode=IN},#{roomNo,mode=OUT}
-	)
-	}
+	<select id="getMoimChatRoomNo" 
+		parameterType="com.yedam.mohobby.service.chat.CreateRoomVO" statementType="CALLABLE">
+		{
+		call pr_get_moimroom_id(
+		#{vMemberId,mode=IN},#{vMoimId,mode=IN},#{vRoomNo,mode=OUT,jdbcType=INTEGER}
+		)
+		}
 	</select>
 	
 	<update id="updateCheckTime"

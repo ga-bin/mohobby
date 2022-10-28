@@ -99,19 +99,24 @@
     <v-divider></v-divider>
 
     <v-list>
-      <v-list-item
-        v-for="link in links"
-        :key="link.text"
-        
-        @click="$router.push({ name: link.route })"
-        link
-      >
-        <v-list-item-icon>
-          <v-icon>{{ link.icon }}</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>{{ link.text }}</v-list-item-title>
-        </v-list-item-content>
+      <v-list-item v-for="link in links" :key="link.text">
+        <v-list-item v-if="link.check==0" @click="checkChat()">
+          <v-list-item-icon>
+            <v-icon>{{ link.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ link.text }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-else @click="$router.push({ name: link.route })" link>
+          <v-list-item-icon>
+            <v-icon>{{ link.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ link.text }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
       </v-list-item>
         
     </v-list>
@@ -133,7 +138,7 @@ export default {
       member: 0,
       right: 0,
       links: [
-        { icon: "mdi-mail", text: "채팅", route: "checkChat" },
+        { icon: "mdi-mail", text: "채팅", check: 0 },
         { icon: "mdi-plus-box", text: "프로필 관리", route: "mypageprofile" },
         { icon: "mdi-note-text", text: "게시글", route: "moimBoard" },
         // { icon: "mdi-image", text: "사진첩", route: "moimPhoto" },
@@ -162,13 +167,20 @@ export default {
   methods: {
     //채팅방 유무 확인
     checkChat() {
+      let vm =this
+      console.log("moimId : " +this.moimId)
       this.axios.get("/checkMoimChatRoom", {
         params: {
           memberId: this.$store.state.id, 
           moimId: this.$route.params.Id
+          vMemberId: this.$store.state.id, 
+          vMoimId: vm.moimId
         }
       }).then(function (res) {
-        this.$router.push({ name: "chat", query: { getRoomId: res.data } });
+        vm.$router.push({
+            name: "chat",
+            query: { getRoomId: res.data.vroomNo },
+          });
       })
     },
 
