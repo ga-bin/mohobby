@@ -331,15 +331,78 @@ const routes = [
         component: () => import("./../views/lecture/mycourse/classAttdMain.vue"),
       },
       {
-        path: "/class/attd/login",
+        path: "attd/login",
         name: "attdLogin",
         component: () => import("./../views/lecture/mycourse/classAttdLogin"),
         props: true,
       },
       {
-        path: "/class/open",
+        path: "open",
         name: "classOpenUp",
-        component: () => import("./../views/lecture/open/ClassInputView")
+        component: () => import("./../views/lecture/open/ClassInputView"),
+      },
+      {
+        path: "note",
+        name: "MyNoteHome",
+        component: () => import("./../views/lecture/note/ClassNoteHome"),
+        meta: {
+          breadCrumb: [
+            {
+              text: 'Home'
+            }
+          ]
+        },
+        children: [
+          {
+            path: ":currId",
+            name: "MyNoteFolder",
+            component: () => import("./../views/lecture/note/ClassNoteFolder"),
+            meta: {
+              breadCrumb(VueRouter) {
+                const currId = VueRouter.params.currId;
+                return [
+                  {
+                    text: 'Home',
+                    to: { name: 'Home' }
+                  },
+                  {
+                    text: currId,
+                  }
+                ]
+              }
+            },
+            children: [
+              {
+                path: "action",
+                name: "MyNote",
+                component: () => import("./../views/lecture/note/ClassNote"),
+                meta: {
+                  breadCrumb(VueRouter) {
+                    const currId = VueRouter.params.currId;
+                    return [
+                      {
+                        text: 'Home',
+                        to: { name: 'Home' }
+                      },
+                      {
+                        text: currId,
+                        to: {
+                          name: 'MyNoteFolder',
+                          params: {
+                            currId: currId
+                          }
+                        }
+                      },
+                      {
+                        text: 'MyNote'
+                      }
+                    ]
+                  }
+                },
+              },
+            ],
+          },
+        ]
       },
     ],
   },

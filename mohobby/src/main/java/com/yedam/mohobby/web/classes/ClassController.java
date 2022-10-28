@@ -251,6 +251,14 @@ public class ClassController {
 	public @ResponseBody ClassAttendanceVO getAttendanceInfo(@RequestParam String memberId) {
 		return classService.getAttendanceInfo(memberId);
 	}
+	
+	//출결 정보 입력
+	@PostMapping("/class/attd")
+	public void insertAttendanceInfo(@RequestBody HashMap<String, String> req) {
+		System.out.println("컨트롤러");
+		System.out.println(req);
+		classService.insertAttendanceInfo(req);
+	}
 
 }
 

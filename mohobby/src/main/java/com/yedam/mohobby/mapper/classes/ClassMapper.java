@@ -104,4 +104,8 @@ public interface ClassMapper {
     public ClassAttendanceVO getTodayClassProgress(int classId);
     //수업없는 날 강의 정보
     public ClassAttendanceVO getNoneClassInfo(String memberId);
+    //출결 정보 입력
+    public void insertAttendanceInfo(HashMap<String, String> req);
+    //출결 정보 수정
+    public void updateAttendanceInfo(HashMap<String, String> req);
 }
