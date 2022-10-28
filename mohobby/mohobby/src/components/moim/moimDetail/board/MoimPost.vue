@@ -50,6 +50,7 @@ export default {
           boardId : this.$route.query.boardId,
           boardType : this.$route.query.boardType,
           memberId : this.$store.state.id,
+          title : this.$route.query.title,
           content : '',
             items: [],
             writer : 0,
@@ -65,7 +66,7 @@ export default {
     },
     methods : {
       updateBoard() {
-        this.$router.push({ name: "BoardUpdate" })
+        this.$router.push({ name: "BoardUpdate" , query: { boardId: this.boardId, boardType : this.boardType, title : this.title } })
       },
       getPost() {
         this.axios.get("/readMoimInfo", {
@@ -76,6 +77,7 @@ export default {
         .then((resp)=> {
           console.log(resp)
           this.content = resp.data;
+          console.log(content)
         })
         .catch((err) => {
           console.log(err)
