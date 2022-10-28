@@ -131,7 +131,7 @@
    
    
    <!-- 전체피드페이징 -->
-   <select id="allListPaging" parameterType="Integer" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+<!--    <select id="allListPaging" parameterType="Integer" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
 <![CDATA[ SELECT *
            FROM
                ( SELECT ROWNUM AS RNUM, s.*
@@ -139,7 +139,7 @@
                   WHERE ROWNUM < #{ num }+6
                )
           WHERE #{ num } < RNUM ]]>
-   </select>
+   </select> -->
    
    
    
@@ -723,6 +723,28 @@
       ORDER BY post_id DESC
    </select>
    
+<!-- 전체 피드조회 페이징 -->
+<select id="allListPaging" parameterType="Integer" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+ <![CDATA[SELECT *
+FROM
+    (
+        SELECT 
+            ROWNUM AS RNUM, T.*
+        FROM
+            (     SELECT *
+        FROM (   sns_post s
+              JOIN
+                  (  SELECT count(post_id) imgs, post_id
+                       FROM sns_media
+                      GROUP BY post_id 
+                  ) IMGS_CNT
+                 ON (s.post_id=IMGS_CNT.post_id)))T
+        WHERE
+          ROWNUM <= #{firstIdx}+20
+    )
+WHERE
+       #{firstIdx} <= RNUM]]>
+      
+</select>
    
-
 </mapper>

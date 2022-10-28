@@ -18,6 +18,8 @@ public int updateCheckTime(ChatUserVO chatUser);
 
 //sns 채팅방 생성및 조회
 public void getSnsChatRoomNo(CreateRoomVO createRoom);
+//moim 채팅방 생성및 조회
+public void getMoimChatRoomNo(CreateRoomVO createRoom);
 //체크인
 public int updateCheckIn(int roomId,String memberId);
 //체크아웃

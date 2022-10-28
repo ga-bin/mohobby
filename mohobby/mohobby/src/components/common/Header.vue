@@ -113,7 +113,6 @@
 
 export default {
   components: {},
-
   data() {
     return {
       noticeMsgCount: "", //메신저 알람수
@@ -133,17 +132,6 @@ export default {
       this.connect()
     }
   },
-  // mounted() {
-  //   let vm = this
-  //   console.log("mounted")
-  //   this.$store.watch(
-  //     this.$store.getters.getId, n => {
-  //       console.log("123")
-  //       this.connect()
-  //       vm.stompClient.unsubscribe(this.$store.state.isUser)
-  //     }
-  //   );
-  // },
   computed: {
     getId() {
       return this.$store.getters.getId
@@ -151,24 +139,19 @@ export default {
   },
   watch: {
     getId(val, oldVal) {
-     
       this.connect()
-      //vm.stompClient.unsubscribe(this.$store.state.isUser)
     }
   },
-
   afterEach() {
     this.$router.go(0);
   },
   methods: {
     connect() {
-   
       this.noticeRes()
       this.getAllNotice()
     },
     //알림정보 가져오기
     getAllNotice() {
-     
       this.items = []
       this.messages = []
       let vm = this;
@@ -180,7 +163,6 @@ export default {
           },
         })
         .then((res) => {
-        
           for (let i = 0; i < res.data.length; i++) {
             if (res.data[i].noticeType == 2) {
               let idx = vm.messages.findIndex(obj => obj.postId == res.data[i].postId)
@@ -239,25 +221,18 @@ export default {
         });
         })
         .catch((err) => {
-          console.log("에러나나요/?");
         });
     }},
     //알림 처리
     noticeRes() {
-      console.log("noticeRes TEst")
       let vm = this;
       if(vm.$store.state.id!=''){
       vm.stompClient.subscribe("/queue/" + this.$store.state.id + "/notice",
         function (res) {
-
-      
           if(res.body==vm.$store.state.id){
             vm.isUser = res.headers.subscription;}
             else{
-            console.log(typeof res.body)
-            console.log("res.body :" +res.body)
             let resNotice = JSON.parse(res.body);
-            console.log("resNotice : "+ resNotice)
             //sns 알림 처리
             if (resNotice.noticeType == 0) {
               //sns - 좋아요 알림 처리
@@ -307,7 +282,6 @@ export default {
             }
             //메신저 알림 처리
             else if (resNotice.noticeType == 2) {
-              console.log("메시지 오나요??")
               let idx = vm.messages.findIndex(obj => obj.postId == resNotice.postId)
               if (idx < 0) {
                 vm.messages.unshift({ divider: true, inset: true });
@@ -326,8 +300,10 @@ export default {
               }
               else {
                 vm.messages[idx].count = vm.messages[idx].count + 1
+                console.log("count : " +vm.messages[idx].count)
               }
               vm.noticeMsgCount=vm.noticeMsgCount+1
+              console.log("noticeMsgCount: "+ vm.noticeMsgcount)
             }
         }});
     }},
@@ -378,7 +354,7 @@ export default {
           this.messages.splice(i, 2);
         }
       }
-      console.log(item.postId)
+  
       this.axios
         .delete("/deleteMsgNotice", {
           params: {
@@ -393,10 +369,8 @@ export default {
         });
       this.noticeMsgCount = this.noticeMsgCount - item.count;
     },
-
     //메신저 알림 전체 삭제
     deleteAllMsgNotice(item) {
-      console.log("여기오나요???")
       this.axios
         .delete("/deleteAllMsgNotice", {
           params: {
@@ -412,11 +386,8 @@ export default {
       this.noticeMsgCount = 0
       this.messages = []
     },
-
     //알림 클릭 이벤트
     pageMove(item) {
-      console.log("pageMove Test : " + item)
-      console.log("item.noticeType : " + item.noticeType)
       if (item.noticeType != 2) {
         this.deleteNotice(item)
         if (item.noticeType == 0) {
@@ -426,13 +397,11 @@ export default {
           );
         }
       } else if (item.noticeType == 2) {
-        console.log("여기오나요?")
         this.deleteMsgNotice(item)
         this.$router.push({ name: "chat", query: { getRoomId: item.postId } });
       }
     },
     search() {
-      console.log(this.searchText);
       this.$router.push({ name: 'mainsearch', query: { searchText: this.searchText } });
       this.$router.go(0);
     },

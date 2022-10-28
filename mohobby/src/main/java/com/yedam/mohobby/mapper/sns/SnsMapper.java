@@ -73,6 +73,8 @@ public interface SnsMapper {
     //피드이미지조회
     public List<SnsMediaVO> getFeedImg(int postId);
     
+    //전체조회페이징
+    public List<SnsPostVO> allListPaging(@Param("firstIdx") int firstIdx);
     
     /*
      * 해시태그

@@ -28,18 +28,27 @@ import com.yedam.mohobby.service.notice.NoticeService;
 public class ChatController {
 	@Autowired
 	ChatService cService;
-	
+
 	AES256Util aes = new AES256Util();
-	
+
 	@Autowired
 	NoticeService nService;
 
+	// sns 채팅방 생성및 조회
 	@GetMapping("/getSnsChatRoomNo")
 	public CreateRoomVO getSnsChatRoomNo(CreateRoomVO createRoom) {
 		cService.getSnsChatRoomNo(createRoom);
 		return createRoom;
 	}
-	
+
+	// sns 채팅방 생성및 조회
+	@GetMapping("/checkMoimChatRoom")
+	public CreateRoomVO getSnsChatMoimRoomNo(CreateRoomVO createRoom) {
+		cService.getMoimChatRoomNo(createRoom);
+		System.out.println("return : " +createRoom);
+		return createRoom;
+	}
+
 	@GetMapping("/getChatList/{roomNo}")
 	public List<ChatVO> getChat(@PathVariable String roomNo) {
 		return cService.getChat(roomNo);
@@ -72,39 +81,32 @@ public class ChatController {
 	public List<NonReadChatVO> getNonReadChat(@RequestBody ChatUserVO chatUser) {
 		return cService.getNonReadChat(chatUser);
 	}
+
 	// 대화방 입장상태 최신화
 	@PostMapping("/updateCheckTime")
 	public int updateCheckTime(@RequestBody ChatUserVO chatUser) {
 		return cService.updateCheckTime(chatUser);
 	}
-	
+
 	// 체크인
 	@GetMapping("/updateCheckIn")
-	public int updateCheckIn(@RequestParam int roomId,@RequestParam String memberId) {
-		return cService.updateCheckIn(roomId,memberId);
+	public int updateCheckIn(@RequestParam int roomId, @RequestParam String memberId) {
+		return cService.updateCheckIn(roomId, memberId);
 	}
+
 	// 체크아웃
 	@GetMapping("/updateCheckOut")
-	public int updateCheckOut(@RequestParam int roomId,@RequestParam String memberId) {
-		System.out.println("============================");
-		System.out.println("roomId :" + roomId);
-		System.out.println("============================");
-		
-		System.out.println("memberId :" + memberId);
-		System.out.println("============================");
-		return cService.updateCheckOut(roomId,memberId);
+	public int updateCheckOut(@RequestParam int roomId, @RequestParam String memberId) {
+		return cService.updateCheckOut(roomId, memberId);
 	}
+
 	// 체크인아웃
 	@GetMapping("/updateCheckInOut")
-	public int updateCheckInOut(@RequestParam int preRoomId,@RequestParam int currentRoomId,@RequestParam String memberId) {
-		return cService.updateCheckInOut(preRoomId,currentRoomId,memberId);
-	}
-	// 소모임채팅방 생성
-	@GetMapping("/checkMoimChatRoom")
-	public int createChatMoimRoom(@RequestParam int preRoomId,@RequestParam int currentRoomId) {
-		return 1;
-
+	public int updateCheckInOut(@RequestParam int preRoomId, @RequestParam int currentRoomId,
+			@RequestParam String memberId) {
+		return cService.updateCheckInOut(preRoomId, currentRoomId, memberId);
 	}
 
 	
+
 }
