@@ -17,6 +17,7 @@ import com.yedam.mohobby.service.sns.SnsPostVO;
 
 @RestController
 @CrossOrigin(origins = "*")
+
 public class MainController {
 
 	@Autowired
