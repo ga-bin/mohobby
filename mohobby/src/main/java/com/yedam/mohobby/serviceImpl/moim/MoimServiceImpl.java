@@ -488,4 +488,13 @@ public class MoimServiceImpl implements MoimService {
    public List<MoimBoardVO> boardSearch(int moimId, int boardType, String title) {
       return mapper.searchBoard(moimId, boardType, title);
    }
+
+   //게시물 삭제	
+	   @Override
+	   public String deleteBoard(int boardId, int boardType) {
+		   return mapper.deleteBoard(boardId, boardType);
+	   }
+   
+   
+   
 }

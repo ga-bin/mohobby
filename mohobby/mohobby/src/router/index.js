@@ -378,13 +378,6 @@ const routes = [
         props: true,
       },
       {
-        //초대하기
-        path: "moiminvite",
-        name: "moiminvite",
-        component: () => import("@/views/moim/setting/MoimInviteView"),
-        props: true,
-      },
-      {
         path: "moimJoin",
         name: "moimJoin",
         component: () => import("@/views/moim/setting/MoimJoinView"),
@@ -401,6 +394,12 @@ const routes = [
         path: "moimboardwrite",
         name: "moimboardwrite",
         component: () => import("@/views/moim/board/MoimBoardWrite"),
+        props: true,
+      },
+      {
+        path: "BoardUpdate",
+        name: "BoardUpdate",
+        component: () => import("@/views/moim/board/BoardUpdateView"),
         props: true,
       },
       {

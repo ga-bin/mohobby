@@ -19,24 +19,19 @@
         ></v-img>
       </v-avatar>
       <div class="user text-overline">{{item.memberId}}<br>{{item.writeDate | moment('YYYY-MM-DD HH:mm')}}</div>
+      <!-- 수정, 삭제 버튼-->
+      <v-spacer></v-spacer>
+      <v-card-actions v-if="item.memberId == memberId" class="mr-15">
+        <v-btn small outlined color="success" @click="updateBoard()">수정</v-btn>
+        <v-btn small outlined color="error" @click="deleteBoard()">삭제</v-btn>
+      </v-card-actions>
     </div>
     </div>
     
-    <!-- 수정, 삭제 버튼-->
-    <v-card-actions v-if="writer === 1" class="mr-15">
-      <v-spacer></v-spacer>
-      <v-btn>수정</v-btn>
-      <v-btn>삭제</v-btn>
-    </v-card-actions>
-    <v-card-actions v-if="writer === 0" class="mr-15">
-      <v-spacer></v-spacer>
-      <v-btn disabled>수정</v-btn>
-      <v-btn disabled>삭제</v-btn>
-    </v-card-actions>
 
     <!-- 게시글 내용 -->
     <div class="contents">
-    <v-card-text class="text--primary">
+    <v-card-text class="text--primary ml-16">
       <div v-html="content"></div>
     </v-card-text>
     </div>
@@ -54,6 +49,7 @@ export default {
           moimId : this.$route.query.moimId,
           boardId : this.$route.query.boardId,
           boardType : this.$route.query.boardType,
+          memberId : this.$store.state.id,
           content : '',
             items: [],
             writer : 0,
@@ -68,6 +64,9 @@ export default {
       console.log(this.boardId);
     },
     methods : {
+      updateBoard() {
+        this.$router.push({ name: "BoardUpdate" })
+      },
       getPost() {
         this.axios.get("/readMoimInfo", {
           params : {
@@ -100,6 +99,38 @@ export default {
         console.log(err)
       })
       },
+      deleteBoard() {
+      this.$swal({
+        title: '정말 삭제할까요?',
+        text: "삭제를 원하지 않으면 취소버튼을 눌러주세요!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ac187',
+        cancelButtonColor: '#d33',
+        cancelButtonText: '취소',
+        confirmButtonText: '네, 삭제할게요!'
+      }).then((resp) => {
+        if (resp.isConfirmed) {
+          let vm = this;
+       this.axios.delete("/deleteBoard", {
+        params:{
+          boardId : this.boardId,
+          boardType : this.boardType
+        }
+      }).then((resp) => {
+        console.log("게시글 삭제 결과" + resp);
+        this.$swal(
+            '삭제 완료!',
+            '작성한 게시글을 삭제하였습니다.',
+            'success'
+          )
+         vm.$router.push({ name: "moimBoard" })
+      }).catch((err)=> {
+        console.log(err)
+      })
+        }
+      })
+    }
     },
 };
 </script>

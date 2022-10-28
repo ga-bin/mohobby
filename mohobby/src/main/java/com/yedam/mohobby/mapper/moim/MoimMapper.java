@@ -150,4 +150,7 @@ public interface MoimMapper {
 	
 	//게시판 검색
 	public List<MoimBoardVO> searchBoard(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title);
+	
+	//게시물 삭제
+	public String deleteBoard(@Param("boardId")int boardId,@Param("boardType")int boardType);
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,7 +30,6 @@ import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
-import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.user.MemberVO;
 
 /**
@@ -527,6 +525,18 @@ public class MoimController {
     public List<MoimBoardVO> boardSearch(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title) {
     return service.boardSearch(moimId, boardType, title);
     }
+    
+    //게시글 삭제
+    @DeleteMapping("/deleteBoard")
+    public String deleteBoard(@Param("boardId")int boardId,@Param("boardType")int boardType) {
+    	try {
+    		service.deleteBoard(boardId, boardType);
+    		return "success";
+    	} catch (Exception e) {
+    		return "error";
+    	}
+    }
+    
 }
 
 
