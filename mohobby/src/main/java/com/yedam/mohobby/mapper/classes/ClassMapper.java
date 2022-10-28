@@ -22,6 +22,12 @@ public interface ClassMapper {
 	//강의개설
 	public void insertClass(ClassesVO classes);
 	
+	//챕터생성
+	public void insertChaper(ClassChapterVO chap);
+	
+	//커리큘럼생성
+	public void insertCurriculum(ClassCurriculumVO curr);
+	
 	//전체조회
 	public List<ClassesVO> listAll(ClassListRequestVO req);
 	

@@ -500,5 +500,17 @@
   INSERT INTO moim_board 
   VALUES (#{boardId}, #{memberId}, #{title}, #{boardId}, #{boardType}, current_date,#{moimId})
   </insert>
-
+  
+  <!-- 소모임 삭제 -->
+  <delete id="delMoim" parameterType="Integer">
+  	{call delete_moim(#{moimId, mode=IN, jdbcType=INTEGER})}
+  </delete>
+  
+  <!-- 게시글 검색 -->
+  <select id="searchBoard" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+   select * from moim_board 
+   where moim_id = #{moimId}
+   and board_type = #{boardType}
+   and title like '%'||#{title}||'%'
+  </select>
 </mapper>

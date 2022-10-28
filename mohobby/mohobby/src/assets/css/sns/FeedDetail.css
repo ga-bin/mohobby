@@ -1,6 +1,10 @@
 #container {
   margin: 0 auto;
-  width: 30%;
+  width: 80%;
+}
+
+#wrap {
+  width: 800px;
 }
 
 #mdi-dots-vertical {

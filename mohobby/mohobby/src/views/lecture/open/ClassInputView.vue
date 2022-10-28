@@ -4,8 +4,8 @@
       <h1 class="mb-10">강의 개설 신청</h1>
 
     </div>
+    <form id="classInput" name="classInput" v-on:submit.prevent>
     <div class="fill-height">
-        <form id="classInput" name="classInput" v-on:submit.prevent>
         <div id="step1" class="contents-box mb-5">
           <div class="contents">
             <br />
@@ -185,6 +185,7 @@
               v-model="thumbnailImage"
               id="mainImage"
               accept="image/*"
+              name="mainImage"
             />
             <span class="label">추가이미지등록(선택)</span>
             <!-- 파일등록부 -->
@@ -200,10 +201,12 @@
               multiple
               id="subImageList"
               accept="image/*"
+              v-model="subImageList"
+              name="subImageList"
             />
           </div>
         </div>
-      </form>
+      
         <div id="step5" v-show="step5" class="contents-box mb-5">
         <!-- <div id="step5" class="contents-box mb-5"> -->
           <div class="contents">
@@ -214,10 +217,10 @@
             <div v-if="classType==1">
               <span class="label">수업일수를 등록하세요</span>
               <span class="mr-5">주</span>
-              <input class="input" type="number" v-model="times" min="1" max="7" id="times" style="width: 70px"/>
+              <input class="input" type="number" v-model="times" min="1" max="7" id="times" style="width: 70px" name="weekTimes" />
               <span class="ml-1">회</span>
               <span class="mx-5">X</span>
-              <input class="input" type="number" v-model="weeks" min="3" id="weeks" style="width: 70px"/>
+              <input class="input" type="number" v-model="weeks" min="3" id="weeks" style="width: 70px" name="weeks" />
               <span class="ml-1">주</span>
             </div>
             <span class="label">챕터를 등록하세요</span>
@@ -232,7 +235,7 @@
                 placeholder="챕터 제목을 입력하세요"
                 style="width: 1100px"
                 type="text"
-                v-model="item.name"
+                v-model="item.chapName"
                 @change="checkStep5"
               />
               <button 
@@ -274,12 +277,12 @@
               >
                 <option value="" selected>--- 챕터를 선택하세요 ---</option>
                 <option 
+                  v-if="chap.chapName != ''"
                   v-for="(chap, i) in chapList" 
                   :key="i" 
-                  :value="chap.name" 
-                  v-if="chap.name != ''"
+                  :value="chap.chapName" 
                 >
-                  {{ chap.name }}
+                  {{ chap.chapName }}
                 </option>
               </select>
               <input
@@ -287,7 +290,7 @@
                 type="text"
                 placeholder="강의 제목을 입력하세요"
                 style="width: 620px"
-                v-model="curr.title"
+                v-model="curr.partName"
                 @change="checkStep5"
               />
               <button
@@ -319,9 +322,9 @@
             <span style="margin-left: 30px; display: inline-block" class="label"
               >영상 등록</span
             >
-            <span style="margin-left: 490px; display: inline-block" class="label"
+            <!-- <span style="margin-left: 490px; display: inline-block" class="label"
               >교안 등록</span
-            >
+            > -->
             <div class="d-flex justify-center" v-for="(curr, i) in currList" :key="i">
               <span
                 style="padding: 10px 15px 10px 15px; display: inline-block; border: 1px solid black; margin-right: 20px;"
@@ -330,19 +333,20 @@
               </span>
               <v-file-input
                 type="file"
-                class="input"
+                class="input currVideo"
                 style="width: 530px;"
                 accept="video/*"
                 v-model="curr.video"
-                @change="checkStep6"
+                name="videoList"
+                @change="checkStep6(i)"
               />
-              <v-file-input
+              <!-- <v-file-input
                 type="file"
                 class="input"
                 v-model="curr.file"
                 style="width: 540px; margin-left: 20px"
                 accept="image/jpeg,.txt,.mp4"
-              />
+              /> -->
             </div>
           </div>
         </div>
@@ -363,6 +367,7 @@
               class="input"
               placeholder="준비물을 입력하세요"
               style="width: 1150px; margin-right: 10px"
+              name="needs"
             />
           </div>
         </div>
@@ -370,6 +375,7 @@
           신청
         </v-btn>
       </div>
+    </form>
   </v-container>
 </template>
 <script>
@@ -406,7 +412,7 @@ export default {
       postcode: '',
       currList: [
         {
-          title: '',
+          partName: '',
           chap: '',
           video: '',
           file: '',
@@ -416,7 +422,7 @@ export default {
       ],
       chapList: [
         {
-          name: '',
+          chapName: '',
         },
       ],
       bankCode : '',
@@ -490,13 +496,11 @@ export default {
     getAllRegion() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/regionAll",
+        url: "/regionAll",
         method: "get",
       })
         .then(function (response) {
-          console.log(response);
           if (response.data != "") {
-            console.log(response.data);
             vm.regionList = response.data;
           }
         })
@@ -508,13 +512,11 @@ export default {
     getAllCatg() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/allCatg",
+        url: "/allCatg",
         method: "get",
       })
         .then(function (response) {
-          console.log(response.data);
           if (response.data != "") {
-            console.log(vm.catg);
             vm.catg = response.data;
           }
         })
@@ -526,7 +528,6 @@ export default {
       IMP.certification({
         //merchant_uid: "ORD20180131-0010013" // 주문 번호
       }, rsp => {
-        console.log(rsp.imp_uid);
         const imp_uid = rsp.imp_uid;
         if (rsp.success) {
           // 인증 정보 받기
@@ -577,29 +578,29 @@ export default {
     },
     addChapList() {
       this.chapList.push({
-        name: '',
+        chapName: '',
       });
     },
     delChapList(i) {
       if(this.chapList.length == 1) {
-        this.chapList[0].name = '';
+        this.chapList[0].chapName = '';
       } else {
         this.chapList.splice(i, 1);
       }
     },
     addCurrList(i) {
       this.currList.push({
-        title: '',
+        partName: '',
         chap: '',
         video: '',
         file: '',
-        minDate: this.$moment(this.currList[i-1].classDate).add(1, "d"),
+        minDate: this.$moment(this.currList[i].minDate).add(1, "d").format('YYYY-MM-DD'),
         classDate: '',
       })
     },
     delCurrList(i) {
       if(this.currList.length == 1) {
-        this.currList[0].title = '';
+        this.currList[0].partName = '';
         this.currList[0].chap = '';
         this.currList[0].video = '';
         this.currList[0].file = '';
@@ -665,7 +666,7 @@ export default {
 
       for(let i=0; i<total; i++) {
         this.currList.push({
-          title: '',
+          partName: '',
           chap: '',
           video: '',
           file: '',
@@ -677,9 +678,7 @@ export default {
       this.currDateChange(total-1);
     },
     getContent(editorContent) {
-      console.log("emit_success", editorContent);
       this.content = editorContent;
-      console.log("겟 콘탠트 내용", this.content);
     },
     checkStep1() {
       if(this.classType == 0 && this.className != '' && this.jobName != '' && this.keywordId != '' && this.classPrice != 0) {
@@ -696,37 +695,39 @@ export default {
       let sum = 0;
 
       for(let chap of this.chapList) {
-        if(chap.name == '') {
+        if(chap.chapName == '') {
           sum += 1;
         }
       }
 
       if(sum != 0) {
         this.step6 = false;
-        console.log('sum', sum);
         return;
       }
 
       for(let curr of this.currList) {
-        if(curr.chap == '' || curr.title == '') {
+        if(curr.chap == '' || curr.partName == '') {
           sum += 1;
         }
       }
 
       if(sum != 0) {
         this.step6 = false;
-        console.log('sum', sum);
         return;
       }
 
       this.step6 = true;
-      console.log('sum', sum);
     },
-    checkStep6() {
+    checkStep6(i) {
+      this.uploadVideo(i);
+
       let sum = 0;
 
       for(let curr of this.currList) {
-        if(curr.video == '' || curr.video == null) {
+        if(this.classType == 0 && (  curr.video == '' || curr.video == null)) {
+          sum += 1;
+        }
+        if(this.classType == 1 && (  curr.video == '' || curr.video == null || curr.classDate == '' || curr.classDate == null)) {
           sum += 1;
         }
       }
@@ -736,6 +737,31 @@ export default {
       } else {
         this.step7 = true;
       }
+    },
+    uploadVideo(i) {
+      let vm = this;
+      let file = this.currList[i].video;
+
+      let video = document.createElement('video');
+      video.preload = 'metadata';
+
+      video.onloadedmetadata = function() {
+
+        window.URL.revokeObjectURL(video.src);
+        file.duration = video.duration;
+        
+        if (video.duration < 1) {
+          return;
+        }
+
+        vm.getDuration(i, video.duration);
+
+      }
+      
+      video.src = URL.createObjectURL(file);
+    },
+    getDuration(i, duration) {
+      this.currList[i].duration = Math.floor(duration);
     },
     submitBtn() {
       if(!this.step2 || !this.step3 || !this.step4 || !this.step5 || !this.step6 || !this.step7) {
@@ -748,31 +774,48 @@ export default {
       let subImageInput = document.getElementById('subImageList');
       let subImages = subImageInput.files;
       formData.append("imgAmount", subImages.length+1);
+      if(this.classType == 1) {
+        let endDate = this.$moment(this.currList[this.currList.length-1].classDate).format('YYYY/MM/DD');
+        formData.append("endDate", endDate);
+      }
 
-      //chap
+      //html
+      formData.append("content", this.content);
 
-      //curr
+      //chapter
+      formData.append("chapListJson", JSON.stringify(this.chapList));
 
-      //main-image
+      //curriculum
+      let currList = [];
+      this.currList.forEach((curr, i) => {
+        currList.push({
+          partNo: (i+1),
+          partName: curr.partName,
+          chapName: curr.chap,
+          videoLength: curr.duration,
+        })
+        if(this.classType == 1) {
+          currList[i].classDate = curr.classDate;
+        }
+      });
+      formData.append("currListJson", JSON.stringify(currList));
+      
 
-      //sub-images
-
-      //videos
-
-      //files
+      this.axios.post('class/open', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+      }).then(res => {
+        if(res.status == 200) {
+          //to-do 신청 성공 페이지
+        }
+      })
 
     },
     currDateChange(idx) {
 
       for(let i = (idx+1); i<this.currList.length; i++) {
-
-        console.log('i.minDate', this.currList[i].minDate);
-        console.log('idx.classDate', this.currList[idx].classDate);
-        console.log('idx.classDate+1',this.$moment(this.currList[idx].classDate).add(1,"d").format('YYYY-MM-DD') );
-
         this.currList[i].minDate = this.$moment(this.currList[idx].classDate).add(1,"d").format('YYYY-MM-DD');
-
-        console.log('i.minDate', this.currList[i].minDate);
       }
     },
   },

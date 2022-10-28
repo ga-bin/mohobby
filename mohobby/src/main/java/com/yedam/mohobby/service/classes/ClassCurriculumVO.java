@@ -14,4 +14,6 @@ public class ClassCurriculumVO {
     private String fileExtension; //파일 확장자
     private int viewProgress;	//커리큘럼 진행율
     private int classId;	//강의id
+    private String chapName;
+    private String classDate;
 }

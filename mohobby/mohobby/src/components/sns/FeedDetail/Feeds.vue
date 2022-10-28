@@ -3,6 +3,7 @@
         <!-- 피드 갤러리 -->
         <div class="gallery">
             <div @click.stop="goFeedDetail(feed.memberId, feed.postId)" class="gallery-item" tabindex="0" v-for="(feed,i) in feeds" :key="i">
+                <v-icon v-show="feed.imgs > 1" class="image_icon">mdi-checkbox-multiple-blank</v-icon>
                 <v-img :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)" class="gallery-image" alt="thumbnail_img" />
                 <div class="gallery-item-info">
                     <ul>
@@ -11,6 +12,10 @@
                     </ul>
                 </div>
             </div>
+        </div>
+        <div class="no_post" v-show="feeds.length < 1">
+            <v-img id="no_post_img" :src="require(`@/assets/image/sns/default/no_post.png`)" />
+            <h2>아직 업로드된 게시글이 없습니다!</h2>
         </div>
         <!-- 피드 갤러리 끝 -->
         <!-- <div class="loader"></div> -->

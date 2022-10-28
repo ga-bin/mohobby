@@ -18,17 +18,11 @@
         ></v-select>
       </v-col>
       <template>
-        <!-- <v-data-table
-          :headers="headers"
-          :items="QnAList"
-          :items-per-page="5"
-          class="elevation-1"
-          @click:row="answerQnA()"
-        > -->
         <v-data-table
-        :headers="headers"
+        :headers="QnAHeaders"
         :items="QnAList"
         sort-by="calories"
+        :items-per-page="5"
         class="elevation-1"
       >
         <template v-slot:item.actions="{ item }">
@@ -39,11 +33,15 @@
         </template>
 
         <template v-slot:no-data>
-          <v-btn color="primary"> Reset </v-btn>
+          <p>해당하는 내용이 없습니다.</p>
+        </template>
+        <template v-slot:item.showDetail="{ item }">
+          <v-icon v-if="item.classType == 0" @click="$router.push('/class/on/' + item.classId + '/qna')"> mdi-arrow-right-bold-box </v-icon>
+          <v-icon v-if="item.classType == 1" @click="$router.push('/class/off/' + item.classId + '/qna')"> mdi-arrow-right-bold-box </v-icon>
         </template>
 
         <template v-slot:no-data>
-          <v-btn color="primary"> Reset </v-btn>
+          <p>해당하는 내용이 없습니다.</p>
         </template>
       </v-data-table>
         <!-- <template v-slot:item="{ item }">
@@ -62,13 +60,26 @@
           :items-per-page="5"
           class="elevation-1"
         >
-          <template v-slot:item.action>
-            <v-btn color="#2ac187">상세보기</v-btn>
-          </template>
-          <template v-slot:item.actions="{ item }">
+        >
+        <template v-slot:item.actions="{ item }">
           <v-icon small class="mr-2" @click="updateConfirm(item)">
             mdi-pencil
           </v-icon>
+        </template>
+
+        <template v-slot:item.manage="{ item }">
+          <v-icon v-if='item.auditStatus === "승인"' 
+          @click="$router.push({name: 'classPrepare', params: {classId : item.classId }})">
+          mdi-arrow-right-bold-box
+          </v-icon>
+        </template>
+
+        <template v-slot:no-data>
+          <p>해당하는 내용이 없습니다.</p>
+        </template>
+
+        <template v-slot:item.showDetail="{ item }">
+          <v-icon @click="goToClassInput(item)"> mdi-arrow-right-bold-box </v-icon>
         </template>
         </v-data-table>
       </v-col>
@@ -83,7 +94,7 @@ export default {
   components: { AdminSidebar },
   data() {
     return {
-              headers: [
+              QnAHeaders: [
           {
             text: '강의번호',
             align: 'classId',
@@ -109,9 +120,11 @@ export default {
         { text: "카테고리", value: "categoryName" },
         { text: "신청자", value: "memberId" },
         { text: "강의명", value: "className" },
-        { text: "상세보기", value: "action" },
         { text: "관리자승인여부", value: "auditStatus" },
+        { text: "반려이유", value: "auditReturn" },
         { text: "수정하기", value: "actions", sortable: false },
+        { text: "상세보기", value: "showDetail", sortable: false },
+        { text: "관리하기", value: "manage", sortable: false },
       ],
       classList: [],
       beforeComfirmList: [],
@@ -121,6 +134,7 @@ export default {
       QnAList : [],
       selectedClassId : "",
       selectedQnABoard : {},
+      selectedClass : "",
     };
   },
   beforeCreate() {},
@@ -135,7 +149,7 @@ export default {
   beforeUnmount() {},
   unmounted() {},
   methods: {
-    // 클래스 전체 가지고오기
+    // 승인 신청한 클래스 전체 가지고오기
     getAllClass() {
       const vm = this;
       this.axios({
@@ -262,11 +276,90 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    })
+      })
     },
-    updateConfirm() {
-      
+
+    // 강의 승인 여부 업데이트
+    updateConfirm(item) {
+      this.selectedClass = Object.assign({}, item);
+      const vm = this;
+      (async () => {
+      const { value: confirm } = await this.$swal.fire({
+        title: 'Select field validation',
+        input: 'select',
+        inputOptions: {
+          0 : '심사대기',
+          1: '심사중',
+          2: '승인',
+          3: '미승인'
+        },
+        inputPlaceholder: '관리자 승인 여부를 선택하세요',
+        showCancelButton: true,
+        confirmButtonText: '제출하기',
+        cancelButtonText: '취소하기',
+        inputValidator: (value) => {
+          return new Promise((resolve) => {
+            if (value == 3) {
+              this.$swal.fire({
+                title: '미승인 이유를 입력하세요',
+                html: `<input type="text" id="auditReturn" class="swal2-input" placeholder="미승인 이유를 입력하세요">`,
+                confirmButtonText: '제출하기',
+                cancelButtonText: '취소하기',
+                focusConfirm: false,
+                preConfirm: () => {
+                  const auditReturn = this.$swal.getPopup().querySelector('#auditReturn').value
+                  if (!auditReturn) {
+                    this.$swal.showValidationMessage(`미승인 이유가 입력되지 않았습니다.`)
+                  }
+                  return { auditReturn: auditReturn }
+                }
+              }).then((result) => {
+                this.axios({
+                  url: "/adminAuditClass",
+                  method: "put",
+                  data: {
+                    auditStatus : value,
+                    auditReturn : result.value.auditReturn,
+                    classId : this.selectedClass.classId,
+                  }
+                })
+                  .then(function (response) {
+                    vm.$swal.fire('승인 여부 수정이 완료되었습니다.');
+                    vm.getAllClass();
+                  })
+                  .catch(function (error) {
+                    console.log(error);
+                  });
+              })
+            } else {
+              this.axios({
+                  url: "/adminAuditClass",
+                  method: "put",
+                  data: {
+                    auditStatus : value,
+                    classId : this.selectedClass.classId,
+                  }
+                })
+                  .then(function (response) {
+                    vm.$swal.fire('승인 여부 수정이 완료되었습니다.');
+                    vm.getAllClass();
+                  })
+                  .catch(function (error) {
+                    console.log(error);
+                  });
+            }
+          })
+        }
+      })
+      if (fruit) {
+        this.$swal.fire('You selected: ' + fruit)
+      }
+      })()
+    },
+    // 해당 클래스의 classInput으로 이동
+    goToClassInput(item) {
+
     }
-      },
-    };
+  },
+};
 </script>

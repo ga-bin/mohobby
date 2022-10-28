@@ -1,46 +1,46 @@
 <template>
-  <div class="mx-auto" style="width:800px; height:500px;">
+  <div class="mx-auto" style="width:1050px; height:500px;">
     <v-card outlined>
-      <form id="feedInsert" name="feedInsert">
+      <form id="feedInsert" name="feedInsert" v-on:submit.prevent>
         <v-container fluid>
           <input type="hidden" v-model="memberId" name="memberId" />
           <input type="hidden" v-model="hashtag" name="hashtag" />
-          <!-- 파일등록부 -->
-          <v-file-input
-            class="mx-auto"
-            label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)"
-            type="file"
-            filled
-            prepend-icon="mdi-camera"
-            counter
-            show-size
-            dense
-            multiple
-            @change="onImageChange"
-            name="fileList"
-            accept="image/png, image/jpeg, image/jpg"
-          />
-
-          <!-- 
-            
-              동적 FILE_INPUT_BOX TEST
-          
-          -->
-
-          <!--INPUT FILE박스 추가 버튼  -->
-          <!-- <div id="box"> 
-              <input type="file"><input type="button" value="추가" onclick="add_filebox()">
-          </div> -->
+        <div v-for="(file,i) in fileList" :key="i" style="width:200px; height:200px; display: inline-block;">
+          <!-- <input
+                class="input"
+                type="file"
+                style="width: 200px"
+                @change="onImageChange"
+                name="fileList"
+              /> -->
+              
+              <v-file-input
+                class="mx-auto"
+                label="이미지 등록 부탁드립니다🙏"
+                type="file"
+                style="width:200px; display: inline-block;"
+                v-model="file.file"
+                prepend-icon="mdi-camera"
+                counter
+                show-size
+                dense
+                @change="onImageChange"
+                name="fileList"
+                accept="image/png, image/jpeg, image/jpg"
+              />          
+              
+              <img src="" height="200" alt="Image preview...">
 
 
 
           <!-- 파일이름, 개수 -->
-          <div v-for="(list, i) in fileList" :key="i">
+          <!-- <div v-for="(list, i) in fileList.file" :key="i">
             {{ list.name }}
-          </div>
+          </div> -->
 
           <!-- 이미지 미리보기 -->
-          <div style="display: inline-flex; margin-left: 10px">
+          
+          <!-- <div style="display: inline-flex; margin-left: 10px">
             <v-img
               v-for="(item, i) in uploadimageurl"
               :key="i"
@@ -52,7 +52,29 @@
               error
               style="margin-right: 10px"
             />
+          </div> -->
+
+              <v-btn 
+                style="display: inline-block;"
+                color="green"
+                class="plus_btn"
+                rounded
+                @click="addFileList(i)"
+              >
+                +
+              </v-btn>
+              <v-btn
+                color="red"
+                class="del_btn"
+                rounded
+                @click="delFileList(i)"
+              >
+                -
+              </v-btn>
           </div>
+          
+
+
 
           <!-- 내용 -->
           <v-textarea
@@ -169,7 +191,9 @@ data() {
   //이미지Data
   uploadimageurl: [], //미리보기 이미지url
   imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
-  fileList : [],
+  fileList: [ {
+    file: "",
+  }],
   file : {},
   postId : "1",
   formData : {},
@@ -214,20 +238,60 @@ methods: {
         
 
 */
-    //파일박스추가
-    add_filebox(){
 
-        const box = document.getElementById("box"); //아이디가 box인 태그를 box 상수로 지정해준다.
-        const newP = document.createElement('p'); //newP라는 상수를 만드는데 그것은 p태그를 만드는것(삭제 버튼을 눌렀을때 div라는 부모노드 안에 p태그 자식노드를 지워주기 위함)
+// onImageChange(i) {
+//   const preview = document.querySelector('img');
+//   const file = document.querySelector('input[type=file]').files[i];
+//   const reader = new FileReader();
+
+//   reader.addEventListener("load", function () {
+//     // convert image file to base64 string
+//     preview.src = reader.result;
+//     console.log(reader.result);
+//   }, false);
+
+//   if (file) {
+//     reader.readAsDataURL(file);
+//   }
+// },
 
 
-        newP.innerHTML = "<input type='file'> <input type='button' value='삭제' onclick='remove(this)'>";
-        box.appendChild(newP); //box에 삭제버튼이 포함된 newP태그 추가
 
+
+onImageChange(file) {
+  if (!file) return;
+  console.log(file);
+      const fileReader = new FileReader();
+      console.log("item.name: " + file.name);
+      fileReader.onload = (e) => {
+        this.uploadimageurl.push({url: e.target.result});
+      };
+      fileReader.readAsDataURL(file);
+},
+
+
+
+addFileList(i) {
+  if(this.fileList.length > 4){
+    return;
+  }
+      this.fileList.push({
+        file: '',
+      })
     },
-    remove(){
-      document.getElementById("box").removeChild(obj.parentNode);
-    },
+
+delFileList(i) {
+  if(this.fileList.length == 1) {
+    this.fileList[0].file = '';
+  } else {
+    this.fileList.splice(i, 1);
+  }
+},
+
+
+
+
+/////////////////////////////////////////////////////////////////////
 
 
     //해시태그수정
@@ -239,21 +303,6 @@ methods: {
         this.editing = null
         this.editingIndex = -1
       }
-    },
-
-
-    //이미지 미리보기***********미리보기에서 사진 삭제돼야함
-    onImageChange(file) {
-      if (!file) return;
-
-      file.forEach((getFile) => {
-        const fileReader = new FileReader();
-        console.log("item.name: " + getFile.name);
-        fileReader.onload = (e) => {
-          this.uploadimageurl.push({url: e.target.result});
-        };
-        fileReader.readAsDataURL(getFile);
-      });
     },
 
 
@@ -316,5 +365,13 @@ methods: {
   margin: 0 auto 30px;
   background-size: cover;
   background-position: center center;
+}
+.plus_btn{
+  color:white;
+  font-weight: bold;
+}
+.del_btn{
+  color:white;
+  font-weight: bold;
 }
 </style>

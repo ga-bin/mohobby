@@ -123,12 +123,25 @@
               </button>
             </ul>
             <ul v-else>
-              <button
+              <!-- <button
                 v-if="followStatus === 0"
 
                 @click="follow(sessionId, infoes.memberId)"
                 class="btn profile-edit-btn2">
                 Follow
+              </button> -->
+              <button
+                v-if="followStatus === 0"
+                @click="follow(sessionId, infoes.memberId)"
+                class="btn profile-edit-btn2">
+                follow
+              </button>
+              <button
+                v-else
+                style="background-color: #2ac187; color: white"
+                @click="unfollow(sessionId, infoes.memberId)"
+                class="btn profile-edit-btn2">
+                Unfollow
               </button>
               <button
                 v-else
@@ -152,6 +165,7 @@
       <div>
         <Feeds :userId="userId"/>
       </div>
+
       <!-- 피드 끝 -->
     </div>
   </template>
@@ -204,6 +218,7 @@
       },
 
       methods: {
+        
         //프로필 업로드
         loadUserProfile(userId) {
             this.axios('/sns/user/profile/' + userId)
@@ -265,7 +280,6 @@
             alert(err);
           });
       },
-
 
       //팔로우
       follow(memberId, userId) {
@@ -367,12 +381,6 @@
               });
             }
           },
-
-          
-        // //채팅방 이동
-        // send() {
-        // this.$router.push({ name: "chat", params: { roomId: this.roomId } });
-        // },
           
           
           /*
@@ -398,6 +406,9 @@
                 console.log(error);
             });
           },
+
+
+
           // 신고
           userFlagging() {
           const vm = this;

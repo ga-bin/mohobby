@@ -86,12 +86,24 @@ public class ChatController {
 	// 체크아웃
 	@GetMapping("/updateCheckOut")
 	public int updateCheckOut(@RequestParam int roomId,@RequestParam String memberId) {
+		System.out.println("============================");
+		System.out.println("roomId :" + roomId);
+		System.out.println("============================");
+		
+		System.out.println("memberId :" + memberId);
+		System.out.println("============================");
 		return cService.updateCheckOut(roomId,memberId);
 	}
 	// 체크인아웃
 	@GetMapping("/updateCheckInOut")
 	public int updateCheckInOut(@RequestParam int preRoomId,@RequestParam int currentRoomId,@RequestParam String memberId) {
 		return cService.updateCheckInOut(preRoomId,currentRoomId,memberId);
+	}
+	// 소모임채팅방 생성
+	@GetMapping("/checkMoimChatRoom")
+	public int createChatMoimRoom(@RequestParam int preRoomId,@RequestParam int currentRoomId) {
+		return 1;
+
 	}
 
 	

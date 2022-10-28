@@ -1,11 +1,11 @@
 <template>
   
-  <div class="cards-container" >
+  <!-- <div class="cards-container" > -->
     <v-container fluid>
-    <v-sheet max-width="1180">
+    <v-sheet max-width="1400">
     <!-- FIRST CARD -->
     <v-slide-group class="pa-2">
-        <v-slide-item  v-for="(info,i) in listInfo" :key="i" style="width:280px;">
+        <v-slide-item  v-for="(info,i) in infoList" :key="i" style="width:280px;">
           <div class="card card-first">
             <div class="card-header-wrapper" @click="goMyFeed(info.memberId)">
                 <h2 class="card-title"></h2>
@@ -15,8 +15,8 @@
                 </div>
             </div>
             <div class="card-photo-wrapper" style="cursor:pointer;" @click="getFeedDetail(info.memberId, info.postId)">
-                <v-icon v-show="imgsLength > 1" class="image_icon">mdi-checkbox-multiple-blank</v-icon>
-                <img class="card-photo" :src="require(`@/assets/image/sns/${info.postId}/${info.thumbnail}`)" alt="썸네일">
+              <v-icon v-show="info.imgs > 1" class="image_icon">mdi-checkbox-multiple-blank</v-icon>
+              <img class="card-photo" :src="require(`@/assets/image/sns/${info.postId}/${info.thumbnail}`)" alt="썸네일">
             </div>
             <p class="card-text">{{ info.content }}</p>
             <div class="card-like" height="32" width="32">
@@ -32,7 +32,7 @@
     </v-slide-group>
   </v-sheet>
   </v-container>
-  </div>
+  <!-- </div> -->
 </template>
 <script>
 export default {
@@ -42,8 +42,7 @@ export default {
   },
   data() {
     return {
-      listInfo: [],
-      imgsLength: Number,
+      infoList: [],
       memberId: this.$store.state.id, //세션아이디
     };
   },
@@ -65,30 +64,19 @@ export default {
     getFeedDetail(memberId, postId) {
         this.$router.push({ path: '/snsFeedDetail', query: {writer : memberId, postId : postId} });
       },
+
+    //hot강의 피드
     getHotLecturerList() {
         //hotLectureList조회
         this.axios('/sns/main/top20LecturerFeeds')
         .then(res => {
-            this.listInfo = res.data;
-            this.detailImg(postId);
-            console.log("getHotLecturerList받아오기 성공")
+            this.infoList = res.data;
+           
           }).catch(err =>{
             console.log(err);
           });
       },
 
-    //게시글 이미지 로드
-    detailImg(postId) {
-      this.axios("/sns/user/feed_detail_img/" + postId)
-        .then((res) => {
-          this.imgsLength = this.imgs.length;
-          this.console.log(this.imgsLength);
-          console.log("이미지 로딩 성공!");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
 
     //유저피드로 이동
     goMyFeed(userId) {
