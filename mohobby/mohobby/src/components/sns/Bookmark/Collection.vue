@@ -103,11 +103,12 @@
                   <v-img  v-if ='collection.postId == ""'
                           class="white--text align-end rounded-sm dark" 
                           aspect-ratio="1.2" 
+                          @click="goBookmark(collection.catgId, collection.catgName)"
                         :src="require('@/assets/image/sns/default/bookmark_default.png')" />
 
                   <!-- 저장 포스트의 첫번째 썸네일 커버사진으로  -->
-                  <v-img  class="white--text align-end rounded-sm dark" 
-                          aspect-ratio="1.2" v-else
+                  <v-img v-else class="white--text align-end rounded-sm dark" 
+                          aspect-ratio="1.2"
                           @click="goBookmark(collection.catgId, collection.catgName)"
                           :src="require(`@/assets/image/sns/${collection.postId}/${collection.thumbnail}`)" />
 

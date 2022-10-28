@@ -4,7 +4,14 @@
     margin-left: 30px;
     width: 90%;
   }
-  
+  .cmt{
+    border:none;
+    outline:none;
+  }
+  .reCmt{
+    
+    display: none;
+  }
   .profile::after {
     content: "";
     position: absolute;

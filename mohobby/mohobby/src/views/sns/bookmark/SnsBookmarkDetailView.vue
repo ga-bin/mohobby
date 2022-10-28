@@ -10,7 +10,6 @@
                         <v-img aspect-ratio="1.2" @click.stop="goFeedDetail(bookmark.postId, bookmark.memberId)" class="gallery-image" :src="require(`@/assets/image/sns/${bookmark.postId}/${bookmark.thumbnail}`)" />
                     </div>
                 </div>
-
                 <!-- 북마크가 없을 때 -->
                 <div class="wrap_box" v-else>
                 <v-img class="mx-auto mt-10 mb-10" width="100" src="@/assets/image/sns/default/warn.jpg" alt="no_result"></v-img>
@@ -49,10 +48,10 @@
 
       if(this.catgName !== "default"){
         this.getBookmarkList(this.catgId);
-      }else{
+      }else if(this.catgName == "default"){
+        
         this.getAllBookmarks();
       }
-
       console.log("북마크 디테일뷰 입장" + this.catgId + ", " + this.catgName);
   },
 
@@ -62,7 +61,7 @@
             this.axios('/sns/collection/allBookmarks',{
 
                     params: {
-                        memberId : this.bookmark.memberId, //post아이디,thumbnail 조회해옴
+                        memberId : this.$store.state.id, //post아이디,thumbnail 조회해옴
                     }
 
                 }).then(res => {
@@ -71,12 +70,10 @@
                     console.log(res.data.length);
                     if(res.data.length < 1){  //북마크 리스트가 없으면
                         this.isBookmark = false; //북마크 저장 권유
-
                     }else{    //있으면 목록보여주기
                         this.bookmarks = res.data;
                         this.isBookmark = true;
                     }
-
                 }).catch(err => {
                     alert(err);
             });
@@ -89,7 +86,6 @@
               params: {
                   catgId: catgId, //post아이디,thumbnail 조회해옴
               }
-
             }).then(res => {
               console.log("북마크 리스트 호출 성공!");
               console.log(res.data.length);

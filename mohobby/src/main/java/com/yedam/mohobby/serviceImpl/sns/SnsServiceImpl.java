@@ -432,6 +432,13 @@ public class SnsServiceImpl implements SnsService{
     public int deleteHistory(int searchId) {
         return mapper.deleteHistory(searchId);
     }
+    
+    //전체 피드 조회 페이징
+	@Override
+	public List<SnsPostVO> allListPaging(int firstIdx) {
+		System.out.println("firstIdx : " + firstIdx);
+		return mapper.allListPaging(firstIdx);
+	}
 
 
 

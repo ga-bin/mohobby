@@ -72,15 +72,22 @@ export default {
   components: {},
   props: {
     text: {
-      type: String,
-      required: true, //props 무조건 받아야함.
+      type: String
+      //required: true, //props 무조건 받아야함.
     },
-    dataList: {
-      type: [],
-    },
-    divider: true,
-    inset: true,
+    dataList : {},
+    // divider: true,
+    // inset: true,
   },
+  beforeCreate() {},
+  created() {},
+  beforeMount() {},
+  mounted() {
+  },
+  beforeUpdate() {},
+  updated() {},
+  beforeUnmount() {},
+  unmounted() {},
   methods: {},
 };
 </script>

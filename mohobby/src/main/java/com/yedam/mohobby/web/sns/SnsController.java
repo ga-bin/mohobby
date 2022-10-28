@@ -157,6 +157,11 @@ public class SnsController {
            return service.getFeedImg(postId);
     }
     
+    //게시물전체 조회 페이징
+   @GetMapping("/main/allFeed")
+   public List<SnsPostVO> allListpageing(@RequestParam int firstIdx){
+    	return service.allListPaging(firstIdx);
+    } 
     
     /*
      * 해시태그
