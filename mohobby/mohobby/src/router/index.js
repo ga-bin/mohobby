@@ -211,47 +211,6 @@ const routes = [
         props: true,
       },
       {
-        path: "off/:classId",
-        name: "classOfflineDetail",
-        component: () => import("./../views/lecture/list/classOfflineDetail"),
-        props: true,
-        children: [
-          {
-            path: "info",
-            name: "classInfo",
-            component: () => import("./../components/lecture/detail/classInfo"),
-            props: true,
-          },
-          {
-            path: "course",
-            name: "classCourse",
-            component: () =>
-              import("./../components/lecture/detail/classCourse"),
-            props: true,
-          },
-          {
-            path: "qna",
-            name: "classQna",
-            component: () => import("./../components/lecture/detail/classQna"),
-            props: true,
-          },
-          {
-            path: "review",
-            name: "classReview",
-            component: () =>
-              import("./../components/lecture/detail/classReview"),
-            props: true,
-          },
-          {
-            path: "location",
-            name: "classLocation",
-            component: () =>
-              import("./../components/lecture/detail/classLocation"),
-            props: true,
-          },
-        ],
-      },
-      {
         path: "on/:classId",
         name: "classOnlineDetail",
         component: () => import("./../views/lecture/list/classOnlineDetail"),
@@ -259,28 +218,69 @@ const routes = [
         children: [
           {
             path: "info",
-            name: "classInfo",
+            name: "classInfoOnline",
             component: () => import("./../components/lecture/detail/classInfo"),
             props: true,
           },
           {
             path: "course",
-            name: "classCourse",
+            name: "classCourseOnline",
             component: () =>
               import("./../components/lecture/detail/classCourse"),
             props: true,
           },
           {
             path: "qna",
-            name: "classQna",
+            name: "classQnaOnline",
             component: () => import("./../components/lecture/detail/classQna"),
             props: true,
           },
           {
             path: "review",
-            name: "classReview",
+            name: "classReviewOnline",
             component: () =>
               import("./../components/lecture/detail/classReview"),
+            props: true,
+          },
+        ],
+      },
+      {
+        path: "off/:classId",
+        name: "classOfflineDetail",
+        component: () => import("./../views/lecture/list/classOfflineDetail"),
+        props: true,
+        children: [
+          {
+            path: "info",
+            name: "classInfoOffline",
+            component: () => import("./../components/lecture/detail/classInfo"),
+            props: true,
+          },
+          {
+            path: "course",
+            name: "classCourseOffline",
+            component: () =>
+              import("./../components/lecture/detail/classCourse"),
+            props: true,
+          },
+          {
+            path: "qna",
+            name: "classQnaOffline",
+            component: () => import("./../components/lecture/detail/classQna"),
+            props: true,
+          },
+          {
+            path: "review",
+            name: "classReviewOffline",
+            component: () =>
+              import("./../components/lecture/detail/classReview"),
+            props: true,
+          },
+          {
+            path: "location",
+            name: "classLocationOffline",
+            component: () =>
+              import("./../components/lecture/detail/classLocation"),
             props: true,
           },
         ],

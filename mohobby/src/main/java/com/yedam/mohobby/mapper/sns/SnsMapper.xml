@@ -141,6 +141,7 @@
                        FROM sns_media
                       GROUP BY post_id 
                   ) IMGS_CNT
+                 ON (s.post_id=IMGS_CNT.post_id))
    </select>
    
    

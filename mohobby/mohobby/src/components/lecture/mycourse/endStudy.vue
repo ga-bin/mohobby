@@ -12,7 +12,7 @@
                     lazy-src="https://picsum.photos/id/11/10/6"
                     height="200"
                     width="250"
-                    :src="require(`@/assets/image/class/thumb/${item.classId}/1.jpg`)"
+                    :src="require(`@/assets/image/class/thumb/${item.classId}/0.jpg`)"
                     style="padding-top: 6px"
                     @click="goDetail(item)"
                     class="hover"

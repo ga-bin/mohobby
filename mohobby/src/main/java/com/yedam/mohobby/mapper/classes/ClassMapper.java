@@ -90,4 +90,18 @@ public interface ClassMapper {
     
     //내 수료증 발급 가능한 강의 목록 조회
     public List<ClassesVO> getMyCourseCertificate(String memberId);
+    
+    
+    
+    /*
+     * 출석관리
+     */
+    //오늘 기준 커리큘럼 출결 정보
+    public ClassAttendanceVO getTodayAttendanceInfo(String memberId);
+    //오늘 기준 출결 통계
+    public ClassAttendanceVO getTodayAttendanceCalc(@Param("memberId")String memberId, @Param("classId")int classId);
+    //오늘 기준 과정 진행율
+    public ClassAttendanceVO getTodayClassProgress(int classId);
+    //수업없는 날 강의 정보
+    public ClassAttendanceVO getNoneClassInfo(String memberId);
 }
