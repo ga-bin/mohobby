@@ -31,7 +31,6 @@
           </v-icon>
           <!-- <v-icon @click="deleteFlagUser(item)"> mdi-delete </v-icon> -->
         </template>
-        small
 
         <template v-slot:no-data>
           <p>해당하는 내용이 없습니다.</p>
@@ -52,7 +51,6 @@
       </template> -->
         </v-data-table>
       </template>
-    <h3>지급 내역</h3>
     <h3>강의 목록</h3>
     <v-row>
       <v-col lg="12">
@@ -86,6 +84,7 @@
         </v-data-table>
       </v-col>
     </v-row>
+    <h3>지급 내역</h3>
   </main>
 </template>
 <script>
@@ -109,7 +108,6 @@ export default {
           { text: '답변내용', value: 'content' },
           { text: '답변여부', value: 'replyCheck' },
           { text: "수정하기", value: "actions", sortable: false },
-          { text: "상세보기", value: "showDetail", sortable: false },
         ],
       tags: ["전체", "심사대기", "심사중", "승인", "미승인"],
       classHeaders: [
@@ -159,7 +157,6 @@ export default {
         method: "get",
       })
         .then(function (response) {
-          console.log(response.data);
           vm.classList = response.data;
 
           for (let i = 0; i < response.data.length; i++) {
