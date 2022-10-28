@@ -1,22 +1,103 @@
 <template>
   <div class="mx-auto" style="width:1050px; height:500px;">
     <v-card outlined>
+      <div class="room-file-upload-example">
+
+        <div class="room-file-notice-item">
+            사진은 한 장 이상 등록 부탁드립니다🙏
+        </div>
+
+        <div class="room-file-notice-item room-file-notice-item-red">
+            타인에게 불쾌감을 줄 수 있는 게시글은 비공개 처리가 될 수 있으니 유의 부탁드립니다🙏
+        </div>
+      </div>
+
       <form id="feedInsert" name="feedInsert" v-on:submit.prevent>
         <v-container fluid>
           <input type="hidden" v-model="memberId" name="memberId" />
           <input type="hidden" v-model="hashtag" name="hashtag" />
-        <div v-for="(file,i) in fileList" :key="i" style="width:200px; height:200px; display: inline-block;">
-          <!-- <input
-                class="input"
-                type="file"
-                style="width: 200px"
-                @change="onImageChange"
-                name="fileList"
-              /> -->
+
+
+
+          <div class="main-container">
+
+            <div class="room-deal-information-container">
+                <!-- 추가버튼 -->
+                <div 
+                  class="plus_btn"
+                  rounded
+                  @click="addFileList(i)"
+                >
+                  <v-icon color="#2ac187" size="30">mdi-plus</v-icon>
+                  <v-icon color="#2ac187" size="30">mdi-camera</v-icon>
+                  </div>
+                <div class="room-file-upload-example-container">
+
+                
+
+
+                <div v-for="(file,i) in fileList" :key="i" style="width:200px; height:200px;  display: inline-block;">
+                  <v-file-input
+                      v-model="file.file"
+                      @change="onImageChange(i)"
+                      style="margin-top:20px;"
+                      label="이곳을 클릭해주세요🙏"
+                      type="file"
+                      class="mx-auto"
+                      id="file"
+                      name="fileList"
+                      prepend-icon="mdi-camera"
+                      dense
+                      accept="image/png, image/jpeg, image/jpg"
+                    />
+
+                    <!-- 이미지 미리보기 -->
+                    <div class="img_box" style="display: inline-flex;">
+                      <v-img                    
+                        :src="file.url"
+                        aspect-ratio="4/3"
+                        height="150"
+                        width="150"
+                        lazy-src
+                        error
+                        style="margin-top: 10px; margin-right: 10px"
+                      />
+                    </div>
+
+
+
+                    <!-- 삭제버튼 -->
+                    <div
+                        class="del_btn"
+                        rounded
+                        @click="delFileList(i)"
+                      >
+                        -
+                    </div>
+
+                </div> 
+
+              </div>
               
+              </div>
+            
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <div v-for="(file,i) in fileList" :key="i" style="width:200px; height:200px; display: inline-block;">
+            <div> 
               <v-file-input
                 class="mx-auto"
-                label="이미지 등록 부탁드립니다🙏"
+                label="이미지 등록🙏🙏🙏"
                 type="file"
                 style="width:200px; display: inline-block;"
                 v-model="file.file"
@@ -24,55 +105,43 @@
                 counter
                 show-size
                 dense
-                @change="onImageChange"
+                @change="onImageChange(i)"
                 name="fileList"
                 accept="image/png, image/jpeg, image/jpg"
-              />          
-              
-              <img src="" height="200" alt="Image preview...">
+              />           -->
+
+              <!-- 이미지 미리보기 -->
+              <!-- <div style="display: inline-flex;">
+                <v-img
+                  :src="file.url"
+                  aspect-ratio="4/3"
+                  height="150px"
+                  width="200px"
+                  lazy-src
+                  error
+                  style="margin-right: 10px"
+                />
+              </div>
 
 
-
-          <!-- 파일이름, 개수 -->
-          <!-- <div v-for="(list, i) in fileList.file" :key="i">
-            {{ list.name }}
-          </div> -->
-
-          <!-- 이미지 미리보기 -->
-          
-          <!-- <div style="display: inline-flex; margin-left: 10px">
-            <v-img
-              v-for="(item, i) in uploadimageurl"
-              :key="i"
-              :src="item.url"
-              aspect-ratio="4/3"
-              height="150px"
-              width="200px"
-              lazy-src
-              error
-              style="margin-right: 10px"
-            />
-          </div> -->
-
-              <v-btn 
-                style="display: inline-block;"
-                color="green"
+              <div 
+                style="display: inline-block; color:green; margin-right:10px;"
                 class="plus_btn"
                 rounded
                 @click="addFileList(i)"
               >
                 +
-              </v-btn>
-              <v-btn
-                color="red"
+              </div>
+              <div
+                style="display: inline-block; color:red; font-size:20px;"
                 class="del_btn"
                 rounded
                 @click="delFileList(i)"
               >
                 -
-              </v-btn>
+            </div>
           </div>
-          
+        </div>  -->
 
 
 
@@ -152,7 +221,7 @@
         </v-container>
       </form>
     </v-card>
-    <v-btn @click="uploadImage">uploadImage</v-btn>
+    <v-btn @click="uploadImage" rounded color="#2ac187" class="white--text">가보자고</v-btn>
   </div>
 </template>
 
@@ -193,6 +262,7 @@ data() {
   imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
   fileList: [ {
     file: "",
+    url:"",
   }],
   file : {},
   postId : "1",
@@ -205,7 +275,7 @@ data() {
   };
 },
 created() {
-
+  this.getHotHashtags();
 },
 watch: {
 
@@ -234,37 +304,46 @@ methods: {
 /*
 
           
-     동적 FILE_INPUT_BOX TEST
+     동적 FILE_INPUT_BOX
         
 
 */
 
-// onImageChange(i) {
-//   const preview = document.querySelector('img');
-//   const file = document.querySelector('input[type=file]').files[i];
-//   const reader = new FileReader();
 
-//   reader.addEventListener("load", function () {
-//     // convert image file to base64 string
-//     preview.src = reader.result;
-//     console.log(reader.result);
-//   }, false);
-
-//   if (file) {
-//     reader.readAsDataURL(file);
-//   }
-// },
+//상단바 - top6해시태그 리스트
+getHotHashtags() {
+  
+  this.axios('/sns/main/hashtag')
+  .then(res => {
+    console.log(res.data);
 
 
+  }).catch(err =>{
+    console.log(err);
+  });
+
+},
 
 
-onImageChange(file) {
-  if (!file) return;
+ // 유효성검사 & 미리보기
+onImageChange(i) {
+  let file = this.fileList[i].file;
+  if (!file) return; //file없으면 return
+  console.log("file------>");
   console.log(file);
+
+  //파일 형식 검사
+  if(!file.type.match("image/.*")){
+    this.$swal("png, jpg, jpeg파일만 부탁드립니다🙏");
+  };
+
+
       const fileReader = new FileReader();
-      console.log("item.name: " + file.name);
+      console.log("file.name: " + file.name);
+      
       fileReader.onload = (e) => {
-        this.uploadimageurl.push({url: e.target.result});
+        //이미지 url push
+        this.fileList[i].url = e.target.result
       };
       fileReader.readAsDataURL(file);
 },
@@ -273,25 +352,24 @@ onImageChange(file) {
 
 addFileList(i) {
   if(this.fileList.length > 4){
-    return;
+    this.$swal("사진은 5장까지만 부탁드립니다🙏")
+    return; //추가한것부터 1개로 취급해서 계산됨. 즉, 파일 5개 이상 추가 못하도록
   }
+      //파일 초기화
       this.fileList.push({
         file: '',
+        url: '',
       })
     },
 
 delFileList(i) {
-  if(this.fileList.length == 1) {
-    this.fileList[0].file = '';
+  if(this.fileList.length == 1) { //fileList가 1개면 초기화하고 
+    this.fileList[0].file = ''; 
+    this.fileList[0].url = '';
   } else {
-    this.fileList.splice(i, 1);
+    this.fileList.splice(i, 1); //아니면 인덱스번호 잘라내기
   }
 },
-
-
-
-
-/////////////////////////////////////////////////////////////////////
 
 
     //해시태그수정
@@ -308,9 +386,27 @@ delFileList(i) {
 
     //게시글 등록
 
-    //첫번째 사진을 썸네일로
+    //사진 업로드
     uploadImage() {
+      
       let self = this;
+      console.log(self.fileList);
+
+      for(let i=0; i<self.fileList.length; i++){
+        let file = self.fileList[i].file;
+        if (!file) { 
+          self.$swal("이미지를 첨부하지 않은 추가칸은 삭제 부탁드립니다🙏");
+          return;
+        }
+      }
+
+      console.log(self.fileList.length);
+      // let file = self.fileList.file;
+      // if (!file) { self.$swal("추가한 이미지는 등록 혹은 삭제 부탁드립니다🙏");
+      //   retur
+      //  n; //file없으면 return
+      // }
+
       this.model.forEach((hashtag) => {
         console.log("push hashtag: " + hashtag.text);
         this.getHashtag.push(hashtag.text);
@@ -333,8 +429,8 @@ delFileList(i) {
         })
         .then(function (res) {
             console.log("게시글저장 성공!");
-            console.log(this.$store.state.id);
-            self.$router.push({ path: '/snsUserFeed', query: {userId : self.$store.state.id} });
+            // console.log(this.$store.state.id);
+            self.$router.push({ path: '/snsUserFeed', query: {userId : self.memberId} });
         })
         .catch(function (error) {
           console.log(error);
@@ -367,11 +463,309 @@ delFileList(i) {
   background-position: center center;
 }
 .plus_btn{
-  color:white;
+  margin-left:20px;
+  border-radius: 20px;
+  padding:10px;
+  color: green;
   font-weight: bold;
+  font-size: x-large;
+  display: inline-block; 
+  margin-right:10px;
+  cursor:pointer;
 }
 .del_btn{
-  color:white;
+  color:red;
   font-weight: bold;
+  border-radius: 20px;
+  padding:10px;
+  font-size: xx-large;
+  display: inline-block;
+  cursor:pointer;
 }
+
+.img_box{
+  margin-left: 40px;
+}
+
+/* ///////////// */
+.main-container {
+            min-width: 800px;
+            
+            margin: 0 auto;
+        }
+        
+        .room-deal-information-container {
+            height: 400px;
+            margin-top: 50px;
+            color: #222222;
+            /* border: 1px solid #dddddd; */
+            border-radius: 8px;
+        }
+        
+        .room-deal-information-title {
+            text-align: center;
+            font-size: 18px;
+            line-height: 60px;
+            border-bottom: 1px solid #dddddd;
+        }
+        
+        .room-deal-information-content-wrapper {
+            min-height: 50px;
+            display: flex;
+        }
+        
+        .room-deal-informtaion-content-title {
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            background-color: #f9f9f9;
+        }
+        
+        .room-deal-information-content {
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        .room-deal-option-selector {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .room-deal-option-item {
+            width: 100px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .room-deal-option-item:last-child {
+            margin-left: 10px;
+        }
+        
+        .room-deal-option-notice {
+            margin-left: auto;
+            font-size: 14px;
+            color: #888888;
+        }
+        
+        .room-deal-option-item-deposit {
+            margin-left: 10px;
+        }
+        
+        .room-deal-information-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .room-deal-information-option {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .room-deal-information-option:last-child {
+            border-bottom: 1px solid #dddddd;
+        }
+        
+        .room-deal-information-item-type {
+            font-size: 13px;
+            color: #fff;
+            background-color: #61b6e5;
+            min-width: 50px;
+            height: 26px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 3px;
+        }
+        
+        .room-deal-information-item-wrapper {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+            height: 46px;
+            width: 100%;
+        }
+        
+        .room-deal-information-item-wrapper>input {
+            border: 1px solid #dddddd;
+            width: 140px;
+            height: 100%;
+            padding: 0 15px;
+            font-size: 15px;
+        }
+        
+        .room-deal-inforamtion-won {
+            margin: 0 10px;
+        }
+        
+        .room-deal-information-example {
+            color: #888888;
+        }
+        
+        .room-deal-information-option:not(:first-child) {
+            margin-top: 10px;
+        }
+        
+        .room-deal-inforamtion-divide {
+            font-size: 22px;
+            margin: 0 8px;
+            color: #222222;
+            font-weight: 100;
+        }
+        
+        .room-deal-close-button-wrapper {
+            margin-left: auto;
+            cursor: pointer;
+        }
+        
+        .room-deal-close-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background-color: #666666;
+            color: rgb(220, 220, 220);
+        }
+        
+        .room-deal-cliked {
+            background-color: rgb(235, 235, 235);
+            color: rgb(170, 170, 170);
+        }
+        
+        .room-file-upload-example {
+            height: 100%;
+        }
+        
+        .room-write-content-container {
+            border-top: 1px solid #dddddd;
+            min-height: 260px;
+        }
+        
+        .room-picture-notice {
+            margin: 20px;
+            padding: 20px 40px;
+            border: 1px solid #dddddd;
+        }
+        
+        .file-preview-content-container {
+            height: 100%;
+        }
+        
+        .room-file-upload-wrapper {
+            margin: 20px;
+            border: 1px solid #dddddd;
+            background-color: #f4f4f4;
+            min-height: 350px;
+            font-size: 15px;
+            color: #888888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        .room-file-upload-example-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* height: 100%;
+  width: 100%; */
+        }
+        
+        .room-file-image-example-wrapper {
+            text-align: center;
+        }
+        
+        .room-file-notice-item {
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        .room-file-notice-item-red {
+            color: #e16e1c;
+        }
+        
+        .image-box {
+            margin-top: 30px;
+            padding-bottom: 20px;
+            text-align: center;
+        }
+        
+        .image-box input[type='file'] {
+            position: absolute;
+            width: 0;
+            height: 0;
+            padding: 0;
+            overflow: hidden;
+            border: 0;
+        }
+        
+        .image-box label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2ac187;
+            color: #fff;
+            vertical-align: middle;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+        
+        .file-preview-wrapper {
+            padding: 10px;
+            position: relative;
+        }
+        
+        .file-preview-wrapper>img {
+            position: relative;
+            width: 200px;
+            height: 180px;
+            z-index: 10;
+            border-radius: 10px;
+        }
+        
+        .file-preview-container {
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        
+        .room-write-button-wrapper {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #222222;
+        }
+        
+        .room-write-button-wrapper>div {
+            width: 160px;
+            height: 50px;
+            border: 1px solid #2ac187;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        
+        .room-write-button {
+            margin-left: 15px;
+            color: #fff;
+            background-color: hsl(155, 74%, 52%);
+        }
+        
+        .room-write-button:hover {
+            opacity: 0.8;
+        }
 </style>

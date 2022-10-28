@@ -8,7 +8,7 @@
     <ul v-else>
       <button
         v-if="followStatus === 0"
-        @click="follow(memberId, getUserId)"
+        @click="followup(memberId, getUserId)"
         class="btn profile-edit-btn2"
       >
         Follow
@@ -92,7 +92,7 @@ export default {
         });
     },
     //팔로우
-    follow(memberId, getUserId) {
+    followup(memberId, getUserId) {
       if (this.confirmMember(memberId) == false) {
         this.loginConfirm();
       } else {

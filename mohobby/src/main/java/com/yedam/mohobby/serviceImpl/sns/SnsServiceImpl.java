@@ -140,6 +140,12 @@ public class SnsServiceImpl implements SnsService{
       return mapper.updateFeed(snsPostVO);
    }
    
+   //비밀게시글로 전환
+   @Override
+   public int changeSecPost(SnsPostVO snsPostVO) {
+       return mapper.changeSecPost(snsPostVO);
+   }
+   
    //피드 삭제
    @Override
    public int deleteFeed(int postId) {
@@ -175,12 +181,24 @@ public class SnsServiceImpl implements SnsService{
         return mapper.getFollowingFeeds(memberId);
     }
 
-   //프로필조회
+    //프로필조회
     @Override
     public SnsProfileVO getProfile(String memberId) {
         return mapper.getProfile(memberId);
     }
     
+    //팔로잉 제외 조회
+    @Override
+    public List<SnsPostVO> getNoFollowingFeeds(String memberId) {
+        return mapper.getNoFollowingFeeds(memberId);
+    }
+    
+    //내 피드 모아보기
+    @Override
+    public List<SnsFeedVO> getMyArchive(String memberId) {
+        return mapper.getMyArchive(memberId);
+    }
+        
     //유저피드조회
     @Override
     public List<SnsPostVO> getUserFeed(String memberId) {
@@ -193,7 +211,7 @@ public class SnsServiceImpl implements SnsService{
         return mapper.getFeedDetail(postId, memberId);
    }
    
-    //이미지 조회
+   //이미지 조회
    @Override
    public List<SnsMediaVO> getFeedImg(int postId) {
       return mapper.getFeedImg(postId);
@@ -231,6 +249,7 @@ public class SnsServiceImpl implements SnsService{
    public List<SnsFollowVO> getFollowingList(String followerId) {
       return mapper.getFollowingList(followerId);
    }
+  
    
    //팔로워 조회
    @Override
@@ -420,5 +439,7 @@ public class SnsServiceImpl implements SnsService{
 		System.out.println("firstIdx : " + firstIdx);
 		return mapper.allListPaging(firstIdx);
 	}
+
+
 
 }

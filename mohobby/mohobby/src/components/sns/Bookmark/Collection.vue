@@ -394,7 +394,6 @@
 
           //해당 컬렉션으로 이동
           goBookmark(catgId,catgName){
-console.log()
             console.log(catgId);
             console.log(catgName);
             this.$router.push({ path: '/snsBookmarkDetail', query: {catgId : catgId, catgName : catgName} });

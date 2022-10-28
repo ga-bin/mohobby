@@ -265,21 +265,10 @@ this.getAllListPaging()
                 let hashtag = keyword.slice(1); // #잘라내기
                 this.searchHashtag(hashtag);//해시태그 검색 실행
                 console.log("해시태그 검색 실행")
-               
-                // this.userSearch = false; //유저결과 show
-                // this.tagSearch = true; //해시태그결과 hide
-                // this.hotLectureFeeds = false; //main hide
-                // this.randomFeeds = false; //main hide
 
             }else{ //나머지 - 유저검색 실행
 
                 this.searchMem(keyword); //유저검색 실행
-                
-                // this.userSearch = true; //유저결과 show
-                // this.tagSearch = false; //해시태그결과 hide
-                // this.hotLectureFeeds = false; //main hide
-                // this.randomFeeds = false; //main hide
-                
 
             }
           },
@@ -287,7 +276,7 @@ this.getAllListPaging()
           
           //1. 해시태그 검색
           searchHashtag(hashtag){
-            this.temp = hashtag;
+            this.temp = "'" + hashtag +  "'에 대한 검색결과입니다";
             console.log("해시태그검색 ->");
             console.log(hashtag);
             this.axios('/sns/search/hashtag', {
@@ -329,7 +318,7 @@ this.getAllListPaging()
           //2. 유저검색
           searchMem(keyword) {
             console.log("유저검색: "+ keyword);
-            this.temp = keyword;
+            this.temp = "'" + keyword +  "'에 대한 검색결과입니다";
             this.axios('/sns/search/user', {
                 params : {
                     memberId : keyword

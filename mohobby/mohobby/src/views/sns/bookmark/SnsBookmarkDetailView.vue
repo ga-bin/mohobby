@@ -45,8 +45,8 @@
   created(){
       this.catgId = this.$route.query.catgId;
       this.catgName= this.$route.query.catgName;
-console.log(" this.catgName" + this.catgName)
-      if(this.catgName != "default"){
+
+      if(this.catgName !== "default"){
         this.getBookmarkList(this.catgId);
       }else if(this.catgName == "default"){
         

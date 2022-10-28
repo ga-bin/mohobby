@@ -93,7 +93,7 @@
               <!-- <button
                 v-if="followStatus === 0"
 
-                @click="follow(sessionId, infoes.memberId)"
+                @click="followup(sessionId, infoes.memberId)"
                 class="btn profile-edit-btn2">
                 Follow
               </button> -->
