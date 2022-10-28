@@ -496,7 +496,7 @@ export default {
     getAllRegion() {
       const vm = this;
       this.axios({
-        url: "/regionAll",
+        url: "http://localhost:8088/java/regionAll",
         method: "get",
       })
         .then(function (response) {
@@ -512,7 +512,7 @@ export default {
     getAllCatg() {
       const vm = this;
       this.axios({
-        url: "/allCatg",
+        url: "http://localhost:8088/java/allCatg",
         method: "get",
       })
         .then(function (response) {

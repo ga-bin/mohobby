@@ -28,7 +28,7 @@ public class AdminClassServiceImpl implements AdminClassService {
 	// 신청 결과 업로드
 	@Override
 	public void updateAuditStatus(ClassesVO classesVO) {
-		mapper.updateAuditStatus(classesVO);
+		mapper.updateAuditStatus();
 	}
 	
 	// 강사, 강의, 정산 정보, 지급 여부 등등

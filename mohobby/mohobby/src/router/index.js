@@ -35,11 +35,6 @@ const routes = [
     name: "adminsns",
     component: () => import("./../views/admin/AdminSnsView"),
   },
-  {
-    path: "/classPrepare",
-    name: "classPrepare",
-    component: () => import("./../views/admin/ClassPrepareView"),
-  },
   // main
   {
     path: "/",
