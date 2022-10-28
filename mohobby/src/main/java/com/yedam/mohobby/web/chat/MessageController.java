@@ -44,12 +44,13 @@ public class MessageController {
 		NoticeVO noticeVO = new NoticeVO();
 		ResNoticeVO resNotice = new ResNoticeVO();
 		// 실시간 메시지 보내기
-		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
+		
 		ChatListContentResVO res = new ChatListContentResVO();
 		for (int i = 0; i < content.getMemberIds().size(); i++) {
-			System.out.println("content:" + content.getMemberIds().get(i));
-			System.out.println(content);
+			content.setNickName(mService.getMember(content.getMemberId()).getNickName());
+			content.setProfileImg(mService.getMember(content.getMemberId()).getProfileImg());
 			sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i), content);
+			sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
 			// 상대방이 같은방에 없을때는 알림을 보낸다.
 			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0) {
 				resNotice.setNoticeId(nService.getNoticeId());
@@ -71,9 +72,7 @@ public class MessageController {
 				noticeVO.setSubtitle("새로운 메세지가 도착했습니다.");
 				noticeVO.setPostId(content.getRoomNo());
 				noticeVO.setNoticeType(2);
-				System.out.println("++++++++++++++++=========");
-				System.out.println(resNotice);
-				System.out.println("++++++++++++++++=========");
+
 				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i) + "/notice", resNotice);
 				nService.insertNotice(noticeVO);
 			}

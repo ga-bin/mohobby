@@ -1,81 +1,86 @@
 <template>
-  <!-- <div>
-    <v-container>
-
-
-    </v-container>
-  </div> -->
-
-
-  <div id="container">
-    <v-card class="scroll" ref="scroll" style=" margin: 0 auto; width: 800px;">
-      <v-row class="no-gutters elevation-4">
+  <div id="container" class="scroll" ref="scroll">
+    <h1> {{ this.$store.state.user.nickName }} 님의 채팅방입니다 </h1>
+    <!-- <v-card  class="overflow-y-auto"   max-heght="344" > -->
+    <div>
+      <v-row class="no-gutters elevation-4 overflow-y-auto">
         <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid ">
-          <v-responsive>
-            <v-list>
-              <v-list-item-group>
-                <template v-for="(item, index) in roomList">
-                  <v-list-item v-on:click="openRoom(item.roomNo)" style="background-color:white">
-                    <v-avatar>
-                      <v-img v-if="item.roomNo > 10000" :src="require(`@/assets/image/user/${item.profileImg}`)"
-                        height="100px" width="50px" border-radius:10px></v-img>
-                      <v-img v-else :src="require(`@/assets/image/moim/${item.profileImg}`)" height="100px" width="50px"
-                        border-radius:10px></v-img>
-                    </v-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title v-text="item.nickName" style="white" />
-                      <v-list-item-subtitle v-text="item.content" />
-                    </v-list-item-content>
-                    <v-badge style="cursor: pointer;" v-if="item.nonReadChat != 0" offset-x="10" offset-y="10" color="red"
-                      :content="item.nonReadChat">
-                    </v-badge>
-                  </v-list-item>
-                  <v-divider class="my-0" />
-                  <hr>
-                </template>
-              </v-list-item-group>
-            </v-list>
-          </v-responsive>
+
+          <v-list>
+            <v-list-item-group>
+              <template v-for="(item, index) in roomList">
+                <v-list-item v-on:click.prevent.stop="openRoom(item.roomNo)" style="background-color:white">
+                  <v-avatar>
+                    <v-img v-if="item.roomNo > 10000" :src="require(`@/assets/image/user/${item.profileImg}`)"
+                      height="100px" width="50px" border-radius:10px></v-img>
+                    <v-img v-else :src="require(`@/assets/image/moim/${item.profileImg}`)" height="100px" width="50px"
+                      border-radius:10px></v-img>
+                  </v-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item.nickName" style="white" />
+                    <v-list-item-subtitle v-text="item.content" />
+                  </v-list-item-content>
+                  <v-badge style="cursor: pointer;" v-if="item.nonReadChat != 0" offset-x="10" offset-y="10" color="red"
+                    :content="item.nonReadChat">
+                  </v-badge>
+                </v-list-item>
+                <v-divider class="my-0" />
+                <hr>
+              </template>
+            </v-list-item-group>
+          </v-list>
+
         </v-col>
         <v-col cols="auto" class="flex-grow-1 flex-shrink-0  ">
-          <v-card flat class="d-flex flex-column fill-height ">
-            <v-card-title>
-              {{ this.$store.state.user.nickName + " 님의 채팅방입니다" }}
-            </v-card-title>
-            <v-card-text class="flex-grow-1 overflow-y-auto">
-              <v-if roomId="">
-                <v-img :src="require(`@/assets/image/moim/mohobby.png`)">
-                </v-img>
+          <!-- <v-card flat class="d-flex flex-column fill-height overflow-y-auto">
+            <v-card-text class="flex-grow-1 overflow-y-auto"> -->
+          <template v-for="(msg, i) in messages">
+
+            <div :class="{ 'd-flex flex-row-reverse': msg.memberId }">
+              <!-- <div v-if=""></div> -->
+
               </v-if>
-              <template v-for="(msg, i) in messages">
-                <div :class="{ 'd-flex flex-row-reverse': msg.memberId }">
-                  <v-menu offset-y>
-                    <template v-slot:activator="{ on }">
-                      <v-chip :color="msg.memberId ? 'primary' : ''" dark style="height: auto; white-space: normal"
-                        class="pa-4 mb-2" v-on="on">
-                        {{ msg.content }}
-                        <sub class="ml-2" style="font-size: 0.5rem">
-                          {{ msg.hour }}
-                        </sub>
-                      </v-chip>
-                    </template>
-                  </v-menu>
-                </div>
-              </template>
-            </v-card-text>
-
-            <!-- 글 입력폼 -->
-            <v-card-text class="flex-shrink-1">
-              <div class="messages" ref="messages">
-                <v-text-field class="fixed" v-model="message" label="메시지를 입력해주세요" type="text" no-details outlined
-                  append-outer-icon="send" @keyup.enter="send()" hide-details />
+              <!-- <v-menu offset-y> -->
+              <!-- <template v-slot:activator="{ on }"> -->
+              <!-- <v-chip :color="msg.memberId ? 'primary' : ''" dark style="height: auto; white-space: normal"
+                class="pa-4 mb-2 mr-2 ml-2 mt-2" v-on="on"> -->
+                <div :color="msg.memberId ? 'primary' : ''" dark style="height: auto; white-space: normal"
+                class="pa-4 mb-2 mr-2 ml-2 mt-2">
+                  
+                <v-avatar class="mr-2">
+                  <v-img :src="require(`@/assets/image/user/${msg.profileImg}`)"
+                    border-radius:10px></v-img>
+                </v-avatar>
+                {{ msg.nickname }}
+                <v-row>
+                  <v-chip class="pa-4" :color="msg.memberId ? 'primary' : ''">
+                    {{ msg.content }}
+                  </v-chip>
+              </v-row>
+                <sub class="ml-2" style="font-size: 0.5rem">
+                  {{ msg.hour }}
+                </sub>
               </div>
-            </v-card-text>
+          <!-- </v-chip> -->
+              <!-- </template> -->
+              <!-- </v-menu> -->
+            </div>
+          </template>
+          <!-- </v-card-text> -->
 
-          </v-card>
+          <!-- 글 입력폼 -->
+          <v-card-text class="flex-shrink-1">
+            <div class="messages" ref="messages">
+              <v-text-field class="fixed" v-model="message" label="메시지를 입력해주세요" type="text" no-details outlined
+                append-outer-icon="send" @keyup.enter="send()" hide-details />
+            </div>
+          </v-card-text>
+
+          <!-- </v-card> -->
         </v-col>
       </v-row>
-    </v-card>
+      <!-- </v-card> -->
+    </div>
   </div>
 </template>
 
@@ -102,8 +107,8 @@ export default {
   created() {
     this.memberId = this.$store.state.id,
       this.roomId = this.$route.query.getRoomId,
-   
-    this.connect()
+
+      this.connect()
     this.getRoom()
     this.sortRoom()
     this.CheckIn(this.roomId)
@@ -181,12 +186,12 @@ export default {
           console.log(res)
           console.log("success")
         })
-        .catch(function(err){
+        .catch(function (err) {
           console.log(err)
         })
     },
     CheckOut(roomId) {
-    
+
       this.axios
         .get("/updateCheckOut", {
           params: {
@@ -213,7 +218,7 @@ export default {
         this.CheckInOut(this.roomId, roomNo)
         this.roomId = roomNo
       }
-      this.$store.state.stayRoomNo= roomNo
+      this.$store.state.stayRoomNo = roomNo
       this.messages = [];
       this.targetId = [];
       //안읽은 메세지수 추출
@@ -281,9 +286,9 @@ export default {
               res.data[i].hour =
                 res.data[i].hour + ":" + res.data[i].minute + " am";
             }
-            vm.messages = res.data;
           }
-          vm.scrollDown()
+          vm.messages = res.data;
+
         })
         .catch(function (error) {
           console.log(error);
@@ -295,6 +300,7 @@ export default {
         }
         else {
           let rev = JSON.parse(res.body);
+          console.log("rev : " + rev)
           if (rev.memberId == vm.memberId) {
             rev.memberId = true;
           } else {
@@ -308,11 +314,12 @@ export default {
               rev.hour.substr(11, 2) + ":" + rev.hour.substr(14, 2) + " am";
           }
           vm.messages.push(rev);
+
         }
       });
       //구독취소헤더값 가져오기
       this.stompClient.send("/app/getSubscribeId", vm.roomId, (res) => { });
- 
+
     },
     //채팅방 리스트출력
     getRoom() {
@@ -351,11 +358,11 @@ export default {
     //소켓 구독
     connect() {
       let vm = this
-    
+
       vm.stompClient.subscribe(
         "/queue/" + this.$store.state.id,
         function (res) {
- 
+
           if (res.body == vm.$store.state.id) {
             vm.$store.state.isUser = res.headers.subscription
           }
@@ -370,7 +377,7 @@ export default {
                 vm.roomList[i].msgTime = resContent.hour;
                 if (vm.roomId != resContent.roomNo)
                   ++vm.roomList[i].nonReadChat;
-             
+
               }
             }
             vm.sortRoom();
@@ -379,17 +386,19 @@ export default {
       );
 
       vm.stompClient.send("/app/SubscribeIds", vm.$store.state.id, (res) => { console.log(res) })
- 
+
     },
     scrollDown() {
       let scroll = this.$refs.scroll;
-      let scrol = scroll.scrollHeight + 100000000
+      let scrol = scroll.scrollHeight + 200
+      console.log("scrol : " + scrol)
       window.scrollTo(0, scrol);
     }
   },
   watch: {
     messages() {
       this.$nextTick(() => {
+        console.log("nextTick TEXST")
         this.scrollDown()
       });
     },
@@ -397,8 +406,8 @@ export default {
 };
 </script>
 <style scoped>
-#container{
-  margin-top: 180px; 
+#container {
+  margin-top: 180px;
   height: 1000px;
 }
 </style>

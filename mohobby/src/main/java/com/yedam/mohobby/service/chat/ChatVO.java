@@ -9,6 +9,20 @@ public class ChatVO {
 	private String memberId;
 	private String minute;
 	private String hour;
+	private String nickname;
+	private String profileImg;
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	public String getProfileImg() {
+		return profileImg;
+	}
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
+	}
 	public String getRoomNo() {
 		return roomNo;
 	}

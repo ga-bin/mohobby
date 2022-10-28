@@ -172,7 +172,7 @@ export default {
       this.axios.get("/checkMoimChatRoom", {
         params: {
           memberId: this.$store.state.id, 
-          moimId: this.$route.params.Id
+          moimId: this.$route.params.Id,
           vMemberId: this.$store.state.id, 
           vMoimId: vm.moimId
         }
