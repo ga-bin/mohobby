@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
@@ -153,4 +154,7 @@ public interface MoimMapper {
 	
 	//게시물 삭제
 	public String deleteBoard(@Param("boardId")int boardId,@Param("boardType")int boardType);
+	
+	//소모임 프로필 수정
+	public String updateProfile(MoimVO moimVO);
 }

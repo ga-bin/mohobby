@@ -523,7 +523,27 @@ public class MoimController {
     //게시글 검색
     @GetMapping("/boardSearch")
     public List<MoimBoardVO> boardSearch(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title) {
-    return service.boardSearch(moimId, boardType, title);
+    	return service.boardSearch(moimId, boardType, title);
+    }
+    
+    //소모임 프로필 수정
+    @PutMapping(value = "/memberProfileUpdate", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public String updateMoimProfile(MoimVO moimVO, List<MultipartFile> files) {
+	    System.out.println("===========================");
+    	System.out.println(moimVO);
+    	System.out.println("===========================");
+    	System.out.println(files);
+    	try {
+    		System.out.println(moimVO.getMoimId());
+    		System.out.println(moimVO.getMoimInfo());
+    		System.out.println(moimVO.getMoimCatg());
+    		System.out.println(moimVO.getMoimRegion());
+    		service.updateProfile(moimVO, files);
+    		
+    		return "success";
+    	}catch (Exception e) {
+    		return "fail"+e;
+    	}
     }
     
     //게시글 삭제

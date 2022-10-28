@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.mapper.moim.MoimMapper;
 import com.yedam.mohobby.service.communal.CommentsVO;
@@ -28,6 +29,7 @@ import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
+import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.user.MemberVO;
 import com.yedam.mohobby.web.classes.ClassController;
 import com.yedam.mohobby.web.moim.MoimController;
@@ -484,16 +486,52 @@ public class MoimServiceImpl implements MoimService {
 	}
 	
     //게시글 검색
+
    @Override
    public List<MoimBoardVO> boardSearch(int moimId, int boardType, String title) {
       return mapper.searchBoard(moimId, boardType, title);
    }
 
-   //게시물 삭제	
-	   @Override
-	   public String deleteBoard(int boardId, int boardType) {
-		   return mapper.deleteBoard(boardId, boardType);
-	   }
+
+    @Override
+    public List<MoimBoardVO> boardSearch(int moimId, int boardType, String title) {
+       return mapper.searchBoard(moimId, boardType, title);
+    }
+	
+    //소모임 프로필 수정
+	@Override
+	public String updateProfile(MoimVO moimVO, List<MultipartFile> files) {
+		try {
+	         //저장할 경로
+	         String path = this.getClass().getResource("/").getPath();
+	         System.out.println( path);
+	         path = path.substring(0, path.lastIndexOf("mohobby"));
+	         path = path.substring(0, path.lastIndexOf("mohobby")+"mohobby".length());
+	         path += "/mohobby/mohobby/src/assets/image/moim/";
+	         
+	         //진짜 진짜 파일 이름
+	         path += moimVO.getMoimName();
+	         path += ".jpg";
+	         
+	         //새로 path만든 값은 save에 저장
+	         for(int i = 0; i < files.size(); i++) {
+	              
+	             MultipartFile file = files.get(i);
+	             File save = new File(path);
+	              
+	             file.transferTo(save);
+	          }
+	         
+	         //소모임 정보 수정
+	         mapper.updateProfile(moimVO);
+	         
+	         return "success";
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	         System.out.println("업로드 실패: " + e.getMessage());
+	      } 
+		return "fail";
+	}
    
    
    

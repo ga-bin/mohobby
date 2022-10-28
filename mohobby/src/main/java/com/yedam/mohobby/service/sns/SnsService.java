@@ -2,6 +2,7 @@ package com.yedam.mohobby.service.sns;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +30,9 @@ public interface SnsService {
     //게시물 수정
     public int updateFeed(SnsPostVO snsPostVO);
     
+    //비밀 게시글로 전환
+    public int changeSecPost(SnsPostVO snsPostVO);
+    
     //피드 삭제
     public int deleteFeed(int postId);
     
@@ -47,6 +51,12 @@ public interface SnsService {
     //팔로잉피드조회
     public List<SnsPostVO> getFollowingFeeds(String memberId);
     
+    //팔로잉 제외
+    public List<SnsPostVO> getNoFollowingFeeds(String memberId);
+    
+    //내 비밀글 모아보기
+    public List<SnsFeedVO> getMyArchive(String memberId);
+    
     //피드프로필
     public SnsProfileVO getProfile(String memberId);
     
@@ -59,6 +69,8 @@ public interface SnsService {
     //피드이미지조회
     public List<SnsMediaVO> getFeedImg(int postId);
     
+    //피드전체조회 페이징
+    public List<SnsPostVO> allListPaging(int firstIdx);
     
     /*
      * 해시태그
@@ -71,16 +83,15 @@ public interface SnsService {
      * 팔로우
      */
     //팔로우
-    
     public int follow(SnsFollowVO followVO);
+    
     //언팔로우
-    
     public int unfollow(String followerId, String followingId);
+    
     //팔로잉 조회
-    
     public List<SnsFollowVO> getFollowingList(String followerId);
-    //팔로워 조회
     
+    //팔로워 조회
     public List<SnsFollowVO> getFollowerList(String followingId);
     
     //필로우 상태 조회

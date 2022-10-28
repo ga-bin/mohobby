@@ -5,7 +5,7 @@
         <v-carousel-item
           v-for="i in classInfo.imgAmount"
           :key="i"
-          :src="require(`@/assets/image/class/thumb/${classId}/${i}.jpg`)"
+          :src="require(`@/assets/image/class/thumb/${classId}/${i-1}.jpg`)"
           style="filter: brightness(75%)"
         >
         </v-carousel-item>
@@ -141,17 +141,16 @@
 
 export default {
   name: "classDetail",
-  // props: {
-  //   classId: {
-  //     type: String,
-  //     default: 1,
-  //   },
-  // },
+  props: {
+    classId: {
+      type: String,
+      default: 1,
+    },
+  },
   data() {
     return {
       classInfo: {},
       active_tab: 0,
-      classId: 2,
       tabs: [
         {
           index: 0,

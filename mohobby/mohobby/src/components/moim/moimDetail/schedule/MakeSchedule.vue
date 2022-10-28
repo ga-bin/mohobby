@@ -87,6 +87,18 @@ export default {
   },
   methods: {
     submit() {
+      console.log('endTime: '+this.endTime)
+      if (
+        this.endTime == undefined ||
+        this.startTime == undefined ||
+        this.info == undefined                      ||
+        this.startDate == undefined ||
+        this.endDate == undefined ||
+        this.title == undefined
+      ) {
+        this.$swal("필수항목이 입력되지 않았습니다.");
+        return;
+      }
       let vm = this
       let myDate = new Date()
       let startTime = this.calendar.startTime

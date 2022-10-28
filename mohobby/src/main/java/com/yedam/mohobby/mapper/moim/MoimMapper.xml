@@ -471,7 +471,6 @@
 		delete from moim_schedule where sked_id=#{skedId}
 	</delete>
 
-
 	<!-- 소모임 멤버 가입 등록 -->
 	<insert id="insertMember">
 		<selectKey resultType="Integer" keyProperty="moimMemberId"
@@ -500,32 +499,6 @@
 		where moim_id = #{moimId}
 	</update>
 
-
-	<!-- 소모임 게시글 등록 -->
-	<insert id="insertBoard">
-		<selectKey resultType="Integer" keyProperty="boardId"
-			order="BEFORE">
-			SELECT NVL(MAX(board_id), 0)+1 FROM moim_board
-		</selectKey>
-		INSERT INTO moim_board
-		VALUES (#{boardId}, #{memberId}, #{title}, #{boardId}, #{boardType},
-		current_date,#{moimId})
-	</insert>
-
-	<!-- 소모임 삭제 -->
-	<delete id="delMoim" parameterType="Integer">
-		{call delete_moim(#{moimId, mode=IN, jdbcType=INTEGER})}
-	</delete>
-
-	<!-- 게시글 검색 -->
-	<select id="searchBoard"
-		resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
-		select * from moim_board
-		where moim_id = #{moimId}
-		and board_type = #{boardType}
-		and title like '%'||#{title}||'%'
-	</select>
-
 	<!-- 게시글 삭제 -->
 	<delete id="deleteBoard"
 		parameterType="com.yedam.mohobby.service.moim.MoimBoardVO">
@@ -538,4 +511,33 @@
 		DELETE comments where target_type = v_boardType and target_id = v_boardId;
 		END;
 	</delete>
+
+   <!-- 소모임 게시글 등록 -->
+  <insert id="insertBoard">
+  <selectKey resultType="Integer" keyProperty="boardId" order="BEFORE">
+  SELECT NVL(MAX(board_id), 0)+1 FROM moim_board
+  </selectKey>
+  INSERT INTO moim_board 
+  VALUES (#{boardId}, #{memberId}, #{title}, #{boardId}, #{boardType}, current_date,#{moimId})
+  </insert>
+  
+  <!-- 소모임 삭제 -->
+  <delete id="delMoim" parameterType="Integer">
+  	{call delete_moim(#{moimId, mode=IN, jdbcType=INTEGER})}
+  </delete>
+  
+  <!-- 게시글 검색 -->
+  <select id="searchBoard" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+   select * from moim_board 
+   where moim_id = #{moimId}
+   and board_type = #{boardType}
+   and title like '%'||#{title}||'%'
+  </select>
+  
+  <!-- 소모임 프로필 수정 -->
+  <update id="updateProfile" parameterType="com.yedam.mohobby.service.moim.MoimVO">
+  update moim set moim_info=#{moimInfo},moim_catg=#{moimCatg}',moim_region=#{moimRegion}
+  where moim_id = #{moimId};
+  </update>
+
 </mapper>

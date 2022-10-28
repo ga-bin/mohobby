@@ -15,14 +15,14 @@
 
       <!-- 이미지 등록하기 -->
       <v-row>
-        <form id="imgForm" v-on:submit.prevent>
         <v-col cols="12" sm="6" md="4">
+        <form id="imgForm" v-on:submit.prevent>
           <v-container fluid>
-            <v-file-input name="files" class="mx-auto" label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)" type="file" filled
+            <v-file-input name="files" class="mx-auto" max-width="50" label="이미지 파일을 등록해주세요!(jpg,png,jpeg 형식만 가능)" type="file" filled
               prepend-icon="mdi-camera" counter show-size dense accept="image/*" @change="onImageChange" />
           </v-container>
-        </v-col>
         </form>
+        </v-col>
 
           <v-col cols="12" sm="6" md="6">
             <v-text-field label="모임명" required v-model="moimName"></v-text-field>

@@ -357,6 +357,31 @@ public class ClassServiceImpl implements ClassService {
         return res;
     }
 
+    //출결 관리 정보 가져오기
+    @Override
+    public ClassAttendanceVO getAttendanceInfo(String memberId) {
+    	ClassAttendanceVO info = new ClassAttendanceVO();
+    	
+    	info = classMapper.getTodayAttendanceInfo(memberId);
+    	
+    	if(info == null) info = classMapper.getNoneClassInfo(memberId);
+    	
+    	ClassAttendanceVO calc = classMapper.getTodayAttendanceCalc(memberId, info.getClassId());
+    	ClassAttendanceVO progress = classMapper.getTodayClassProgress(info.getClassId());
+    	
+    	info.setSumAttd(calc.getSumAttd());
+    	info.setSumOut(calc.getSumOut());
+    	info.setSumLeave(calc.getSumLeave());
+    	info.setSumAbsent(calc.getSumAbsent());
+    	info.setSumLate(calc.getSumLate());
+    	info.setTotal(progress.getTotal());
+    	info.setGone(progress.getGone());
+    	info.setProgress(progress.getProgress());
+    	
+    	return info;
+    }
+    		
+    		
     // qr코드 생성
     @Override
     public String createCodeImg(String link) {

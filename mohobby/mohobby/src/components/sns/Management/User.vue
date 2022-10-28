@@ -1,43 +1,30 @@
 <template>
     <div>
       <v-card class="mx-auto" width="800" min-height="520">
-        <v-toolbar color="#2ac187" dark> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' {{ keyword }} '에 대한 검색결과입니다 </v-toolbar>
+        <v-toolbar color="#2ac187" dark> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ keyword }}</v-toolbar>
           <v-list three-line>
             <div v-for="(user, i) in users" :key="i">
               <template>
                 <v-list-item>
                   <v-list-item-avatar>
-                    <v-img @click="goUserProfile(user.memberId)" :src="require(`@/assets/image/user/${user.profileImg}`)" />
+                    <v-img @click="goUserProfile(users[i])" :src="require(`@/assets/image/user/${user.profileImg}`)" />
                   </v-list-item-avatar>
                   <v-list-item-content>
+                    <v-list-item-title v-html="user.followerId" />
+                    <v-list-item-title v-html="user.followingId" />
                     <v-list-item-title v-html="user.memberId" />
-                    {{user.nickname}}
                     <v-list-item-subtitle v-html="user.nickname" />
                   </v-list-item-content>
+                  <v-btn v-show="user.followingId" 
+                         @click="unfollow(memberId,users[i].followingId)"
+                         rounded color="#2ac187" class="white--text">손절</v-btn>
+                  <v-btn v-show="user.followingId" 
+                        @click="unfollow(memberId,users[i].followingId)"
+                        rounded color="white" class="#2ac187--text">팔로우</v-btn>
                 </v-list-item>
               </template>
             </div>
           </v-list>
-          <!-- <div class="wrap_box" v-if="noResult == true" >
-            <v-img class="mx-auto mt-10 mb-10" width="100" src="@/assets/image/sns/default/warn.jpg" alt="no_result"></v-img>
-            <div class="text_box">
-              <div class="text_box_title"><span class="point">'{{ searchResult }}'</span> 에 대한 검색결과가 없습니다. </div>
-              <ul>
-                <li>
-                  단어의 철자가 정확한지 확인해 주세요🙏
-                </li>
-                <li>
-                  한글을 영어로 혹은 영어르르 한글로 입력했는지 확인해주세요🙏
-                </li>
-                <li>
-                  검색어의 단어 수를 줄이거나, 보다 일반적인 검색어로 다시 검색해주세요🙏
-                </li>
-                <li>
-                  해시태그 검색일 경우 앞에 '#'가 빠졌는지 확인해주세요🙏
-                </li>
-              </ul>
-            </div>
-          </div> -->
         </v-card>
       </div>
 </template>
@@ -49,17 +36,13 @@
     props:{
       userResult: [], //유저검색 결과
       keyword : String, //키워드
-
-      followingLists : [], //팔로잉 목록 조회 페이지,
     },
     data() {
       return {
 
           users: [], //props 담을 변수
-
-          // noResult: false,
-          // user: true,
-          // userResultForm: false,
+          memberId : this.$store.state.id,
+          userId: "",
 
       };
     },
@@ -71,16 +54,6 @@
       this.users = this.userResult;
       console.log(this.user);
 
-      //팔로잉 리스트
-      if(this.followingLists){
-        this.users = this.followingLists;
-      };
-
-      // this.userSearch();
-      // this.keyword = this.searchResult;
-        // this.searchMem(this.keyword);
-
-
     },
     watch: {
       userResult(){
@@ -91,10 +64,33 @@
         
     methods: {
       //유저 프로필로 이동
-      goUserProfile(userId) {
-        this.$router.push({ path: "/snsUserFeed", query: { userId: userId } });
+      goUserProfile(e) {
+        if (e.followerId){
+          this.userId = e.followerId;
+        } else if (e.memberId) {
+          this.userId = e.memberId;
+        } else if (e.followingId){
+          this.userId = e.followingId;
+        }
+        this.$router.push({ path: "/snsUserFeed", query: { userId: this.userId } });
       },
-    }
+
+      //언팔로우
+      unfollow(memberId, userId) {
+        this.axios
+          .delete("/sns/follow/" + memberId + "/" + userId)
+          .then((res) => {
+            console.log("언팔로우성공 전" + this.followStatus);
+            console.log("언팔로우 성공! " + res);
+            const btn = document.getElementsByClassName('.white--text');
+            btn.innerText = '친구걸기';
+
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        },
+      }
   }
   </script>
   

@@ -19,6 +19,7 @@
         v-model="moimRegion"
         label="지역"
         dense
+        @change="up()"
       >
       </v-select>
     </v-col>
@@ -35,6 +36,11 @@ export default {
       moimRegion: "",
       regionList: [],
       }
+  },
+  methods: {
+    up(){
+      this.$emit("Region",this.moimRegion)
+    }
   },
   created() {
     const vm = this;

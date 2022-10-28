@@ -14,7 +14,11 @@
       </v-col>
     </div>
     <div class="example">
-      <QuillEditor @editorEmit="getContent" ref="editor_content"></QuillEditor>
+      <quill-editor
+        class="editor"
+        v-model="content"
+        :style="editorStyle"
+      />
     </div>
     <div class="center">
       <v-btn>취소</v-btn>
@@ -22,44 +26,17 @@
     </div>
   </div>
 </template>
--
+
 <script>
-import QuillEditor from "@/components/common/TextEditor.vue";
 
 export default {
-  name: "quill-example-snow",
-  title: "Theme: snow",
+  name: "MoimBoardEditor",
   components: {
-    QuillEditor,
   },
   data() {
     return {
-      styleEditor: {
-        height: "300px"
-      },
-      editorOption: {
-        placeholder: "내용을 입력해주세요",
-        modules: {
-          toolbar: [
-            ["bold", "italic", "underline", "strike"], // <strong>, <em>, <u>, <s>
-            ["blockquote", "code-block"], // <blockquote>, <pre class="ql-syntax" spellcheck="false">
-            [{ header: 1 }, { header: 2 }], // <h1>, <h2>
-            [{ list: "ordered" }, { list: "bullet" }],
-            [{ script: "sub" }, { script: "super" }], // <sub>, <sup>
-            [{ indent: "-1" }, { indent: "+1" }], // class제어
-            [{ direction: "rtl" }], //class 제어
-            [{ size: ["small", false, "large", "huge"] }], //class 제어 - html로 되도록 확인
-            [{ header: [1, 2, 3, 4, 5, 6, false] }], // <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, normal
-            [{ font: [] }], // 글꼴 class로 제어
-            [{ color: [] }, { background: [] }], //style="color: rgb(230, 0, 0);", style="background-color: rgb(230, 0, 0);"
-            [{ align: [] }], // class
-            // ["clean"],
-            ["link", "image", "video"],
-          ],
-          syntax: {
-            highlight: (text) => hljs.highlightAuto(text).value,
-          },
-        },
+      editorStyle: {
+        'height': '300px',
       },
       content: "",
       boardType: null,
@@ -73,7 +50,7 @@ export default {
       console.log("emit_success", editorContent);
       this.content = editorContent;
       console.log("겟 콘탠트 내용", this.content);
-    },
+    }, 
     async clickSave(boardId) {
       document.querySelector(".ql-editor").style.display = 'none';
 
@@ -140,9 +117,6 @@ export default {
     }
   },
   computed: {
-    contentCode() {
-      return hljs.highlightAuto(this.content).value;
-    },
   },
   mounted() {
   },
