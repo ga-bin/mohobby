@@ -159,7 +159,9 @@ export default {
       } else {
         this.$router.push({
           name: "moimBoard",
-          params: { moimId: this.items[idx].moimId, boardType: 1 },
+          params: { moimId: this.items[idx].moimId,
+                    moimName: this.items[idx].moimName,
+                    boardType: 1 },
         });
       }
     },

@@ -513,4 +513,10 @@
    and board_type = #{boardType}
    and title like '%'||#{title}||'%'
   </select>
+  
+  <!-- 소모임 프로필 수정 -->
+  <update id="updateProfile" parameterType="com.yedam.mohobby.service.moim.MoimVO">
+  update moim set moim_info=#{moimInfo},moim_catg=#{moimCatg}',moim_region=#{moimRegion}
+  where moim_id = #{moimId};
+  </update>
 </mapper>

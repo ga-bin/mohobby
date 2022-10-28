@@ -387,6 +387,7 @@
         save(){
             this.moimCatg = this.selected
             this.temp=this.selected
+            this.$emit('Catg',this.moimCatg)
       },
         cancel(){
             this.selected =this.temp

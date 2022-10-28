@@ -117,27 +117,36 @@ export default {
   },
   components: { MakeSchedule },
   methods: {
-
     deleteSchedule(skedId){
-      this.$swal('정말 삭제하시겠습니까?')
-      if(this.$swal.value == true){
-        let vm =this
-        this.axios.delete("/deleteSchedule",{
-          params:{
-            skedId : skedId
-          },
-        })
-        .then(function(res){
-          this.$swal("삭제가 완료되었습니다.")
-
-          vm.getSchedule();
-        })
-        .catch(function(res){
-          console.log("실패")
-        })
-      } else {
-        this.$swal('삭제가 취소되었습니다.')
-      }
+      this.$swal({
+        title: '정말 삭제할까요?',
+        text: "삭제를 원하지 않으면 취소버튼을 눌러주세요!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ac187',
+        cancelButtonColor: '#d33',
+        cancelButtonText: '취소',
+        confirmButtonText: '네, 삭제할게요!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let vm = this;
+      this.axios.delete("/deleteSchedule",{
+        params:{
+          skedId : skedId,
+        }
+      }).then((resp) => {
+        console.log("일정 삭제 결과" + resp);
+        this.$swal(
+            '삭제 완료!',
+            '작성한 일정을 삭제하였습니다.',
+            'success'
+          )
+        vm.getSchedule()
+      }).catch((err) => {
+        console.log(err)
+      })
+        }
+      })
     },
       getSchedule() {
       this.axios
