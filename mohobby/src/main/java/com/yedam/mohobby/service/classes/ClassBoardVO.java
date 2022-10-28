@@ -18,4 +18,5 @@ public class ClassBoardVO {
     private int secret; //0:공개, 1:비공개
     private int commentTotal;   //코멘트 토탈
     private String className; // 강의 명 
+    private int classType; // 0온라인 1오프라인 
 }

@@ -90,7 +90,6 @@
           </v-icon>
           <v-icon @click="deleteFlagMoim(item)"> mdi-delete </v-icon>
         </template>
-        small
 
         <template v-slot:no-data>
           <v-btn color="primary"> Reset </v-btn>
@@ -98,10 +97,9 @@
         <template v-slot:item.showDetail="{ item }">
           <v-icon @click="goToMoim(item)"> mdi-arrow-right-bold-box </v-icon>
         </template>
-        small
 
         <template v-slot:no-data>
-          <v-btn color="primary"> Reset </v-btn>
+          <p>해당하는 모임이 없습니다.</p>
         </template>
       </v-data-table>
     </div>
