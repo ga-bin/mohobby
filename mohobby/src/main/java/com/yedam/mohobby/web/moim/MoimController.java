@@ -509,17 +509,6 @@ public class MoimController {
       }
     }
     
-    //n빵 체크 업데이트
-    @PutMapping("/update")
-    public String updateCheck(@Param ("dutchId")int dutchId, @Param ("calcCheck")int calcCheck) {
-    	try {
-    		service.checkUpdate(dutchId, calcCheck);
-    		return "success";
-    	} catch(Exception e) {
-    		return "error"+e;
-    	}
-    }
-    
     //게시글 검색
     @GetMapping("/boardSearch")
     public List<MoimBoardVO> boardSearch(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title) {
@@ -527,7 +516,7 @@ public class MoimController {
     }
     
     //소모임 프로필 수정
-    @PutMapping(value = "/memberProfileUpdate", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/moimProfileUpdate", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public String updateMoimProfile(MoimVO moimVO, List<MultipartFile> files) {
 	    System.out.println("===========================");
     	System.out.println(moimVO);
@@ -557,6 +546,27 @@ public class MoimController {
     	}
     }
     
+    //n빵 게시물 삭제
+    @DeleteMapping("/delNbbang")
+    public String deleteNbbang(@Param("dutchId")int dutchId) {
+    	try {
+    		service.delNbbang(dutchId);
+    		return "success";
+    	} catch (Exception e) {
+    		return "error";
+    	}
+    }
+    
+    //n빵 calc체크 수정
+    @PutMapping("/updateCalc")
+    public String updateCalc(@RequestBody MoimDutchPtpVO dutchPtpVO) {
+    	try {
+    		service.updateCacl(dutchPtpVO);
+    		return "success";
+    	} catch(Exception e) {
+    		return "error";
+    	}
+    }
 }
 
 

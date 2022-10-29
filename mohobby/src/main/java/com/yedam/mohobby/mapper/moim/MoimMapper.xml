@@ -190,7 +190,7 @@
 	<!-- 소모임 N빵 전체 리스트 조회 -->
 	<select id="getAllDuchList" parameterType="int"
 		resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
-		select * from moim_dutch where moim_id = #{moimId}
+		select * from moim_dutch where moim_id = #{moimId} order by dutch_id DESC
 	</select>
 
 
@@ -535,9 +535,32 @@
   </select>
   
   <!-- 소모임 프로필 수정 -->
-  <update id="updateProfile" parameterType="com.yedam.mohobby.service.moim.MoimVO">
-  update moim set moim_info=#{moimInfo},moim_catg=#{moimCatg}',moim_region=#{moimRegion}
-  where moim_id = #{moimId};
+  <update id="updateProfile">
+  update moim set moim_info=#{moimInfo}
+  ,moim_catg=#{moimCatg}
+  ,moim_region=#{moimRegion}
+  where moim_id = #{moimId}
   </update>
-
+  
+  <!-- n빵 삭제 -->
+  <delete id="delNbbang">
+  	DECLARE
+	v_dutchId NUMBER := #{dutchId};
+	BEGIN
+	DELETE moim_dutch_ptp where dutch_id = v_dutchId;
+	DELETE moim_dutch WHERE dutch_id = v_dutchId;
+	END;
+  </delete>
+  
+  <!-- n빵 체크 업데이트 -->
+  <update id="updateCacl">
+	UPDATE moim_dutch_ptp
+	SET calc_check = 
+	CASE
+	WHEN calc_check = 1 THEN 0    
+	WHEN calc_check = 0 THEN 1
+	END
+	WHERE member_id = #{memberId}
+	and dutch_id = #{dutchId};
+  </update>
 </mapper>
