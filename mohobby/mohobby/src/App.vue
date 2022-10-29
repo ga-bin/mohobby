@@ -39,14 +39,16 @@ export default {
   methods: {
     //채팅방 inout 감지
     CheckOut() {
+      console.log("roomNO:" + this.$store.state.stayRoomNo)
+      console.log("memberId:" + this.$store.state.id)
       this.axios
         .get("/updateCheckOut", {
           params: {
-            roomId: this.$store.state.isRoomNo,
+            roomId: this.$store.state.stayRoomNo,
             memberId: this.$store.state.id
           },
         }).then(function (res) { console.log("res : " + res) })
-      vm.axios
+      this.axios
         .post("/updateCheckTime", {
           memberId: this.$store.state.id,
           roomNo: this.$store.state.stayRoomNo,
@@ -58,7 +60,7 @@ export default {
 
   },
   created() {
-    this.stompClient.connect(
+    this.stompClient.disconnect(    this.stompClient.connect(
       {},
       frame => {
         // 소켓 연결 성공
@@ -70,7 +72,8 @@ export default {
         console.log('소켓 연결 실패', error);
         this.connected = false;
       }
-    );
+    ),)
+
 
   },
   watch: {
