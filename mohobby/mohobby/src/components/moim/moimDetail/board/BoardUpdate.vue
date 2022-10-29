@@ -3,8 +3,12 @@
     <div class="flex">
       <v-chip class="ma-2 mt-4" text-color="white" color="black" label>목록</v-chip>
       <v-radio-group v-model="boardType" row>
-        <v-radio class="ml-7" label="공지" value=0></v-radio>
-        <v-radio label="메인글" value=1></v-radio>
+        <div v-if="this.$route.query.boardType == 0">
+        <v-radio class="ml-6" label="공지" v-model="this.$route.query.boardType" value=0></v-radio>
+        </div>
+        <div v-else>
+        <v-radio class="ml-6" v-model="this.$route.query.boardType" label="메인글" value=1></v-radio>
+      </div>
       </v-radio-group>
     </div>
     <div class="flex">
@@ -14,6 +18,11 @@
       </v-col>
     </div>
     <div class="example">
+      <quill-editor
+        class="editor"
+        v-model="content"
+        :style="editorStyle"
+      />
     </div>
     <div class="center">
       <v-btn>취소</v-btn>
@@ -21,7 +30,6 @@
     </div>
   </div>
 </template>
--
 <script>
 
 export default {
@@ -31,14 +39,35 @@ export default {
   },
   data() {
     return {
-      content: "",
-      boardType: null,
-      title: '',
+      editorStyle: {
+        'height': '300px',
+      },
+      content: '',
+      boardType: this.$route.query.boardType,
+      title: this.$route.query.title,
       moimId: this.$route.query.moimId,
-      boardId: ''
+      boardId: this.$route.query.boardId,
     };
   },
+  created() {
+      this.getPost()
+    },
   methods: {
+    getPost() {
+        this.axios.get("/readMoimInfo", {
+          params : {
+            boardId : this.boardI
+          }
+        })
+        .then((resp)=> {
+          console.log(resp)
+          this.content = resp.data;
+          console.log(this.content)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      },
     async clickSave(boardId) {
       document.querySelector(".ql-editor").style.display = 'none';
 
@@ -53,16 +82,13 @@ export default {
       }
       this.saveEditor(boardId);
     },
+
+
     testEditor() {
-      console.log(this.title)
-      console.log(this.boardType)
-      console.log(this.$store.state.id)
-      console.log(this.moimId)
-      this.axios.post("/insertBoard", {
+      this.axios.put("/updateBoard", {
         title: this.title,
         boardType: this.boardType,
-        memberId: this.$store.state.id,
-        moimId: this.moimId
+        boardId : this.boardId 
       })
         .then((resp) => {
           console.log(resp)
