@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-row class="text-center">
+    <v-row>
       <v-col>
-        <h1>Home Page</h1>
+        <h1>강의를 선택하세요</h1>
       </v-col>
     </v-row>
     <v-row>
-      <v-col class="text-center">
+      <v-col>
         <ul>
           <li>
             <v-btn

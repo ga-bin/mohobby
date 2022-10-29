@@ -108,4 +108,9 @@ public interface ClassMapper {
     public void insertAttendanceInfo(HashMap<String, String> req);
     //출결 정보 수정
     public void updateAttendanceInfo(HashMap<String, String> req);
+    
+    
+    /*
+     * 작성 게시글
+     */
 }

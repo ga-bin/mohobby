@@ -215,7 +215,10 @@ public class ClassController {
 	
 	//내 강의 목록 조회
 	@GetMapping("/class/my")
-    public List<ClassesVO> getMyCourse(@RequestParam String memberId, @RequestParam int classStatus) {
+    public List<ClassesVO> getMyCourse(
+    		@RequestParam(required = true) String memberId, 
+    		@RequestParam(required = false) int classStatus
+    		) {
     	return classService.getMyCourse(memberId, classStatus);
     }
 	

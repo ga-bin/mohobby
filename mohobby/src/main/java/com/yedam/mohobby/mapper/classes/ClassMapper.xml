@@ -463,7 +463,10 @@
 		where class_id in (select class_id
 		                    from class_pay
 		                    where member_id = #{memberId}
-		                    and class_status = #{classStatus})
+		                    <if test="classStatus != null">
+		                    and class_status = #{classStatus}
+		                    </if>
+		                    )
 	</select>
 	
 	<!-- 내 강의 진행율 조회 -->
