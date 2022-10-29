@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-card class="mx-auto" width="800" min-height="520">
-        <v-toolbar color="#2ac187" dark> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' {{ keyword }} '에 대한 검색결과입니다 </v-toolbar>
+        <v-toolbar color="#2ac187" dark> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ keyword }} 에 대한 검색결과입니다 </v-toolbar>
             <div class="wrap_box">
                 <v-img class="mx-auto mt-10 mb-10" width="100" src="@/assets/image/sns/default/warn.jpg" alt="no_result"></v-img>
                 <div class="text_box">

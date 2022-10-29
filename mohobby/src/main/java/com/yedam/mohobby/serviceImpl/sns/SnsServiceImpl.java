@@ -21,6 +21,7 @@ import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.sns.SnsProfileVO;
 import com.yedam.mohobby.service.sns.SnsSearchHistoryVO;
 import com.yedam.mohobby.service.sns.SnsService;
+import com.yedam.mohobby.service.user.MemPickKeywordVO;
 import com.yedam.mohobby.service.user.MemberVO;
 /**
  * @create 22/10/08
@@ -203,6 +204,12 @@ public class SnsServiceImpl implements SnsService{
     @Override
     public List<SnsPostVO> getUserFeed(String memberId) {
         return mapper.getUserFeed(memberId);
+    }
+    
+    //유저키워드조회
+    @Override
+    public List<MemPickKeywordVO> getUserHobbies(String memberId) {
+        return mapper.getUserHobbies(memberId);
     }
     
    //피드상세조회
@@ -439,6 +446,7 @@ public class SnsServiceImpl implements SnsService{
 		System.out.println("firstIdx : " + firstIdx);
 		return mapper.allListPaging(firstIdx);
 	}
+
 
 
 

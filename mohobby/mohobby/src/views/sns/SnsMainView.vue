@@ -1,10 +1,12 @@
 <template>
-    <div id="container" align-center>
-        <v-container>
-                <v-spacer></v-spacer>
-                <div style="float:right">
-                    <!-- 내 피드 버튼 -->
-                    <v-btn @click="goMyFeed(member)" color="grey" icon class="mx-auto black--text font-weight-bold">
+    <div id = "container" align-center  @scroll="handleNotificationListScroll">
+        <v-container id="main">
+          
+            <v-spacer></v-spacer>
+            <div v-show = "member" style="float:right">
+                <!-- 내 피드 버튼 -->
+                <v-btn  @click="goMyFeed(member)"
+                        color="grey" icon class="mx-auto black--text font-weight-bold">
                         <v-icon left>mdi-account</v-icon>
                     </v-btn>
                     <!-- 내 피드 버튼 끝 -->

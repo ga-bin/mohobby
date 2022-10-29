@@ -222,8 +222,7 @@
 
           댓글
 
-         -->
-  
+         --> 
         <v-col cols="12">
           <CmtReg @cmtCount="cmtAllCount" :postid="postId" :targetId="items.memberId" />
         </v-col>
@@ -232,13 +231,12 @@
   </div>
   </div>
 </template>
-<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+
 <script>
-Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); // 사용하려는 앱의 JavaScript 키 입력
 
 import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
 import CmtReg from "@/components/sns/FeedDetail/CmtReg.vue";
-
+//Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); // 사용하려는 앱의 JavaScript 키 입력
 export default {
   name: "FeedDetail",
   components: { SnsSidebar, CmtReg },
@@ -338,7 +336,7 @@ export default {
             description: this.items.content,
             imageUrl: 'https://ifh.cc/g/H0FFVT.jpg',   
             link: {
-              webUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
+              webUrl: this.$url + 'snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
             },
           },
           // social: {
@@ -349,8 +347,8 @@ export default {
             {
               title: '모하비에서 확인하기',  //첫 번째 버튼 
               link: {
-                mobileWebUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,  //버튼 클릭 시 이동 링크
-                webUrl: 'http://localhost:8081/snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
+                mobileWebUrl: this.$url + 'snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,  //버튼 클릭 시 이동 링크
+                webUrl: this.$url + 'snsFeedDetail?writer=' + this.writer +'&postId=' + this.postId,
               },
             },
           ],

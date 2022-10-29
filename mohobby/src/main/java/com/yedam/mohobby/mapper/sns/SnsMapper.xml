@@ -262,6 +262,14 @@
       WHERE m.member_id = #{ memberId }
    </select>
    
+   <!-- 멤버의 등록된 취미 키워드 가져오기 -->
+   <select id="getUserHobbies" resultType="com.yedam.mohobby.service.user.MemPickKeywordVO">
+   		SELECT k.keyword_name 
+   		  FROM keyword k, member_pick_keyword m
+   		 WHERE k.keyword_id = m.keyword_id
+   		   AND member_id = #{ memberId }
+   </select>
+   
    
    <!-- 유저피드 조회 -->
    <select id="getUserFeed" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">
@@ -348,7 +356,7 @@
    
    
    <!-- 취미 조회 -->
-   <select id="getUserHobbies" parameterType="String" resultType="com.yedam.mohobby.service.user.MemberVO">
+<!--    <select id="getUserHobbies" parameterType="String" resultType="com.yedam.mohobby.service.user.MemberVO">
       SELECT REGEXP_SUBSTR(hobbies, '[^,]+', 1, Level) hobbies
         FROM member
        WHERE hobbies is not null
@@ -357,7 +365,7 @@
          AND PRIOR member_id  = member_id       
          AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
          AND ROWNUM <=5]]>
-   </select>
+   </select> -->
    
    
    
@@ -424,19 +432,19 @@
    
    <!-- 팔로잉조회 -->
    <select id="getFollowingList" parameterType = "String" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
-        SELECT f.following_id, m.profile_img, m.nickname, m.intro
+        SELECT f.follower_id, f.following_id, m.profile_img, m.nickname, m.intro
           FROM follow f, member m
-         WHERE f.following_id = m.member_id
-           AND follower_id = #{ followerId }
+         WHERE f.follower_id = m.member_id
+           AND following_id = #{ followerId }
    </select>
    
    
    <!-- 팔로워조회 -->
    <select id="getFollowerList" parameterType = "String" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
-      SELECT f.follower_id, m.profile_img, m.nickname, m.intro 
+      SELECT f.following_id, f.follower_id, m.profile_img, m.nickname, m.intro 
           FROM follow f, member m
-         WHERE f.follower_id = m.member_id
-           AND following_id = #{ followingId }
+         WHERE f.following_id = m.member_id
+           AND follower_id = #{ followingId }
    </select>
    
    <!-- 팔로우 상태 조회 -->

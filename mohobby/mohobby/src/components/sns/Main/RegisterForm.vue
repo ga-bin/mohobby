@@ -84,76 +84,20 @@
             </div>
 
 
-
-
-
-
-
-
-
-
-
-    <!-- <div v-for="(file,i) in fileList" :key="i" style="width:200px; height:200px; display: inline-block;">
-            <div> 
-              <v-file-input
-                class="mx-auto"
-                label="이미지 등록🙏🙏🙏"
-                type="file"
-                style="width:200px; display: inline-block;"
-                v-model="file.file"
-                prepend-icon="mdi-camera"
-                counter
-                show-size
-                dense
-                @change="onImageChange(i)"
-                name="fileList"
-                accept="image/png, image/jpeg, image/jpg"
-              />           -->
-
-              <!-- 이미지 미리보기 -->
-              <!-- <div style="display: inline-flex;">
-                <v-img
-                  :src="file.url"
-                  aspect-ratio="4/3"
-                  height="150px"
-                  width="200px"
-                  lazy-src
-                  error
-                  style="margin-right: 10px"
-                />
-              </div>
-
-
-              <div 
-                style="display: inline-block; color:green; margin-right:10px;"
-                class="plus_btn"
-                rounded
-                @click="addFileList(i)"
-              >
-                +
-              </div>
-              <div
-                style="display: inline-block; color:red; font-size:20px;"
-                class="del_btn"
-                rounded
-                @click="delFileList(i)"
-              >
-                -
-            </div>
-          </div>
-        </div>  -->
-
-
-
           <!-- 내용 -->
           <v-textarea
             name="content"
             auto-grow
             placeholder="내용을 입력해주세요!"
             value=""
+            counter="2000"
             v-model="content"
+            @change="checkContent(content)"
           ></v-textarea>
         </v-container>
+
+
+
         <!-- 유저소환 -->
 
         <!-- 해시태그 -->
@@ -165,11 +109,13 @@
             :items="items"
             :search-input.sync="search"
             hide-selected
-            label="Search for an option"
+            label="해시태그를 등록해보세요!"
             multiple
             small-chips
             solo
           >
+
+
             <!-- :filter="filter" -->
             <template v-slot:no-data>
               <v-list-item>
@@ -235,16 +181,8 @@ data() {
   colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange'],
   editing: null,
   editingIndex: -1,
-  items: [ //임의로 바인딩해놓은 추천 해시태그
-    { header: 'Select an option or create one' },
-    {
-      text: '오운완',
-      color: 'blue',
-    },
-    {
-      text: '오수완',
-      color: 'red',
-    },
+  items: [ // Top 6해시태그 추천 키워드
+    { header: '최근 인기있는 해시태그를 추가해보세요!' },
   ],
   nonce: 1,
   menu: false,
@@ -257,6 +195,7 @@ data() {
   search: null,
   x: 0,
   y: 0,
+
   //이미지Data
   uploadimageurl: [], //미리보기 이미지url
   imagecnt: 0,//업로드한 이미지개수 axious시에 넘겨줌
@@ -267,11 +206,12 @@ data() {
   file : {},
   postId : "1",
   formData : {},
+
   //sns글등록Data
   memberId : this.$store.state.id,
   content: "",
   getHashtag:[],//내가 추가한 해시태그
-  hashtag:"",//스트링화 해시태그
+  hashtag:"",//해시태그 스트링화
   };
 },
 created() {
@@ -317,10 +257,18 @@ getHotHashtags() {
   .then(res => {
     console.log(res.data);
 
-
+    for(let i = 0; i<res.data.length; i++){
+      let hashtag = res.data[i].hashtag;
+      this.items.push({
+        text: hashtag,
+        color: 'pink',
+      })
+    }
+    console.log(this.items);
   }).catch(err =>{
     console.log(err);
   });
+
 
 },
 
@@ -328,7 +276,7 @@ getHotHashtags() {
  // 유효성검사 & 미리보기
 onImageChange(i) {
   let file = this.fileList[i].file;
-  if (!file) return; //file없으면 return
+  if (!file)  return; //file없으면 return
   console.log("file------>");
   console.log(file);
 
@@ -351,8 +299,13 @@ onImageChange(i) {
 
 
 addFileList(i) {
+  // let file = this.fileList[i].name;
+  // if (!file || file == "" ) {
+  //   this.$swal("사진이 첨부되지 않은 추가칸이 있는지 확인 부탁드립니다🙏");
+  //   return; //file없으면 return
+  // }
   if(this.fileList.length > 4){
-    this.$swal("사진은 5장까지만 부탁드립니다🙏")
+    this.$swal("사진은 5장까지만 추가 부탁드립니다🙏")
     return; //추가한것부터 1개로 취급해서 계산됨. 즉, 파일 5개 이상 추가 못하도록
   }
       //파일 초기화
@@ -383,8 +336,9 @@ delFileList(i) {
       }
     },
 
-
     //게시글 등록
+
+
 
     //사진 업로드
     uploadImage() {
@@ -392,19 +346,20 @@ delFileList(i) {
       let self = this;
       console.log(self.fileList);
 
-      for(let i=0; i<self.fileList.length; i++){
-        let file = self.fileList[i].file;
-        if (!file) { 
-          self.$swal("이미지를 첨부하지 않은 추가칸은 삭제 부탁드립니다🙏");
-          return;
-        }
+      if(self.content.length > 2000) {
+        self.$swal("내용은 2000자 이내로 부탁드립니다🙏");
+        return;
       }
 
-      console.log(self.fileList.length);
+      // if(self.fileList.length[0] = ""){
+      //     self.$swal("이미지는 최소 한 장 이상 첨부 부탁드립니다🙏");
+      //     return;
+      // }
+
+      // console.log("파일길이"+self.fileList.length);
       // let file = self.fileList.file;
       // if (!file) { self.$swal("추가한 이미지는 등록 혹은 삭제 부탁드립니다🙏");
-      //   retur
-      //  n; //file없으면 return
+      //   return; //file없으면 return
       // }
 
       this.model.forEach((hashtag) => {

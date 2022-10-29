@@ -2,7 +2,6 @@
   
   <!-- <div class="cards-container" > -->
     <v-container fluid>
-    <v-sheet max-width="1400">
     <!-- FIRST CARD -->
     <v-slide-group class="pa-2">
         <v-slide-item  v-for="(info,i) in infoList" :key="i" style="width:280px;">
@@ -30,7 +29,6 @@
           </div>
       </v-slide-item>
     </v-slide-group>
-  </v-sheet>
   </v-container>
   <!-- </div> -->
 </template>

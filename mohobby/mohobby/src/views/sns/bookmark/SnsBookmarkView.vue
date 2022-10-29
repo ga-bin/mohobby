@@ -1,5 +1,8 @@
 <template>
-  <Collection />
+  <div>
+    <SnsSidebar />
+    <Collection />
+  </div>
 </template>
 <script>
     import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";

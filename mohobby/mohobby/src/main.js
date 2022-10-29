@@ -18,6 +18,9 @@ import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import { VueSpinners } from "@saeris/vue-spinners";
 
+
+window.Kakao.init("157b38874395f658a48c02cc8473066b"); // 카카오 로그인 앱 키
+
 axios.defaults.baseURL = "http://localhost:8088/java";
 const serverURL = "http://localhost:8088/java/sock";
 let socket = new SockJS(serverURL);
