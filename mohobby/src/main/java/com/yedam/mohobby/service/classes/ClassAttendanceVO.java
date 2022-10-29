@@ -33,4 +33,5 @@ public class ClassAttendanceVO {
     private int gone;		//과정 진행된 일수
     private double progress;	//오늘 기준 과정 진행율
     private Date classDate;	//수업일자
+    private int count; 	//조퇴+외출이 3번 이상인지
 }

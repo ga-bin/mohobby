@@ -1,6 +1,7 @@
 <template>
-  <div style="margin: 50px 40px;">
-        <v-row v-if="info.classId != null" style="border: 1px solid #ededed; border-radius: 10px;" >
+    <div style="margin: 50px 40px;">
+        <div v-if="info.classId != null">
+        <v-row style="border: 1px solid #ededed; border-radius: 10px;" >
             <v-col cols="3" class="d-flex justify-center align-center">
                 <v-sheet>
                     <div>
@@ -23,13 +24,13 @@
                         <v-row class="d-flex justify-center mt-10">
                             <v-btn small outlined color="#2ac187" 
                                 @click="attdBtn"
-                                v-if="info.outDate == null || (info.comebackDate != null && info.outDate != null)"
+                                v-if="(!info.outDate && !info.attdDate) || info.exitDate"
                             >
                                 출석
                             </v-btn>
                             <v-btn small outlined color="#2ac187" 
                                 @click="exitBtn"
-                                v-if="info.outDate != null && info.leaveDate == null && info.exitDate == null"
+                                v-if="(info.attdDate && !info.leaveDate && !info.exitDate) || (info.outDate && !info.comebackDate) || (info.attdDate && !info.exitDate)"
                             >
                                 퇴실
                             </v-btn>
@@ -47,7 +48,6 @@
                             </v-btn>
                         </v-row>
                     </div>
-
                 </v-sheet>
             </v-col>
             <v-col cols="9" class="d-flex">
@@ -169,7 +169,6 @@
 
                                     {{ info.progress }}% ({{ info.gone }}/{{ info.total }}일)
                                 </span>
-                                
                             </v-col>
                             <v-col cols="8">
                                 <v-progress-linear 
@@ -187,6 +186,10 @@
                 </v-sheet>
             </v-col>
         </v-row>
+        <v-row>
+            <div>* 조퇴/외출/지각 3번은 결석 1번으로 처리됩니다.</div>
+        </v-row>
+        </div>
         <v-card
             v-if="info.classId == null"
             flat justify="center" 
@@ -200,7 +203,6 @@
             v-model="dialog"
             width="400"
         >
-
             <v-card>
                 <img :src="qrimg" style="width: 400px; height: 400px;" />
             </v-card>
@@ -209,13 +211,13 @@
 </template>
 
 <script>
-
 export default {
     data() {
         return {
-           info: {},
-           dialog: false,
-           qrimg: '',
+            info: {},
+            dialog: false,
+            qrimg: '',
+            urlTail: '',
         };
     },
     created() {
@@ -233,6 +235,60 @@ export default {
                 }
             }).catch(err => console.log(err));
         },
+        checkGeocode(url) {
+            let classX, classY, myX, myY, absX, absY, distance = '';
+            let vm = this;
+
+            // 주소-좌표 변환 객체를 생성합니다
+            var geocoder = new kakao.maps.services.Geocoder();
+
+            // 주소로 좌표를 검색합니다
+            geocoder.addressSearch(this.info.address, function(result, status) {
+
+                // 정상적으로 검색이 완료됐으면 
+                if (status === kakao.maps.services.Status.OK) {
+                    classX = result[0].x;
+                    classY = result[0].y;
+
+                    // 현재 내 위치 잡기
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(pos) {
+                            myY = pos.coords.latitude;
+                            myX = pos.coords.longitude;
+
+                            // 좌표 차이 절대값 구하기
+                            absX = Math.abs(classX - myX);
+                            absY = Math.abs(classY - myY);
+
+                            // 거리 차이 구하기
+                            distance = vm.getDistance(classX, classY, myX, myY).toFixed(1);
+                            vm.checkDistance(distance, url);
+                        });
+                    } else {
+                        this.$swal('위치를 인식할 수 없습니다.', '', 'error');
+                    }
+                } 
+            });
+        },
+        getDistance(lat1,lng1,lat2,lng2) {
+            function deg2rad(deg) {
+                return deg * (Math.PI/180)
+            }
+            var R = 6371; // Radius of the earth in km
+            var dLat = deg2rad(lat2-lat1);  // deg2rad below
+            var dLon = deg2rad(lng2-lng1);
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            var d = R * c; // Distance in km
+            return d;
+        },
+        checkDistance(distance, url) {
+            if(distance <= 0.5) {
+                this.floatingQR(url);
+            } else {
+                this.$swal('수강장소에서 다시 시도해주세요!', '', 'error');
+            }
+        },
         floatingQR(url) {
             this.axios.get('/AttdQR', {
                 params: {
@@ -245,14 +301,16 @@ export default {
             });
         },
         attdBtn() {
-            if(!this.info.classDate) {
+            let now = this.$moment().format('HH:mm');
+            let end = this.info.endTime + ':00';
+            let start = this.info.startTime - 1 + ':30';
+
+            if(!this.info.classDate || (now>end)) {
                 this.$swal('출석일이 아닙니다!', '', 'info');
                 return;
             }
 
-            let now = this.$moment().format('HH:mm');
-            let start = this.info.startTime - 1 + ':30';
-            if(now<=start) {
+            if(now>start) {
                 this.$swal(start + '부터 출석이 가능합니다!', '', 'info');
                 return;
             }
@@ -262,14 +320,14 @@ export default {
                 return;
             }
 
-            let url = this.$url + 'class/attd/login?id=' + this.$store.state.id + '&type=0';
-            this.floatingQR(url);
+            let url = this.$url + 'class/attd/login?id=' + this.$store.state.id + '&type=0' + this.urlTail;
+            this.checkGeocode(url);
         },
         exitBtn() {
             let now = this.$moment().format('HH:mm');
             let end = this.info.endTime + ':00';
 
-            if(now<=end) {
+            if(now<end) {
                 this.$swal(end + '부터 퇴실이 가능합니다!', '', 'info');
                 return;
             }
@@ -278,20 +336,33 @@ export default {
                 this.$swal('복귀 후 퇴실이 가능합니다!', '', 'info');
                 return;
             }
-        },
-        comebackBtn() {
+
+            let url = this.$url + 'class/attd/login?id=' + this.$store.state.id + '&type=4' + this.urlTail;
+            this.checkGeocode(url);
 
         },
+        comebackBtn() {
+            let url = this.$url + 'class/attd/login?id=' + this.$store.state.id + '&type=5' + this.urlTail;
+            this.checkGeocode(url);
+        },
         outBtn() {
+            if(this.info.outDate) {
+                this.$swal('외출은 한 번만 가능합니다!', '', 'info');
+                return;
+            }
+
             if(this.info.exitDate) {
                 this.$swal('이미 퇴실하였습니다!', '', 'info');
                 return;
             }
 
-            if(!this.info.attdBtn) {
+            if(!this.info.attdDate) {
                 this.$swal('입실 후 외출이 가능합니다!', '', 'info');
                 return;
             }
+
+            let url = this.$url + 'class/attd/login?id=' + this.$store.state.id + '&type=2' + this.urlTail;
+            this.checkGeocode(url);
         },
         leaveBtn() {
             if(this.info.exitDate) {
@@ -299,21 +370,27 @@ export default {
                 return;
             }
 
-            if(!this.info.attdBtn) {
+            if(!this.info.attdDate) {
                 this.$swal('입실 후 조퇴가 가능합니다!', '', 'info');
                 return;
             }
+
+            let url = this.$url + 'class/attd/login?id=' + this.$store.state.id + '&type=1' + this.urlTail;
+            this.checkGeocode(url);
         },
     },
     watch: {
         dialog() {
-            if(dialog) {
+            if(this.dialog) {
                 //소켓구독
             }
-            if(!dialog) {
-                //소켓구독취소
+            if(!this.dialog) {
+                this.getInfo();
             }
         },
+        info() {
+            this.urlTail = '&connect=' + this.$moment().format('YYYYMMDDHHmmss') + Date.now() + '&currId=' + this.info.currId + '&time=' + this.info.startTime;
+        }
     }
 }
 </script>

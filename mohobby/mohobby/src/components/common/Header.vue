@@ -227,6 +227,7 @@ export default {
     noticeRes() {
       let vm = this;
       if(vm.$store.state.id!=''){
+        
       vm.stompClient.subscribe("/queue/" + this.$store.state.id + "/notice",
         function (res) {
           if(res.body==vm.$store.state.id){

@@ -1,18 +1,22 @@
 package com.yedam.mohobby.web.admin;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.admin.AdminClassService;
 import com.yedam.mohobby.service.admin.AdminClassVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
+import com.yedam.mohobby.service.classes.ClassNeedsVO;
 import com.yedam.mohobby.service.classes.ClassesVO;
 
 /**
@@ -65,5 +69,43 @@ public class AdminClassController {
 	@PutMapping("/QnAUpdate")
 	public void updateQnAAnswer(@RequestBody ClassBoardVO classBoardVO) {
 		service.updateQnAAnswer(classBoardVO);
+	}
+	
+	// 강의 개설 신청 시 등록한 준비물 목록 조회
+	@GetMapping("/applyNeeds/{classId}")
+	public ClassesVO getApplyNeeds(@PathVariable int classId) {
+		return service.getApplyNeeds(classId);
+	}
+	
+	// 강의 수료증 발급 여부, 발급 기준 업데이트
+	@PutMapping("/updateCert")
+	public void updateCert(@RequestBody ClassesVO classesVO) {
+		service.updateCert(classesVO);
+	}
+	
+	// 강의 준비물 insert
+	@PostMapping("/insertNeeds")
+	public void insertNeeds(List<MultipartFile> prodImgList, List<ClassNeedsVOList> classNeedsList) { 
+		
+		for(int i = 0; i < prodImgList.size(); i++) {
+			System.out.println(prodImgList.get(i));
+		}
+		
+//		List<ClassNeedsVOList> classNeedsList
+//		System.out.println(classNeedsList);
+//		System.out.println(prodImgList);
+		
+		
+//		for(int i = 0; i < classNeedsVOListVO.classNeedsVOList.size(); i++) {
+//			System.out.println(classNeedsVOListVO.classNeedsVOList.get(i));
+//		}
+////		System.out.println(classNeedsVOListVO.ClassNeedsVOList);
+		
+//		for (List<ClassNeedsVO> key : classNeedsVOList.values()) {
+//			  for(let i = 0; i < key.size(); i++) {
+//				  
+//			  }
+//			  System.out.println(key);
+//			}
 	}
 }

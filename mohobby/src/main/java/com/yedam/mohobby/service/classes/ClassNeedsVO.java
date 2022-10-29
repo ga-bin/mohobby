@@ -1,8 +1,10 @@
 package com.yedam.mohobby.service.classes;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class ClassNeedsVO {
     private int prodId; //상품id
     private int classId; //강의id

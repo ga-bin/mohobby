@@ -114,9 +114,9 @@
 								msg_time
 						 FROM
 								chat
-						 WHERE msg_time IN (
+						 WHERE chat_id IN (
 											SELECT
-													MAX(msg_time)
+													MAX(chat_id)
 											FROM
 													chat
 											WHERE

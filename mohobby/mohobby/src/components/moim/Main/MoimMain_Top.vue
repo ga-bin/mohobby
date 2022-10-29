@@ -71,10 +71,9 @@
     <h1>Mo#obby 소모임</h1> 
     <div>
     <!-- 소모임 유저별 모임 리스트 -->
-    moimRight : {{moimRight}}
-    <MyMoim_user v-if="(moimRight === 1 || moimRight === 0)"></MyMoim_user>
-    <MyMoim_leader v-else-if="moimRight === 2 || moimRight === 3"></MyMoim_leader>
-    <MyMoim_none v-else-if="moimRight == ''"></MyMoim_none>
+    <MyMoim_user v-if="(moimRight == 1 || moimRight == 0) && newRight == 0"></MyMoim_user>
+    <MyMoim_leader v-else-if="(moimRight == 2 || moimRight == 3) && newRight == 0"></MyMoim_leader>
+    <MyMoim_none v-else-if="moimRight == '' || newRight == 1"></MyMoim_none>
   </div>
     <!-- 소모임 검색창 -->
     <br>
@@ -160,12 +159,14 @@
         search : '',
         moimRight : '',
         id : '',
+        newRight : null,
         noneuser : false,
       }
     },
     created() {
       this.moimRight = this.$store.state.user.role;
       this.id = this.$store.state.id;
+      this.moimR();
     },
     methods : {
   select : function() {
@@ -187,6 +188,26 @@
       } else {
       this.$emit('category', e.target.innerText)
       }
+    },
+    moimR() {
+      this.axios.get("/moimRight", {
+        params : {
+          memberId : this.$store.state.id,
+        }
+      })
+      .then((resp)=> {
+        console.log(resp.data.length)
+        if(resp.data.length == 0) {
+          this.newRight = 1
+        } else {
+          this.newRight = 0
+        }
+
+      })
+      .catch((err)=> {
+        console.log(err)
+
+      }) 
     }
   }
  }

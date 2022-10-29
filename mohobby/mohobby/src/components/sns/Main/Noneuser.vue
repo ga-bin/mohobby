@@ -41,11 +41,6 @@ export default {
       console.log(this.feeds);
 
     }, 
-    
-    // mounted () {
-    //   window.addEventListener('scroll', this.handleScroll);
-    // },
-
     methods : {
 
       //디테일피드 테스트버튼
@@ -53,18 +48,6 @@ export default {
         console.log(memberId);
         this.$router.push({ path: "/snsFeedDetail", query: {postId : postId, writer : memberId} });
       },
-
-
-      //무한스크롤
-      // handleScroll() {
-      // if (
-      //   window.scrollY + window.innerHeight >=
-      //   document.body.scrollHeight - 50
-      //   ) {
-      //     const new_feeds = this.feeds;
-      //   this.feeds = [...this.feeds, ...new_feeds];
-      //   }
-      // },  
   }
 };
 

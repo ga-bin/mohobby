@@ -162,4 +162,18 @@ public interface MoimMapper {
 	
 	//n빵 체크 수정
 	public void updateCacl(MoimDutchPtpVO dutchPtpVO);
+  
+	public String updateProfile(MoimVO moimVO);
+	
+	//소모임 게시글 수정
+	public void updateBoard(MoimBoardVO vo);
+	
+	//소모임 권한 확인
+	public List<MoimMemberVO> moimRight(@Param("memberId")String memberId);
+	
+	//소모임 가입 확인
+	public List<MoimMemberVO> joincheck(@Param("memberId")String memberId, @Param("moimId")int moimId);
+	
+	//소모임 가입자수 증가
+	public int updatecnt(@RequestBody MoimVO vo);
 }

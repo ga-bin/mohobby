@@ -75,53 +75,13 @@
           <ul>
             <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
             <li>
-              <FollowModal :text="followertext" :dataList="follower" :follow="follow" />
+              <FollowModal :text="followertext" :dataList="follower" />
             </li>
             <li>
-              <FollowModal :text="followingtext" :dataList="following" :follow="follow" />
+              <FollowModal :text="followingtext" :dataList="following"  />
             </li>
           </ul>
           
-          <!-- 버튼 컴포넌트: 유저본인이냐에 따라 버튼 바뀜 -->
-          <div class="profile-bio">
-            <ul v-if="sessionId && sessionId == infoes.memberId">
-              <button class="btn profile-edit-btn" @click="goMypage(sessionId)">
-                Edit Profile
-              </button>
-            </ul>
-            <ul v-else>
-              <!-- <button
-                v-if="followStatus === 0"
-
-                @click="followup(sessionId, infoes.memberId)"
-                class="btn profile-edit-btn2">
-                Follow
-              </button> -->
-              <button
-                v-if="followStatus === 0"
-                @click="follow(sessionId, infoes.memberId)"
-                class="btn profile-edit-btn2">
-                follow
-              </button>
-              <button
-                v-else
-                style="background-color: #2ac187; color: white"
-                @click="unfollow(sessionId, infoes.memberId)"
-                class="btn profile-edit-btn2">
-                Unfollow
-              </button>
-              <button
-                v-else
-                style="background-color: #2ac187; color: white"
-                @click="unfollow(sessionId, infoes.memberId)"
-                class="btn profile-edit-btn2">
-                Unfollow
-              </button>
-              <button class="btn profile-edit-btn2" @click="send(sessionId)">
-                Message
-              </button>
-            </ul>
-          </div>
 
           <!-- 내 게시물 정보 끝 -->
           <ul>
@@ -218,11 +178,6 @@ export default {
   },
   //팔로우를 실행하면 follower모달의 다시실행된 getFollowingList값을 받아와 보내줘야함
   watch: {
-
-    getFollowing() {
-
-    }
-
   },
 
   methods: {
@@ -302,7 +257,7 @@ export default {
           })
           .then((res) => {
             this.followStatus = 1;
-            this.getFollower(userId);
+            //this.getFollower(userId);
           })
           .catch((err) => {
             console.log(err);
@@ -321,7 +276,7 @@ export default {
           .delete("/sns/follow/" + memberId + "/" + userId)
           .then((res) => {
             this.followStatus = 0;
-            this.getFollower(userId);
+            //this.getFollower(userId);
           })
           .catch((err) => {
             console.log(err);
@@ -343,7 +298,8 @@ export default {
             vm.follower.push({ divider: true, inset: true });
             console.log("follower : " + response.data[i]);
           }
-          console.log("vm.follower : " + vm.follower);
+        //  vm.getFollowing(userId)
+          console.log("vm.follower : " + vm.follower.followerId);
           console.log("vm.follower length : " + vm.follower.length);
         })
         .catch(function (error) {
@@ -364,7 +320,7 @@ export default {
             vm.following.push(response.data[i]);
             vm.following.push({ divider: true, inset: true });
           }
-          console.log("vm.following" + vm.following);
+          console.log("vm.following" + vm.following.followerId);
           console.log("followin")
         })
         .catch(function (error) {

@@ -563,4 +563,26 @@
 	WHERE member_id = #{memberId}
 	and dutch_id = #{dutchId};
   </update>
+  
+  <!-- 게시판 수정 -->
+  <update id="updateBoard" parameterType="com.yedam.mohobby.service.moim.MoimBoardVO">
+  	update moim_board set 
+	title = #{title} , board_type = #{boardType}
+	where board_id = #{boardId}
+	</update>
+	
+	<!-- 소모임 존재여부 검사 -->
+	<select id="moimRight" parameterType="com.yedam.mohobby.service.moim.MoimMemberVO" resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
+	 select a.moim_name, b.* from moim a , moim_member b where a.moim_id = b.moim_id and b.member_id = #{memberId}
+	</select>
+	
+	<!-- 소모임 가입여부 검사 -->
+	<select id="joincheck" parameterType="com.yedam.mohobby.service.moim.MoimMemberVO" resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
+	select * from moim_member where member_id = #{memberId} and moim_id = #{moimId}
+	</select>
+	
+	<!-- 가입수 증가 -->
+	<update id="updatecnt" parameterType="com.yedam.mohobby.service.moim.MoimVO">
+	update moim set reg_cnt = reg_cnt+1 where moim_id= #{moimId}
+	</update>
 </mapper>

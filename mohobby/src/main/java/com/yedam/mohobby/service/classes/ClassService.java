@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.JjimVO;
@@ -99,5 +100,8 @@ public interface ClassService {
     
     //출결 관리 정보 가져오기
     public ClassAttendanceVO getAttendanceInfo(String memberId);
+    
+    //출결 정보 입력
+    public void insertAttendanceInfo(HashMap<String, String> req);
 
 }

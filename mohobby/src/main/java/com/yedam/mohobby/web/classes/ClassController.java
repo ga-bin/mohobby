@@ -215,7 +215,10 @@ public class ClassController {
 	
 	//내 강의 목록 조회
 	@GetMapping("/class/my")
-    public List<ClassesVO> getMyCourse(@RequestParam String memberId, @RequestParam int classStatus) {
+    public List<ClassesVO> getMyCourse(
+    		@RequestParam(required = true) String memberId, 
+    		@RequestParam(required = false) int classStatus
+    		) {
     	return classService.getMyCourse(memberId, classStatus);
     }
 	
@@ -250,6 +253,14 @@ public class ClassController {
 	@GetMapping("/class/attd")
 	public @ResponseBody ClassAttendanceVO getAttendanceInfo(@RequestParam String memberId) {
 		return classService.getAttendanceInfo(memberId);
+	}
+	
+	//출결 정보 입력
+	@PostMapping("/class/attd")
+	public void insertAttendanceInfo(@RequestBody HashMap<String, String> req) {
+		System.out.println("컨트롤러");
+		System.out.println(req);
+		classService.insertAttendanceInfo(req);
 	}
 
 }
