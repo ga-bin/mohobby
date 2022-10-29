@@ -97,6 +97,10 @@ export default {
       console.log('newPrice:' + this.newPrice);
     },
     insertMember() {
+      if(this.select.length < 2){
+        this.$swal('2명이상 선택해주세요!')
+        return;
+      }
       this.$emit('update:empty', this.select)
       this.$emit('update:totalPrice', this.newPrice)
     },

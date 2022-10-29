@@ -147,9 +147,6 @@ public interface MoimService {
 
 	public String readMoimInfo(int boardId);
 
-	//n방 체크 업데이트
-	public String checkUpdate(int dutchId, int calcCheck);
-
 	//소모임 삭제하기
 	public String deleteMoim(int moimId);
 
@@ -160,6 +157,14 @@ public interface MoimService {
 	public String deleteBoard(@Param("boardId")int boardId, @Param("boardType")int boardType);
 
 	//소모임 프로필 수정
+	public void updateProfile(MoimVO moimVO, List<MultipartFile> files);
+
+	//n빵 삭제
+	public void delNbbang(int dutchId);
+
+	//n빵 체크 수정
+	public void updateCacl(MoimDutchPtpVO dutchPtpVO);
+
 	public String updateProfile(MoimVO moimVO, List<MultipartFile> files);
 	
 	//소모임 게시글 수정

@@ -16,15 +16,9 @@
       </div>
 
       <!-- 수정, 삭제 버튼-->
-      <v-card-actions v-if="writer === 1" class="mr-15 mb-8">
+      <v-card-actions v-if="writer == memberId" class="mr-15  mb-8">
         <v-spacer></v-spacer>
-        <v-btn text>수정</v-btn>
-        <v-btn text>삭제</v-btn>
-      </v-card-actions>
-      <v-card-actions v-if="writer === 0" class="mr-15 mb-8">
-        <v-spacer></v-spacer>
-        <v-btn disabled>수정</v-btn>
-        <v-btn disabled>삭제</v-btn>
+        <v-btn small outlined color="error" @click="deleteNbbang()">삭제</v-btn>
       </v-card-actions>
 
       <v-row>
@@ -42,7 +36,7 @@
                       >mdi-chart-pie</v-icon
                     >
                     {{ item.header }}
-                    {{ totalPrice}}/{{ people }}/{{calcCheck}}명
+                    {{ totalPrice}}/{{ people }}명
                   </v-subheader>
                   <v-divider
                     v-else-if="item.divider"
@@ -59,11 +53,13 @@
                       <v-list-item-subtitle
                         v-html="item.money"
                       ></v-list-item-subtitle>
+                     
                     </v-list-item-content>
                     <div class="checkBox">
                       <v-checkbox v-if="item.writer == memberId"
-                        v-model="checkd"
-                        :value="calcCheck"
+                        id="select"
+                        v-model="item.calcCheck"
+                        @click="priceCheck"
                         color="light-green"
                       ></v-checkbox>
                     </div>
@@ -81,7 +77,8 @@
                   dark
                   v-bind="attrs"
                   v-on="on"
-                >
+                  >
+                  <!-- @click="updateCalc()"  -->
                   완료
                 </v-btn>
               </template>
@@ -111,36 +108,40 @@
 export default {
   data() {
     return {
-      memberId : this.$store.state.id,
+      memberId: this.$store.state.id,
       dialog: false,
-      writer: 0,
+      writer: '',
       dutchId: this.$route.query.dutchId,
       moimId : this.$route.query.moimId,
       items : [],
       oneNbbangList : [],
-      checked : false,
-      totalPrice : "",
-      people : "",
-      calcCheck: ''
+      checked : [],
+      totalPrice : '',
+      people : '',
+      calcCheck: '',
     };
   },
-  created() {},
-  mounted() {
+  created() {
     this.getOneNbbangList()
+  },
+  mounted() {
   },
   methods: {
     changeCheck() {
-      this.dialog = false
-      this.axios.put("/",{
-        params: {
-          calcCheck : this.calcCheck,
-          dutchId : this.dutchId
-        }
-      }).then((resp) => {
-          console.log(resp)
-      }).catch((err) => {
-          console.log(err);
-      });
+      console.log('dutchId'+this.dutchId)
+      console.log('moneyTarget'+this.items[1].moneyTarget)
+      this.dialog = falses
+      this.axios.put("/updateCalc",{
+       
+          dutchId : this.dutchId,
+          memberId : this.items.moneyTarget,
+          calcCheck : this.calcCheck
+        
+      }).then((resp)=>{
+        console.log(resp)
+      }).catch((err)=>{
+        console.log(err)
+      })
       this.$router.push('moimNbbang')
     },
     getOneNbbangList() {
@@ -166,11 +167,11 @@ export default {
     makeShowList() {
       this.items.push({ header: "N빵" });
       for(let i = 0; i < this.oneNbbangList.length; i++) {
-        if (this.checked == false) {
-          this.calcCheck = 0;
-        } else {
-          this.calcCheck = 1;
-        }
+        // if (this.checked == 0) {
+        //   this.calcCheck = 0;
+        // } else {
+        //   this.calcCheck = 1;
+        // }
   
         this.items.push({
           avatar: require(`@/assets/image/user/${this.oneNbbangList[i].profileImg}`),
@@ -178,12 +179,54 @@ export default {
           writer: this.oneNbbangList[i].memberId,
           money: this.oneNbbangList[i].calcPrice,
           moneyTarget : this.oneNbbangList[i].moneyTarget,
-        },)
+          calcCheck : this.oneNbbangList[i].calcCheck
+        })     
       }
+    },
+    // priceCheck(){
+    //   console.log(this.calcCheck)
+    //   if(this.calcCheck == 1){
+    //     this.calcCheck = 0;
+    //   } else if(this.calcCheck == 0) {
+    //     this.calcCheck = 1;
+    //   }
+    // },
+    updateCalc(){
+
+    },
+    deleteNbbang(){
+      this.$swal({
+        title: '정말 삭제할까요?',
+        text: "삭제를 원하지 않으면 취소버튼을 눌러주세요!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ac187',
+        cancelButtonColor: '#d33',
+        cancelButtonText: '취소',
+        confirmButtonText: '네, 삭제할게요!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let vm = this;
+      this.axios.delete("/delNbbang",{
+        params:{
+          dutchId : this.dutchId,
+        }
+      }).then((resp) => {
+        console.log("N빵 삭제 결과" + resp);
+        this.$swal(
+            '삭제 완료!',
+            'n빵을 삭제하였습니다.',
+            'success'
+          )
+        this.$router.push({name: "moimNbbang"})
+      }).catch((err)=> {
+        console.log(err)
+      })
+        }
+      })
     }
-  },
-  
-};
+  }
+}
 </script>
 
 <style scoped>

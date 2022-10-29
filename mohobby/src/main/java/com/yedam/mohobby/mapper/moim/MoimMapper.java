@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpSoloVO;
+import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimMemberVO;
 import com.yedam.mohobby.service.moim.MoimScheduleVO;
@@ -146,9 +148,6 @@ public interface MoimMapper {
 	//소모임 삭제하기
 	public String delMoim(@Param("moimId")int moimId);
 	
-	//n방 체크 업데이트
-	public String checkUpdate(int dutchId, int calcCheck);
-	
 	//게시판 검색
 	public List<MoimBoardVO> searchBoard(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title);
 	
@@ -156,6 +155,14 @@ public interface MoimMapper {
 	public String deleteBoard(@Param("boardId")int boardId,@Param("boardType")int boardType);
 	
 	//소모임 프로필 수정
+	public void updateProfile(MoimVO moimVO);
+	
+	//n빵 삭제
+	public void delNbbang(int dutchId);
+	
+	//n빵 체크 수정
+	public void updateCacl(MoimDutchPtpVO dutchPtpVO);
+  
 	public String updateProfile(MoimVO moimVO);
 	
 	//소모임 게시글 수정

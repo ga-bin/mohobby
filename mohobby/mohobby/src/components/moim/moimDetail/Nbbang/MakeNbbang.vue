@@ -92,6 +92,14 @@ export default {
   methods: {
     allInsert() {
       console.log(this.empty.length)
+      if (
+        this.price === "" ||
+         this.title === "" ||
+        this.empty.length === 0
+      ) {
+        this.$swal("필수항목이 입력되지 않았습니다.");
+        return;
+      }
       this.axios
         .post("/makeNbbang", {
           title: this.title,
