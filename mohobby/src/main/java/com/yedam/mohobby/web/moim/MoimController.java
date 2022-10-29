@@ -514,44 +514,7 @@ public class MoimController {
          System.out.println("업로드 실패: " + e.getMessage());
       }
     }
-    
-    //게시글 검색
-    @GetMapping("/boardSearch")
-    public List<MoimBoardVO> boardSearch(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title) {
-    	return service.boardSearch(moimId, boardType, title);
-    }
-    
-    //소모임 프로필 수정
-    @PostMapping(value = "/moimProfileUpdate", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String updateMoimProfile(MoimVO moimVO, List<MultipartFile> files) {
-	    System.out.println("===========================");
-    	System.out.println(moimVO);
-    	System.out.println("===========================");
-    	System.out.println(files);
-    	try {
-    		System.out.println(moimVO.getMoimId());
-    		System.out.println(moimVO.getMoimInfo());
-    		System.out.println(moimVO.getMoimCatg());
-    		System.out.println(moimVO.getMoimRegion());
-    		service.updateProfile(moimVO, files);
-    		
-    		return "success";
-    	}catch (Exception e) {
-    		return "fail"+e;
-    	}
-    }
-    
-    //게시글 삭제
-    @DeleteMapping("/deleteBoard")
-    public String deleteBoard(@Param("boardId")int boardId,@Param("boardType")int boardType) {
-    	try {
-    		service.deleteBoard(boardId, boardType);
-    		return "success";
-    	} catch (Exception e) {
-    		return "error";
-    	}
-    }
-    
+  
     //n빵 게시물 삭제
     @DeleteMapping("/delNbbang")
     public String deleteNbbang(@Param("dutchId")int dutchId) {
@@ -573,49 +536,6 @@ public class MoimController {
     		return "error";
     	}
     }
-}
-
-	@PostMapping(value = "/moimProfileUpload", consumes = { MediaType.APPLICATION_JSON_VALUE,
-			MediaType.MULTIPART_FORM_DATA_VALUE })
-	public void insertProfile(List<MultipartFile> files, String moimName) {
-		System.out.println(moimName);
-		System.out.println(files);
-		try {
-			// 저장할 경로
-			String path = this.getClass().getResource("/").getPath();
-			System.out.println(path);
-			path = path.substring(0, path.lastIndexOf("mohobby"));
-			path = path.substring(0, path.lastIndexOf("mohobby") + "mohobby".length());
-			path += "/mohobby/mohobby/src/assets/image/moim/";
-			// 진짜 진짜 파일 이름
-			path += moimName;
-			path += ".jpg";
-
-			// 새로 path만든 값은 save에 저장
-			for (int i = 0; i < files.size(); i++) {
-
-				MultipartFile file = files.get(i);
-				File save = new File(path);
-
-				file.transferTo(save);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("업로드 실패: " + e.getMessage());
-		}
-	}
-
-	// n빵 체크 업데이트
-	@PutMapping("/update")
-	public String updateCheck(@Param("dutchId") int dutchId, @Param("calcCheck") int calcCheck) {
-		try {
-			service.checkUpdate(dutchId, calcCheck);
-			return "success";
-		} catch (Exception e) {
-			return "error" + e;
-		}
-	}
 
 	// 게시글 검색
 	@GetMapping("/boardSearch")
@@ -674,6 +594,7 @@ public class MoimController {
 		return service.joincheck(memberId, moimId);
 	}
 	
+	// 소모임 가입자 수 증가
 	@PutMapping("/updatecnt")
 	public int updatecnt(@RequestBody MoimVO vo) {
 		try {
