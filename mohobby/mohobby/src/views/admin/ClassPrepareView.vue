@@ -23,7 +23,7 @@
             <h3>수료증 발급 기준을 선택해 주세요</h3>
             <hr>
             <v-radio-group
-                v-model="column"
+                v-model="certStandard"
                 column
                 >
                 <v-radio
@@ -49,23 +49,49 @@
             <hr>
             <br>
             <span class="label">유저가 입력한 준비물</span>
-            <input type="text" class="input" style="width: 1000px;" :value="classNeeds">     
-     </div>
+            <input type="text" class="input" style="width: 1000px;" :value="classNeeds">
+            <span class="label">준비물 연계하기</span> 
+            <!-- 플러스 버튼 -->  
+            <br>
+            <v-btn
+                class="mx-2"
+                dark
+                color="#2ac187"
+                @click="addProdForm"
+                >
+                <v-icon dark>
+                    mdi-plus
+                </v-icon>
+                </v-btn>
+                <br>
+                <br>
+                <form id="needs" v-on:submit.prevent> 
+                    <NeedsForm v-for="i in count" :key="i" :i="i-1"></NeedsForm>
+                </form>
+                <v-btn
+                elevation="2"
+                color="#2ac187"
+                @click="register"
+                >등록하기</v-btn>
+     </div> 
     </main>
 </template>
 <script>
 import AdminSidebar from "../../components/admin/AdminSidebar.vue";
+import NeedsForm from "@/components/admin/NeedsForm.vue";
 
 export default {
     name: '',
     components: {
-        AdminSidebar
+        AdminSidebar, NeedsForm
     },
     data() {
         return {
             classId : this.$route.params.classId,
             certAble : 0,
-            classNeeds : [],
+            classNeeds : "",
+            count : 0,
+            certStandard : 0,
     }
 },
     beforeCreate() {},
@@ -85,17 +111,53 @@ export default {
             const vm = this;
             console.log(this.$route.params.classId);
             this.axios({
-                url: "/class/pay/needs/" + this.classId,
+                url: "/applyNeeds/" + this.classId,
                 method: "get",
                 })
                 .then(function (response) {
                     console.log(response.data);
-                    vm.classNeeds = response.data;
+                    vm.classNeeds = response.data.needs;
+                    console.log(response.data.needs);
                     console.log(vm.classNeeds);
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        addProdForm() {
+            this.count++;
+        },
+        updateCert() {
+             this.axios({
+                url: "/updateCert",
+                method: "put",
+                data : {
+                    certAble : this.certAble,
+                    certStandard : this.certStandard,
+                    classId : this.classId
+                }
+                })
+                .then(function (response) {
+                    console.log(response.data);
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        register() {
+            //this.updateCert();
+            this.registerNeeds()
+        },
+        registerNeeds() {
+            let formData = new FormData(needs);
+
+            this.axios.post('/insertNeeds', formData)
+            .then((response) => {
+                console.log(response);
+            }, (error) => {
+                console.log(error);
+            });
         }
     }
 }

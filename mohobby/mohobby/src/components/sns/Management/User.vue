@@ -73,11 +73,11 @@
           users: [], //props 담을 변수
           memberId : this.$store.state.id,
 
-      };
-    },
-    created() {
-      console.log("User page");
-      console.log(this.userResult);
+    };
+  },
+  created() {
+    console.log("User page");
+    console.log(this.userResult);
 
       //유저검색
       this.users = this.userResult;
@@ -107,13 +107,12 @@
             const btn = document.getElementsByClassName('.white--text');
             btn.innerText = '친구걸기';
 
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        },
-      }
-  }
-  </script>
-  
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      },
+    }
+}
+</script>
 

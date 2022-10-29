@@ -75,10 +75,10 @@
           <ul>
             <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
             <li>
-              <FollowModal :text="followertext" :dataList="follower" :follow="follow" />
+              <FollowModal :text="followertext" :dataList="follower" />
             </li>
             <li>
-              <FollowModal :text="followingtext" :dataList="following" :follow="follow" />
+              <FollowModal :text="followingtext" :dataList="following"  />
             </li>
           </ul>
           
@@ -196,11 +196,6 @@ export default {
   },
   //팔로우를 실행하면 follower모달의 다시실행된 getFollowingList값을 받아와 보내줘야함
   watch: {
-
-    getFollowing() {
-
-    }
-
   },
 
   methods: {
@@ -293,7 +288,7 @@ export default {
           })
           .then((res) => {
             this.followStatus = 1;
-            this.getFollower(userId);
+            //this.getFollower(userId);
           })
           .catch((err) => {
             console.log(err);
@@ -312,7 +307,7 @@ export default {
           .delete("/sns/follow/" + memberId + "/" + userId)
           .then((res) => {
             this.followStatus = 0;
-            this.getFollower(userId);
+            //this.getFollower(userId);
           })
           .catch((err) => {
             console.log(err);
@@ -334,7 +329,8 @@ export default {
             vm.follower.push({ divider: true, inset: true });
             console.log("follower : " + response.data[i]);
           }
-          console.log("vm.follower : " + vm.follower);
+        //  vm.getFollowing(userId)
+          console.log("vm.follower : " + vm.follower.followerId);
           console.log("vm.follower length : " + vm.follower.length);
         })
         .catch(function (error) {
@@ -358,7 +354,7 @@ export default {
             vm.following.push(response.data[i]);
             vm.following.push({ divider: true, inset: true });
           }
-          console.log("vm.following" + vm.following);
+          console.log("vm.following" + vm.following.followerId);
           console.log("followin")
         })
         .catch(function (error) {

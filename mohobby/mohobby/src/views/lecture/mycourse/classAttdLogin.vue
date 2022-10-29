@@ -68,23 +68,23 @@ export default {
     data() {
         return {
             id: this.$route.query.id,
-            // 1 : 출석
-            // 2 : 외출
-            // 3 : 복귀
-            // 4 : 조퇴
-            // 5 : 퇴실
+            currId: this.$route.query.currId,
             type: this.$route.query.type,
+            connect: this.$route.query.connect,
+            time: this.$route.query.time,
             memberId: '',
             password: '',
             loginInfo: null,
             email: '',
             token: '',
+            now: this.$moment().format('YYYY-MM-DD HH:mm:ss'),
             attdType: {
-                1: 'ATTD_DATE',
-                2: 'OUT_DATE',
-                3: 'COMEBACK_DATE',
-                4: 'LEAVE_DATE',
-                5: 'EXIT_DATE'
+                0: 'ATTD_DATE',     //출석
+                1: 'LEAVE_DATE',    //조퇴
+                2: 'OUT_DATE',      //외출
+                3: 'RECORD_TYPE',   //결석
+                4: 'EXIT_DATE',     //퇴실
+                5: 'COMEBACK_DATE'  //복귀
             },
         }
     },
@@ -94,16 +94,7 @@ export default {
         // console.log('페이지 로딩');
     },
     created() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(pos) {
-                var latitude = pos.coords.latitude;
-                var longitude = pos.coords.longitude;
-                alert("현재 위치는 : " + latitude + ", "+ longitude);
-                alert(pos.coords.accuracy);
-            });
-        } else {
-            alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.")
-        }
+        this.checkTimeLimit();
     },
     methods: {
         kakaoLogin() {
@@ -117,10 +108,6 @@ export default {
                     success: (res) => {
                     const kakao_account = res.kakao_account;
                     console.log(kakao_account);
-                    // console.log(kakao_account.profile.nickname);
-                    // console.log(kakao_account.email);
-                    // console.log(kakao_account.gender);
-                    // console.log(kakao_account.birthday);
 
                     vm.token = kakao_account.access_token;
                     vm.email = kakao_account.email;
@@ -207,27 +194,43 @@ export default {
                 });
         },
         setAttdStatus() {
-            let res;
-            if(this.type == 1) {
-                res = this.axios.post('/attd', {
-                    params: {
-                        memberId: '',
-                        currId: '',
-                        type: '',
-                    }
-                })
-            } else {
-                res = this.axios.put('/attd', {
-                    params: {
-                        memberId: '',
-                        currId: '',
-                        type: '',
-                    }
-                })
+            let req = {
+                memberId: this.id,
+                currId: this.currId,
+                type: this.type,
+                column: this.attdType[`${this.type}`],
+                value: this.type == 3 ? '3' : this.now,
+            };
+            let time = this.time + ':00';
+            let nowTime = this.$moment(this.now).format('HH:mm');
+            if(this.type == 0 && time < nowTime) {
+                req.lateCheck=1;
+                this.$swal('출석이 완료되었습니다!', '지각이지만.. 화이팅!', 'success');
+            } else if (this.type == 1) {
+                this.$swal('조퇴가 완료되었습니다!', '', 'success');
+            } else if (this.type == 2) {
+                this.$swal('외출이 완료되었습니다!', '', 'success');
+            } else if (this.type == 4) {
+                this.$swal('퇴실이 완료되었습니다!', '', 'success');
+            } else if (this.type == 5) {
+                this.$swal('복귀가 완료되었습니다!', '', 'success');
             }
-            console.log(res);
-            console.log(res.data);
-        }
+
+            this.send(req);
+        },
+        send(req) {
+            this.axios.post('/class/attd', req);
+        },
+        checkTimeLimit() {
+            let now = this.now;
+            let connect = this.connect.substr(0, 4)+'-'+this.connect.substr(4, 2)+'-'+this.connect.substr(6, 2)+' '+this.connect.substr(8, 2)+':'+this.connect.substr(10, 2)+':'+this.connect.substr(12, 2);
+            let income = this.$moment(connect).format('YYYY-MM-DD HH:mm:ss');
+            let limit = this.$moment(income).add(5, "m").format('YYYY-MM-DD HH:mm:ss');
+            if(!(limit>now)) {
+                document.body.innerHTML = '';
+                this.$swal('시간이 초과되었습니다!', '출결QR을 재발급 받으세요.', 'error');
+            };
+        },
     }
 }
 </script>

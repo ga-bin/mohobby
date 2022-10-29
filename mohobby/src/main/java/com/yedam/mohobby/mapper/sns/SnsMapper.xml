@@ -425,8 +425,8 @@
    <!-- 언팔로우 -->
    <delete id="unfollow" parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
       DELETE FROM follow
-       WHERE follower_id = #{ followerId }
-         AND following_id = #{ followingId }
+       WHERE follower_id = #{	followerId  }
+         AND following_id = #{ followingId}
    </delete>
    
    

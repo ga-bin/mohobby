@@ -2,7 +2,7 @@
   <v-navigation-drawer app>
     <div class="text-center pa-10">
       <v-avatar class="mb-4" color="grey darken-1" size="64">
-        <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${profileImg}`)" />
+        <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${profileImg}`)"></v-img>
       </v-avatar>
       <h4 class="white--text">{{ memberId }}</h4>
     </div>
@@ -41,6 +41,9 @@ export default {
         { icon: "mdi-label-multiple", text: "저장된 게시글", route: "/snsBookmark" },
       ],
     };
+  },
+  beforeCreate() {
+
   },
   created() {
     this.setMemberInfo();

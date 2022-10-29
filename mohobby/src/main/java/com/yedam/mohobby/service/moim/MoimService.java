@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
@@ -146,9 +147,6 @@ public interface MoimService {
 
 	public String readMoimInfo(int boardId);
 
-	//n방 체크 업데이트
-	public String checkUpdate(int dutchId, int calcCheck);
-
 	//소모임 삭제하기
 	public String deleteMoim(int moimId);
 
@@ -159,6 +157,26 @@ public interface MoimService {
 	public String deleteBoard(@Param("boardId")int boardId, @Param("boardType")int boardType);
 
 	//소모임 프로필 수정
+	public void updateProfile(MoimVO moimVO, List<MultipartFile> files);
+
+	//n빵 삭제
+	public void delNbbang(int dutchId);
+
+	//n빵 체크 수정
+	public void updateCacl(MoimDutchPtpVO dutchPtpVO);
+
 	public String updateProfile(MoimVO moimVO, List<MultipartFile> files);
+	
+	//소모임 게시글 수정
+	public void updateBoard(MoimBoardVO vo);
+	
+	//소모임 권한 확인
+	public List<MoimMemberVO> moimRight(@Param("memberId")String memberId);
+	
+	//소모임 가입 확인
+	public List<MoimMemberVO> joincheck(@Param("memberId")String memberId, @Param("moimId")int moimId);
+	
+	//소모임 가입자수 증가
+	public int updatecnt(@RequestBody MoimVO vo);
 }
 
