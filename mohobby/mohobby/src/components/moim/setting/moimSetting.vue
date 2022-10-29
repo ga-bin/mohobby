@@ -139,7 +139,7 @@ export default {
       console.log(vm.moimId)
       console.log(vm.moimName)
       this.axios({
-        url: "/memberProfileUpdate", // 이미지 저장을 위해 back서버와 통신
+        url: "/moimProfileUpdate", // 이미지 저장을 위해 back서버와 통신
         method: "PUT",
         headers: { "Content-Type": "multipart/form-data" }, // 이걸 써줘야 formdata 형식 전송가능
         data : {

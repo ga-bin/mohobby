@@ -49,4 +49,17 @@ update class set audit_status = #{auditStatus}, audit_return = #{auditReturn} wh
 select needs from class where class_id= #{classId}
 </select>
 
+<!-- 강의 수료증 발급 여부, 발급 기준 업데이트  -->
+<update id="updateCert" parameterType="com.yedam.mohobby.service.classes.ClassesVO">
+update class set cert_able = #{certAble}, cert_standard = #{certStandard} where class_id = #{classId}
+</update>
+
+
+<!-- 강의 준비물 insert -->
+<insert id="insertNeeds" parameterType="com.yedam.mohobby.service.classes.ClassNeedsVO">
+<selectKey keyProperty="prodId" resultType="integer">
+select nvl(max(prod_id), 0) + 1 from class_needs
+</selectKey>
+insert into class_needs (prod_id, class_id, prod_price, prod_name, prod_img) values (#{prodId}, #{classId}, #{prodPrice}, #{prodName}, #{prodImg})
+</insert>
 </mapper>

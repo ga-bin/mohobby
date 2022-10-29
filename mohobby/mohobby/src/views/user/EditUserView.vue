@@ -361,7 +361,7 @@ export default {
       console.log(this.memberId);
       console.log(this.memberId);
       this.axios({
-        url: "http://localhost:8088/java/member/" + this.memberId,
+        url: "/member/" + this.memberId,
         method: "get",
       })
         .then(function (response) {
@@ -406,7 +406,7 @@ export default {
     getAllCatg() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/allCatg",
+        url: "/allCatg",
         method: "get",
       })
         .then(function (response) {
@@ -423,7 +423,7 @@ export default {
     getMemberPickKeyword() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/memPickKeyword/" + this.memberId,
+        url: "/memPickKeyword/" + this.memberId,
         method: "get",
       })
         .then(function (response) {
@@ -444,7 +444,7 @@ export default {
     getAllMember() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/memberAll",
+        url: "/memberAll",
         method: "get",
       })
         .then(function (response) {
@@ -463,7 +463,7 @@ export default {
     getAllRegion() {
       const vm = this;
       this.axios({
-        url: "http://localhost:8088/java/regionAll",
+        url: "/regionAll",
         method: "get",
       })
         .then(function (response) {
