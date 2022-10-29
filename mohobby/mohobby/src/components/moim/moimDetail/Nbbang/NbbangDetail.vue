@@ -119,6 +119,8 @@ export default {
       totalPrice : '',
       people : '',
       calcCheck: '',
+      target : [],
+      
     };
   },
   created() {
