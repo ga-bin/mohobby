@@ -35,11 +35,11 @@
                       <v-list-item-content>
                         <v-list-item-title
                           v-if="text == 'follower'"
-                          v-html="data.followerId"
+                          v-html="data.followingId"
                         ></v-list-item-title>
                         <v-list-item-title
                           v-else-if="text == 'following'"
-                          v-html="data.followingId"
+                          v-html="data.followerId"
                         ></v-list-item-title>
                         <v-list-item-subtitle
                           v-html="data.nickname"
@@ -80,7 +80,11 @@ export default {
     // inset: true,
   },
   beforeCreate() {},
-  created() {},
+  created() {
+    for(let i=0;i<this.dataList.length;i++){
+    console.log(dataList[i])}
+    
+  },
   beforeMount() {},
   mounted() {
   },

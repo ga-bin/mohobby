@@ -234,6 +234,8 @@
 </template>
 <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script>
+Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); // 사용하려는 앱의 JavaScript 키 입력
+
 import SnsSidebar from "@/components/sns/Common/SnsSidebar.vue";
 import CmtReg from "@/components/sns/FeedDetail/CmtReg.vue";
 
@@ -328,7 +330,7 @@ export default {
 
       },
       sendLink() {
-        Kakao.init('0e317fda8cca7ac1d7e440fc807131bd'); // 사용하려는 앱의 JavaScript 키 입력
+        
         Kakao.Link.sendDefault({
           objectType: 'feed',
           content: {

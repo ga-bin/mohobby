@@ -1,5 +1,4 @@
 <template>
-
   <div class="container">
     <div class="flex">
       <v-chip class="ma-2 mt-4" text-color="white" color="black" label>목록</v-chip>
@@ -89,12 +88,12 @@ export default {
       this.axios.put("/updateBoard", {
         title: this.title,
         boardType: this.boardType,
-        boardId : this.boardId
+        boardId : this.boardId 
       })
         .then((resp) => {
           console.log(resp)
           console.log("data =" + resp.data)
-          // this.boardId = resp.data
+          this.boardId = resp.data
           this.clickSave(this.boardId)
         })
 

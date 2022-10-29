@@ -1,10 +1,10 @@
 <template>
-  <div id="container">
-
-    <v-card class="scroll" ref="scroll" style=" margin: 0 auto; width: 800px;">
-      <v-row class="no-gutters elevation-4">
+  <div id="container" class="scroll" ref="scroll">
+    <h1> {{this.$store.state.user.nickName}} 님의 채팅방입니다 </h1>
+    <v-card  class="overflow-y-auto" >
+      <v-row class="no-gutters elevation-4 overflow-y-auto">
         <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid ">
-          <v-responsive>
+         
             <v-list>
               <v-list-item-group>
                 <template v-for="(item, index) in roomList">
@@ -28,12 +28,12 @@
                 </template>
               </v-list-item-group>
             </v-list>
-          </v-responsive>
+
         </v-col>
         <v-col cols="auto" class="flex-grow-1 flex-shrink-0  ">
-          <v-card flat class="d-flex flex-column fill-height ">
+          <v-card flat class="d-flex flex-column fill-height overflow-y-auto">
             <v-card-title>
-              {{ this.$store.state.user.nickName + " 님의 채팅방입니다" }}
+        
             </v-card-title>
             <v-card-text class="flex-grow-1 overflow-y-auto">
               <v-if roomId="">
@@ -41,11 +41,17 @@
                 </v-img>
               </v-if>
               <template v-for="(msg, i) in messages">
+
                 <div :class="{ 'd-flex flex-row-reverse': msg.memberId }">
                   <v-menu offset-y>
                     <template v-slot:activator="{ on }">
                       <v-chip :color="msg.memberId ? 'primary' : ''" dark style="height: auto; white-space: normal"
                         class="pa-4 mb-2" v-on="on">
+                        <v-avatar>
+                      <v-img :src="require(`@/assets/image/user/${msg.profileImg}`)"
+                        height="100px" width="50px" border-radius:10px></v-img>
+                        </v-avatar> 
+                        {{msg.nickname}} :
                         {{ msg.content }}
                         <sub class="ml-2" style="font-size: 0.5rem">
                           {{ msg.hour }}
@@ -56,7 +62,7 @@
                 </div>
               </template>
             </v-card-text>
-            
+
             <!-- 글 입력폼 -->
             <v-card-text class="flex-shrink-1">
               <div class="messages" ref="messages">
@@ -274,9 +280,9 @@ export default {
               res.data[i].hour =
                 res.data[i].hour + ":" + res.data[i].minute + " am";
             }
-            vm.messages = res.data;
           }
-          vm.scrollDown()
+          vm.messages = res.data;
+       
         })
         .catch(function (error) {
           console.log(error);
@@ -288,6 +294,7 @@ export default {
         }
         else {
           let rev = JSON.parse(res.body);
+          console.log("rev : "+ rev)
           if (rev.memberId == vm.memberId) {
             rev.memberId = true;
           } else {
@@ -301,6 +308,7 @@ export default {
               rev.hour.substr(11, 2) + ":" + rev.hour.substr(14, 2) + " am";
           }
           vm.messages.push(rev);
+        
         }
       });
       //구독취소헤더값 가져오기
@@ -376,13 +384,15 @@ export default {
     },
     scrollDown() {
       let scroll = this.$refs.scroll;
-      let scrol = scroll.scrollHeight + 100000000
+      let scrol = scroll.scrollHeight + 200
+      console.log("scrol : " + scrol)
       window.scrollTo(0, scrol);
     }
   },
   watch: {
     messages() {
       this.$nextTick(() => {
+        console.log("nextTick TEXST")
         this.scrollDown()
       });
     },
