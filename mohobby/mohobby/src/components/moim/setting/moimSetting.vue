@@ -117,29 +117,6 @@
         if (!file) {
           console.log("file" + file);
           return;
-
-    //정보 수정
-    uploadImage() {
-      console.log(this.intro)
-      const formData = new FormData(imgForm)
-      formData.append("moimName", this.moimName)
-      const vm = this;
-      console.log(vm.intro)
-      console.log(vm.moimRegion)
-      console.log(vm.moimCatg)
-      console.log(vm.moimId)
-      console.log(vm.moimName)
-      this.axios({
-        url: "/moimProfileUpdate", // 이미지 저장을 위해 back서버와 통신
-        method: "PUT",
-        headers: { "Content-Type": "multipart/form-data" }, // 이걸 써줘야 formdata 형식 전송가능
-        data : {
-          formData : vm.formData,
-          moimInfo : vm.intro,
-          moimRegion : vm.moimRegion,
-          moimCatg : vm.moimCatg,
-          moimName : vm.moimName,
-          moimId : vm.moimId
         }
         const formData = new FormData(); // 파일을 전송할때는 FormData 형식으로 전송
         //console.log("file.name" + file.name); //name:파일명, size:바이트(인듯),type:image/png
