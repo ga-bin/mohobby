@@ -5,6 +5,11 @@
         <h1>Page</h1>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col>
+        {{ this.$route.params.currId }}
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

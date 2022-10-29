@@ -1,13 +1,12 @@
 <template>
-  <v-app>
-    <v-main>
+  <div>
+
       <BreadCrumb />
       <router-view></router-view>
-    </v-main>
-  </v-app>
+  </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import BreadCrumb from "@/components/BreadCrumb.vue";
 export default Vue.extend({

@@ -10,6 +10,9 @@
         {{ item.text }}
       </v-breadcrumbs-item>
     </template>
+    <template v-slot:divider>
+      <v-icon>mdi-chevron-right</v-icon>
+    </template>
   </v-breadcrumbs>
 </template>
 

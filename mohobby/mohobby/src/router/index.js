@@ -342,19 +342,24 @@ const routes = [
         component: () => import("./../views/lecture/open/ClassInputView"),
       },
       {
-        path: "note",
-        name: "MyNoteHome",
-        component: () => import("./../views/lecture/note/ClassNoteHome"),
-        meta: {
-          breadCrumb: [
-            {
-              text: 'Home'
-            }
-          ]
-        },
+        path: 'mynote',
+        name: "MyNoteMain",
+        component: () => import("./../views/lecture/note/ClassNoteMain"),
         children: [
           {
-            path: ":currId",
+            path: "home",
+            name: "MyNoteHome",
+            component: () => import("./../views/lecture/note/ClassNoteHome"),
+            meta: {
+              breadCrumb: [
+                {
+                  text: 'Home'
+                }
+              ]
+            },
+          },
+          {
+            path: "folder/:currId",
             name: "MyNoteFolder",
             component: () => import("./../views/lecture/note/ClassNoteFolder"),
             meta: {
@@ -363,7 +368,7 @@ const routes = [
                 return [
                   {
                     text: 'Home',
-                    to: { name: 'Home' }
+                    to: { name: 'MyNoteHome' }
                   },
                   {
                     text: currId,
@@ -371,38 +376,41 @@ const routes = [
                 ]
               }
             },
-            children: [
-              {
-                path: "action",
-                name: "MyNote",
-                component: () => import("./../views/lecture/note/ClassNote"),
-                meta: {
-                  breadCrumb(VueRouter) {
-                    const currId = VueRouter.params.currId;
-                    return [
-                      {
-                        text: 'Home',
-                        to: { name: 'Home' }
-                      },
-                      {
-                        text: currId,
-                        to: {
-                          name: 'MyNoteFolder',
-                          params: {
-                            currId: currId
-                          }
-                        }
-                      },
-                      {
-                        text: 'MyNote'
+          },
+          {
+            path: "action",
+            name: "MyNote",
+            component: () => import("./../views/lecture/note/ClassNote"),
+            meta: {
+              breadCrumb(VueRouter) {
+                const currId = VueRouter.params.currId;
+                return [
+                  {
+                    text: 'Home',
+                    to: { name: 'MyNoteHome' }
+                  },
+                  {
+                    text: currId,
+                    to: {
+                      name: 'MyNoteFolder',
+                      params: {
+                        currId: currId
                       }
-                    ]
+                    }
+                  },
+                  {
+                    text: 'MyNote'
                   }
-                },
-              },
-            ],
+                ]
+              }
+            },
           },
         ]
+      },
+      {
+        path: "myboard",
+        name: "ClassMyBoard",
+        component: () => import("./../views/lecture/board/ClassMyBoard")
       },
     ],
   },
