@@ -27,6 +27,7 @@ import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.sns.SnsProfileVO;
 import com.yedam.mohobby.service.sns.SnsSearchHistoryVO;
 import com.yedam.mohobby.service.sns.SnsService;
+import com.yedam.mohobby.service.user.MemPickKeywordVO;
 import com.yedam.mohobby.service.user.MemberVO;
 
 
@@ -141,6 +142,12 @@ public class SnsController {
     @GetMapping("/user/user_feeds/{memberId}")
     public List<SnsPostVO> getUserFeed(@PathVariable("memberId") String memberId) {
         return service.getUserFeed(memberId);
+    }
+    
+    //유저취미키워드조회
+    @GetMapping("/user/hobbies/{memberId}")
+    public List<MemPickKeywordVO> getUserHobbies(@PathVariable String memberId){
+        return service.getUserHobbies(memberId);
     }
     
    //피드상세조회 - 테스트완료

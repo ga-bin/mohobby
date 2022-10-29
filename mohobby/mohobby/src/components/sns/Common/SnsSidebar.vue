@@ -47,6 +47,7 @@ export default {
   },
   methods: {
     setMemberInfo() {
+      this.memberId = this.$store.state.id;
       if (this.memberId == "") {
         this.memberId = "비회원";
         this.profileImg = "comfuck.jpg";

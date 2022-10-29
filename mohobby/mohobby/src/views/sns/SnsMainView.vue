@@ -3,7 +3,7 @@
         <v-container id="main">
           
             <v-spacer></v-spacer>
-            <div style="float:right">
+            <div v-show = "member" style="float:right">
                 <!-- 내 피드 버튼 -->
                 <v-btn  @click="goMyFeed(member)"
                         color="grey" icon class="mx-auto black--text font-weight-bold">
@@ -178,7 +178,7 @@ this.getAllListPaging()
           //디테일에서 해시태그 검색 키워드 들어오면 실행
           if(this.$route.params.detailHashtag) {
 
-            this. keyword= this.$route.params.detailHashtag; //디테일에서 받아온 해시태그 키워드
+            this.keyword = this.$route.params.detailHashtag; //디테일에서 받아온 해시태그 키워드
             this.search(this.keyword); //키워드 있으면 해시태그검색 실행
 
             this.tagSearch = true;

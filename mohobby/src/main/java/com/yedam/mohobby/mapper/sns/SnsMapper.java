@@ -14,6 +14,7 @@ import com.yedam.mohobby.service.sns.SnsMediaVO;
 import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.sns.SnsProfileVO;
 import com.yedam.mohobby.service.sns.SnsSearchHistoryVO;
+import com.yedam.mohobby.service.user.MemPickKeywordVO;
 import com.yedam.mohobby.service.user.MemberVO;
 /**
  * @create 22/10/08
@@ -72,6 +73,9 @@ public interface SnsMapper {
     
     //유저피드조회
     public List<SnsPostVO> getUserFeed(String memberId);
+    
+    //유저취미조회
+    public List<MemPickKeywordVO> getUserHobbies(String memberId);
     
     //인기해시태그
     public List<HashtagVO> selectHashtagForMain();

@@ -1,23 +1,14 @@
 <template>
     <div>
         <v-card class="mx-auto" width="800" min-height="520">
-        <v-toolbar color="#2ac187" dark> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' {{ keyword }} '에 대한 검색결과입니다 </v-toolbar>
+        <v-toolbar color="#2ac187" dark> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ keyword }} 에 대한 검색결과입니다 </v-toolbar>
             <div class="wrap_box">
                 <v-img class="mx-auto mt-10 mb-10" width="100" src="@/assets/image/sns/default/warn.jpg" alt="no_result"></v-img>
                 <div class="text_box">
-                    <div class="text_box_title"><span class="point">{{ keyword }}</span> 에 대한 검색결과가 없습니다. </div>
+                    <div class="text_box_title"><span class="point">'{{ keyword }}'</span> 에 대한 검색결과가 없습니다. </div>
                     <ul>
                         <li>
                         단어의 철자가 정확한지 확인해 주세요🙏
-                        </li>
-                        <li>
-                        한글을 영어로 혹은 영어를 한글로 입력했는지 확인해주세요🙏
-                        </li>
-                        <li>
-                        검색어의 단어 수를 줄이거나, 보다 일반적인 검색어로 다시 검색해주세요🙏
-                        </li>
-                        <li>
-                        해시태그 검색일 경우 앞에 '#'가 빠졌는지 확인해주세요🙏
                         </li>
                     </ul>
                 </div>

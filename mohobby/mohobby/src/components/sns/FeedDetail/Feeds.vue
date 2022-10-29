@@ -7,8 +7,8 @@
                 <v-img :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)" class="gallery-image" alt="thumbnail_img" />
                 <div class="gallery-item-info">
                     <ul>
-                    <li class="gallery-item-likes"><span class="visually-hidden"><v-icon>mdi-heart-outline</v-icon></span><i class="fas fa-heart" aria-hidden="true"></i>{{ feed.likes }}</li>
-                    <li class="gallery-item-comments"><span class="visually-hidden"><v-icon>mdi-chat-outline</v-icon></span><i class="fas fa-comment" aria-hidden="true"></i>{{ feed.cmts }}</li>
+                    <li class="gallery-item-likes"><span ><v-icon color="#e1e1e1" class="mr-2">mdi-heart</v-icon></span>{{ feed.likes }}</li>
+                    <li class="gallery-item-comments"><span ><v-icon color="#e1e1e1" class="mr-2">mdi-chat-outline</v-icon></span>{{ feed.cmts }}</li>
                     </ul>
                 </div>
             </div>

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.communal.HashtagVO;
 import com.yedam.mohobby.service.communal.JjimVO;
+import com.yedam.mohobby.service.user.MemPickKeywordVO;
 import com.yedam.mohobby.service.user.MemberVO;
 /**
  * @create 22/10/08
@@ -62,6 +63,9 @@ public interface SnsService {
     
     //유저피드조회
     public List<SnsPostVO> getUserFeed(String memberId);
+    
+    //유저취미조회
+    public List<MemPickKeywordVO> getUserHobbies(String memberId);
     
     //피드상세조회
     public SnsFeedVO getFeedDetail(int postId, String memberId);

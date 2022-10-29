@@ -8,14 +8,14 @@
  * @title sns controller
  */
 -->
-	<!-- 
-	
-		유저
-	
-	 -->
+   <!-- 
+   
+      유저
+   
+    -->
 
-	 
-	 
+    
+    
    <!-- 
    
          피드
@@ -38,7 +38,8 @@
                                 write_date,
                                 thumbnail,
                                 likes,
-                                cmts
+                                cmts,
+                                sec_post
                               )
                       VALUES  (
                                #{ postId },
@@ -48,7 +49,8 @@
                                CURRENT_DATE,
                                #{ thumbnail },
                                0,
-                               0
+                               0,
+                               #{ secPost }
                               )
     </insert>
     
@@ -91,12 +93,12 @@
          {CALL delete_sns_feed(#{ postId, mode=IN })}
    </delete>
    
-	<!-- 비밀게시글로 전환 -->
- 	<update id="changeSecPost" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
-	 	UPDATE sns_post 
-	 	   SET sec_post = #{ secPost }
-	 	 WHERE post_id = #{ postId }
-	</update>
+   <!-- 비밀게시글로 전환 -->
+    <update id="changeSecPost" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
+       UPDATE sns_post 
+          SET sec_post = #{ secPost }
+        WHERE post_id = #{ postId }
+   </update>
    
    
    
@@ -112,6 +114,7 @@
                     ,s.thumbnail
                     ,s.likes
                     ,s.cmts
+                    ,s.sec_post
                     
                  FROM sns_post s 
                  JOIN member m
@@ -126,7 +129,8 @@
                 GROUP BY post_id 
                ) IMGS_CNT
            ON (s.post_id=IMGS_CNT.post_id))
-         WHERE ROWNUM <=  20 ]]>
+         WHERE sec_post = 0
+           AND ROWNUM <=  20 ]]>
    </select>
    
    
@@ -142,34 +146,22 @@
                       GROUP BY post_id 
                   ) IMGS_CNT
                  ON (s.post_id=IMGS_CNT.post_id))
+      WHERE sec_post = 0
    </select>
-   
-   
-   <!-- 전체피드페이징 -->
-<!--    <select id="allListPaging" parameterType="Integer" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-<![CDATA[ SELECT *
-           FROM
-               ( SELECT ROWNUM AS RNUM, s.*
-                   FROM sns_post s
-                  WHERE ROWNUM < #{ num }+6
-               )
-          WHERE #{ num } < RNUM ]]>
-   </select> -->
-   
    
    
    <!-- 최신피드조회 -->
    <select id="newList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
       SELECT *
-        FROM (	sns_post s
-        		JOIN
-			         (  SELECT count(post_id) imgs, post_id
-			              FROM sns_media
-			             GROUP BY post_id 
-			         ) IMGS_CNT
-	              ON (s.post_id=IMGS_CNT.post_id)
-	          )
-	   WHERE sec_post = 0
+        FROM (   sns_post s
+              JOIN
+                  (  SELECT count(post_id) imgs, post_id
+                       FROM sns_media
+                      GROUP BY post_id 
+                  ) IMGS_CNT
+                 ON (s.post_id=IMGS_CNT.post_id)
+             )
+      WHERE sec_post = 0
        ORDER BY s.post_id DESC
    </select>
    
@@ -177,15 +169,15 @@
    <!-- 인기피드조회 -->
    <select id="hotList" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
       SELECT *
-        FROM (	sns_post s
-        		JOIN
-			         (  SELECT count(post_id) imgs, post_id
-			              FROM sns_media
-			             GROUP BY post_id 
-			         ) IMGS_CNT
-	              ON (s.post_id=IMGS_CNT.post_id)
-	         )
-	   WHERE sec_post = 0
+        FROM (   sns_post s
+              JOIN
+                  (  SELECT count(post_id) imgs, post_id
+                       FROM sns_media
+                      GROUP BY post_id 
+                  ) IMGS_CNT
+                 ON (s.post_id=IMGS_CNT.post_id)
+            )
+      WHERE sec_post = 0
        ORDER BY s.likes DESC, s.post_id DESC
    </select>
    
@@ -199,27 +191,26 @@
                                 likes,
                                 cmts
                         FROM sns_post
- 
                         WHERE member_id IN (
-			                                SELECT following_id
-			                                FROM follow
-			                                WHERE follower_id = #{ memberId }
-                            				)
+                                         SELECT following_id
+                                         FROM follow
+                                         WHERE follower_id = #{ memberId }
+                                        )
                         AND sec_post = 0
                             
-                 	 ) s JOIN (
-		                        SELECT
-		                            COUNT(post_id) imgs, post_id  
-		                        FROM sns_media
-		                        GROUP BY post_id
-                        	  ) IMGS_CNT
-	  				ON (s.post_id=IMGS_CNT.post_id)
-		ORDER BY s.post_id DESC
+                     ) s JOIN (
+                              SELECT
+                                  COUNT(post_id) imgs, post_id  
+                              FROM sns_media
+                              GROUP BY post_id
+                             ) IMGS_CNT
+                 ON (s.post_id=IMGS_CNT.post_id)
+      ORDER BY s.post_id DESC
    </select>
    
    
    <!-- 팔로잉제외 피드 제외한 나머지 피드 조회 -->
-	<select id="getNoFollowingFeeds" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+   <select id="getNoFollowingFeeds" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
        SELECT * FROM (
                         SELECT  post_id,
                                 member_id,
@@ -228,20 +219,20 @@
                                 cmts
                         FROM sns_post
                         WHERE member_id NOT IN (
-			                                SELECT following_id
-			                                FROM follow
-			                                WHERE follower_id = #{ memberId }
-                            				)
+                                         SELECT following_id
+                                         FROM follow
+                                         WHERE follower_id = #{ memberId }
+                                        )
                         AND sec_post = 0
                             
-                 	 ) s JOIN (
-		                        SELECT
-		                            COUNT(post_id) imgs, post_id  
-		                        FROM sns_media
-		                        GROUP BY post_id
-                        	  ) IMGS_CNT
-	  				ON (s.post_id=IMGS_CNT.post_id)
-		ORDER BY s.post_id DESC
+                     ) s JOIN (
+                              SELECT
+                                  COUNT(post_id) imgs, post_id  
+                              FROM sns_media
+                              GROUP BY post_id
+                             ) IMGS_CNT
+                 ON (s.post_id=IMGS_CNT.post_id)
+      ORDER BY s.post_id DESC
    </select>
    
    <!-- 취미쪼개기 -->
@@ -269,6 +260,14 @@
               
        FROM member m
       WHERE m.member_id = #{ memberId }
+   </select>
+   
+   <!-- 멤버의 등록된 취미 키워드 가져오기 -->
+   <select id="getUserHobbies" resultType="com.yedam.mohobby.service.user.MemPickKeywordVO">
+   		SELECT k.keyword_name 
+   		  FROM keyword k, member_pick_keyword m
+   		 WHERE k.keyword_id = m.keyword_id
+   		   AND member_id = #{ memberId }
    </select>
    
    
@@ -316,33 +315,35 @@
       ORDER BY post_id
    </select>
    
+   
    <!-- 내 비밀글 모아보기 -->
    <select id="getMyArchive" parameterType="com.yedam.mohobby.service.sns.SnsFeedVO" resultType="com.yedam.mohobby.service.sns.SnsFeedVO">  
       SELECT mem.profile_img, mem.role, k.*
-		FROM member mem,
-			(
-			 SELECT nvl2(m.target_id, 1, 0) like_status, c.*
-		       FROM sns_post c,
-			       (	
-		 			SELECT * FROM jjim 
-			        WHERE target_type = 2 
-			        AND member_id = #{ memberId }
-			        ) m,
-		   		   (
-			   		 SELECT COUNT(*)JJIM, target_id 
-			   		 FROM jjim 
-			   		 WHERE target_type = 2 
-			   		 GROUP BY target_id
-		   		    ) x
-		     WHERE c.post_id = m.target_id(+)
-		     AND c.post_id = x.target_id(+)
-			) k
-			
-		WHERE mem.member_id = k.member_id
+      FROM member mem,
+         (
+          SELECT nvl2(m.target_id, 1, 0) like_status, c.*
+             FROM sns_post c,
+                (   
+                SELECT * FROM jjim 
+                 WHERE target_type = 2 
+                 AND member_id = #{ memberId }
+                 ) m,
+                  (
+                   SELECT COUNT(*)JJIM, target_id 
+                   FROM jjim 
+                   WHERE target_type = 2 
+                   GROUP BY target_id
+                   ) x
+           WHERE c.post_id = m.target_id(+)
+           AND c.post_id = x.target_id(+)
+         ) k
+         
+      WHERE mem.member_id = k.member_id
         AND k.member_id = #{ memberId }
         AND k.sec_post = 1
-		ORDER BY post_id
-	</select>
+      ORDER BY post_id
+   </select>
+   
    
    
    <!-- 상세 이미지 -->
@@ -355,7 +356,7 @@
    
    
    <!-- 취미 조회 -->
-   <select id="getUserHobbies" parameterType="String" resultType="com.yedam.mohobby.service.user.MemberVO">
+<!--    <select id="getUserHobbies" parameterType="String" resultType="com.yedam.mohobby.service.user.MemberVO">
       SELECT REGEXP_SUBSTR(hobbies, '[^,]+', 1, Level) hobbies
         FROM member
        WHERE hobbies is not null
@@ -364,7 +365,7 @@
          AND PRIOR member_id  = member_id       
          AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
          AND ROWNUM <=5]]>
-   </select>
+   </select> -->
    
    
    
@@ -431,19 +432,19 @@
    
    <!-- 팔로잉조회 -->
    <select id="getFollowingList" parameterType = "String" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
-        SELECT f.following_id, m.profile_img, m.nickname, m.intro
+        SELECT f.follower_id, f.following_id, m.profile_img, m.nickname, m.intro
           FROM follow f, member m
-         WHERE f.following_id = m.member_id
-           AND follower_id = #{ followerId }
+         WHERE f.follower_id = m.member_id
+           AND following_id = #{ followerId }
    </select>
    
    
    <!-- 팔로워조회 -->
    <select id="getFollowerList" parameterType = "String" resultType="com.yedam.mohobby.service.sns.SnsFollowVO">
-      SELECT f.follower_id, m.profile_img, m.nickname, m.intro 
+      SELECT f.following_id, f.follower_id, m.profile_img, m.nickname, m.intro 
           FROM follow f, member m
-         WHERE f.follower_id = m.member_id
-           AND following_id = #{ followingId }
+         WHERE f.following_id = m.member_id
+           AND follower_id = #{ followingId }
    </select>
    
    <!-- 팔로우 상태 조회 -->
@@ -787,27 +788,36 @@
       ORDER BY post_id DESC
    </select>
    
-<!-- 전체 피드조회 페이징 -->
-<select id="allListPaging" parameterType="Integer" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
- <![CDATA[SELECT *
-FROM
-    (
-        SELECT 
-            ROWNUM AS RNUM, T.*
-        FROM
-            (     SELECT *
-        FROM (   sns_post s
-              JOIN
-                  (  SELECT count(post_id) imgs, post_id
-                       FROM sns_media
-                      GROUP BY post_id 
-                  ) IMGS_CNT
-                 ON (s.post_id=IMGS_CNT.post_id)))T
-        WHERE
-          ROWNUM <= #{firstIdx}+20
-    )
-WHERE
-       #{firstIdx} <= RNUM]]>
-      
-</select>
+   
+   
+   <!-- 
+   
+         페이징 
+   
+   -->
+   
+   <!-- 전체 피드조회 페이징 -->
+   <select id="allListPaging" parameterType="Integer" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
+       <![CDATA[SELECT *
+               FROM
+                   (
+                       SELECT 
+                           ROWNUM AS RNUM, T.*
+                       FROM
+                           (     SELECT *
+                       FROM (   sns_post s
+                             JOIN
+                                 (  SELECT count(post_id) imgs, post_id
+                                      FROM sns_media
+                                     GROUP BY post_id 
+                                 ) IMGS_CNT
+                                ON (s.post_id=IMGS_CNT.post_id)))T
+                       WHERE
+                         ROWNUM <= #{firstIdx}+20
+                   )
+               WHERE
+                      #{firstIdx} <= RNUM]]>
+   </select>
+   
+
 </mapper>
