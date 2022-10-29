@@ -1,4 +1,5 @@
 <template>
+
   <div class="container">
     <div class="flex">
       <v-chip class="ma-2 mt-4" text-color="white" color="black" label>목록</v-chip>
@@ -56,7 +57,7 @@ export default {
     getPost() {
         this.axios.get("/readMoimInfo", {
           params : {
-            boardId : this.boardId
+            boardId : this.boardI
           }
         })
         .then((resp)=> {

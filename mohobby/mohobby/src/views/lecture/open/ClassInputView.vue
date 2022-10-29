@@ -396,7 +396,7 @@ export default {
       content: "",
       thumbnailImage: '',
       step2: false,
-      step3: true,
+      step3: false,
       step4: false,
       step5: false,
       step6: false,
