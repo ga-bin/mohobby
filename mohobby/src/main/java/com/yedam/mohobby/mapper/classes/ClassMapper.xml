@@ -463,7 +463,10 @@
 		where class_id in (select class_id
 		                    from class_pay
 		                    where member_id = #{memberId}
-		                    and class_status = #{classStatus})
+		                    <if test="classStatus != null">
+		                    and class_status = #{classStatus}
+		                    </if>
+		                    )
 	</select>
 	
 	<!-- 내 강의 진행율 조회 -->
@@ -532,6 +535,7 @@
 		        attd.record_type, 
 		        attd.late_check,
 		        attd.exit_date,
+		        rr.curr_id,
 		        rr.class_date
 		from 
 		        class c, 
@@ -551,16 +555,16 @@
 		and
 		        to_char(rr.class_date, 'YYYYMMDD') = to_char(current_date, 'YYYYMMDD')
 		and 
-		        attd.curr_id = rr.curr_id
+		        rr.curr_id = attd.curr_id(+)
 	</select>
 	<!-- 오늘 기준 출결 통계 -->
 	<select id="getTodayAttendanceCalc" resultType="com.yedam.mohobby.service.classes.ClassAttendanceVO">
 		select 
 		        c.class_id, 
 		        sum(case when a.record_type=0 then 1 else 0 end)sum_attd, 
-		        sum(case when a.record_type=2 then 1 else 0 end)sum_out, 
-		        sum(case when a.record_type=1 then 1 else 0 end)sum_leave, 
-		        sum(case when a.record_type=3 then 1 else 0 end)sum_absent, 
+		        sum(case when a.out_date is not null then 1 else 0 end)sum_out, 
+		        sum(case when a.leave_date is not null then 1 else 0 end)sum_leave, 
+		        sum(case when a.record_type=1 then 1 else 0 end)sum_absent, 
 		        sum(nvl(a.late_check, 0))sum_late
 		from 
 		        class_attendance a, 
@@ -613,5 +617,47 @@
 		and 
 		        c.class_id = p.class_id(+)
 	</select>
-	
+	<!-- 출결 정보 입력 -->
+	<insert id="insertAttendanceInfo">
+		insert into class_attendance 
+								 		(
+										curr_id
+										,member_id
+										,${column}
+										,late_check
+										)
+								values (
+										#{currId}
+										,#{memberId}
+										<if test="type==0">										
+										,to_date(#{value}, 'YYYY-MM-DD HH24:MI:SS')
+										</if>
+										<if test="type==3">
+										,to_number(#{value})
+										</if>
+										,#{lateCheck, jdbcType=INTEGER}
+										)
+														
+	</insert>
+	<!-- 출결 정보 업데이트 -->
+	<update id="updateAttendanceInfo">
+		<selectKey keyProperty="count" keyColumn="count" resultType="java.lang.Integer" order="BEFORE">
+			select MOD(count(out_date) + count(leave_date) + sum(nvl(late_check, 0)), 3) count
+			from class_attendance 
+			where member_id = #{memberId}
+			and curr_id in (select curr_id from class_curriculum where class_id = (select class_id from class_curriculum where curr_id = #{currId}))
+		</selectKey>
+		update class_attendance 
+		set	${column} = to_date(#{value}, 'YYYY-MM-DD HH24:MI:SS')
+		<if test="(type==4 or type==1) and count!=0">
+		, record_type = 0
+		, view_progress = 100
+		</if>
+		<if test="(type==4 or type==1) and count==0">
+		, record_type = 1
+		, view_progress = 0
+		</if>
+		where curr_id = #{currId}
+		and member_id = #{memberId}
+	</update>
 </mapper>

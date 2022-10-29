@@ -7,7 +7,7 @@
           <v-sheet max-width="500">
             <v-slide-group class="pa-2">
               <v-slide-item v-for="item, index in items" :key="index">
-                <v-card elevation="0"  class="mr-5" max-width="160">
+                <v-card elevation="0" class="mr-5" max-width="160">
                   <div class="box" @click="box(index)">
                     <v-list-item-avatar tile size="160">
                       <img :src="require(`@/assets/image/moim/${item.moimImg}`)" />
@@ -37,7 +37,6 @@
                   </div>
                   <div class="text-md-center">
                     {{ item.moimName }}
-                    {{item.moimId}}
                   </div>
                 </v-card>
               </v-slide-item>
@@ -105,7 +104,7 @@ export default {
       } else {
         this.$router.push({
           name: "moimBoard",
-          params: { moimId: this.chamyeo[idx].moimId, boardType: 1 },
+          params: { moimId: this.chamyeo[idx].moimId, moimName: this.items[idx].moimName, boardType: 1 },
         });
       }
     },

@@ -380,11 +380,21 @@ public class ClassServiceImpl implements ClassService {
     	
     	return info;
     }
-    		
+
+    //출결 정보 입력
+    @Override
+    public void insertAttendanceInfo(HashMap<String, String> req) {
+    	int type = Integer.parseInt(req.get("type"));
+    	if(type==0 || type==3) classMapper.insertAttendanceInfo(req);
+    	else classMapper.updateAttendanceInfo(req);
+    }
     		
     // qr코드 생성
     @Override
     public String createCodeImg(String link) {
+    	System.out.println("!!!!!!!!!!!!!!!!");
+    	System.out.println(link);
+    	
         int width = 400;
         int height = 400;
         String base64 = "";
