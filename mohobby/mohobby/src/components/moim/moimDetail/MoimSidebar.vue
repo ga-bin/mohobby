@@ -8,20 +8,17 @@
         ></v-img>
       </v-avatar>
       <h4 class="white--text">{{ memberId }}</h4>
-
-      <!-- 소모임 회원 -->
-      <div class="right" v-if="right == 1">
-        <v-btn text @click="invite()">
-          <v-icon small color="white">mdi-plus-circle-outline</v-icon>
-          <div style="color: white">초대하기</div>
-        </v-btn>
-      </div>
-
       <!-- 가입클릭 시 회원 -->
-      <div class="right" v-if="right == 0 && member == 0">
+      <div class="right" v-if="right == 0">
         <v-btn text @click="checkForJoin()">
           <v-icon small color="white">mdi-plus-circle-outline</v-icon>
           <div style="color: white">가입하기</div>
+        </v-btn>
+      </div>
+      <div class="right" v-if="right == 1">
+        <v-btn text @click="">
+          <v-icon small color="white">mdi-plus-circle-outline</v-icon>
+          <div style="color: white">탈퇴하기</div>
         </v-btn>
       </div>
       <!-- 신고하기 -->
@@ -132,11 +129,10 @@ export default {
   data() {
     return {
       moimId: this.$route.params.Id,
-      memberId: "",
+      memberId: this.$store.state.id,
       profileImg: "comfuck.jpg",
       dialog: false,
-      member: 0,
-      right: 0,
+      right : null,
       links: [
         { icon: "mdi-mail", text: "채팅", check: 0 },
         { icon: "mdi-plus-box", text: "프로필 관리", route: "mypageprofile" },
@@ -159,12 +155,33 @@ export default {
     };
   },
   created() {
+    this.joincheck();
     this.setMemberInfo();
     this.getMemberInfo();
     this.getMoimOneInfo();
     this.getMoimMemberCount();
   },
   methods: {
+    joincheck() {
+      this.axios.get("/joincheck", {
+        params : {
+          moimId : this.moimId,
+          memberId : this.memberId,
+        }
+      })
+      .then((resp)=> {
+        console.log(resp)
+        console.log("33")
+        if(resp.data.length == 0) {
+          this.right = 0
+        } else {
+          this.right = 1
+        }
+      })
+      .catch((err)=> {
+        console.log(err)
+      })
+    },
     //채팅방 유무 확인
     checkChat() {
       let vm =this
@@ -172,7 +189,7 @@ export default {
       this.axios.get("/checkMoimChatRoom", {
         params: {
           memberId: this.$store.state.id, 
-          moimId: this.$route.params.Id
+          moimId: this.$route.params.Id,
           vMemberId: this.$store.state.id, 
           vMoimId: vm.moimId
         }
@@ -302,8 +319,10 @@ export default {
           })
           .then((result) => {
             if (result.isConfirmed) {
-              this.$swal.fire(vm.insertMoim(), "가입이 완료되었습니다.");
+              this.$swal.fire(vm.insertMoim(),"가입이 완료되었습니다.");
             }
+            vm.updatecnt()
+            vm.joincheck()
           });
       }
       // 모입 가입조건 있는 경우
@@ -352,8 +371,10 @@ export default {
           })
           .then((result) => {
             if (result.isConfirmed) {
-              this.$swal.fire(vm.insertMoim(), "가입이 완료되었습니다.");
+              this.$swal.fire(vm.insertMoim(),"가입이 완료되었습니다.");
             }
+            vm.updatecnt()
+            vm.joincheck();
           });
         }
       }
@@ -448,8 +469,18 @@ export default {
               console.log(error);
             });
         },
-        invite() {
+        updatecnt() {
+          this.axios.put("/updatecnt", {
+            moimId : this.moimId
+          })
+          .then((resp)=> {
+            console.log(resp)
 
+          })
+          .catch((err)=> {
+            console.log(err)
+
+          })
         }
   },
 };
