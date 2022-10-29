@@ -38,7 +38,7 @@ const routes = [
   {
     path: "/classPrepare",
     name: "classPrepare",
-    component: () => import("./../views/admin/ClassPrepareView"),
+    component: () => import("@/views/admin/ClassPrepareView"),
   },
   // main
   {

@@ -29,7 +29,6 @@ import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
-import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.user.MemberVO;
 import com.yedam.mohobby.web.classes.ClassController;
 import com.yedam.mohobby.web.moim.MoimController;
@@ -491,12 +490,6 @@ public class MoimServiceImpl implements MoimService {
    public List<MoimBoardVO> boardSearch(int moimId, int boardType, String title) {
       return mapper.searchBoard(moimId, boardType, title);
    }
-
-
-    @Override
-    public List<MoimBoardVO> boardSearch(int moimId, int boardType, String title) {
-       return mapper.searchBoard(moimId, boardType, title);
-    }
 	
     //소모임 프로필 수정
 	@Override
@@ -532,6 +525,38 @@ public class MoimServiceImpl implements MoimService {
 	      } 
 		return "fail";
 	}
+	
+	//게시글 삭제
+	@Override
+	public String deleteBoard(int boardId, int boardType) {
+		return mapper.deleteBoard(boardId, boardType);
+	}
+	
+	//게시글 수정
+	@Override
+	public void updateBoard(MoimBoardVO vo) {
+		mapper.updateBoard(vo);	
+	}
+
+	//소모임 권한 확인
+	@Override
+	public List<MoimMemberVO> moimRight(String memberId) {
+		return mapper.moimRight(memberId);
+	}
+
+	//소모임 가입 체크
+	@Override
+	public List<MoimMemberVO> joincheck(String memberId, int moimId) {
+		 return mapper.joincheck(memberId, moimId);
+	}
+
+	//가입자수 증가
+	@Override
+	public int updatecnt(MoimVO vo) {
+		return mapper.updatecnt(vo);
+	}
+	
+	
    
    
    

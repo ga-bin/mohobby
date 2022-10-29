@@ -67,6 +67,7 @@ export default {
         query: {
           moimId: this.moimId,
           boardId: this.items[idx].boardId,
+          title : this.items[idx].title,
           boardType: 1,
         },
       });
