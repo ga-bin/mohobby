@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mohobby.service.classes.ClassBoardVO;
+import com.yedam.mohobby.service.classes.ClassNeedsVO;
 import com.yedam.mohobby.service.classes.ClassesVO;
 
 @Service
@@ -27,4 +28,13 @@ public interface AdminClassService {
 
 	// qna답변 여부 업데이트
 	public void updateQnAAnswer(ClassBoardVO classBoardVO);
+	
+	// 강의 개설 신청 시 등록한 준비물 목록 조회
+	public ClassesVO getApplyNeeds(int classId);
+	
+	// 강의 수료증 발급 여부, 발급 기준 업데이트
+	public void updateCert(ClassesVO classesVO);
+	
+	// 강의 준비물 insert
+	public void insertNeeds(List<ClassNeedsVO> classNeedVOList);
 }
