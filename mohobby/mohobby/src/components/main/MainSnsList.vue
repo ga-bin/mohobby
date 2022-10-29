@@ -1,6 +1,6 @@
 <template>
    <v-container fluid>
-    <v-sheet max-width="2200">
+    <v-sheet style="background-color: #e9e9ec;" max-width="2200">
       <v-slide-group class="pa-2">
         <v-slide-item v-for="(info,i) in snsHighLikesList.data" :key="i">
           <div class="displayflex" style="width: 350px">

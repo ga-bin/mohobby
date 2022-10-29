@@ -68,7 +68,6 @@ public class IamportController {
 				}
 				br.close();
 				response = ""+sb.toString();
-				System.out.println("response : " + response);
 				
 				//json 객체
 				@SuppressWarnings("deprecation")
@@ -147,11 +146,6 @@ public class IamportController {
 			os.close();
 			
 			
-			System.out.println("getContentType():" + con.getContentType());
-			System.out.println("getResponseCode():" + con.getResponseCode());
-			System.out.println("getResponseMessage():" + con.getResponseMessage());
-			
-			
 			if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8")); 
 				String line = null; 
@@ -171,7 +165,6 @@ public class IamportController {
 				if(respJson.has("response")) {
 					respJson = (JsonObject) respJson.get("response");
 					result = respJson.get("access_token").getAsString();
-					System.out.println("token : " + result);
 				}
 				
 				

@@ -305,20 +305,20 @@ export default {
             let end = this.info.endTime + ':00';
             let start = this.info.startTime - 1 + ':30';
 
-            if(!this.info.classDate || (now>end)) {
-                this.$swal('출석일이 아닙니다!', '', 'info');
-                return;
-            }
+            // if(!this.info.classDate || (now>end)) {
+            //     this.$swal('출석일이 아닙니다!', '', 'info');
+            //     return;
+            // }
 
-            if(now>start) {
-                this.$swal(start + '부터 출석이 가능합니다!', '', 'info');
-                return;
-            }
+            // if(now>start) {
+            //     this.$swal(start + '부터 출석이 가능합니다!', '', 'info');
+            //     return;
+            // }
 
-            if(this.info.leaveDate || this.info.exitDate) {
-                this.$swal('조퇴 및 퇴실 후 재출석은 불가합니다!', '', 'info');
-                return;
-            }
+            // if(this.info.leaveDate || this.info.exitDate) {
+            //     this.$swal('조퇴 및 퇴실 후 재출석은 불가합니다!', '', 'info');
+            //     return;
+            // }
 
             let url = this.$url + 'class/attd/login?id=' + this.$store.state.id + '&type=0' + this.urlTail;
             this.checkGeocode(url);
@@ -381,9 +381,6 @@ export default {
     },
     watch: {
         dialog() {
-            if(this.dialog) {
-                //소켓구독
-            }
             if(!this.dialog) {
                 this.getInfo();
             }

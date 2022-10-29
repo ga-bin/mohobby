@@ -1,23 +1,58 @@
 <template>
   <div id="container">
     <div class="carousels">
-      <v-carousel cycle>
+      <v-carousel hide-delimiters cycle>
         <v-carousel-item
           v-for="(item, i) in items"
           :key="i"
           :src="item.src"
-          reverse-transition="fade-transition"
-          transition="fade-transition"
         ></v-carousel-item>
       </v-carousel>
     </div>
-    <v-spacer />
-    <h3>SNS인기feed</h3>
-    <MainSnsList :snsHighLikesList="snsHighLikesList"></MainSnsList>
-    <h3>인기 소모임</h3>
-    <moimPopularList :moimPopularList="moimPopularList"></moimPopularList>
-    <h3>모집 중인 강의</h3>
-    <collectClassList :collectClassList="collectClassList"></collectClassList>
+    <v-img
+      :src="require('@/assets/image/web/back-1.jpg')"
+      max-height="900"
+    >
+      <v-container fluid class="mt-10">
+        <div class="d-flex justify-center">
+          <v-chip :ripple="false" class="pa-4" large dark color="#2255b1">
+            <h1 style="font-weight: bolder;">Best Feed in SNS</h1>
+          </v-chip>
+        </div>
+        <MainSnsList :snsHighLikesList="snsHighLikesList"></MainSnsList>
+      </v-container>
+    </v-img>
+    <v-img
+      :src="require('@/assets/image/web/back-2.jpg')"
+    />
+    <v-img
+      :src="require('@/assets/image/web/back-3.jpg')"
+      max-height="700"
+    >
+      <div class="d-flex justify-center pb-10">
+        <v-chip :ripple="false" class="pa-4" large dark color="#2255b1">
+          <h1 style="font-weight: bolder;">Best CLUB</h1>
+        </v-chip>
+      </div>
+      <moimPopularList :moimPopularList="moimPopularList"></moimPopularList>
+    </v-img>
+    <v-img
+      :src="require('@/assets/image/web/back-4.jpg')"
+    />
+    <v-img
+      :src="require('@/assets/image/web/back-5.jpg')"
+      max-height="700"
+    >
+      <div class="d-flex justify-center">
+        <v-chip :ripple="false" class="pa-4" large dark color="#2255b1">
+          <h1 style="font-weight: bolder;">Take a CLASS</h1>
+        </v-chip>
+      </div>
+      <collectClassList :collectClassList="collectClassList"></collectClassList>
+    </v-img>
+    <v-img
+      :src="require('@/assets/image/web/footer.jpg')"
+    />
   </div>
 </template>
 
