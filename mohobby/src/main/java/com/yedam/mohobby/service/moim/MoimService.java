@@ -165,8 +165,6 @@ public interface MoimService {
 	//n빵 체크 수정
 	public void updateCacl(MoimDutchPtpVO dutchPtpVO);
 
-	public String updateProfile(MoimVO moimVO, List<MultipartFile> files);
-	
 	//소모임 게시글 수정
 	public void updateBoard(MoimBoardVO vo);
 	

@@ -534,4 +534,28 @@ public class MoimServiceImpl implements MoimService {
 		mapper.updateCacl(dutchPtpVO);
 	}
 	
+	//게시글 수정
+	@Override
+	public void updateBoard(MoimBoardVO vo) {
+	   mapper.updateBoard(vo);   
+	}
+
+
+	//소모임 권한 확인
+	@Override
+	public List<MoimMemberVO> moimRight(String memberId) {
+	   return mapper.moimRight(memberId);
+	}
+
+	//소모임 가입 체크
+	@Override
+	public List<MoimMemberVO> joincheck(String memberId, int moimId) {
+	    return mapper.joincheck(memberId, moimId);
+	}
+
+	//가입자수 증가
+	@Override
+	public int updatecnt(MoimVO vo) {
+	   return mapper.updatecnt(vo);
+	}
 }

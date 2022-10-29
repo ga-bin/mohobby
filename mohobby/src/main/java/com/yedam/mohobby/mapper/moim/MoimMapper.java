@@ -162,9 +162,7 @@ public interface MoimMapper {
 	
 	//n빵 체크 수정
 	public void updateCacl(MoimDutchPtpVO dutchPtpVO);
-  
-	public String updateProfile(MoimVO moimVO);
-	
+
 	//소모임 게시글 수정
 	public void updateBoard(MoimBoardVO vo);
 	
