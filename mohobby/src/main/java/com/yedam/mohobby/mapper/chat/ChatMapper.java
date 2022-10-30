@@ -37,4 +37,5 @@ public int updateCheckInOut(@Param("preRoomId") int preRoomId,@Param("currentRoo
 public int getCheckIn(@Param("roomId")int roomId,@Param("memberId") String memberId);
 //1:1 1:m 채팅 여부
 public int checkMoimId(@Param("roomNo")int moimId);
+
 }

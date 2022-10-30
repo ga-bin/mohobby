@@ -1,5 +1,5 @@
 <template>
-    <div id = "container" align-center  @scroll="handleNotificationListScroll">
+    <div id = "container" align-center >
         <v-container id="main">
           
             <v-spacer></v-spacer>
