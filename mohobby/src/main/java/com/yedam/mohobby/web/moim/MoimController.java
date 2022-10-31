@@ -642,7 +642,7 @@ public class MoimController {
 		service.delmoim(memberId ,moimId);
 	}
 	
-	//관리자 확인
+	//소모임 관리자 검색
 	@GetMapping("/moimadmin")
 	public List<MoimVO> getmoimadmin(@Param("moimdId") int moimId) {
 		return service.moimadmin(moimId);

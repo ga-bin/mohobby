@@ -585,6 +585,7 @@ public class MoimServiceImpl implements MoimService {
 		mapper.delmember(memberId, moimId);
 	}
 
+	//소모임 관리자 검색
 	@Override
 	public List<MoimVO> moimadmin(int moimId) {
 		return mapper.moimadmin(moimId);

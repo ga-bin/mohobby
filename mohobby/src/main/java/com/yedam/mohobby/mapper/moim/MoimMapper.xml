@@ -642,6 +642,7 @@
 		delete moim_member where member_id = #{memberId} and moim_id = #{moimId}
 	</delete>
 	
+	<!-- 소모임 관리자 검색 -->
 	<select id="moimadmin" parameterType="com.yedam.mohobby.service.moim.MoimVO" resultType="com.yedam.mohobby.service.moim.MoimVO">
 		select * from moim where moim_id = #{moimId}
 	</select>
