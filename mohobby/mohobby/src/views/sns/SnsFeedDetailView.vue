@@ -534,7 +534,7 @@ export default {
         .then((res) => {
           if(this.items.secPost == 0){
             this.items.secPost  = 1;
-            // this.lists.splice(2, 1); //아니면 인덱스번호 잘라내기
+
             this.lists[2].title = "비밀글 해제"
           }else {
             this.items.secPost = 0;
@@ -577,11 +577,7 @@ export default {
     //해시태그 키워드 검색
     search(e) {
       let getHashtag = e.target.innerText; //선택한 해시태그
-      console.log(getHashtag)
-      console.log(getHashtag)
-      console.log(getHashtag)
-      console.log(getHashtag)
-      console.log(getHashtag)
+
       this.$router.push({ name: "snsmain", params: { detailHashtag : getHashtag },
       });
     },
@@ -592,9 +588,10 @@ export default {
       let vm = this;
       this.axios
         .get("/getSnsChatRoomNo", {
-          params: { myId: this.$store.state.id, targetId: this.items.memberId },
+          params: { myId : this.$store.state.id, targetId : this.items.memberId },
         })
         .then(function (res) {
+          console.log("res.data.vroomNo : " + res.data.vroomNo);
           vm.$router.push({
             name: "chat",
             query: { getRoomId: res.data.vroomNo },
@@ -640,12 +637,14 @@ export default {
           })
           .then((res) => {
             if (this.items.likeStatus == 0) {
-              //좋아요 상태가 0이면 개수++,상태를 1로
+
+              //좋아요 상태가 아닐 때
               ++this.items.likes;
               this.items.likeStatus = 1;
               console.log("좋아요 완료");
             } else if (this.items.likes > 0) {
-              //좋상이 1이고 좋개가 0이 아니면 개수--,상태를 0으로
+
+              //좋아요 상태일때
               --this.items.likes;
               this.items.likeStatus = 0;
               console.log("좋아요 취소");
@@ -716,33 +715,25 @@ export default {
     },
 
 
-    //컬렉션 리스트 호출 호출했는데
-    //-----------------------------> 리스트.length가 0이면 생성되도록,,
+    //컬렉션 리스트 호출
     getCollectionList(memberId) {
 
       this.axios("/sns/collection/" + memberId)
         .then((res) => {
 
-          if(res.data.length == 0){//리스트 불러올 데이터가 없으면 디폴트 컬렉션 생성
+          if(res.data.length == 0){ // 만들어놓은 컬렉션이 존재하지 않으면 디폴트 컬렉션 생성
                   this.createDefaultCollection(memberId);
 
-            }else{
+          }else{ // 만든 컬렉션이 존재하면 이름만 뽑아서 바인딩
 
               for(let i=0; i<res.data.length; i++){
-                let isCatgName = res.data[i].catgName; //컬렉션 이름만 뽑아서 바인딩
+
+                let isCatgName = res.data[i].catgName; 
                 this.catgNames.push(isCatgName);
 
               }
-
-                console.log("내 컬렉션들--> ");
-                console.log(this.catgNames);
-
-                this.isCollections = res.data;//or not 생성되어있는 리스트 호출
-
-                console.log("컬렉션리스트 호출 성공!");
-
-            }
-
+                this.isCollections = res.data;
+          }
         })
         .catch((err) => {
           alert("컬렉션호출 실패" + err);
@@ -794,7 +785,8 @@ export default {
         });
     },
 
-    //디폴트 컬렉션 생성 - 해당 유저 아이디에 생성된 컬렉션이 없으면 기본컬렉션 생성됨
+
+    //디폴트 컬렉션 생성
     createDefaultCollection(memberId){
         const thumbnail = 'bookmark_default.png'
 
@@ -802,15 +794,13 @@ export default {
             memberId : memberId,
             catgName : 'default',
             thumbnail : thumbnail,
+
         }).then(res => {
-            console.log("디폴트컬렉션생성 성공!"+res);
             this.getCollectionList(memberId);
         }).catch(err => {
             alert(err);
         });
       },
-
-
 
 
     //사진 넘기기

@@ -2,13 +2,14 @@
     <div class="container">
         <!-- 피드 갤러리 -->
         <div class="gallery">
-            <div @click.stop="goFeedDetail(feed.memberId, feed.postId)" class="gallery-item" tabindex="0" v-for="(feed,i) in feeds" :key="i">
+            <div class="gallery-item" @click.stop="goFeedDetail(feed.memberId, feed.postId)" tabindex="0" v-for="(feed,i) in feeds" :key="i">
+                <v-icon v-show="feed.secPost === 1" color="red" class="icon_secret">mdi-lock</v-icon>
                 <v-icon v-show="feed.imgs > 1" class="image_icon">mdi-checkbox-multiple-blank</v-icon>
-                <v-img :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)" class="gallery-image" alt="thumbnail_img" />
+                <v-img class="gallery-image" :src="require(`@/assets/image/sns/${feed.postId}/${feed.thumbnail}`)" alt="thumbnail_img" />
                 <div class="gallery-item-info">
                     <ul>
-                    <li class="gallery-item-likes"><span ><v-icon color="#e1e1e1" class="mr-2">mdi-heart</v-icon></span>{{ feed.likes }}</li>
-                    <li class="gallery-item-comments"><span ><v-icon color="#e1e1e1" class="mr-2">mdi-chat-outline</v-icon></span>{{ feed.cmts }}</li>
+                    <li class="gallery-item-likes"><v-icon color="#e1e1e1" class="mr-2">mdi-heart</v-icon>{{ feed.likes }}</li>
+                    <li class="gallery-item-comments"><v-icon color="#e1e1e1" class="mr-2">mdi-chat-outline</v-icon>{{ feed.cmts }}</li>
                     </ul>
                 </div>
             </div>

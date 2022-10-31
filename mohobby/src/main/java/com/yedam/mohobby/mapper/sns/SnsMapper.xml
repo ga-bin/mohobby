@@ -23,8 +23,8 @@
       -->
         
        <!-- 새로운 postId 생성 -->
-       <select id="getPostId" resultType="Integer">
-      SELECT NVL(MAX(post_id),0)+1 FROM sns_post
+      <select id="getPostId" resultType="Integer">
+      	SELECT NVL(MAX(post_id),0)+1 FROM sns_post
       </select>
       
       
@@ -75,7 +75,6 @@
                         #{ fileRealName },
                         #{ dirName }
                        )
-                        
    </insert>
    
    
@@ -93,17 +92,17 @@
          {CALL delete_sns_feed(#{ postId, mode=IN })}
    </delete>
    
+   
    <!-- 비밀게시글로 전환 -->
     <update id="changeSecPost" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
        UPDATE sns_post 
           SET sec_post = #{ secPost }
         WHERE post_id = #{ postId }
    </update>
+
    
    
-   
-   
-   <!-- 유저x- 인기강사피드조회 top20 -->
+   <!-- 강사피드조회(좋아요 순 top20) -->
    <select id="hotLecturerList" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
 <![CDATA[ SELECT *
            FROM ((
@@ -209,7 +208,7 @@
    </select>
    
    
-   <!-- 팔로잉제외 피드 제외한 나머지 피드 조회 -->
+   <!-- 팔로잉제외 피드 제외한 나머지 피드 조회 (최신순) -->
    <select id="getNoFollowingFeeds" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
        SELECT * FROM (
                         SELECT  post_id,
@@ -291,23 +290,25 @@
       SELECT mem.profile_img, mem.role, k.*
       FROM member mem,
          (
-          SELECT nvl2(m.target_id, 1, 0) like_status, c.*
+           SELECT nvl2(m.target_id, 1, 0) like_status, c.*
              FROM sns_post c,
+             
                 (   
-                SELECT * FROM jjim 
-                 WHERE target_type = 2 
-                 AND member_id = 
-                 <if test="memberId == null"> null</if>
-                 <if test="memberId != null">#{ memberId }</if>
+	                SELECT * FROM jjim 
+	                 WHERE target_type = 2 
+	                 AND member_id = 
+	                 <if test="memberId == null"> null</if>
+	                 <if test="memberId != null">#{ memberId }</if>
                  ) m,
-                  (
+                (
                    SELECT COUNT(*)JJIM, target_id 
-                   FROM jjim 
-                   WHERE target_type = 2 
-                   GROUP BY target_id
-                   ) x
+                     FROM jjim 
+                    WHERE target_type = 2 
+                    GROUP BY target_id
+                ) x
+                
            WHERE c.post_id = m.target_id(+)
-           AND c.post_id = x.target_id(+)
+             AND c.post_id = x.target_id(+)
          ) k
          
       WHERE mem.member_id = k.member_id
@@ -371,31 +372,32 @@
    
    <!--
 
-         해시태그
+         게시글 등록 - 해시태그
 
-            게시글 테이블에 들어온 해시태그들(#사과,#바나나)을 특정 문자 기준으로 잘라서 별도의 해시태그 테이블에 넣는다 
+            게시글 테이블에 들어온 해시태그들을 특정 문자(',') 기준으로 잘라서 해시태그 테이블에 저장
             1. 이미 테이블에 존재하는 해시태그면 update 사용횟수
-            2. 테이블에 존재하지 않는 해시태그면 insert 
+            2. 테이블에 존재하지 않는 해시태그면 insert
+            
    -->
-   <!-- 조회수만업뎃 - 이미 등록되어있는 해시태그 -->
-   <!-- hashVO, snsPostVO -->
    <update id="updateHashtag" parameterType="com.yedam.mohobby.service.sns.SnsPostVO">
        MERGE INTO hashtag h
-        USING (SELECT                
-       <![CDATA[REGEXP_SUBSTR(hashtag, '[^,]+', 1, Level) hashtag]]>
-                FROM sns_post
-                WHERE hashtag IS NOT NULL
-                AND post_id = #{ postId }
-       <![CDATA[CONNECT BY LEVEL <= REGEXP_COUNT(hashtag, '[^,]+')]]>       
-                AND PRIOR post_id  = post_id       
-                AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
-               ) p
-          ON  (h.hashtag = p.hashtag)
-        WHEN  MATCHED THEN UPDATE SET h.use_count = h.use_count+1
-        WHEN  NOT MATCHED THEN
-              INSERT(h.hashtag)
-              VALUES(p.hashtag)
+            USING (SELECT                
+	       <![CDATA[REGEXP_SUBSTR(hashtag, '[^,]+', 1, Level) hashtag]]>
+	                FROM sns_post
+	                WHERE hashtag IS NOT NULL
+	                AND post_id = #{ postId }
+	       <![CDATA[CONNECT BY LEVEL <= REGEXP_COUNT(hashtag, '[^,]+')]]>       
+	                AND PRIOR post_id  = post_id       
+	                AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
+                  ) p
+	          ON  (h.hashtag = p.hashtag)
+	        WHEN  MATCHED THEN UPDATE SET h.use_count = h.use_count+1
+	        WHEN  NOT MATCHED THEN
+	              INSERT(h.hashtag)
+	              VALUES(p.hashtag)
    </update>
+ 
+ 
  
    <!-- 
    
@@ -425,8 +427,8 @@
    <!-- 언팔로우 -->
    <delete id="unfollow" parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
       DELETE FROM follow
-       WHERE follower_id = #{	followerId  }
-         AND following_id = #{ followingId}
+       WHERE follower_id = #{ followerId }
+         AND following_id = #{ followingId }
    </delete>
    
    
@@ -446,6 +448,7 @@
          WHERE f.following_id = m.member_id
            AND follower_id = #{ followingId }
    </select>
+   
    
    <!-- 팔로우 상태 조회 -->
    <select id="followCheck" parameterType = "String" resultType="Integer">
@@ -468,6 +471,8 @@
    </select>
    
    
+   
+   
    <!-- 유저검색 -->
    <select id="searchUser" parameterType="String" resultType="com.yedam.mohobby.service.user.MemberVO">
       SELECT member_id, profile_img, nickname
@@ -475,31 +480,24 @@
        WHERE member_id LIKE LOWER('%' || #{ memberId } || '%')
    </select>
    
-   
-   <!-- 유저닉네임검색(단어포함 - 프로필사진, 아이디, 닉네임) -->
-<!-- <select id="getUsersByNick" resultType="com.yedam.mohobby.service.user.MemberVO">
-      SELECT profile_img, member_id, nickname
-      FROM member
-      WHERE nickname LIKE '%' || #{ nickname } || '%'
-   </select> -->
-   
-   
    <!-- 해시태그검색 -->
    <select id="searchHashtag" resultType="com.yedam.mohobby.service.sns.SnsPostVO">
-    SELECT * 
-      FROM (  SELECT  post_id, member_id, thumbnail, cmts, likes         
-   <![CDATA[       ,REGEXP_SUBSTR(hashtag, '[^,]+', 1, Level) hashtag]]>
-            FROM sns_post
-            WHERE hashtag IS NOT NULL
-            AND post_id = post_id   
-   <![CDATA[CONNECT BY LEVEL <= REGEXP_COUNT(hashtag, '[^,]+')]]>       
-            AND PRIOR post_id  = post_id       
-            AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL)
-    <where>
-      <if test='hashtag != null and hashtag != ""'>
-         hashtag = #{ hashtag }
-      </if>
-   </where>
+	<![CDATA[  SELECT * 
+	             FROM (  SELECT  post_id, member_id, thumbnail, cmts, likes         
+	          					,REGEXP_SUBSTR(hashtag, '[^,]+', 1, Level) hashtag
+			               FROM sns_post
+			              WHERE hashtag IS NOT NULL
+			                AND post_id = post_id   
+              
+     		   CONNECT BY LEVEL <= REGEXP_COUNT(hashtag, '[^,]+'
+     		   )   
+                AND PRIOR post_id  = post_id       
+                AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL)]]>
+			<where>
+		      <if test='hashtag != null and hashtag != ""'>
+		         hashtag = #{ hashtag }
+		      </if>
+ 			</where>
    </select>
 
 
@@ -517,7 +515,7 @@
    
     -->
 
-   <!-- 좋아요 누적 -->
+   <!-- 좋아요 여부에 따라 좋아요 상태 변경 및 총 좋아요 개수 update -->
    <update id="sumLikes" parameterType="com.yedam.mohobby.service.communal.JjimVO">
         DECLARE
             v_target_id NUMBER := #{ targetId };
@@ -525,6 +523,7 @@
             v_status NUMBER;
         BEGIN
        SELECT
+       
           (CASE WHEN NOT EXISTS (
               SELECT *
               FROM jjim
@@ -536,6 +535,7 @@
                   )
               )THEN 0 ELSE 1 END  
           ) test
+          
         INTO v_status
         FROM dual;
       
@@ -546,6 +546,7 @@
         ELSIF v_status = 1 THEN 
            DELETE FROM jjim WHERE target_id= v_target_id AND target_type=2 AND member_id = v_member_id;
            UPDATE sns_post SET likes = likes - 1 WHERE post_id = v_target_id;
+           
        END IF;
          END;
    </update>
@@ -576,7 +577,7 @@
                            content,
                            write_date
                            )
-                   VALUES (
+                    VALUES (
                             v_commId
                            ,v_member_id
                            ,v_target_id
@@ -603,13 +604,13 @@
         DECLARE
             v_commId comments.comm_id%TYPE := #{ commId };
             v_target_id comments.target_id%TYPE := #{ targetId };
-      BEGIN
+          BEGIN
             DELETE FROM comments
              WHERE comm_id = v_commId;
             
             UPDATE sns_post SET cmts = cmts-1
              WHERE post_id = v_target_id;
-        END;
+           END;
    </delete>
    
    
@@ -730,10 +731,10 @@
    <!-- 북마크추가 -->
    <insert id="addBookmark" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
       INSERT INTO sns_bookmark (
-                            CATG_ID,
-                           POST_ID,
-                           THUMBNAIL
-                            )
+	                            CATG_ID,
+	                           	POST_ID,
+	                           	THUMBNAIL
+	                            )
                          VALUES (
                                #{ catgId },
                                #{ postId },
@@ -742,17 +743,28 @@
    </insert>
    
    
+   <!-- 북마크 카테고리 이동 -->
+   <update id="changeCatg" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
+       UPDATE sns_bookmark SET CATG_ID = #{ catgId }
+       WHERE postId = #{ postId }
+   </update>
+   
+   
    <!-- 북마크삭제 -->
    <delete id="deleteBookmark" parameterType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
       DELETE FROM sns_bookmark
-       WHERE (catg_id, post_id)
-          IN (SELECT catg_id, post_id 
-                FROM sns_bookmark
-               WHERE catg_id 
-                  IN (SELECT catg_id 
-                        FROM sns_bookmark_catg 
-                       WHERE member_id = #{ memberId })
-                 AND post_id=#{ postId })
+            WHERE (catg_id, post_id)
+               IN (
+                   SELECT catg_id, post_id 
+                     FROM sns_bookmark
+                    WHERE catg_id 
+                       IN (
+                           SELECT catg_id 
+                             FROM sns_bookmark_catg 
+                            WHERE member_id = #{ memberId }
+                  		  )
+                      AND post_id=#{ postId }
+                  )
    </delete>
    
    
@@ -788,6 +800,7 @@
       ORDER BY post_id DESC
    </select>
    
+
    
    
    <!-- 

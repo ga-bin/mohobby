@@ -288,6 +288,8 @@ export default {
           });
       }
     },
+
+    
     // 팔로워 목록 불러오기
     getFollower(userId) {
       const vm = this;
@@ -311,8 +313,9 @@ export default {
           console.log(error);
         });
     },
-        // 팔로잉 목록 불러오기
-        getFollowing(userId) {
+
+    // 팔로잉 목록 불러오기
+    getFollowing(userId) {
       const vm = this;
       vm.following=[]
       this.axios({
@@ -332,6 +335,16 @@ export default {
           console.log(error);
         });
     },
+
+    //취미 검색
+    search(e){
+        //유저 취미 누르면 같은 값 가진 모든 포스트뜸
+        let getHobby = e.target.innerText; //선택한 해시태그
+        this.$router.push({ name: "mainsearch", query: { searchText : getHobby },
+      });
+    },
+
+
     //마이페이지로 이동
     goMypage(memberId) {
       this.$router.push({

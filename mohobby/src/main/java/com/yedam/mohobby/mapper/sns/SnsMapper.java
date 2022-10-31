@@ -175,8 +175,11 @@ public interface SnsMapper {
     //컬렉션 목록
     public List<SnsBookmarkVO> getBookmarkCtgs(String memberId);
     
-    //북마크 등록
+    //북마크 이동
     public int addBookmark(SnsBookmarkVO bmkVO);
+    
+    //북마크 카테고리 이동
+    public int changeCatg(SnsBookmarkVO bmkVO);
     
     //북마크 삭제
     public int deleteBookmark(@Param("postId")int postId, @Param("memberId") String memberId);

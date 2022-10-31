@@ -1,4 +1,5 @@
 <template>
+    <div id = "container" align-center>
         <v-container id="main">
           
             <v-spacer></v-spacer>
@@ -24,14 +25,6 @@
                 <div class="mx-auto" style="width:500px;">
                     <v-text-field class="rounded-xl mx-auto" v-model="keyword" label="해시태그나 유저 아이디를 검색해보세요!" dense
                         outlined append-icon="mdi-magnify" @keydown.enter="search(keyword)" style="height:50px" />
-                    <!-- 
-                                :items="ctg" 
-                                item-text="tag" 
-                                item-value="tag"
-                                :search-input.sync="userInput" 
-                                @input="userInput=null"
-                                menu-props="{'closeOnContentClick': true}"
-                            -->
 
                     <!-- 상단바 HOT해시태그 (키워드검색) -->
                     <div id="chip" style="width:500px;">
@@ -64,6 +57,8 @@
                         <h3 v-if="!member">재주 견습생들 피드</h3>
                         <h3 v-else>나의 팔로워 피드</h3>
                         <NoneUser :feeds="feeds" />
+                        <!-- 팔로워 제외 피드 갖다붙일방법,, -->
+                        <!-- <NoneUser :feeds="feeds" /> --> 
                     </div>
                 </div>
 
@@ -152,6 +147,7 @@ export default {
         if (this.member) {
 
             this.getFollowingList();
+            this.getNoFollowingList();
             console.log("회원 팔로잉리스트호출");
 
         } else {
@@ -163,17 +159,15 @@ export default {
 
 
 
-        //디테일에서 해시태그 검색 키워드 들어오면 실행
+        //디테일에서 들어온 해시태그 키워드
         if (this.$route.params.detailHashtag) {
-
-            this.keyword = this.$route.params.detailHashtag; //디테일에서 받아온 해시태그 키워드
-            this.search(this.keyword); //키워드 있으면 해시태그검색 실행
+            this.keyword = this.$route.params.detailHashtag;
+            this.search(this.keyword);
 
             this.tagSearch = true;
             this.hotLectureFeeds = false;
             this.randomFeeds = false;
             this.userSearch = false;
-
         }
 
     },
@@ -193,6 +187,7 @@ export default {
                 });
 
         },
+
         //전체 피드조회
         getAllListPaging() {
             let vm = this
@@ -211,11 +206,31 @@ export default {
             })
         },
 
-
-        //FollowingList조회
+        /*
+            로그인 한 회원    
+        */
+        //팔로잉 리스트조회
         getFollowingList() {
 
             this.axios('/sns/main/followingFeeds/' + this.member)
+                .then(res => {
+                    console.log(res.data);
+                    this.feeds = res.data;
+                    if (this.feeds.length < 1) { //피드값이 없으면 전체리스트 호출
+                        this.getAllList();
+                    }
+                    console.log("팔로잉목록 호출 성공");
+                }).catch(err => {
+                    console.log(err);
+                });
+
+        },
+
+
+        //No팔로잉 조회
+        getNoFollowingList(){
+
+            this.axios('/sns/main/nofollowingFeeds/' + this.member)
                 .then(res => {
                     console.log(res.data);
                     this.feeds = res.data;
@@ -243,21 +258,22 @@ export default {
         },
 
 
-        //검색창 - 유저, 해시태그
+        
+
+        /*
+            검색창
+              1. '#'가 포함된 검색어 -> 해시태그 검색
+              2. 그 외 유저검색
+        */
         search(keyword) {
 
-            console.log("받아온 검색어!!!!!!!!!!!!!!!!!" + keyword);
+            if (keyword.includes("#")) {
 
-            if (keyword.includes("#")) { //'#'가 포함된 검색어가 들어오면 다음 연산을 실행
+                let hashtag = keyword.slice(1);
+                this.searchHashtag(hashtag);
 
-                let hashtag = keyword.slice(1); // #잘라내기
-                this.searchHashtag(hashtag);//해시태그 검색 실행
-                console.log("해시태그 검색 실행")
-
-            } else { //나머지 - 유저검색 실행
-
-                this.searchMem(keyword); //유저검색 실행
-
+            } else { 
+                this.searchMem(keyword); 
             }
         },
 
@@ -265,37 +281,31 @@ export default {
         //1. 해시태그 검색
         searchHashtag(hashtag) {
             this.temp = "'" + hashtag + "'에 대한 검색결과입니다";
-            console.log("해시태그검색 ->");
-            console.log(hashtag);
+
             this.axios('/sns/search/hashtag', {
                 params: {
                     hashtag: hashtag
                 }
             }).then(res => {
 
-                this.hashResult = res.data; //->해시태그검색 컴포넌트로
+                this.hashResult = res.data;
                 this.keyword = "";
-                console.log(this.hashResult);
 
+                //페이지 노출여부 컨트롤
                 if (this.hashResult.length < 1) {
+                    this.noResult = true;
+                    this.tagSearch = false;
+                    this.userSearch = false;
+                    this.hotLectureFeeds = false;
+                    this.randomFeeds = false;
 
-                    this.noResult = true; // 검색결과 없음페이지 show
-                    this.tagSearch = false; //해시태그결과 hide
-                    this.userSearch = false//검색결과 없음페이지 hide
-                    this.hotLectureFeeds = false; //main hide
-                    this.randomFeeds = false; //main hide
-
-                    console.log("해시태그 검색결과 없음!");
                 } else {
-                    this.tagSearch = true; //해시태그결과 show
-                    this.noResult = false; //검색결과 없음페이지 hide
-                    this.userSearch = false; //유저결과 show
-                    this.hotLectureFeeds = false; //main hide
-                    this.randomFeeds = false; //main hide
-
+                    this.tagSearch = true;
+                    this.noResult = false;
+                    this.userSearch = false;
+                    this.hotLectureFeeds = false;
+                    this.randomFeeds = false;
                 }
-
-                console.log("해시태그검색 성공!");
 
             }).catch(err => {
                 console.log(err);
@@ -305,28 +315,24 @@ export default {
 
         //2. 유저검색
         searchMem(keyword) {
-            console.log("유저검색: " + keyword);
+
             this.temp = "'" + keyword + "'에 대한 검색결과입니다";
             this.axios('/sns/search/user', {
                 params: {
                     memberId: keyword
                 }
             }).then(res => {
-
-                this.userResult = res.data; //유저검색페이지 컴포넌트로
+               
+                this.userResult = res.data; 
                 this.keyword = "";
 
-                console.log(this.userResult[0]);
-
+                //페이지 노출여부 컨트롤
                 if (this.userResult.length < 1) {
-
                     this.noResult = true;
                     this.userSearch = false;
                     this.tagSearch = false;
                     this.hotLectureFeeds = false;
                     this.randomFeeds = false;
-
-                    console.log("유저검색 성공!");
 
                 } else {
                     this.userSearch = true;
@@ -334,8 +340,6 @@ export default {
                     this.hotLectureFeeds = false;
                     this.randomFeeds = false;
                     this.noResult = false;
-
-                    console.log("유저검색 성공!");
                 }
 
             }).catch(err => {
