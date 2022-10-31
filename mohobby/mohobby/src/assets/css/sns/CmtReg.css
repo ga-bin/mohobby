@@ -45,9 +45,9 @@
   .member_id {
     color: #2ac187;
     font-weight: 300;
-    cursor: pointer;
+   /* // cursor: pointer; */
   }
   
   .user {
-    cursor: pointer;
+    /* cursor: pointer; */
   }

@@ -44,7 +44,6 @@ public class MessageController {
 		NoticeVO noticeVO = new NoticeVO();
 		ResNoticeVO resNotice = new ResNoticeVO();
 		// 실시간 메시지 보내기
-		
 		ChatListContentResVO res = new ChatListContentResVO();
 		for (int i = 0; i < content.getMemberIds().size(); i++) {
 			content.setNickName(mService.getMember(content.getMemberId()).getNickName());
@@ -72,7 +71,6 @@ public class MessageController {
 				noticeVO.setSubtitle("새로운 메세지가 도착했습니다.");
 				noticeVO.setPostId(content.getRoomNo());
 				noticeVO.setNoticeType(2);
-
 				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i) + "/notice", resNotice);
 				nService.insertNotice(noticeVO);
 			}
@@ -99,9 +97,6 @@ public class MessageController {
 	public void NoticeSns(ResNoticeVO resNotice) {
 		NoticeVO noticeVO = new NoticeVO();
 		if (!resNotice.getMyId().equals(resNotice.getTargetId())) {
-			System.out.println("문자열비교성공");
-			System.out.println(resNotice.getMyId());
-			System.out.println(resNotice.getTargetId());
 			if (resNotice.getMyId() != resNotice.getTargetId()) {
 				resNotice.setNoticeId(nService.getNoticeId());
 				noticeVO.setBoardType(resNotice.getBoardType());

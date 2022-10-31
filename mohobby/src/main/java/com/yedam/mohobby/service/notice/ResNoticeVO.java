@@ -12,6 +12,7 @@ public class ResNoticeVO {
 	private String myId;
 	private String profileImge;
 	private String nickname;
+	private String Subtitle;
 	private int postId;
 	private int moimId;
 	private int boardType; //소모임 게시판 분류

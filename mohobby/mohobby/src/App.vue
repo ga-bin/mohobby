@@ -5,15 +5,7 @@
     <v-main> 
      <v-container fluid style="padding: 0px;">
        <router-view></router-view>
-        <!-- <div class='loader'>
-            <HashLoader
-              class="custom-class"
-              :loading="$store.state.loading"
-              :color="color"
-              :size="size"
-              :sizeUnit="sizeUnit"
-            />
-          </div> -->
+      
     </v-container> 
      </v-main>
   </v-app>
