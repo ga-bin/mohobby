@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet max-width="2000">
+    <v-sheet style="background-color: inherit;" max-width="2200">
       <v-slide-group class="pa-2">
         <v-slide-item v-for="moim in moimPopularList.data" :key="moim.index">
           <div class="displayflex">

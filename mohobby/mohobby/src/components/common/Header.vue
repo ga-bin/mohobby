@@ -1,14 +1,20 @@
 <template>
-  <v-app-bar app color="white" elevate-on-scroll elevation="4">
+  <v-app-bar app color="white" elevate-on-scroll elevation="0">
 
-    <v-toolbar-title @click="$router.push('/').catch(() => { })" style="cursor: pointer; font-weight: bolder;">Mohobby
+    <v-toolbar-title @click="$router.push('/').catch(() => { })" style="cursor: pointer;">
+      <v-img src="../../../public/logo-dark.png" max-width="30"></v-img>
+    </v-toolbar-title>
+    <v-toolbar-title 
+      style="font-weight: bolder; font-size: 1em; padding: 0px 10px; color: #1b243b;" 
+      v-if="this.$store.state.id"
+    >
+      <span style="color: #2255b1">{{ this.$store.state.id }}</span>님, 오늘 모하비?
     </v-toolbar-title>
     <v-spacer />
-    <p style="font-weight: bolder;" v-if="this.$store.state.id">{{ this.$store.state.id }}님, 오늘 모하비?</p>
-    <v-spacer />
-    <v-btn text class="ml-2" to="/snsmain" style="font-weight: bolder;">sns</v-btn>
-    <v-btn text class="ml-2" to="/class/list/all" style="font-weight: bolder;">강의</v-btn>
-    <v-btn text class="ml-2" to="/moimmain" style="font-weight: bolder;">소모임</v-btn>
+    <v-btn text class="ml-2" @click="$router.push('/').catch(() => { })" style="font-weight: bolder;">HOME</v-btn>
+    <v-btn text class="ml-2" to="/snsmain" style="font-weight: bolder;">SNS</v-btn>
+    <v-btn text class="ml-2" to="/class/list/all" style="font-weight: bolder;">CLASS</v-btn>
+    <v-btn text class="ml-2" to="/moimmain" style="font-weight: bolder;">CLUB</v-btn>
     <v-spacer />
     <v-col lg="4" cols="12">
       <v-form class="mt-5">
@@ -42,7 +48,6 @@
         </v-toolbar>
 
         <template v-for="(item, index) in items">
-          <div style="background-color: white">
             <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
             <v-list-item v-else :key="item.title" @click="pageMove(item)">
               <v-list-item-avatar>
@@ -54,14 +59,13 @@
               </v-list-item-content>
               <v-icon @click.prevent.stop="deleteNotice(item)" style="hover">close</v-icon>
             </v-list-item>
-          </div>
         </template>
       </v-list>
     </v-menu>
-    <v-btn v-if="!this.$store.state.id" @click="$router.push('/login')" elevation="2"
-      style="margin-right:10px; border: none; background-color: white">로그인</v-btn>
-    <v-btn v-if="!this.$store.state.id" @click="$router.push('/register')" elevation="2"
-      style="border: none; background-color: white">회원가입</v-btn>
+    <v-btn v-if="!this.$store.state.id" @click="$router.push('/login')" elevation="0"
+      style="margin-right:10px; border: none;" rounded color="#1b243b" dark>로그인</v-btn>
+    <v-btn v-if="!this.$store.state.id" @click="$router.push('/register')" elevation="0"
+      style="border: none;" rounded color="#1b243b" dark>회원가입</v-btn>
     <!-- <v-btn v-if="this.$store.state.id" icon> -->
     <v-menu offset-y v-if="this.$store.state.id">
       <template v-slot:activator="{ on, attrs }">
@@ -86,8 +90,8 @@
             전체삭제
           </v-btn>
         </v-toolbar>
-        <template v-for="(item, index) in messages">
-          <div @click="pageMove(item)" style="background-color: white">
+        <div v-for="(item, index) in messages" :key="index">
+          <div @click="pageMove(item)">
             <v-subheader v-if="item.header" :key="item.header">
               <v-text> v-text="item.header"</v-text>
             </v-subheader>
@@ -106,15 +110,14 @@
               <v-icon @click.prevent.stop="deleteMsgNotice(item)" style="hover">close</v-icon>
             </v-list-item>
           </div>
-        </template>
+        </div>
       </v-list>
     </v-menu>
     <v-btn v-if="this.$store.state.id" icon>
-      <v-icon @click="$router.push('/mypageprofile')">mdi-account</v-icon>
+      <v-icon @click="$router.push('/mypageprofile')" color="#1b243b">mdi-account</v-icon>
     </v-btn>
-    <v-btn v-if="this.$store.state.id" @click="logout()" icon>
-      <v-icon>mdi-arrow-right-box</v-icon>
-    </v-btn>
+    <v-btn v-if="this.$store.state.id" @click="logout()" elevation="0"
+      style="border: none;" rounded color="#1b243b" dark>로그아웃</v-btn>
   </v-app-bar>
 </template>
 <script>
