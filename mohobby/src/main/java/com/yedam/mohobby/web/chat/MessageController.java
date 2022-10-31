@@ -92,7 +92,7 @@ public class MessageController {
 	@MessageMapping("/getSubscribeId")
 	public void getSubscribeId(String RoomNo) {
 		sendTemplate.convertAndSend("/topic/room/" + RoomNo, RoomNo);
-		String Check="chatNotice";
+		
 		sendTemplate.convertAndSend("/queue/" + RoomNo + "/notice" ,"chatNotice");
 	}
 
