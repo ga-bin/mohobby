@@ -557,7 +557,7 @@
 	</insert>
 
 	<!-- 소모임 삭제 -->
-	<delete id="delMoim" parameterType="Integer">
+	<delete id="removeMoim" parameterType="Integer">
 		{call delete_moim(#{moimId, mode=IN, jdbcType=INTEGER})}
 	</delete>
 

@@ -472,11 +472,11 @@ public class MoimController {
 	}
 
 	// 소모임 삭제하기
-	@DeleteMapping("/deleteMoim")
-	public String delMoim(@Param("moimId") int moimId) {
+	@DeleteMapping("/removemoim")
+	public String removeMoim(@Param("moimId") int moimId) {
 		System.out.println("moimId" + moimId);
 		try {
-			service.deleteMoim(moimId);
+			service.removeMoim(moimId);
 			return "succes";
 		} catch (Exception e) {
 			return "fail" + e;
@@ -636,12 +636,13 @@ public class MoimController {
 		}
 	}
 	
+	//멤버 탈퇴하기
 	@DeleteMapping("/delmoim")
 	public void delmoim(@Param("memberId")String memberId, @Param("moimId")int moimId) {
 		service.delmoim(memberId ,moimId);
 	}
 	
-	
+	//관리자 확인
 	@GetMapping("/moimadmin")
 	public List<MoimVO> getmoimadmin(@Param("moimdId") int moimId) {
 		return service.moimadmin(moimId);

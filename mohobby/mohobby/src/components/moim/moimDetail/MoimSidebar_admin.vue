@@ -76,7 +76,7 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn @click="dialog = false"> 취소 </v-btn>
-                  <v-btn color="error" @click="[dialog = false, delmoim()]"> 삭제 </v-btn>
+                  <v-btn color="error" @click="[dialog = false, removeMoim()]"> 삭제 </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -168,9 +168,9 @@ export default {
         });
     },
     //소모임 삭제
-    delmoim(){
+    removeMoim(){
       console.log("=========================")
-      this.axios.delete("/deleteMoim",{
+      this.axios.delete("/removemoim",{
         params: {
           moimId : this.moimId
         }
