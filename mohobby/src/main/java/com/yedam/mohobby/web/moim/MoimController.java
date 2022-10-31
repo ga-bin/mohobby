@@ -578,14 +578,21 @@ public class MoimController {
 
 	// 게시글 수정
 	@PutMapping("/updateBoard")
-	public void updateBoard(@RequestBody MoimBoardVO vo) {
+	public int updateBoard(@RequestBody MoimBoardVO vo) {
 		service.updateBoard(vo);
+		return vo.getBoardId();
 	}
 
 	// 소모임 권한 확인
 	@GetMapping("/moimRight")
 	public List<MoimMemberVO> moimRight(@Param("memberId") String memberId) {
 		return service.moimRight(memberId);
+	}
+	
+	// 소모임 권한 확인
+	@GetMapping("/moimnewRight")
+	public List<MoimMemberVO> moimnewRight(@Param("memberId") String memberId) {
+		return service.moimnewRight(memberId);
 	}
 	
 	// 소모임 가입 체크
@@ -603,5 +610,27 @@ public class MoimController {
 		} catch(Exception e) {
 			return 0;
 		}
+	}
+	
+	// 소모임 가입자 수 감소
+	@PutMapping("/deletecnt")
+	public int deletecnt(@RequestBody MoimVO vo) {
+		try {
+		service.deletecnt(vo);
+		return 1;
+		} catch(Exception e) {
+			return 0;
+		}
+	}
+	
+	@DeleteMapping("/delmoim")
+	public void delmoim(@Param("memberId")String memberId, @Param("moimId")int moimId) {
+		service.delmoim(memberId ,moimId);
+	}
+	
+	
+	@GetMapping("/moimadmin")
+	public List<MoimVO> getmoimadmin(@Param("moimdId") int moimId) {
+		return service.moimadmin(moimId);
 	}
 }

@@ -56,7 +56,7 @@ export default {
     getPost() {
         this.axios.get("/readMoimInfo", {
           params : {
-            boardId : this.boardI
+            boardId : this.boardId
           }
         })
         .then((resp)=> {
@@ -91,8 +91,7 @@ export default {
         boardId : this.boardId 
       })
         .then((resp) => {
-          console.log(resp)
-          console.log("data =" + resp.data)
+          console.log(resp.data)
           this.boardId = resp.data
           this.clickSave(this.boardId)
         })
