@@ -66,7 +66,7 @@
                 <br>
                 <br>
                 <form id="needs" v-on:submit.prevent> 
-                    <NeedsForm v-for="i in count" :key="i" :i="i-1"></NeedsForm>
+                    <NeedsForm v-for="i in count" :key="i" :i="i-1" :classId=classId></NeedsForm>
                 </form>
                 <v-btn
                 elevation="2"
@@ -146,8 +146,9 @@ export default {
                 });
         },
         register() {
-            //this.updateCert();
-            this.registerNeeds()
+            this.updateCert();
+            this.registerNeeds();
+
         },
         registerNeeds() {
             let formData = new FormData(needs);
@@ -155,6 +156,8 @@ export default {
             this.axios.post('/insertNeeds', formData)
             .then((response) => {
                 console.log(response);
+                this.$swal.fire('등록이 완료되었습니다.');
+                this.$router.push('/adminclass');
             }, (error) => {
                 console.log(error);
             });

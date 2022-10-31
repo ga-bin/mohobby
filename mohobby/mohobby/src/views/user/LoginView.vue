@@ -197,12 +197,6 @@ export default {
             url: "/v2/user/me",
             success: (res) => {
               const kakao_account = res.kakao_account;
-              console.log(kakao_account);
-              // console.log(kakao_account.profile.nickname);
-              // console.log(kakao_account.email);
-              // console.log(kakao_account.gender);
-              // console.log(kakao_account.birthday);
-
               vm.token = kakao_account.access_token;
               vm.email = kakao_account.email;
 
@@ -281,16 +275,19 @@ export default {
         .then(function (response) {
           console.log(response);
           if (response.data !== "" && response.data.constructor === Object) {
-            //this.$store.commit("setId", this.memberId);
             console.log(response.data);
             if (response.data.delDate != null) {
               vm.$swal.fire("탈퇴한 회원입니다.");
               return;
             }
+            if (response.data.role == 4) {
+              vm.$swal.fire("관리자에 의해 접근 금지된 유저입니다.");
+              return;
+            }
+            // vuex를 이용해 로그인 정보 저장
             vm.$store.state.id = vm.memberId;
             vm.$store.commit("setIsLoginTrue");
             vm.$store.commit("setUserData", response.data);
-            // vm.$store.state.user=response.data;
             // 로그인 성공시 메인으로 이동
             this.$router.push("/");
           } else {
@@ -298,13 +295,13 @@ export default {
               name: "register",
               params: { email: vm.email },
             });
-            // vm.$router.push("/register");
           }
         })
         .catch(function (error) {
           console.log(error);
         });
     },
+    // 아이디 찾기
     findMemberId() {
       const vm = this;
       this.$swal
@@ -338,6 +335,7 @@ export default {
             });
         });
     },
+    // 비밀번호 찾기
     findMemberPassword() {
       const vm = this;
       this.$swal

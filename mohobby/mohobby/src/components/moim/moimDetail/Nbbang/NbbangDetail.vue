@@ -26,7 +26,8 @@
           <v-card class="mb-10 pa-5">
             <v-list two-line>
               <div class="">
-                <template v-for="(item, index) in items.slice(0, 6)">
+                <template v-for="(item, index) in items">
+                
                   <v-subheader
                     v-if="item.header"
                     :key="item.header"
@@ -59,7 +60,6 @@
                       <v-checkbox v-if="item.writer == memberId"
                         id="select"
                         v-model="item.calcCheck"
-                        @click="priceCheck"
                         color="light-green"
                       ></v-checkbox>
                     </div>
@@ -77,8 +77,8 @@
                   dark
                   v-bind="attrs"
                   v-on="on"
+                  @click="changeCheck()"
                   >
-                  <!-- @click="updateCalc()"  -->
                   완료
                 </v-btn>
               </template>
@@ -91,7 +91,7 @@
                   <v-btn color="light-green" text @click="dialog = false">
                     취소
                   </v-btn>
-                  <v-btn color="light-green" text @click="changeCheck()">
+                  <v-btn color="light-green" text @click="dialog = false"> 
                     완료
                   </v-btn>
                 </v-card-actions>
@@ -118,9 +118,6 @@ export default {
       checked : [],
       totalPrice : '',
       people : '',
-      calcCheck: '',
-      target : [],
-      
     };
   },
   created() {
@@ -130,22 +127,30 @@ export default {
   },
   methods: {
     changeCheck() {
-      console.log('dutchId'+this.dutchId)
-      console.log('moneyTarget'+this.items[1].moneyTarget)
-      this.dialog = falses
-      this.axios.put("/updateCalc",{
-       
-          dutchId : this.dutchId,
-          memberId : this.items.moneyTarget,
-          calcCheck : this.calcCheck
-        
-      }).then((resp)=>{
-        console.log(resp)
-      }).catch((err)=>{
-        console.log(err)
-      })
-      this.$router.push('moimNbbang')
-    },
+      for(let i=1; i<this.items.length; i++){
+              if(this.items[i].calcCheck == true){
+                this.items[i].calcCheck = 1
+              } else if(this.items[i].calcCheck == false){
+                this.items[i].calcCheck = 0
+              }
+              console.log('dutchId: '+this.dutchId)
+            console.log('memberId: '+this.items[i].moneyTarget)
+            console.log('calcCheck: '+this.items[i].calcCheck)
+          this.axios.post("/updateCalc",{
+            params : {
+              dutchId : this.dutchId,
+              memberId : this.items[i].moneyTarget,
+              calcCheck : this.items[i].calcCheck
+            }
+          }).then((resp)=>{
+            console.log(resp)
+           
+          }).catch((err)=>{
+            console.log(err)
+          })
+        }
+        this.$router.push('moimNbbang')
+      },
     getOneNbbangList() {
       const vm = this;
       this.axios({
@@ -169,12 +174,6 @@ export default {
     makeShowList() {
       this.items.push({ header: "N빵" });
       for(let i = 0; i < this.oneNbbangList.length; i++) {
-        // if (this.checked == 0) {
-        //   this.calcCheck = 0;
-        // } else {
-        //   this.calcCheck = 1;
-        // }
-  
         this.items.push({
           avatar: require(`@/assets/image/user/${this.oneNbbangList[i].profileImg}`),
           writeDate: this.oneNbbangList[i].writeDate,
@@ -184,17 +183,6 @@ export default {
           calcCheck : this.oneNbbangList[i].calcCheck
         })     
       }
-    },
-    // priceCheck(){
-    //   console.log(this.calcCheck)
-    //   if(this.calcCheck == 1){
-    //     this.calcCheck = 0;
-    //   } else if(this.calcCheck == 0) {
-    //     this.calcCheck = 1;
-    //   }
-    // },
-    updateCalc(){
-
     },
     deleteNbbang(){
       this.$swal({

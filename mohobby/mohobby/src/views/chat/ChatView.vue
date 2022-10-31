@@ -1,7 +1,6 @@
 <template>
   <div id="container" class="scroll" ref="scroll">
-    <h1> {{ this.$store.state.user.nickName }} 님의 채팅방입니다 </h1>
-    <!-- <v-card  class="overflow-y-auto"   max-heght="344" > -->
+    <h1 id="chat-user"> {{ this.$store.state.user.nickName }} 님의 채팅방입니다 </h1>
     <div class="room">
       <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid; cursor: pointer;">
         <template v-for="(item, index) in roomList">
@@ -53,7 +52,12 @@
         <template v-for="(msg, i) in messages">
           <div>
             <!-- 내 채팅 -->
-            <div v-if="msg.memberId" :class="{ 'd-flex flex-row-reverse mr-2 mt-4': msg.memberId }">
+            <div class="admin-chat" v-if="i==0">
+              <p>
+              {{ msg.content }}
+            </p>
+            </div>
+            <div v-else-if="msg.memberId" :class="{ 'd-flex flex-row-reverse mr-2 mt-4': msg.memberId }">
               <div class="my-chat">
                 {{ msg.content }}
               </div>
@@ -84,7 +88,6 @@
             </div>
           </div>
         </template>
-     
         
       </div>
         <!-- 글 입력폼 -->
@@ -120,9 +123,9 @@ export default {
   },
   created() {
     this.memberId = this.$store.state.id,
-      this.roomId = this.$route.query.getRoomId,
+    this.roomId = this.$route.query.getRoomId,
 
-      this.connect()
+    this.connect()
     this.getRoom()
     this.sortRoom()
     this.CheckIn(this.roomId)
@@ -393,7 +396,6 @@ export default {
                 vm.roomList[i].msgTime = resContent.hour;
                 if (vm.roomId != resContent.roomNo)
                   ++vm.roomList[i].nonReadChat;
-
               }
             }
             vm.sortRoom();
@@ -423,15 +425,20 @@ export default {
 </script>
 <style scoped>
 #container {
-  height: 100vh;
+ height: 100vh; 
 }
-
+#chat-user{
+  margin-left: 10px;
+}
 .room {
   overflow-y:auto ;
- 
   display: flex;
-}
+  max-height:100vh;
 
+}
+.admin-chat{
+  text-align:center
+}
 .chat-room-list {
   display: flex;
   padding: 10px;

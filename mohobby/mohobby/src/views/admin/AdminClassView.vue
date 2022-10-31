@@ -29,7 +29,6 @@
           <v-icon small class="mr-2" @click="answerQnA(item)">
             mdi-pencil
           </v-icon>
-          <!-- <v-icon @click="deleteFlagUser(item)"> mdi-delete </v-icon> -->
         </template>
         small
 
@@ -45,14 +44,8 @@
           <p>해당하는 내용이 없습니다.</p>
         </template>
       </v-data-table>
-        <!-- <template v-slot:item="{ item }">
-        <tr @click="answerQnA(item)" v-b-modal.modal-lg>
-          <td></td>
-        </tr>
-      </template> -->
         </v-data-table>
       </template>
-    <h3>지급 내역</h3>
     <h3>강의 목록</h3>
     <v-row>
       <v-col lg="12">
@@ -86,6 +79,7 @@
         </v-data-table>
       </v-col>
     </v-row>
+
   </main>
 </template>
 <script>
