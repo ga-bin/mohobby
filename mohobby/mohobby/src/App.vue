@@ -17,7 +17,7 @@ export default {
     Header,
     HashLoader,
   },
-  data: () => ({
+  data:() => ({
     cards: ["Today", "Yesterday"],
     menu5: "asd",
     color: "#2ac187",
