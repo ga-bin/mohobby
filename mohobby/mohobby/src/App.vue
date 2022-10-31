@@ -50,7 +50,7 @@ export default {
 
   },
   created() {
-    this.stompClient.disconnect(    this.stompClient.connect(
+    this.stompClient.connect(
       {},
       frame => {
         // 소켓 연결 성공
@@ -62,13 +62,17 @@ export default {
         console.log('소켓 연결 실패', error);
         this.connected = false;
       }
-    ),)
+    )
 
 
   },
   watch: {
     '$route'(to, from) {
       if (from.name == 'chat') {
+    
+        for(let i=0;i<100;i++){
+          console.log("!@##########################@#@#@")
+        }
         this.CheckOut();
         this.stompClient.unsubscribe(this.$store.state.isRoomNo);
         console.log("this.$store.state.isUser : " + this.$store.state.isUser)
