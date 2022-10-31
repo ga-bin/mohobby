@@ -1,5 +1,4 @@
 <template>
-    <div id = "container" align-center>
         <v-container id="main">
           
             <v-spacer></v-spacer>
