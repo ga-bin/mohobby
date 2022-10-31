@@ -89,9 +89,6 @@ export default {
         }
     },
     mounted() {
-        // let initBody = document.body.innerHTML;
-        // document.body.innerHTML = document.getElementById('login').innerHTML;
-        // console.log('페이지 로딩');
     },
     created() {
         this.checkTimeLimit();
@@ -100,7 +97,7 @@ export default {
         kakaoLogin() {
             const vm = this;
             window.Kakao.Auth.loginForm({
-                scope: "profile_nickname, account_email, gender, birthday", //동의항목 페이지에 있는 개인정보 보호 테이블의 활성화된 ID값을 넣습니다.
+                scope: "profile_nickname, account_email, gender, birthday",
                 success: function (response) {
                 window.Kakao.API.request({
                     // 사용자 정보 가져오기
@@ -115,7 +112,6 @@ export default {
                     vm.checkMemberByEmail();
                     },
                 });
-                // window.location.href='/' //리다이렉트 되는 코드
                 },
                 fail: function (error) {
                 console.log(error);
@@ -223,7 +219,8 @@ export default {
         },
         checkTimeLimit() {
             let now = this.now;
-            let connect = this.connect.substr(0, 4)+'-'+this.connect.substr(4, 2)+'-'+this.connect.substr(6, 2)+' '+this.connect.substr(8, 2)+':'+this.connect.substr(10, 2)+':'+this.connect.substr(12, 2);
+            let connect = this.connect.substr(0, 4)+'-'+this.connect.substr(4, 2)+'-'+this.connect.substr(6, 2)+' '
+                            +this.connect.substr(8, 2)+':'+this.connect.substr(10, 2)+':'+this.connect.substr(12, 2);
             let income = this.$moment(connect).format('YYYY-MM-DD HH:mm:ss');
             let limit = this.$moment(income).add(5, "m").format('YYYY-MM-DD HH:mm:ss');
             if(!(limit>now)) {

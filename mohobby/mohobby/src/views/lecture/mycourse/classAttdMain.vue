@@ -217,7 +217,6 @@ export default {
             info: {},
             dialog: false,
             qrimg: '',
-            urlTail: '',
         };
     },
     created() {
@@ -236,7 +235,7 @@ export default {
             }).catch(err => console.log(err));
         },
         checkGeocode(url) {
-            let classX, classY, myX, myY, absX, absY, distance = '';
+            let classX, classY, myX, myY, distance = '';
             let vm = this;
 
             // 주소-좌표 변환 객체를 생성합니다
@@ -256,10 +255,6 @@ export default {
                             myY = pos.coords.latitude;
                             myX = pos.coords.longitude;
 
-                            // 좌표 차이 절대값 구하기
-                            absX = Math.abs(classX - myX);
-                            absY = Math.abs(classY - myY);
-
                             // 거리 차이 구하기
                             distance = vm.getDistance(classX, classY, myX, myY).toFixed(1);
                             vm.checkDistance(distance, url);
@@ -270,18 +265,21 @@ export default {
                 } 
             });
         },
+
         getDistance(lat1,lng1,lat2,lng2) {
             function deg2rad(deg) {
                 return deg * (Math.PI/180)
             }
-            var R = 6371; // Radius of the earth in km
-            var dLat = deg2rad(lat2-lat1);  // deg2rad below
+            var R = 6371; // 지구 반경
+            var dLat = deg2rad(lat2-lat1);  
             var dLon = deg2rad(lng2-lng1);
-            var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) 
+                    * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            var d = R * c; // Distance in km
+            var d = R * c; // km 기준 거리
             return d;
         },
+
         checkDistance(distance, url) {
             if(distance <= 0.5) {
                 this.floatingQR(url);
@@ -289,6 +287,7 @@ export default {
                 this.$swal('수강장소에서 다시 시도해주세요!', '', 'error');
             }
         },
+
         floatingQR(url) {
             this.axios.get('/AttdQR', {
                 params: {
@@ -300,25 +299,26 @@ export default {
                 this.dialog=true;
             });
         },
+        
         attdBtn() {
             let now = this.$moment().format('HH:mm');
             let end = this.info.endTime + ':00';
             let start = this.info.startTime - 1 + ':30';
 
-            // if(!this.info.classDate || (now>end)) {
-            //     this.$swal('출석일이 아닙니다!', '', 'info');
-            //     return;
-            // }
+            if(!this.info.classDate || (now>end)) {
+                this.$swal('출석일이 아닙니다!', '', 'info');
+                return;
+            }
 
-            // if(now>start) {
-            //     this.$swal(start + '부터 출석이 가능합니다!', '', 'info');
-            //     return;
-            // }
+            if(now>start) {
+                this.$swal(start + '부터 출석이 가능합니다!', '', 'info');
+                return;
+            }
 
-            // if(this.info.leaveDate || this.info.exitDate) {
-            //     this.$swal('조퇴 및 퇴실 후 재출석은 불가합니다!', '', 'info');
-            //     return;
-            // }
+            if(this.info.leaveDate || this.info.exitDate) {
+                this.$swal('조퇴 및 퇴실 후 재출석은 불가합니다!', '', 'info');
+                return;
+            }
 
             let url = this.$url + 'class/attd/login?id=' + this.$store.state.id + '&type=0' + this.urlTail;
             this.checkGeocode(url);
@@ -385,8 +385,11 @@ export default {
                 this.getInfo();
             }
         },
-        info() {
-            this.urlTail = '&connect=' + this.$moment().format('YYYYMMDDHHmmss') + Date.now() + '&currId=' + this.info.currId + '&time=' + this.info.startTime;
+    },
+    computed: {
+        urlTail() {
+            return '&connect=' + this.$moment().format('YYYYMMDDHHmmss') + Date.now() 
+                    + '&currId=' + this.info.currId + '&time=' + this.info.startTime;
         }
     }
 }
