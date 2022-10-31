@@ -48,6 +48,7 @@
         </v-toolbar>
 
         <template v-for="(item, index) in items">
+          {{                        items                        }}
           <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
           <v-list-item v-else :key="item.title" @click="pageMove(item)" style="background-color=red">
             <v-list-item-avatar>
@@ -321,17 +322,31 @@ export default {
                   if (idx < 0) {
                     vm.messages.unshift({ divider: true, inset: true });
                     vm.subtitle = "새로운 메세지가 도착했습니다.";
-                    vm.messages.unshift({
-                      avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-                      title: resNotice.nickname + "님으로 부터",
-                      subtitle: vm.subtitle,
-                      postId: resNotice.postId,
-                      boardType: resNotice.boardType,
-                      moimId: resNotice.moimId,
-                      noticeType: resNotice.noticeType,
-                      noticeId: resNotice.noticeId,
-                      count: 1
-                    })
+                    if (postId < 10000) {
+                      vm.messages.unshift({
+                        avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
+                        title: resNotice.nickname + "님으로 부터",
+                        subtitle: vm.subtitle,
+                        postId: resNotice.postId,
+                        boardType: resNotice.boardType,
+                        moimId: resNotice.moimId,
+                        noticeType: resNotice.noticeType,
+                        noticeId: resNotice.noticeId,
+                        count: 1
+                      })
+                    } else {
+                      vm.messages.unshift({
+                        avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
+                        title: resNotice.nickname + "님으로 부터",
+                        subtitle: vm.subtitle,
+                        postId: resNotice.postId,
+                        boardType: resNotice.boardType,
+                        moimId: resNotice.moimId,
+                        noticeType: resNotice.noticeType,
+                        noticeId: resNotice.noticeId,
+                        count: 1
+                      })
+                    }
                   }
                   else {
                     vm.messages[idx].count = vm.messages[idx].count + 1

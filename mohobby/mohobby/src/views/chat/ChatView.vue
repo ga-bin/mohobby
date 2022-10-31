@@ -1,11 +1,11 @@
 <template>
-  <div id="container" class="scroll" ref="scroll">
+  <v-container class="scroll" ref="scroll">
     <h1 id="chat-user"> {{ this.$store.state.user.nickName }} 님의 채팅방입니다 </h1>
     <div class="room">
       <v-col cols="12" sm="3" class="flex-grow-1 flex-shrink-0" style="border-right: 1px solid; cursor: pointer;">
         <template v-for="(item, index) in roomList">
           <div v-if="item.checkIn == 0" class="chat-room-list" v-on:click.prevent.stop="openRoom(item.roomNo)"
-            style="background-color:#ffff">
+            style="background-color:#ffff;">
             <div></div>
             <v-avatar>
               <v-img v-if="item.roomNo > 10000" :src="require(`@/assets/image/user/${item.profileImg}`)" height="100px"
@@ -21,7 +21,7 @@
                 {{ item.content }}
               </v-text>
             </div>
-            <v-badge style="float: right;" v-if="item.nonReadChat != 0" offset-x="-310" offset-y="30" color="red"
+            <v-badge style="float: right;" v-if="item.nonReadChat != 0" offset-x="-210" offset-y="30" color="red"
               :content="item.nonReadChat">
             </v-badge>
           </div>
@@ -36,61 +36,67 @@
             <div class="chat-room-list-content">
               <v-text id="chat-nickname">
                 {{ item.nickName }}
+                {{ item.nickname }}
               </v-text>
               <v-text>
                 {{ item.content }}
               </v-text>
             </div>
-     
+
           </div>
           <hr>
         </template>
         <!-- 채팅내역 -->
       </v-col>
 
-      <v-col cols="auto" class="flex-grow-1 flex-shrink-0 pa-3 " style="background-color:#B2C7D9">
-     <div>
-        <template v-for="(msg, i) in messages">
-          <div>
-            <!-- 내 채팅 -->
-            <div class="admin-chat" v-if="i==0">
-              <p>
-              {{ msg.content }}
-            </p>
-            </div>
-            <div v-else-if="msg.memberId" :class="{ 'd-flex flex-row-reverse mr-2 mt-4': msg.memberId }">
-              <div class="my-chat">
-                {{ msg.content }}
+      <v-col cols="auto" class="flex-grow-1 flex-shrink-0 pa-3 " style="background-color: #e9e9ec">
+        <div> 
+          <template v-for="(msg, i) in messages">
+          
+            <div>
+              <!-- 내 채팅 -->
+              <div class="admin-chat" v-if="i == 0">
+                <p>
+                  {{ msg.content }}
+                </p>
               </div>
-              <div class="my-chat-Time" style="font-size: 0.5rem">
-                {{ msg.hour }}
-              </div>
-            </div>
-            <!-- 상대 채팅 -->
-            <div v-else :class="{ 'd-flex mr-2 mt-6': !msg.memberId }">
-              <v-avatar class="mr-2">
-                <v-img :src="require(`@/assets/image/user/${msg.profileImg}`)" border-radius:10px></v-img>
-              </v-avatar>
-              <div>
-                <v-text class="ml-4">
-                  {{ msg.nickname }}
-                </v-text>
-                <v-row class="mt-2">
-                  <div class="target-chat">
+              <div v-else-if="msg.memberId" :class="{ 'd-flex flex-row-reverse mr-2 mt-4': msg.memberId }">
+                <div style="  display: flex;">
+                  <div class="my-chat-Time pr-1" style="  margin-top: auto;">
+                    {{ msg.hour }}
+                  </div>
+                  <div class="my-chat" style>
                     {{ msg.content }}
                   </div>
-                  <div class="my-chat-Time" style="font-size: 0.5rem">
-                    <sub class="ml-1" style="font-size: 0.5rem">
-                      {{ msg.hour }}
-                    </sub>
-                  </div>
-                </v-row>
+
+                </div>
+              </div>
+              <!-- 상대 채팅 -->
+              <div v-else :class="{ 'd-flex mr-2 mt-6': !msg.memberId }">
+                <v-avatar class="mr-2">
+                  <v-img :src="require(`@/assets/image/user/${msg.profileImg}`)" border-radius:10px></v-img>
+                </v-avatar>
+                <div>
+                  <v-text class="ml-4">
+                    {{ msg.nickname}}
+                    {{msg}}
+                  </v-text>
+                  <v-row class="mt-2">
+                    <div style="  display: flex;">
+                      <div class="target-chat" style="margin-top: auto;">
+                        {{ msg.content }}
+                      </div>
+                      <div class="target-chat-Time pl-1 ">
+                        {{ msg.hour }}
+                      </div>
+                    </div>
+                  </v-row>
+                </div>
               </div>
             </div>
-          </div>
-        </template>
-        
-      </div>
+          </template>
+
+        </div>
         <!-- 글 입력폼 -->
         <v-card-text class="flex-shrink-1">
           <v-text-field filled dense class="messages" v-model="message" label="메시지를 입력해주세요" type="text" no-details
@@ -99,12 +105,12 @@
         </v-card-text>
       </v-col>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
 export default {
- 
+
   data() {
     return {
       subTitle: "", //수정중
@@ -124,9 +130,9 @@ export default {
   },
   created() {
     this.memberId = this.$store.state.id,
-    this.roomId = this.$route.query.getRoomId,
+      this.roomId = this.$route.query.getRoomId,
 
-    this.connect()
+      this.connect()
     this.getRoom()
     //this.sortRoom()
     //this.CheckIn(this.roomId)
@@ -237,7 +243,7 @@ export default {
 
         this.roomId = roomNo
       }
-      else(
+      else (
         this.CheckIn(roomNo)
       )
       this.$store.state.stayRoomNo = roomNo
@@ -340,8 +346,8 @@ export default {
 
         }
       });
-      //구독취소헤더값 가져오기
       this.stompClient.send("/app/getSubscribeId", vm.roomId, (res) => { });
+      this.stompClient.send("/app/getSubscribeId", this.$store.state.id, (res) => { });
 
     },
     //채팅방 리스트출력
@@ -374,9 +380,10 @@ export default {
             })
             .finally(function (ros) {
               vm.sortRoom();
-           
-              if(vm.$route.query.getRoomId){
-              vm.openRoom(vm.$route.query.getRoomId);}
+
+              if (vm.$route.query.getRoomId) {
+                vm.openRoom(vm.$route.query.getRoomId);
+              }
             });
         });
     },
@@ -398,7 +405,13 @@ export default {
             }
             for (let i = 0; i < vm.roomList.length; i++) {
               if (vm.roomList[i].roomNo == resContent.roomNo) {
-                vm.roomList[i].content = resContent.content;
+                console.log(resContent.content.length)
+                if (resContent.content.length > 10) {
+                  vm.roomList[i].content = resContent.content.slice(0, 10) + "..."
+                }
+                else {
+                  vm.roomList[i].content = resContent.content
+                }
                 vm.roomList[i].msgTime = resContent.hour;
                 if (vm.roomId != resContent.roomNo)
                   ++vm.roomList[i].nonReadChat;
@@ -431,23 +444,30 @@ export default {
 </script>
 <style scoped>
 #container {
- height: 100vh; 
+  height: 100vh;
 }
-#chat-user{
+
+#chat-user {
   margin-left: 10px;
 }
+
 .room {
-  overflow-y:auto ;
+  overflow-y: auto;
   display: flex;
-  max-height:500px;
+  max-height: 2000vh;
 
 }
-.admin-chat{
-  text-align:center
+
+.admin-chat {
+  text-align: center
 }
+
 .chat-room-list {
   display: flex;
   padding: 10px;
+}
+.chat-room-list:hover{
+  background-color: gold;
 }
 
 .chat-room-list-content {
@@ -461,15 +481,18 @@ export default {
 }
 
 
-.chat-content{
+.chat-content {
   background-color: #B2C7D9;
 }
+
 .my-chat {
   position: relative;
-  background: #ffcf24;
+  background: #2255b1;
   border-radius: .4em;
-  padding: 4px;
-
+  padding: 5px 15px;
+  color: white;
+  font-size: 1.3em;
+  max-width: 50vh;
 }
 
 .my-chat:after {
@@ -480,7 +503,7 @@ export default {
   width: 0;
   height: 0;
   border: 0.563em solid transparent;
-  border-left-color: #ffcf24;
+  border-left-color: #2255b1;
   border-right: 0;
   border-top: 0;
   margin-top: -0.281em;
@@ -494,10 +517,13 @@ export default {
 
 .target-chat {
   position: relative;
-  background: #ffff;
+  background: white;
   border-radius: .4em;
-  padding: 4px;
+  padding: 5px 15px;
   margin-left: 20px;
+  color: black;
+  font-size: 1.3em;
+  max-width: 50vh;
 }
 
 .target-chat:after {
@@ -508,13 +534,16 @@ export default {
   width: 0;
   height: 0;
   border: 0.563em solid transparent;
-  border-right-color: #ffffff;
+  border-right-color: white;
   border-left: 0;
   border-top: 0;
   margin-top: -0.281em;
   margin-left: -0.562em;
 }
-
+.target-chat-Time {
+  margin-left: 5px;
+  margin-top: 15px;
+}
 .messages {
   background-color: #ffffff;
 }
