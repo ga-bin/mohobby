@@ -6,6 +6,7 @@
         <template v-for="(item, index) in roomList">
           <div v-if="item.checkIn == 0" class="chat-room-list" v-on:click.prevent.stop="openRoom(item.roomNo)"
             style="background-color:#ffff">
+            <div></div>
             <v-avatar>
               <v-img v-if="item.roomNo > 10000" :src="require(`@/assets/image/user/${item.profileImg}`)" height="100px"
                 width="50px" border-radius:10px></v-img>
@@ -20,7 +21,7 @@
                 {{ item.content }}
               </v-text>
             </div>
-            <v-badge style="float: right;" v-if="item.nonReadChat != 0" offset-x="10" offset-y="10" color="red"
+            <v-badge style="float: right;" v-if="item.nonReadChat != 0" offset-x="-310" offset-y="30" color="red"
               :content="item.nonReadChat">
             </v-badge>
           </div>
@@ -103,7 +104,7 @@
 
 <script>
 export default {
-  name: "App",
+ 
   data() {
     return {
       subTitle: "", //수정중
@@ -127,8 +128,8 @@ export default {
 
     this.connect()
     this.getRoom()
-    this.sortRoom()
-    this.CheckIn(this.roomId)
+    //this.sortRoom()
+    //this.CheckIn(this.roomId)
   },
   mounted() {
     window.addEventListener('beforeunload', this.CheckOut(this.roomId));
@@ -236,6 +237,9 @@ export default {
 
         this.roomId = roomNo
       }
+      else(
+        this.CheckIn(roomNo)
+      )
       this.$store.state.stayRoomNo = roomNo
       this.messages = [];
       this.targetId = [];
@@ -319,7 +323,7 @@ export default {
         }
         else {
           let rev = JSON.parse(res.body);
-          console.log("rev : " + rev)
+          console.log("rev : " + rev.memberId)
           if (rev.memberId == vm.memberId) {
             rev.memberId = true;
           } else {
@@ -370,7 +374,9 @@ export default {
             })
             .finally(function (ros) {
               vm.sortRoom();
-              vm.openRoom(vm.$route.query.getRoomId);
+           
+              if(vm.$route.query.getRoomId){
+              vm.openRoom(vm.$route.query.getRoomId);}
             });
         });
     },
@@ -433,7 +439,7 @@ export default {
 .room {
   overflow-y:auto ;
   display: flex;
-  max-height:100vh;
+  max-height:500px;
 
 }
 .admin-chat{
