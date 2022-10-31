@@ -23,7 +23,7 @@
     <v-spacer />
     <!-- <v-btn v-if="this.$store.state.id" icon/> -->
     <v-menu offset-y v-if="this.$store.state.id">
-   
+
       <template style="margin-right:30px;" v-slot:activator="{ on, attrs }">
         <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer; margin-right:10px;">
           <v-badge v-if="!noticeCount" style="cursor: pointer;" offset-x="10" offset-y="10" color="transparent"
@@ -151,9 +151,9 @@ export default {
   },
 
   watch: {
-  
-    
-    
+
+
+
     getId(val, oldVal) {
       this.connect()
     }
@@ -172,7 +172,7 @@ export default {
       this.items = []
       this.messages = []
 
-    this.noticeMsgCount=0;
+      this.noticeMsgCount = 0;
       let vm = this;
       if (vm.$store.state.id != '') {
         this.axios
@@ -185,7 +185,7 @@ export default {
             for (let i = 0; i < res.data.length; i++) {
               if (res.data[i].noticeType == 2) {
                 let idx = vm.messages.findIndex(obj => obj.postId == res.data[i].postId)
-                console.log("idx : " +idx)
+                console.log("idx : " + idx)
                 if (idx < 0) {
                   vm.messages.unshift({ divider: true, inset: true });
                   vm.messages.unshift({
@@ -233,8 +233,9 @@ export default {
               }
             }
             for (let i = 0; i < vm.messages.length - 1; i++) {
-             if(vm.messages[i].count){
-              vm.noticeMsgCount = vm.noticeMsgCount + vm.messages[i].count}
+              if (vm.messages[i].count) {
+                vm.noticeMsgCount = vm.noticeMsgCount + vm.messages[i].count
+              }
             }
             vm.noticeCount = ((vm.items.length) / 2)
             vm.stompClient.send("/app/SubscribeId", this.$store.state.id, (res) => {
@@ -255,12 +256,12 @@ export default {
             if (res.body == vm.$store.state.id) {
               vm.isUser = res.headers.subscription;
             }
-          
+
             else {
               let resNotice = JSON.parse(res.body);
-              console.log("sId : "+vm.$store.state.id)
-              console.log("rId : " +resNotice.myId)
-           
+              console.log("sId : " + vm.$store.state.id)
+              console.log("rId : " + resNotice.myId)
+
               if (resNotice.myId !== vm.$store.state.id) {
                 console.log("TESTSTSETSETSET")
                 //sns 알림 처리
@@ -312,7 +313,7 @@ export default {
                     noticeId: resNotice.noticeId,
                   });
                   ++vm.noticeCount;
-           
+
                 }
                 //메신저 알림 처리
                 else if (resNotice.noticeType == 2) {
@@ -336,7 +337,7 @@ export default {
                     vm.messages[idx].count = vm.messages[idx].count + 1
                     console.log("count : " + vm.messages[idx].count)
                   }
-                  vm.noticeMsgCount = vm.noticeMsgCount +1
+                  vm.noticeMsgCount = vm.noticeMsgCount + 1
                   console.log("noticeMsgCount: " + vm.noticeMsgCount)
                 }
               }

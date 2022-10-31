@@ -11,7 +11,6 @@
         </div>
         <!-- 프로필이미지 끝 -->
 
-{{follower}}
         <!-- 내 게시물 정보(닉네임, 개시물, 팔로워, 팔로잉 개수) -->
         <div class="profile-user-settings">
           <h1 class="profile-user-name">{{ infoes.memberId }}</h1>
