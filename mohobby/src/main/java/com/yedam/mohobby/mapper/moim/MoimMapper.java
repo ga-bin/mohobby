@@ -147,7 +147,7 @@ public interface MoimMapper {
 	public int insertBoard(MoimBoardVO vo);
 	
 	//소모임 삭제하기
-	public String delMoim(@Param("moimId")int moimId);
+	public String removeMoim(@Param("moimId")int moimId);
 	
 	//게시판 검색
 	public List<MoimBoardVO> searchBoard(@Param("moimId")int moimId, @Param("boardType")int boardType, @Param("title")String title);
