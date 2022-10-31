@@ -37,8 +37,6 @@ export default {
     return {
       boardSearch: "",
       items: [],
-      //moim : 비공개 0 공개 1
-      //moimRight : 비회원 0 회원 1
       moimId: this.$route.params.moimId,
       boardType: 1,
       profile: []

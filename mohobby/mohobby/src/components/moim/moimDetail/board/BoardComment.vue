@@ -17,7 +17,6 @@
           <v-btn x-small outlined color="error" @click="editForm = -1">취소</v-btn>
         </div>
       </div>
-
         <v-card-actions class="mt-2">
           <v-col>
             <div id="comment" class="content" v-if="item.commId != editForm"> {{item.content}} </div>
@@ -61,6 +60,7 @@ export default {
       boardId: this.$route.query.boardId,
       moimId: this.$route.query.moimId,
       boardType: this.$route.query.boardType,
+      profile : [],
       items: [],
       memberId: this.$store.state.id,
       targetId: '',

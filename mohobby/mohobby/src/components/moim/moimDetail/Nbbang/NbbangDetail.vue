@@ -11,12 +11,14 @@
             >
             </v-img>
           </v-avatar>
-          <div class="user text-overline">{{ writer }}<br />{{ date | moment('YYYY-MM-DD HH:mm')}}</div>
+          <div class="user text-overline">
+            {{ writer }}<br />{{ date | moment("YYYY-MM-DD HH:mm") }}
+          </div>
         </div>
       </div>
 
       <!-- 수정, 삭제 버튼-->
-      <v-card-actions v-if="writer == memberId" class="mr-15  mb-8">
+      <v-card-actions v-if="writer == memberId" class="mr-15 mb-8">
         <v-spacer></v-spacer>
         <v-btn small outlined color="error" @click="deleteNbbang()">삭제</v-btn>
       </v-card-actions>
@@ -27,7 +29,6 @@
             <v-list two-line>
               <div class="">
                 <template v-for="(item, index) in items">
-                
                   <v-subheader
                     v-if="item.header"
                     :key="item.header"
@@ -37,7 +38,7 @@
                       >mdi-chart-pie</v-icon
                     >
                     {{ item.header }}
-                    {{ totalPrice}}/{{ people }}명
+                    {{ totalPrice }}/{{ people }}명
                   </v-subheader>
                   <v-divider
                     v-else-if="item.divider"
@@ -50,14 +51,16 @@
                     </v-list-item-avatar>
 
                     <v-list-item-content>
-                      <v-list-item-title v-html="item.moneyTarget"></v-list-item-title>
+                      <v-list-item-title
+                        v-html="item.moneyTarget"
+                      ></v-list-item-title>
                       <v-list-item-subtitle
                         v-html="item.money"
                       ></v-list-item-subtitle>
-                     
                     </v-list-item-content>
                     <div class="checkBox">
-                      <v-checkbox v-if="item.writer == memberId"
+                      <v-checkbox
+                        v-if="item.writer == memberId"
                         id="select"
                         v-model="item.calcCheck"
                         color="light-green"
@@ -78,7 +81,7 @@
                   v-bind="attrs"
                   v-on="on"
                   @click="changeCheck()"
-                  >
+                >
                   완료
                 </v-btn>
               </template>
@@ -96,44 +99,46 @@ export default {
     return {
       memberId: this.$store.state.id,
       dialog: false,
-      writer: '',
+      writer: "",
       dutchId: this.$route.query.dutchId,
-      moimId : this.$route.query.moimId,
-      items : [],
-      oneNbbangList : [],
-      checked : [],
-      totalPrice : '',
-      people : '',
+      moimId: this.$route.query.moimId,
+      items: [],
+      oneNbbangList: [],
+      checked: [],
+      totalPrice: "",
+      people: "",
     };
   },
   created() {
-    this.getOneNbbangList()
+    this.getOneNbbangList();
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     changeCheck() {
-      for(let i=1; i<this.items.length; i++){
-              if(this.items[i].calcCheck == true){
-                this.items[i].calcCheck = 1
-              } else if(this.items[i].calcCheck == false){
-                this.items[i].calcCheck = 0
-              }
-          this.axios.get("/updateCalc",{
-            params : {
-              dutchId : this.dutchId,
-              memberId : this.items[i].moneyTarget,
-              calcCheck : this.items[i].calcCheck
-            }
-          }).then((resp)=>{
-            console.log(resp)
-            this.$swal('n빵 체크가 완료되었습니다.')
-          }).catch((err)=>{
-            console.log(err)
-          })
+      for (let i = 1; i < this.items.length; i++) {
+        if (this.items[i].calcCheck == true) {
+          this.items[i].calcCheck = 1;
+        } else if (this.items[i].calcCheck == false) {
+          this.items[i].calcCheck = 0;
         }
-        this.$router.push('moimNbbang')
-      },
+        this.axios
+          .get("/updateCalc", {
+            params: {
+              dutchId: this.dutchId,
+              memberId: this.items[i].moneyTarget,
+              calcCheck: this.items[i].calcCheck,
+            },
+          })
+          .then((resp) => {
+            console.log(resp);
+            this.$swal("n빵 체크가 완료되었습니다.");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      this.$router.push("moimNbbang");
+    },
     getOneNbbangList() {
       const vm = this;
       this.axios({
@@ -156,50 +161,49 @@ export default {
     },
     makeShowList() {
       this.items.push({ header: "N빵" });
-      for(let i = 0; i < this.oneNbbangList.length; i++) {
+      for (let i = 0; i < this.oneNbbangList.length; i++) {
         this.items.push({
           avatar: require(`@/assets/image/user/${this.oneNbbangList[i].profileImg}`),
           writeDate: this.oneNbbangList[i].writeDate,
           writer: this.oneNbbangList[i].memberId,
           money: this.oneNbbangList[i].calcPrice,
-          moneyTarget : this.oneNbbangList[i].moneyTarget,
-          calcCheck : this.oneNbbangList[i].calcCheck
-        })     
+          moneyTarget: this.oneNbbangList[i].moneyTarget,
+          calcCheck: this.oneNbbangList[i].calcCheck,
+        });
       }
     },
-    deleteNbbang(){
+    deleteNbbang() {
       this.$swal({
-        title: '정말 삭제할까요?',
+        title: "정말 삭제할까요?",
         text: "삭제를 원하지 않으면 취소버튼을 눌러주세요!",
-        icon: 'warning',
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#2ac187',
-        cancelButtonColor: '#d33',
-        cancelButtonText: '취소',
-        confirmButtonText: '네, 삭제할게요!'
+        confirmButtonColor: "#2ac187",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "취소",
+        confirmButtonText: "네, 삭제할게요!",
       }).then((result) => {
         if (result.isConfirmed) {
           let vm = this;
-      this.axios.delete("/delNbbang",{
-        params:{
-          dutchId : this.dutchId,
+          this.axios
+            .delete("/delNbbang", {
+              params: {
+                dutchId: this.dutchId,
+              },
+            })
+            .then((resp) => {
+              console.log("N빵 삭제 결과" + resp);
+              this.$swal("삭제 완료!", "n빵을 삭제하였습니다.", "success");
+              this.$router.push({ name: "moimNbbang" });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
-      }).then((resp) => {
-        console.log("N빵 삭제 결과" + resp);
-        this.$swal(
-            '삭제 완료!',
-            'n빵을 삭제하였습니다.',
-            'success'
-          )
-        this.$router.push({name: "moimNbbang"})
-      }).catch((err)=> {
-        console.log(err)
-      })
-        }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>

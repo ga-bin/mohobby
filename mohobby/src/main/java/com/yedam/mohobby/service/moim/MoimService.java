@@ -172,6 +172,9 @@ public interface MoimService {
 	//소모임 권한 확인
 	public List<MoimMemberVO> moimRight(@Param("memberId")String memberId);
 	
+	//소모임 권한 확인
+	public List<MoimMemberVO> moimnewRight(@Param("memberId")String memberId);
+	
 	//소모임 가입 확인
 	public List<MoimMemberVO> joincheck(@Param("memberId")String memberId, @Param("moimId")int moimId);
 	
@@ -180,5 +183,14 @@ public interface MoimService {
 
 	//소모임 프로필이미지 조회
 	public String getImg(String memberId);
+	
+	//소모임 가입자수 감소
+	public int deletecnt(@RequestBody MoimVO vo);
+	
+	//소모임 탈퇴
+	public void delmoim(@Param("memberId")String memberId, @Param("moimId")int moimId);
+	
+	//소모임 관리자 검색
+	public List<MoimVO> moimadmin(@Param("moimId")int moimId);
 }
 

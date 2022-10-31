@@ -70,43 +70,25 @@
 </v-card-actions>
     <h1>Mo#obby 소모임</h1> 
     <div>
+      <!-- moimRight : {{moimRight}} newRight : {{newRight}} moimLength : {{moimLength}} -->
     <!-- 소모임 유저별 모임 리스트 -->
-    <MyMoim_user v-if="(moimRight == 1 || moimRight == 0) && newRight == 0"></MyMoim_user>
-    <MyMoim_leader v-else-if="(moimRight == 2 || moimRight == 3) && newRight == 0"></MyMoim_leader>
-    <MyMoim_none v-else-if="moimRight == '' || newRight == 1"></MyMoim_none>
+    <MyMoim_user v-if="(moimRight == 1 || moimRight == 0) && (newRight == 1 || moimLength == 0)"></MyMoim_user>
+    <MyMoim_leader v-else-if="(moimRight == 2 || moimRight == 3) && (newRight == 1 || moimLength == 1)"></MyMoim_leader>
+    <MyMoim_none v-else-if="moimRight == '' || newRight == 0 || moimLength == 0"></MyMoim_none>
   </div>
     <!-- 소모임 검색창 -->
     <br>
     <div>
-      <v-text-field
-            outlined
-            label="Search"
-            append-icon="mdi-magnify"
-            hide-details
-            @keyup.enter="submit"
-            v-model="search"
-          ></v-text-field>
+      <v-text-field outlined label="Search" append-icon="mdi-magnify" hide-details @keyup.enter="submit" v-model="search">
+      </v-text-field>
     </div>
     <!-- 소모임 키워드 -->
     <div>
       <v-row justify="space-around">
-    <v-col
-      cols="12"
-      sm="30"
-      md="30"
-    >
-      <v-sheet
-        class="py-4 px-1"
-      >
-        <v-chip-group
-          active-class="primary--text"
-        >
-          <v-chip
-            v-for="catg in catgs"
-            :key="catg"
-            :value="catg"
-            @click="chipclick"
-          >
+    <v-col cols="12" sm="30" md="30">
+      <v-sheet class="py-4 px-1">
+        <v-chip-group active-class="primary--text">
+          <v-chip v-for="catg in catgs" :key="catg" :value="catg" @click="chipclick">
             {{ catg }}
           </v-chip>
         </v-chip-group>
@@ -126,8 +108,6 @@
     this.$store.watch(
       () => this.$store.getters.getId,
       () => {
-     
-
         console.log(this.moimRight);
       }
     );
@@ -160,6 +140,7 @@
         moimRight : '',
         id : '',
         newRight : null,
+        moimLength : null,
         noneuser : false,
       }
     },
@@ -167,6 +148,7 @@
       this.moimRight = this.$store.state.user.role;
       this.id = this.$store.state.id;
       this.moimR();
+      this.moimnewRight();
     },
     methods : {
   select : function() {
@@ -196,18 +178,36 @@
         }
       })
       .then((resp)=> {
+        console.log("moimRight");
         console.log(resp.data.length)
         if(resp.data.length == 0) {
-          this.newRight = 1
+          this.moimLength = 0
         } else {
-          this.newRight = 0
+          this.moimLength = 1
         }
-
+        this.moimRight = this.$store.state.user.role;
       })
       .catch((err)=> {
         console.log(err)
 
       }) 
+    },
+    moimnewRight() {
+      this.axios.get("/moimnewRight", {
+        params : {
+          memberId : this.$store.state.id,
+        }
+      })
+      .then((resp)=> {
+        console.log("NEWRIGHT")
+        console.log(resp.data.length)
+        if(resp.data.length == 0) {
+          this.newRight  = 0
+        } else {
+          this.newRight = 1
+        }
+        this.moimRight = this.$store.state.user.role;
+      })
     }
   }
  }

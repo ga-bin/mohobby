@@ -81,7 +81,6 @@
         </div>
         
         <div id="step2" v-show="step2" class="contents-box mb-5">
-        <!-- <div id="step2" class="contents-box mb-5"> -->
           <div class="contents">
             <br />
             <span class="no">2/7</span>
@@ -148,7 +147,6 @@
         </div>
       
         <div id="step3" v-show="step3" class="contents-box mb-5">
-        <!-- <div id="step3" class="contents-box mb-5"> -->
           <div class="contents">
             <br />
             <span class="no">3/7</span>
@@ -165,7 +163,6 @@
           </div>
         </div>
         <div id="step4" v-show="step4" class="contents-box mb-5">
-        <!-- <div id="step4" class="contents-box mb-5"></div> -->
           <div class="contents">
             <br />
             <span class="no">4/7</span>
@@ -209,7 +206,6 @@
         </div>
       
         <div id="step5" v-show="step5" class="contents-box mb-5">
-        <!-- <div id="step5" class="contents-box mb-5"> -->
           <div class="contents">
             <br />
             <span class="no">5/7</span>
@@ -311,23 +307,23 @@
             </div>
           </div>
         </div>
+
+
         <div id="step6" v-show="step6" class="contents-box mb-5">
-        <!-- <div id="step6" class="contents-box mb-5"> -->
           <div class="contents">
             <br />
             <span class="no">6/7</span>
             <h2>수업에 필요한 자료를 등록하세요.</h2>
             <br />
-            <span style="display: inline-block" class="label">회차</span>
-            <span style="margin-left: 30px; display: inline-block" class="label"
-              >영상 등록</span
+            <span class="label d-inline-block">회차</span>
+            <span 
+              class="label ml-30 d-inline-block"
             >
-            <!-- <span style="margin-left: 490px; display: inline-block" class="label"
-              >교안 등록</span
-            > -->
+              영상 등록
+            </span>
             <div class="d-flex justify-center" v-for="(curr, i) in currList" :key="i">
               <span
-                style="padding: 10px 15px 10px 15px; display: inline-block; border: 1px solid black; margin-right: 20px;"
+                class="py-5 px-5 d-inline-block" style="border: 1px solid black;"
               >
                 {{ i+1 }}
               </span>
@@ -340,16 +336,13 @@
                 name="videoList"
                 @change="checkStep6(i)"
               />
-              <!-- <v-file-input
-                type="file"
-                class="input"
-                v-model="curr.file"
-                style="width: 540px; margin-left: 20px"
-                accept="image/jpeg,.txt,.mp4"
-              /> -->
             </div>
           </div>
         </div>
+
+
+
+
         <div id="step7" v-show="step7" class="contents-box mb-5">
         <!-- <div id="step7" class="contents-box mb-5"> -->
           <div class="contents">
@@ -399,7 +392,7 @@ export default {
       step3: false,
       step4: false,
       step5: false,
-      step6: false,
+      step6: true,
       step7: false,
       startTime: 8,
       endTime: 17,
@@ -498,7 +491,6 @@ export default {
     getAllRegion() {
       const vm = this;
 
-      this.$store.state.loading = true;
       this.axios({
         url: "/regionAll",
         method: "get",
@@ -508,18 +500,15 @@ export default {
             vm.regionList = response.data;
           }
 
-          vm.$store.state.loading = false;
         })
         .catch(function (error) {
           console.log(error);
 
-          vm.$store.state.loading = false;
         });
     },
     // 관심사 전체 목록 가져오기
     getAllCatg() {
       const vm = this;
-      this.$store.state.loading = true;
       this.axios({
         url: "/allCatg",
         method: "get",
@@ -527,18 +516,14 @@ export default {
         .then(function (response) {
           if (response.data != "") {
             vm.catg = response.data;
-            vm.$store.state.loading = false;
           }
         })
         .catch(function (error) {
           console.log(error);
-          vm.$store.state.loading = false;
         });
     },
     CertBtn: function() {
-      this.$store.state.loading = true;
       IMP.certification({
-        //merchant_uid: "ORD20180131-0010013" // 주문 번호
       }, rsp => {
         const imp_uid = rsp.imp_uid;
         if (rsp.success) {
@@ -553,16 +538,13 @@ export default {
             if(name == memberName && birth == memberBirth) {
               this.certName = name;
               this.certBirth = birth;
-              this.$store.state.loading = false;
             } else {
               this.$swal('로그인 정보와 일치하지 않습니다!', '', 'error');
-              this.$store.state.loading = false;
             }
           });
         }
         else {
           console.log("인증 실패");
-          this.$store.state.loading = false;
         }
       })
     },
@@ -732,9 +714,14 @@ export default {
 
       this.step6 = true;
     },
+
+
+
     checkStep6(i) {
       this.uploadVideo(i);
 
+
+      
       let sum = 0;
 
       for(let curr of this.currList) {
@@ -774,9 +761,13 @@ export default {
       
       video.src = URL.createObjectURL(file);
     },
+
+
     getDuration(i, duration) {
       this.currList[i].duration = Math.floor(duration);
     },
+
+    
     submitBtn() {
       if(!this.step2 || !this.step3 || !this.step4 || !this.step5 || !this.step6 || !this.step7) {
         this.$swal('작성 양식을 완료해주세요!', '', 'info');

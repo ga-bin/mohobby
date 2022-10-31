@@ -7,7 +7,7 @@
           :src="require(`@/assets/image/user/${profileImg}`)"
         ></v-img>
       </v-avatar>
-      <h4 class="white--text">{{ memberId }}</h4>
+      <h4 style="color: #2b2b2b; font-weight: bolder;">{{ memberId }}</h4>
     </div>
     <v-divider></v-divider>
 
@@ -63,7 +63,7 @@ export default {
         this.profileImg = "comfuck.jpg";
         return;
       } else if (this.memberId == "admin") {
-        this.profileImg = "female.png";
+        this.profileImg = "logo-color.png";
       } else if (this.memberId != "" && this.memberId != "admin") {
         this.getMemberInfo();
       }
@@ -91,7 +91,7 @@ export default {
 </script>
 <style scoped>
 .text-center {
-  background-color: #2ac187;
+  background-color: #e9e9ec;
 }
 
 .text-xs-center {

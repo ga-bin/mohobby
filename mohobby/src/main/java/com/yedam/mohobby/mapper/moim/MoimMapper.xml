@@ -12,33 +12,29 @@
 	</select>
 
 	<!-- 소모임 등록 -->
-	<insert id="moimInsert"
-		parameterType="com.yedam.mohobby.service.moim.MoimVO">
-		<selectKey keyProperty="moimId" resultType="Integer"
-			order="BEFORE">
-			SELECT NVL(MAX(moim_id), 0)+1 FROM moim
+	<insert id="moimInsert" parameterType="com.yedam.mohobby.service.moim.MoimVO" >
+		<selectKey keyProperty="moimId,moimMemberId" resultType="com.yedam.mohobby.service.moim.MoimVO" order="BEFORE">
+		SELECT NVL(MAX(a.moim_id), 0)+1 AS moimId, NVL(MAX(b.moim_member_id), 0)+1 AS moimMemberId FROM moim a, moim_member b
 		</selectKey>
-		INSERT INTO moim (
-		member_id,
-		moim_id,
-		moim_img,
-		moim_name,
-		moim_info,
-		moim_catg,
-		moim_region,
-		max_people
-		)
-		VALUES
-		(
-		#{memberId},
-		#{moimId},
-		#{moimImg},
-		#{moimName},
-		#{moimInfo},
-		#{moimCatg},
-		#{moimRegion},
-		#{maxPeople}
-		)
+		DECLARE
+		v_moim_id NUMBER := #{moimId};
+		v_member_id VARCHAR2(100) := #{memberId};
+		v_moim_img VARCHAR2(100) := #{moimImg};
+		v_moim_name VARCHAR2(100) := #{moimName};
+		v_moim_info VARCHAR2(200) := #{moimInfo};
+		v_moim_catg VARCHAR2(100) := #{moimCatg};
+		v_moim_region VARCHAR2(100) := #{moimRegion};
+		v_moimmemberId VARCHAR2(100) := #{moimMemberId};
+		v_max_people NUMBER := #{maxPeople};
+		
+		BEGIN
+		INSERT INTO moim (member_id, moim_id, moim_img, moim_name, moim_info, moim_catg, moim_region, max_people)
+		VALUES( v_member_id, v_moim_id, v_moim_img, v_moim_name, v_moim_info, v_moim_catg, v_moim_region, v_max_people);
+		
+		INSERT INTO moim_member (MEMBER_ID, MOIM_ID, MEMBER_ROLE, PROFILE_YN, MOIM_MEMBER_ID)
+		VALUES(v_member_id, v_moim_id, 0, 0, v_moimmemberId);
+		
+		END;
 	</insert>
 	<!-- 소모임 모집 전체 조회(6개씩) -->
 	<select id="moimrecruitMember"
@@ -326,7 +322,7 @@
 		and v.moim_id =
 		m.moim_id(+)
 		and v.moim_id = #{moimId}
-		order by vote_id
+		order by vote_id desc
 	</select>
 
 
@@ -609,11 +605,13 @@
 	</update>
 
 	<!-- 소모임 존재여부 검사 -->
-	<select id="moimRight"
-		parameterType="com.yedam.mohobby.service.moim.MoimMemberVO"
-		resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
-		select a.moim_name, b.* from moim a , moim_member b where a.moim_id =
-		b.moim_id and b.member_id = #{memberId}
+	<select id="moimRight" parameterType="com.yedam.mohobby.service.moim.MoimMemberVO" resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
+	select * from moim where member_id=#{memberId}
+	</select>
+	
+	<!-- 소모임 존재여부 검사 -->
+	<select id="moimnewRight" parameterType="com.yedam.mohobby.service.moim.MoimMemberVO" resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
+	select * from moim_member where member_id=#{memberId}
 	</select>
 
 	<!-- 소모임 가입여부 검사 -->
@@ -634,4 +632,18 @@
 	<select id="getImg" parameterType="String" resultType="String">
 		select profile_img from member where member_id = #{memberId}
 	</select>
+	<!-- 가입수 감소 -->
+	<update id="deletecnt" parameterType="com.yedam.mohobby.service.moim.MoimVO">
+	update moim set reg_cnt = reg_cnt-1 where moim_id= #{moimId}
+	</update>
+	
+	<!-- 모임 탈퇴 -->
+	<delete id="delmember" parameterType="com.yedam.mohobby.service.moim.MoimMemberVO">
+		delete moim_member where member_id = #{memberId} and moim_id = #{moimId}
+	</delete>
+	
+	<select id="moimadmin" parameterType="com.yedam.mohobby.service.moim.MoimVO" resultType="com.yedam.mohobby.service.moim.MoimVO">
+		select * from moim where moim_id = #{moimId}
+	</select>
+	
 </mapper>

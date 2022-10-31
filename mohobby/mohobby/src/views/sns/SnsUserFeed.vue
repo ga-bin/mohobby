@@ -11,7 +11,7 @@
         </div>
         <!-- 프로필이미지 끝 -->
 
-
+{{follower}}
         <!-- 내 게시물 정보(닉네임, 개시물, 팔로워, 팔로잉 개수) -->
         <div class="profile-user-settings">
           <h1 class="profile-user-name">{{ infoes.memberId }}</h1>
@@ -75,37 +75,25 @@
           <ul>
             <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
             <li>
-              <FollowModal :text="followertext" :dataList="follower" />
+              <FollowModal :text="followertext" :dataList="follower" :follow="follow" />
             </li>
             <li>
-              <FollowModal :text="followingtext" :dataList="following"  />
+              <FollowModal :text="followingtext" :dataList="following" :follow="follow" />
             </li>
           </ul>
-          
 
           <!-- 내 게시물 정보 끝 -->
           <ul>
             <!-- 소개 -->
             <li>
-              <p class="profile-bio">{{ infoes.intro }}</p>
+              <p class="profile-bio">{{ infoes.intro }} 📷✈️🏕️</p>
             </li>
             <li></li>
             <!-- 소개 끝 -->
           </ul>
         </div>
 
-        <!-- 유저취미 -->
-        <v-chip-group id="hobbyGroup" class="ml-8">
-          <v-chip
-            v-for="(hobby,i) in hobbies" :key="i" :color="`${colors[nonce - 1]} lighten-3`"
-            @click="search($event)" dark label>
-            {{ hobby.keywordName }}
-          </v-chip>
-        </v-chip-group>
-        <br />
-
-
-        <!-- 버튼 : 유저본인이냐에 따라 버튼 바뀜 -->
+        <!-- 버튼 컴포넌트: 유저본인이냐에 따라 버튼 바뀜 -->
         <div class="profile-bio">
           <ul v-if="sessionId && sessionId == infoes.memberId">
             <button class="btn profile-edit-btn" @click="goMypage(sessionId)">
@@ -113,19 +101,17 @@
             </button>
           </ul>
           <ul v-else>
-            <div id="btn_wrap">
-              <button v-if="followStatus === 0" @click="followup(sessionId, infoes.memberId)"
-                class="btn profile-edit-btn2">
-                Follow
-              </button>
-              <button v-else style="background-color: #2ac187; color: white" @click="unfollow(sessionId, infoes.memberId)"
-                class="btn profile-edit-btn2">
-                Unfollow
-              </button>
-              <button class="btn profile-edit-btn2" @click="send(sessionId)">
-                Message
-              </button>
-            </div>
+            <button v-if="followStatus === 0" @click="followup(sessionId, infoes.memberId)"
+              class="btn profile-edit-btn2">
+              Follow
+            </button>
+            <button v-else style="background-color: #2ac187; color: white" @click="unfollow(sessionId, infoes.memberId)"
+              class="btn profile-edit-btn2">
+              Unfollow
+            </button>
+            <button class="btn profile-edit-btn2" @click="send(sessionId)">
+              Message
+            </button>
           </ul>
         </div>
 
@@ -152,10 +138,6 @@ export default {
   components: { SnsSidebar, Feeds, FollowModal },
   data() {
     return {
-      colors: ["pink", "orange", "green", "purple", "indigo", "cyan"], //tag color
-      nonce: 1,
-      hobbies: [],
-
       infoes: [],
       sessionId: this.$store.state.id,
       sessionInfo: this.$store.state.user,
@@ -189,29 +171,20 @@ export default {
     this.userId = this.$route.query.userId; //넘겨받은 유저아이디 바인딩
     console.log(this.$route.query.userId);
     this.loadUserProfile(this.userId);
-    this.getUserHobby(this.userId);
     this.followCheck(this.sessionId, this.userId);
     this.getFollowing(this.userId);
     this.getFollower(this.userId);
   },
   //팔로우를 실행하면 follower모달의 다시실행된 getFollowingList값을 받아와 보내줘야함
   watch: {
+
+    getFollowing() {
+
+    }
+
   },
 
   methods: {
-
-    //취미조회
-    getUserHobby(userId) {
-      this.axios('/sns/user/hobbies/' + userId)
-      .then(res => {
-          this.hobbies = res.data;
-          console.log('infoes ---> ')
-          console.log(this.hobbies);
-        }).catch(err => {
-          console.log(err);
-    })
-  },
-
 
     //프로필 업로드
     loadUserProfile(userId) {
@@ -277,6 +250,7 @@ export default {
 
     //팔로우
     followup(memberId, userId) {
+      this.follower= [],
       console.log(memberId);
       if (this.confirmMember(memberId) == false) {
         this.loginConfirm();
@@ -288,7 +262,7 @@ export default {
           })
           .then((res) => {
             this.followStatus = 1;
-            //this.getFollower(userId);
+            this.getFollower(userId);
           })
           .catch((err) => {
             console.log(err);
@@ -297,9 +271,9 @@ export default {
     },
 
 
-
     //언팔로우
     unfollow(memberId, userId) {
+      this.follower= []
       if (this.confirmMember(memberId) == false) {
         this.loginConfirm();
       } else {
@@ -307,17 +281,20 @@ export default {
           .delete("/sns/follow/" + memberId + "/" + userId)
           .then((res) => {
             this.followStatus = 0;
-            //this.getFollower(userId);
+            this.getFollower(userId);
           })
           .catch((err) => {
             console.log(err);
           });
       }
     },
+
+    
     // 팔로워 목록 불러오기
     getFollower(userId) {
       const vm = this;
-      vm.follower=[]
+      console.log("getFollowerTEST")
+     // vm.follower=[]
       this.axios({
         url: "/mypagefollower/" + userId,
         method: "get",
@@ -329,8 +306,7 @@ export default {
             vm.follower.push({ divider: true, inset: true });
             console.log("follower : " + response.data[i]);
           }
-        //  vm.getFollowing(userId)
-          console.log("vm.follower : " + vm.follower.followerId);
+          console.log("vm.follower : " + vm.follower);
           console.log("vm.follower length : " + vm.follower.length);
         })
         .catch(function (error) {
@@ -338,9 +314,7 @@ export default {
         });
     },
 
-
-
-        // 팔로잉 목록 불러오기
+    // 팔로잉 목록 불러오기
     getFollowing(userId) {
       const vm = this;
       vm.following=[]
@@ -354,7 +328,7 @@ export default {
             vm.following.push(response.data[i]);
             vm.following.push({ divider: true, inset: true });
           }
-          console.log("vm.following" + vm.following.followerId);
+          console.log("vm.following" + vm.following);
           console.log("followin")
         })
         .catch(function (error) {
@@ -362,11 +336,12 @@ export default {
         });
     },
 
-
     //취미 검색
     search(e){
-      //유저 취미 누르면 같은 값 가진 모든 포스트뜸
-
+        //유저 취미 누르면 같은 값 가진 모든 포스트뜸
+        let getHobby = e.target.innerText; //선택한 해시태그
+        this.$router.push({ name: "mainsearch", query: { searchText : getHobby },
+      });
     },
 
 

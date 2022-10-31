@@ -2,14 +2,13 @@
 <template>
   <div>
     <!-- 권한에 따라 컴포넌트 다르게 보여주기 -->
-    
     <MoimSidebar v-if="moimInfo.memberId != this.$store.state.id" :moimId="Id"/>
     <MoimSidebar_admin v-else></MoimSidebar_admin>
     
-    <div v-if="moim == 0">
+    <div v-if="moimInfo.moimOpen == 1">
     <InvisibleBoard></InvisibleBoard>
     </div>
-    <div v-if="moim == 1">
+    <div v-if="moimInfo.moimOpen == 0">
     <router-view/>
     </div>
   </div>
@@ -24,7 +23,6 @@ export default {
   data() {
     return {
      Id : this.$route.params.moimId,
-     moim: 1,
      moimInfo : [],
     }
   },
