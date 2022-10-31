@@ -38,7 +38,7 @@
 
         <v-list-item>
           <template>
-            <v-list-item-content>
+            <v-list-item-content >
               <v-list-item-title value="us3" @click="getSelectedCode($event)">us3</v-list-item-title>
               <v-list-item-subtitle>게시글, 댓글 도배</v-list-item-subtitle>
             </v-list-item-content>
@@ -159,6 +159,7 @@ export default {
   methods: {
     getSelectedCode(event) {
       console.log(event.target.textContent);
+      console.log("clicked");
       const vm = this;
       this.axios({
         url: "/searchCodeList/" + event.target.textContent,
@@ -233,9 +234,7 @@ export default {
               if (value) {
                 if (value == 1) {
                   this.role = 4;
-                } else if (value == 0) {
-                  this.role = 0;
-                }
+                } 
                  this.axios({
                   url: "/updateFlag",
                   method: "put",

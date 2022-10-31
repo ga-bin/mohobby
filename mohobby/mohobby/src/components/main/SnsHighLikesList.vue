@@ -41,7 +41,7 @@ export default {
   components: {},
   props: {
     snsHighLikesList: {
-      type: Object,
+      type: [],
       required: true,
     },
   },

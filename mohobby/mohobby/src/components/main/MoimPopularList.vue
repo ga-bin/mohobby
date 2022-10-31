@@ -59,7 +59,7 @@
 export default {
   props: {
     moimPopularList: {
-      type: Array,
+      type: [],
       required: true,
     },
   },
