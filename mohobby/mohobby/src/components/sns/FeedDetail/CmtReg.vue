@@ -30,7 +30,7 @@
             @click="$router.push({ path: '/snsUserFeed?userId=' + cmt.memberId }).catch(() => { $router.go(0); })" />
         </v-avatar>
         <input type="hidden" class="cmtId" value="cmt.commId" />
-        <div class="user text-overline">
+        <div class="text-overline">
           {{ cmt.memberId }}
           <small class="date">
             <span style="font-size: 1em">

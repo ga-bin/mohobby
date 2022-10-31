@@ -3,8 +3,8 @@
     <div class="flex">
       <v-chip class="ma-2 mt-4" text-color="white" color="black" label>목록</v-chip>
       <v-radio-group v-model="boardType" row>
-        <v-radio class="ml-7" label="공지" value=0></v-radio>
-        <v-radio label="메인글" value=1></v-radio>
+        <v-radio label="메인글" class="ml-7"  value=1></v-radio>
+        <v-radio v-if="memberId == adminId" label="공지" value=0></v-radio>
       </v-radio-group>
     </div>
     <div class="flex">
@@ -42,20 +42,18 @@ export default {
       boardType: null,
       title: '',
       moimId: this.$route.query.moimId,
-      boardId: ''
+      boardId: '',
+      memberId : this.$store.state.id,
+      adminId : ''
     };
   },
   methods: {
     getContent(editorContent) {
-      console.log("emit_success", editorContent);
       this.content = editorContent;
-      console.log("겟 콘탠트 내용", this.content);
     }, 
     async clickSave(boardId) {
       document.querySelector(".ql-editor").style.display = 'none';
-
       let step = 0;
-
       let len = document.querySelector(".ql-editor").querySelectorAll("img").length;
       if (len != 0) {
         for (let i = 0; i < len; i++) {
@@ -65,20 +63,17 @@ export default {
       }
       this.saveEditor(boardId);
     },
+    //작성완료 버튼 클릭시
     testEditor() {
-      console.log(this.title)
-      console.log(this.boardType)
-      console.log(this.$store.state.id)
-      console.log(this.moimId)
       this.axios.post("/insertBoard", {
         title: this.title,
         boardType: this.boardType,
         memberId: this.$store.state.id,
-        moimId: this.moimId
+        moimId: this.moimId,
       })
         .then((resp) => {
           console.log(resp)
-          console.log("data =" + resp.data)
+          console.log(resp.data)
           this.boardId = resp.data
           this.clickSave(this.boardId)
         })
@@ -106,7 +101,7 @@ export default {
         console.log(`error: ${error}`);
       })
     },
-    async uploadImage(folder, file, img, step) {   //폴더이름은 pk, 파일이름은 index로 
+    async uploadImage(folder, file, img, step) {   //사진이름은 pk, 사진순서는 index로 
       let result = step;
 
       let res = await this.axios.post('/uploadMoimImage', {
@@ -114,11 +109,26 @@ export default {
         filename: folder + "-" + file,
         src: img
       })
+    },
+    getmoimadmin() {
+      this.axios.get("/moimadmin",{
+        params : {
+          moimId : this.moimId
+        }
+      })
+      .then((resp)=> {
+        console.log(resp)
+        this.adminId = resp.data[0].memberId
+      })
+      .catch((err)=> {
+        console.log(err)
+      })
     }
   },
   computed: {
   },
   mounted() {
+    this.getmoimadmin()
   },
 };
 </script>

@@ -16,7 +16,7 @@
         </v-btn>
       </div>
       <div class="right" v-if="right == 1">
-        <v-btn text @click="">
+        <v-btn text @click="delmoim()">
           <v-icon small color="white">mdi-plus-circle-outline</v-icon>
           <div style="color: white">탈퇴하기</div>
         </v-btn>
@@ -161,6 +161,11 @@ export default {
     this.getMoimOneInfo();
     this.getMoimMemberCount();
   },
+  watch: {
+    right() {
+      this.joincheck();
+    }
+  },
   methods: {
     joincheck() {
       this.axios.get("/joincheck", {
@@ -171,7 +176,6 @@ export default {
       })
       .then((resp)=> {
         console.log(resp)
-        console.log("33")
         if(resp.data.length == 0) {
           this.right = 0
         } else {
@@ -319,10 +323,10 @@ export default {
           })
           .then((result) => {
             if (result.isConfirmed) {
+              vm.updatecnt()
+              console.log("확인")
               this.$swal.fire(vm.insertMoim(),"가입이 완료되었습니다.");
             }
-            vm.updatecnt()
-            vm.joincheck()
           });
       }
       // 모입 가입조건 있는 경우
@@ -371,10 +375,9 @@ export default {
           })
           .then((result) => {
             if (result.isConfirmed) {
+              vm.updatecnt()
               this.$swal.fire(vm.insertMoim(),"가입이 완료되었습니다.");
             }
-            vm.updatecnt()
-            vm.joincheck();
           });
         }
       }
@@ -413,6 +416,7 @@ export default {
         moimId: this.moimId,
       }).then((resp) => {
         console.log(resp);
+        this.joincheck();
       }).catch((error) => {
         console.log(error);
       });
@@ -480,6 +484,33 @@ export default {
           .catch((err)=> {
             console.log(err)
 
+          })
+        },
+        deletecnt() {
+          this.axios.put("/deletecnt", {
+            moimId : this.moimId
+          })
+          .then((resp)=> {
+            console.log(resp)
+          })
+          .catch((err)=> {
+            console.log(err)
+          })
+        },
+        delmoim() {
+          this.axios.delete(("/delmoim"), {
+            params : {
+              memberId : this.memberId,
+              moimId : this.moimId
+            }
+          })
+          .then((resp)=> {
+            console.log(resp)
+            this.deletecnt()
+            this.joincheck()
+          })
+          .catch((err)=> {
+            console.log(err)
           })
         }
   },

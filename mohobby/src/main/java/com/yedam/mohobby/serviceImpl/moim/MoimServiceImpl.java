@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.mapper.moim.MoimMapper;
@@ -30,7 +29,6 @@ import com.yedam.mohobby.service.moim.MoimService;
 import com.yedam.mohobby.service.moim.MoimVO;
 import com.yedam.mohobby.service.moim.MoimVoteItemVO;
 import com.yedam.mohobby.service.moim.MoimVoteListVO;
-import com.yedam.mohobby.service.sns.SnsPostVO;
 import com.yedam.mohobby.service.user.MemberVO;
 import com.yedam.mohobby.web.classes.ClassController;
 import com.yedam.mohobby.web.moim.MoimController;
@@ -46,16 +44,17 @@ public class MoimServiceImpl implements MoimService {
 	public MoimVO getMoimOneInfo(int moimId) {
 		return mapper.getMoimOneInfo(moimId);
 	}
-
+	
 	// 소모임 등록
 	@Override
 	public void moimInsert(MoimVO moimVO) {
+		System.out.println(moimVO);
 		try {
 			moimVO.setMoimImg(moimVO.getMoimName() + ".jpg");
 		} catch (NullPointerException e) {
 			moimVO.setMoimImg("comfuck.jpg");
 		}
-		mapper.moimInsert(moimVO);
+		 mapper.moimInsert(moimVO);
 	}
 
 	// 소모임 멤버 모집 조회(6개씩)
@@ -546,6 +545,12 @@ public class MoimServiceImpl implements MoimService {
 	public List<MoimMemberVO> moimRight(String memberId) {
 	   return mapper.moimRight(memberId);
 	}
+	
+	//소모임 권한 확인
+	@Override
+	public List<MoimMemberVO> moimnewRight(String memberId) {
+	   return mapper.moimnewRight(memberId);
+	}
 
 	//소모임 가입 체크
 	@Override
@@ -558,4 +563,24 @@ public class MoimServiceImpl implements MoimService {
 	public int updatecnt(MoimVO vo) {
 	   return mapper.updatecnt(vo);
 	}
+	
+	//가입자수 증가
+	@Override
+	public int deletecnt(MoimVO vo) {
+	   return mapper.deletecnt(vo);
+	}
+	
+	//소모임 탈퇴
+	@Override
+	public void delmoim(String memberId, int moimId) {
+		mapper.delmember(memberId, moimId);
+	}
+
+	@Override
+	public List<MoimVO> moimadmin(int moimId) {
+		return mapper.moimadmin(moimId);
+	}
+	
+	
+	
 }

@@ -523,8 +523,8 @@ export default {
         },
       })
         .then(resp => {
-          console.log(resp.data);
-          alert("소모임생성완료")
+          console.log("11111111111111111111111" + resp.data);
+          this.$swal("소모임생성완료")
           vm.updaterole()
           this.$router.push({ name: 'moimMain' })
 
