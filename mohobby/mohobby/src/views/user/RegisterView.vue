@@ -282,7 +282,6 @@ export default {
     // 카카오, 네이버 로그인 클릭 시 넘어오는 이메일 셋팅
     const vm = this;
     this.email = this.$route.params.email;
-    console.log(document.getElementById("email"));
     if (this.email !== undefined) {
       document.getElementById("email").setAttribute("readonly", true);
     }

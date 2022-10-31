@@ -3,7 +3,7 @@
       <div class="container">
       <v-col lg="4" cols="12" style="margin-left: 100px; width: 100%;"></v-col>
       <v-form class="mt-5">
-        <h3>검색된 sns</h3>
+          <h3>검색된 sns</h3>
           <MainSnsList :snsHighLikesList="searchSnsList"></MainSnsList>
           <h3>검색된 모임</h3>
           <moimPopularList :moimPopularList="searchMoimList"></moimPopularList>
@@ -87,11 +87,6 @@ export default {
           })
             .then(function (response) {
               vm.searchClassList = response;
-              console.log(vm.searchClassList);
-              console.log(vm.searchClassList);
-              console.log(vm.searchClassList);
-              console.log(vm.searchClassList);
-              console.log(vm.searchClassList);
             })
             .catch(function (error) {
               console.log(error);

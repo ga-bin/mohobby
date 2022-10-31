@@ -128,45 +128,6 @@
                       readonly
                     >
                     </v-text-field>
-                    <!-- <v-col cols="24" sm="20" md="20">
-                      <v-dialog
-                        ref="dialog"
-                        color="#2ac187"
-                        v-model="modal"
-                        :return-value.sync="birth"
-                        persistent
-                        width="290px"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            color="#2ac187"
-                            v-model="birth"
-                            label="Picker in dialog"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          color="#2ac187"
-                          v-model="birth"
-                          scrollable
-                        >
-                          <v-spacer></v-spacer>
-                          <v-btn text color="#2ac187" @click="modal = false">
-                            Cancel
-                          </v-btn>
-                          <v-btn
-                            text
-                            color="#2ac187"
-                            @click="$refs.dialog.save(birth)"
-                          >
-                            OK
-                          </v-btn>
-                        </v-date-picker>
-                      </v-dialog>
-                    </v-col> -->
 
                     <!-- 성별입력 -->
                     <v-col>
@@ -286,8 +247,6 @@
 
 <script>
 import UserSidebar from "../../components/user/UserSidebar.vue";
-const { IMP } = window;
-IMP.init("imp46541776");
 
 export default {
   name: "",
@@ -366,11 +325,6 @@ export default {
       })
         .then(function (response) {
           if (response.data != "") {
-            console.log(response.data);
-            console.log(response.data);
-            console.log(response.data);
-            console.log(response.data);
-            console.log(response.data);
             vm.memberId = response.data.memberId;
             vm.password = response.data.password;
             vm.password2 = response.data.password;
@@ -427,13 +381,10 @@ export default {
         method: "get",
       })
         .then(function (response) {
-          console.log(response);
           if (response.data != "") {
-            console.log(response.data);
             for (let i = 0; i < response.data.length; i++) {
               vm.oldInputKeyword[i] = response.data[i].keywordId;
             }
-            console.log("vm.oldInputKeyword" + vm.oldInputKeyword);
           }
         })
         .catch(function (error) {
