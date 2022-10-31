@@ -106,7 +106,7 @@ public class ChatController {
 			@RequestParam String memberId) {
 		return cService.updateCheckInOut(preRoomId, currentRoomId, memberId);
 	}
-
+	
 	
 
 }

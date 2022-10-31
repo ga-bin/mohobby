@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.admin.AdminClassService;
 import com.yedam.mohobby.service.admin.AdminClassVO;
+import com.yedam.mohobby.service.admin.ClassNeedsListVO;
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassNeedsVO;
 import com.yedam.mohobby.service.classes.ClassesVO;
@@ -85,27 +86,17 @@ public class AdminClassController {
 	
 	// 강의 준비물 insert
 	@PostMapping("/insertNeeds")
-	public void insertNeeds(List<MultipartFile> prodImgList, List<ClassNeedsVOList> classNeedsList) { 
+	public void insertNeeds(List<MultipartFile> prodImgList, ClassNeedsListVO classNeedsListVO) { 
 		
+		System.out.println(classNeedsListVO.getList());
+		MultipartFile prodImg = null;
 		for(int i = 0; i < prodImgList.size(); i++) {
-			System.out.println(prodImgList.get(i));
+			prodImg = prodImgList.get(i);	
+			System.out.println(prodImg);
 		}
 		
-//		List<ClassNeedsVOList> classNeedsList
-//		System.out.println(classNeedsList);
-//		System.out.println(prodImgList);
+		service.insertNeeds(prodImgList, classNeedsListVO);
+//			
+		}	
 		
-		
-//		for(int i = 0; i < classNeedsVOListVO.classNeedsVOList.size(); i++) {
-//			System.out.println(classNeedsVOListVO.classNeedsVOList.get(i));
-//		}
-////		System.out.println(classNeedsVOListVO.ClassNeedsVOList);
-		
-//		for (List<ClassNeedsVO> key : classNeedsVOList.values()) {
-//			  for(let i = 0; i < key.size(); i++) {
-//				  
-//			  }
-//			  System.out.println(key);
-//			}
-	}
 }

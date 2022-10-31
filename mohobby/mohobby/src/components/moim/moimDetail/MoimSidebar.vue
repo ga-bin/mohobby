@@ -12,7 +12,7 @@
       <div class="right" v-if="right == 0">
         <v-btn text @click="checkForJoin()">
           <v-icon small color="white">mdi-plus-circle-outline</v-icon>
-          <div style="color: white">가입하기</div>
+          <div style="color: #2b2b2b; font-weight: bolder;">가입하기</div>
         </v-btn>
       </div>
       <div class="right" v-if="right == 1">
@@ -212,7 +212,7 @@ export default {
         this.profileImg = "comfuck.jpg";
         return;
       } else if (this.memberId == "admin") {
-        this.profileImg = "female.png";
+        this.profileImg = "logo-color.png";
       } else if (this.memberId != "" && this.memberId != "admin") {
         await this.getMemberInfo();
         this.profileImg = this.memberInfo.profileImg;
@@ -226,11 +226,6 @@ export default {
       })
         .then(function (response) {
           vm.memberInfo = response.data;
-          console.log(vm.memberInfo);
-          console.log(vm.memberInfo);
-          console.log(vm.memberInfo);
-          console.log(vm.memberInfo);
-          console.log(vm.memberInfo);
 
         })
         .catch(function (error) {
@@ -276,10 +271,6 @@ export default {
     },
     checkForJoin() {
       const vm = this;
-      console.log(this.moimInfo.maxAge);
-      console.log(this.moimInfo.maxAge);
-      console.log(this.moimInfo.gender);
-      console.log(this.memberInfo.gender);
       if (this.memberId == "비회원") {
         this.$swal
           .fire({
@@ -425,11 +416,6 @@ export default {
     moimFlagging() {
           const vm = this;
           this.moimFlagModal = false;
-          console.log(this.selectedCode);
-          console.log(this.selectedCode);
-          console.log(this.selectedCode);
-          console.log(this.selectedCode);
-          console.log(this.selectedCode);
           if (this.selectedCode == "mo6") {
             this.$swal.fire({
                 title: '신고 이유를 입력하세요',
@@ -473,6 +459,7 @@ export default {
               console.log(error);
             });
         },
+
         updatecnt() {
           this.axios.put("/updatecnt", {
             moimId : this.moimId
@@ -518,7 +505,7 @@ export default {
 </script>
 <style scoped>
 .text-center {
-  background-color: #2ac187;
+  background-color: #e9e9ec;
 }
 
 .mb-4 {

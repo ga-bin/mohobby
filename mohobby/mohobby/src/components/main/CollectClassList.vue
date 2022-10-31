@@ -42,7 +42,7 @@
 export default {
   props: {
     collectClassList: {
-      type: Array,
+      type: [],
       required: true,
     },
   },

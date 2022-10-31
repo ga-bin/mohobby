@@ -3,6 +3,7 @@ package com.yedam.mohobby.service.admin;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.classes.ClassBoardVO;
 import com.yedam.mohobby.service.classes.ClassNeedsVO;
@@ -36,5 +37,5 @@ public interface AdminClassService {
 	public void updateCert(ClassesVO classesVO);
 	
 	// 강의 준비물 insert
-	public void insertNeeds(List<ClassNeedsVO> classNeedVOList);
+	public void insertNeeds(List<MultipartFile> prodImgList, ClassNeedsListVO classNeedsListVO);
 }
