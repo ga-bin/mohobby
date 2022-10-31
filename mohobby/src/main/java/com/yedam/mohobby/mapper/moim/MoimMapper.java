@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
@@ -160,8 +162,8 @@ public interface MoimMapper {
 	public void delNbbang(int dutchId);
 	
 	//n빵 체크 수정
-	public void updateCacl(MoimDutchPtpVO dutchPtpVO);
-
+	public void updateCalc(@Param("memberId") String memberId, @Param("dutchId") String dutchId, @Param("calcCheck")String calcCheck);
+	
 	//소모임 게시글 수정
 	public void updateBoard(MoimBoardVO vo);
 	
@@ -176,6 +178,9 @@ public interface MoimMapper {
 	
 	//소모임 가입자수 증가
 	public int updatecnt(@RequestBody MoimVO vo);
+
+	//소모임 프로필이미지 조회
+	public String getImg(String memberId);
 	
 	//소모임 가입자수 감소
 	public int deletecnt(@RequestBody MoimVO vo);

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.yedam.mohobby.service.communal.CommentsVO;
 import com.yedam.mohobby.service.moim.MoimBoardVO;
 import com.yedam.mohobby.service.moim.MoimCommentVO;
+import com.yedam.mohobby.service.moim.MoimDutchPtpSoloVO;
 import com.yedam.mohobby.service.moim.MoimDutchPtpVO;
 import com.yedam.mohobby.service.moim.MoimDutchVO;
 import com.yedam.mohobby.service.moim.MoimImageVO;
@@ -527,14 +528,17 @@ public class MoimController {
     }
     
     //n빵 calc체크 수정
-    @PutMapping("/updateCalc")
-    public String updateCalc(@RequestBody MoimDutchPtpVO dutchPtpVO) {
-    	try {
-    		service.updateCacl(dutchPtpVO);
-    		return "success";
-    	} catch(Exception e) {
-    		return "error";
-    	}
+    @GetMapping("/updateCalc")
+    public String updateCalc(@RequestParam String memberId, @RequestParam String dutchId,@RequestParam String calcCheck) {
+       System.out.println("memberId : " + memberId );
+       System.out.println("dutchId : " + dutchId);
+       System.out.println("calcCheck : " + calcCheck);
+       try {
+          service.updateCalc(memberId, dutchId, calcCheck);
+          return "success";
+       } catch(Exception e) {
+          return "error";
+       }
     }
 
 	// 게시글 검색
@@ -612,6 +616,15 @@ public class MoimController {
 		}
 	}
 	
+	//프로필 이미지 가져오기
+	@GetMapping("/getImg")
+	public String getProfileImg(@Param ("memberId") String memberId) {
+		try {
+			return service.getImg(memberId); 
+		} catch(Exception e) {
+			return "fail"+e;
+		}
+	}
 	// 소모임 가입자 수 감소
 	@PutMapping("/deletecnt")
 	public int deletecnt(@RequestBody MoimVO vo) {

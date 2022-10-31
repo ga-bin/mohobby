@@ -8,7 +8,9 @@
         <v-card class="mx-auto mb-8" max-width="800" outlined v-for="(item, idx) in items" :key="idx"
           @click="goPost(idx)">
           <v-list-item three-line>
-            <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
+            <v-list-item-avatar tile size="80" >
+                <v-img :src="profile[idx].avatar"></v-img>
+              </v-list-item-avatar>
             <v-list-item-content>
               <div class="text-overline mt-6">
                 {{ item.memberId }}
@@ -37,6 +39,7 @@ export default {
       items: [],
       moimId: this.$route.params.moimId,
       boardType: 1,
+      profile: []
     };
   },
   methods: {
@@ -70,6 +73,7 @@ export default {
       });
     },
     getBoard() {
+      let vm = this;
       this.axios
         .get("/moimBoardList", {
           params: {
@@ -79,13 +83,52 @@ export default {
         })
         .then((resp) => {
           console.log(resp);
+          console.log("getboard실행됐음")
+          console.log("getboard실행됐음")
+          console.log("getboard실행됐음")
+          console.log("getboard실행됐음")
+          console.log("getboard실행됐음")
+          console.log("getboard실행됐음")
+
           console.log(this.items);
           this.items = resp.data;
         })
         .catch((err) => {
           console.log(this.items);
           console.log(err);
-        });
+        }).finally((response)=>{
+          console.log("finally")
+          console.log("finally")
+          console.log("finally")
+          console.log("finally")
+          console.log("finally")
+          console.log("finally")
+          console.log("finally")
+          for(let i=0; i<vm.items.length; i++){
+            vm.axios.get("/getImg",{
+              params:{
+                memberId : vm.items[i].memberId
+              }
+            }).then((response)=>{
+              console.log('response: '+response)
+              console.log('response: '+response)
+              console.log('response: '+response)
+              console.log('response: '+response)
+              console.log('response: '+response)
+
+              console.log('response.data: '+response.data)
+              console.log('response.data: '+response.data)
+              console.log('response.data: '+response.data)
+              console.log('response.data: '+response.data)
+              console.log('response.data: '+response.data)
+              console.log('response.data: '+response.data)
+
+              this.profile.push({avatar: require(`@/assets/image/user/${response.data}`)})
+            }).catch((err)=>{
+              console.log(err)
+            })
+          }
+        })
     },
   },
   created() {

@@ -52,15 +52,16 @@
 	<!-- 소모임 중첩 검색 -->
 	<select id="moimAllSearch" parameterType="hashMap"
 		resultType="com.yedam.mohobby.service.moim.MoimVO">
-		select * from moim
-		where 1=1
+		SELECT * FROM moim
+		WHERE 1=1
 		<if test="moimName != null and moimName != ''">
-			and moim_name like '%'||#{moimName}||'%'
+			AND moim_name LIKE LOWER('%'||#{moimName}||'%')
 		</if>
 		<if test="moimCatg != null and moimCatg != ''">
-			and moim_catg in(select SUB_KEYWORD_NAME
-			from sub_keyword
-			where keyword_id = (select keyword_id from keyword where keyword_name like
+			AND moim_catg IN(select SUB_KEYWORD_NAME
+			FROM sub_keyword
+			WHERE keyword_id = (select keyword_id from keyword where keyword_name
+			like
 			#{moimCatg}))
 		</if>
 		and <![CDATA[rownum <= 6]]>
@@ -73,21 +74,26 @@
 
 		select b.*, nvl(c.cnt, 0)cnt
 		from moim_board b,
-		(select count(*)cnt, target_id from comments
+		(select
+		count(*)cnt, target_id from comments
 		where target_id in (
-		select board_id from moim_board)
+		select
+		board_id from moim_board)
 		and target_type=3
 		group by target_id)c
-		where b.board_id = c.target_id(+)
+		where
+		b.board_id = c.target_id(+)
 		and moim_id = #{moimId}
-		and board_type = #{boardType}
+		and board_type =
+		#{boardType}
 		order by board_id desc
 
 	</select>
 
 	<!-- 모임명 중복체크 -->
 	<select id="moimIdCheck" resultType="Integer">
-		SELECT COUNT(*) FROM moim WHERE moim_name = #{moimName}
+		SELECT COUNT(*) FROM moim
+		WHERE moim_name = #{moimName}
 	</select>
 
 	<!-- 소모임 공지사항 전체 리스트 조회 -->
@@ -95,24 +101,31 @@
 		resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
 		select b.*, nvl(c.cnt, 0)cnt
 		from moim_board b,
-		(select count(*)cnt, target_id from comments
+		(select
+		count(*)cnt, target_id from comments
 		where target_id in (
-		select board_id from moim_board)
+		select
+		board_id from moim_board)
 		and target_type=3
 		group by target_id)c
-		where b.board_id = c.target_id(+)
+		where
+		b.board_id = c.target_id(+)
 		and moim_id = #{moimId}
-		and board_type = #{boardType}
+		and board_type =
+		#{boardType}
 	</select>
 
 	<!-- 소모임 게시글내 댓글 전체 조회 -->
 	<select id="moimCommentAllList" parameterType="hashMap"
 		resultType="com.yedam.mohobby.service.moim.MoimCommentVO">
-		select c.comm_id, c.member_id as comment_writer, c.parent_comm_id,
+		select c.comm_id, c.member_id as comment_writer,
+		c.parent_comm_id,
 		c.target_id, c.content,
-		c.write_date as comment_date , m.board_id, m.board_type, m.moim_id
+		c.write_date as comment_date ,
+		m.board_id, m.board_type, m.moim_id
 		from comments c ,moim_board m
-		where c.target_id = m.board_id
+		where
+		c.target_id = m.board_id
 		and c.target_type = 3
 		and m.moim_id = #{moimId}
 		and m.board_type = #{boardType}
@@ -124,7 +137,8 @@
 		resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
 		select * from moim_board
 		where board_id = #{boardId}
-		and board_type = #{boardType}
+		and
+		board_type = #{boardType}
 		and moim_id = #{moimId}
 	</select>
 
@@ -154,7 +168,8 @@
 	<select id="joinMoim"
 		resultType="com.yedam.mohobby.service.moim.MoimVO">
 		select a.moim_id, a.moim_img, a.moim_name, b.member_id
-		from moim a, moim_member b 
+		from
+		moim a, moim_member b
 		where a.moim_id = b.moim_id
 		and b.member_id = #{memberId}
 	</select>
@@ -162,7 +177,8 @@
 	<!-- 내가 참여중인 소모임 없음 -->
 	<select id="noneMoim" resultType="Integer">
 		select count(moim_name)
-		from moim a, moim_member b
+		from
+		moim a, moim_member b
 		where a.moim_id = b.moim_id
 		and b.member_role = 0
 		and b.member_id = #{memberId}
@@ -171,7 +187,8 @@
 
 	<!-- 소모임 게시글 댓글 삭제 -->
 	<delete id="moimCommentDelete" parameterType="integer">
-		delete from comments where comm_id = #{commId}
+		delete from
+		comments where comm_id = #{commId}
 	</delete>
 
 	<!-- 소모임 가입 회원 수 조회하는 로직 -->
@@ -186,7 +203,8 @@
 	<!-- 소모임 N빵 전체 리스트 조회 -->
 	<select id="getAllDuchList" parameterType="int"
 		resultType="com.yedam.mohobby.service.moim.MoimDutchVO">
-		select * from moim_dutch where moim_id = #{moimId} order by dutch_id DESC
+		select * from moim_dutch where moim_id = #{moimId} order by
+		dutch_id DESC
 	</select>
 
 
@@ -203,7 +221,8 @@
 		update comments
 		set
 		content = #{content},
-		write_date = current_date
+		write_date =
+		current_date
 		where
 		comm_id = #{commId}
 	</update>
@@ -213,16 +232,20 @@
 		parameterType="com.yedam.mohobby.service.admin.MemberVO">
 		DECLARE
 		v_member VARCHAR2(100) := #{memberId};
-		v_temp varchar2(100);
+		v_temp
+		varchar2(100);
 		BEGIN
 		select role
 		into v_temp
 		from member
-		where member_id=v_member;
+		where
+		member_id=v_member;
 		if v_temp =0 then
-		update member set role=2 where member_id= v_member;
+		update member set role=2 where
+		member_id= v_member;
 		elsif v_temp=1 then
-		update member set role=3 where member_id= v_member;
+		update member set role=3 where
+		member_id= v_member;
 		end if;
 		update moim_member
 		set
@@ -253,7 +276,8 @@
 		resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
 		select member_id
 		from moim_member
-		where member_id like '%'||#{memberId}||'%'
+		where member_id like
+		'%'||#{memberId}||'%'
 		and moim_id = #{moimId}
 	</select>
 
@@ -327,43 +351,43 @@
 	<update id="UserSelectvote"
 		parameterType="com.yedam.mohobby.service.moim.MoimVoteListVO">
 		DECLARE
-		v_voteId NUMBER := #{voteId};
-		v_memberId VARCHAR2(100) := #{memberId};
-		v_itemSelect NUMBER := #{itemSelect};
-		v_moimId NUMBER := #{moimId};
-		v_preSelect Number := #{preSelect};
+			v_voteId NUMBER := #{voteId};
+			v_memberId
+			VARCHAR2(100) := #{memberId};
+			v_itemSelect NUMBER := #{itemSelect};
+			v_moimId NUMBER := #{moimId};
+			v_preSelect Number := #{preSelect};
 		BEGIN
-
-		update moim_vote_ptp
-		set item_select = v_itemSelect
-		where vote_id =
-		v_voteId
-		and moim_id = v_moimId
-		and member_id = v_memberId;
-
-		update moim_vote_item
-		set cnt = cnt+1
-		where item_id = v_itemSelect;
-
-		update
-		moim_vote_item
-		set cnt = cnt-1
-		where item_id = v_preSelect;
-
+			update moim_vote_ptp
+			set item_select = v_itemSelect
+			where vote_id = v_voteId
+			and moim_id = v_moimId
+			and member_id = v_memberId;
+	
+			update
+			moim_vote_item
+			set cnt = cnt+1
+			where item_id = v_itemSelect;
+	
+			update
+			moim_vote_item
+			set cnt = cnt-1
+			where item_id = v_preSelect;
 		END;
 	</update>
 
 	<!-- 소모임 n빵 참여자 등록 -->
 	<insert id="dutchMemberInsert">
 		INSERT INTO moim_dutch_ptp values(
-		(select MAX(dutch_id) from moim_dutch),
+		(select
+		MAX(dutch_id) from moim_dutch),
 		#{memberId},
 		#{moimId},
 		#{calcPrice},
 		0)
 	</insert>
 
-	<!-- 투표 리스트 추가 -->
+	<!-- 투표 리스트 등록 -->
 	<insert id="insertVoteList"
 		parameterType="com.yedam.mohobby.service.moim.MoimVoteListVO">
 		<selectKey keyProperty="voteId"
@@ -374,7 +398,8 @@
 		INSERT INTO moim_vote VALUES (#{voteId}, #{memberId}, CURRENT_DATE,
 		#{endDate}, #{moimId}, #{topic})
 	</insert>
-
+	
+	<!-- 투표 세부항목 등록 -->
 	<insert id="insertVoteListFor"
 		parameterType="com.yedam.mohobby.service.moim.MoimVoteListVO">
 		<selectKey keyProperty="itemId"
@@ -383,7 +408,8 @@
 			SELECT NVL(MAX(item_id), 0)+1 as itemId from moim_vote_item
 		</selectKey>
 		<if test="content != null or content != ''">
-			INSERT INTO moim_vote_item VALUES (#{itemId}, #{voteId}, #{content}, 0)
+			INSERT INTO moim_vote_item VALUES (#{itemId}, #{voteId},
+			#{content}, 0)
 		</if>
 	</insert>
 
@@ -397,11 +423,15 @@
 		item_select = #{itemSelect}
 		and vote_id = #{voteId}
 	</select>
+	
+	<!-- 투표 체크 여부 조회 -->
 	<select id="selectCheck"
 		resultType="com.yedam.mohobby.service.moim.MoimVoteListVO">
 		select v.vote_id, nvl(p.item_select, 0)item_select
-		from moim_vote v,
-		(select * from moim_vote_ptp where member_id = #{memberId}) p
+		from
+		moim_vote v,
+		(select * from moim_vote_ptp where member_id =
+		#{memberId}) p
 		where v.vote_id = p.vote_id(+)
 		and v.moim_id = #{moimId}
 		order by v.vote_id
@@ -428,10 +458,13 @@
 	<select id="nbbangSelect"
 		resultType="com.yedam.mohobby.service.moim.MoimDutchVO"
 		parameterType="com.yedam.mohobby.service.moim.MoimDutchVO">
-		select a.profile_img, b.dutch_id, b.member_id, b.write_date, b.total_price,
-		b.people, c.member_id as money_target, c.calc_price, c.calc_check
+		select a.profile_img, b.dutch_id, b.member_id,
+		b.write_date, b.total_price,
+		b.people, c.member_id as money_target,
+		c.calc_price, c.calc_check
 		from member a join moim_dutch_ptp c
-		on a.member_id = c.member_id
+		on
+		a.member_id = c.member_id
 		join moim_dutch b
 		on b.dutch_id = c.dutch_id
 		where b.moim_id = #{moimId} and b.dutch_id = #{dutchId}
@@ -459,12 +492,14 @@
 	<!-- 소모임 일정 전체조회 -->
 	<select id="scheduleSelect"
 		resultType="com.yedam.mohobby.service.moim.MoimScheduleVO">
-		SELECT * FROM moim_schedule where moim_id = #{moimId} order by sked_id DESC
+		SELECT * FROM moim_schedule where moim_id = #{moimId} order
+		by sked_id DESC
 	</select>
 
 	<!-- 소모임 일정 삭제 -->
 	<delete id="deleteSchedule" parameterType="Integer">
-		delete from moim_schedule where sked_id=#{skedId}
+		delete from
+		moim_schedule where sked_id=#{skedId}
 	</delete>
 
 	<!-- 소모임 멤버 가입 등록 -->
@@ -501,72 +536,74 @@
 
 		DECLARE
 		v_boardId NUMBER := #{boardId};
-		v_boardType NUMBER := #{boardType};
+		v_boardType NUMBER
+		:= #{boardType};
 		BEGIN
 		DELETE moim_board WHERE board_id = v_boardId;
-		DELETE comments where target_type = v_boardType and target_id = v_boardId;
+		DELETE comments where target_type = v_boardType and target_id =
+		v_boardId;
 		END;
 	</delete>
 
-   <!-- 소모임 게시글 등록 -->
-  <insert id="insertBoard">
-  <selectKey resultType="Integer" keyProperty="boardId" order="BEFORE">
-  SELECT NVL(MAX(board_id), 0)+1 FROM moim_board
-  </selectKey>
-  INSERT INTO moim_board 
-  VALUES (#{boardId}, #{memberId}, #{title}, #{boardId}, #{boardType}, current_date,#{moimId})
-  </insert>
-  
-  <!-- 소모임 삭제 -->
-  <delete id="delMoim" parameterType="Integer">
-  	{call delete_moim(#{moimId, mode=IN, jdbcType=INTEGER})}
-  </delete>
-  
-  <!-- 게시글 검색 -->
-  <select id="searchBoard" resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
-   select * from moim_board 
-   where moim_id = #{moimId}
-   and board_type = #{boardType}
-   and title like '%'||#{title}||'%'
-  </select>
-  
-  <!-- 소모임 프로필 수정 -->
-  <update id="updateProfile">
-  update moim set moim_info=#{moimInfo}
-  ,moim_catg=#{moimCatg}
-  ,moim_region=#{moimRegion}
-  where moim_id = #{moimId}
-  </update>
-  
-  <!-- n빵 삭제 -->
-  <delete id="delNbbang">
-  	DECLARE
-	v_dutchId NUMBER := #{dutchId};
-	BEGIN
-	DELETE moim_dutch_ptp where dutch_id = v_dutchId;
-	DELETE moim_dutch WHERE dutch_id = v_dutchId;
-	END;
-  </delete>
-  
-  <!-- n빵 체크 업데이트 -->
-  <update id="updateCacl">
-	UPDATE moim_dutch_ptp
-	SET calc_check = 
-	CASE
-	WHEN calc_check = 1 THEN 0    
-	WHEN calc_check = 0 THEN 1
-	END
-	WHERE member_id = #{memberId}
-	and dutch_id = #{dutchId};
-  </update>
-  
-  <!-- 게시판 수정 -->
-  <update id="updateBoard" parameterType="com.yedam.mohobby.service.moim.MoimBoardVO">
-  	update moim_board set 
-	title = #{title} , board_type = #{boardType}
-	where board_id = #{boardId}
+	<!-- 소모임 게시글 등록 -->
+	<insert id="insertBoard">
+		<selectKey resultType="Integer" keyProperty="boardId"
+			order="BEFORE">
+			SELECT NVL(MAX(board_id), 0)+1 FROM moim_board
+		</selectKey>
+		INSERT INTO moim_board
+		VALUES (#{boardId}, #{memberId}, #{title}, #{boardId}, #{boardType},
+		current_date,#{moimId})
+	</insert>
+
+	<!-- 소모임 삭제 -->
+	<delete id="delMoim" parameterType="Integer">
+		{call delete_moim(#{moimId, mode=IN, jdbcType=INTEGER})}
+	</delete>
+
+	<!-- 게시글 검색 -->
+	<select id="searchBoard"
+		resultType="com.yedam.mohobby.service.moim.MoimBoardVO">
+		select * from moim_board
+		where moim_id = #{moimId}
+		and board_type = #{boardType}
+		and title like '%'||#{title}||'%'
+	</select>
+
+	<!-- 소모임 프로필 수정 -->
+	<update id="updateProfile">
+		update moim set moim_info=#{moimInfo}
+		,moim_catg=#{moimCatg}
+		,moim_region=#{moimRegion}
+		where moim_id = #{moimId}
 	</update>
-	
+
+	<!-- n빵 삭제 -->
+	<delete id="delNbbang">
+		DECLARE
+		v_dutchId NUMBER := #{dutchId};
+		BEGIN
+		DELETE moim_dutch_ptp where dutch_id = v_dutchId;
+		DELETE moim_dutch WHERE dutch_id = v_dutchId;
+		END;
+	</delete>
+
+	<!-- n빵 체크 업데이트 -->
+	<update id="updateCalc" parameterType="String">
+      UPDATE moim_dutch_ptp
+      SET calc_check =#{calcCheck}
+      WHERE member_id = #{memberId}
+      and dutch_id = #{dutchId}
+   </update>
+
+	<!-- 게시판 수정 -->
+	<update id="updateBoard"
+		parameterType="com.yedam.mohobby.service.moim.MoimBoardVO">
+		update moim_board set
+		title = #{title} , board_type = #{boardType}
+		where board_id = #{boardId}
+	</update>
+
 	<!-- 소모임 존재여부 검사 -->
 	<select id="moimRight" parameterType="com.yedam.mohobby.service.moim.MoimMemberVO" resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
 	select * from moim where member_id=#{memberId}
@@ -576,17 +613,25 @@
 	<select id="moimnewRight" parameterType="com.yedam.mohobby.service.moim.MoimMemberVO" resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
 	select * from moim_member where member_id=#{memberId}
 	</select>
-	
+
 	<!-- 소모임 가입여부 검사 -->
-	<select id="joincheck" parameterType="com.yedam.mohobby.service.moim.MoimMemberVO" resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
-	select * from moim_member where member_id = #{memberId} and moim_id = #{moimId}
+	<select id="joincheck"
+		parameterType="com.yedam.mohobby.service.moim.MoimMemberVO"
+		resultType="com.yedam.mohobby.service.moim.MoimMemberVO">
+		select * from moim_member where member_id = #{memberId} and moim_id =
+		#{moimId}
 	</select>
-	
+
 	<!-- 가입수 증가 -->
-	<update id="updatecnt" parameterType="com.yedam.mohobby.service.moim.MoimVO">
-	update moim set reg_cnt = reg_cnt+1 where moim_id= #{moimId}
+	<update id="updatecnt"
+		parameterType="com.yedam.mohobby.service.moim.MoimVO">
+		update moim set reg_cnt = reg_cnt+1 where moim_id= #{moimId}
 	</update>
 	
+	<!-- 소모임 프로필이미지 조회 -->
+	<select id="getImg" parameterType="String" resultType="String">
+		select profile_img from member where member_id = #{memberId}
+	</select>
 	<!-- 가입수 감소 -->
 	<update id="deletecnt" parameterType="com.yedam.mohobby.service.moim.MoimVO">
 	update moim set reg_cnt = reg_cnt-1 where moim_id= #{moimId}

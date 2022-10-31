@@ -87,22 +87,21 @@ export default {
   },
   methods: {
     submit() {
-      console.log('endTime: '+this.endTime)
+      console.log('endTime: '+this.calendar.endTime)
       if (
-        this.endTime == undefined ||
-        this.startTime == undefined ||
-        this.info == undefined                      ||
-        this.startDate == undefined ||
-        this.endDate == undefined ||
-        this.title == undefined
+        this.calendar.endTime == '' ||
+        this.calendar.startTime == '' ||
+        this.calendar.info == '' ||
+        this.calendar.startDate == '' ||
+        this.calendar.endDate == '' ||
+        this.calendar.title == ''
       ) {
         this.$swal("필수항목이 입력되지 않았습니다.");
         return;
       }
       let vm = this
       let myDate = new Date()
-      let startTime = this.calendar.startTime
-      let endTime = this.calendar.endTime
+    
       this.axios
         .post("/scheduleInsert", {
           startDate: this.calendar.startDate,
@@ -121,6 +120,7 @@ export default {
           this.calendar.endTime = '',
           this.calendar.title = ''
           this.$emit('dialogClose', false);
+          this.$swal('일정이 추가되었습니다.')
         })
         .catch((error) => {
           console.log(error);

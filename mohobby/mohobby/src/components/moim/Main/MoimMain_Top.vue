@@ -169,7 +169,7 @@
         this.$emit('category', '')
       } else {
       this.$emit('category', e.target.innerText)
-      }
+    }
     },
     moimR() {
       this.axios.get("/moimRight", {

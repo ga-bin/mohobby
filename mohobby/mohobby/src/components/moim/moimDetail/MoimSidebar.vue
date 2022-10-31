@@ -298,7 +298,7 @@ export default {
         });
         // 모임 가입조건 없는 경우
       } else if (
-        this.moimInfo.maxAge == 0 &&
+        // this.moimInfo.maxAge == 0 &&
         this.moimInfo.minAge == 0 &&
         this.moimInfo.gender == 0
       ) {

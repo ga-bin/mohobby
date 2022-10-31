@@ -10,8 +10,11 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.mapper.moim.MoimMapper;
@@ -529,8 +532,8 @@ public class MoimServiceImpl implements MoimService {
 	
 	//n빵 체크 수정
 	@Override
-	public void updateCacl(MoimDutchPtpVO dutchPtpVO) {
-		mapper.updateCacl(dutchPtpVO);
+	public void updateCalc(String memberId, String dutchId, String calcCheck) {
+		mapper.updateCalc(memberId, dutchId, calcCheck);
 	}
 	
 	//게시글 수정
@@ -561,7 +564,13 @@ public class MoimServiceImpl implements MoimService {
 	//가입자수 증가
 	@Override
 	public int updatecnt(MoimVO vo) {
-	   return mapper.updatecnt(vo);
+		return mapper.updatecnt(vo);
+	}
+
+	//소모임 프로필 이미지 조회
+	@Override
+	public String getImg(String memberId) {
+		return mapper.getImg(memberId);
 	}
 	
 	//가입자수 증가
