@@ -38,5 +38,5 @@ public interface AdminClassMapper {
 		public void updateCert(ClassesVO classesVO);
 		
 		// 강의 준비물 insert
-		public void insertNeeds(List<ClassNeedsVO> classNeedVOList);
+		public void insertNeeds(ClassNeedsVO classNeedsVO);
 }
