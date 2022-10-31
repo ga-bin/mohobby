@@ -553,12 +553,6 @@ const routes = [
       },
     ],
   },
-  // challenge
-  {
-    path: "/challengemain",
-    name: "challengemain",
-    component: () => import("./../views/challenge/ChallengeMainView"),
-  },
   {
     path: "/chat",
     name: "chat",

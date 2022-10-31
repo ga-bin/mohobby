@@ -7,8 +7,18 @@
                 <!-- bookmark가 있을 때 -->
                 <div class="gallery" v-if="isBookmark == true">
                     <div class="gallery-item" v-for="(bookmark, i) in bookmarks" :key="i">
-                        <v-img aspect-ratio="1.2" @click.stop="goFeedDetail(bookmark.postId, bookmark.memberId)" class="gallery-image" :src="require(`@/assets/image/sns/${bookmark.postId}/${bookmark.thumbnail}`)" />
+                        <v-img @click.stop="goFeedDetail(bookmark.postId, bookmark.memberId)" 
+                                :src="require(`@/assets/image/sns/${bookmark.postId}/${bookmark.thumbnail}`)" />
+                                class="gallery-image" 
+                                aspect-ratio="1.2" 
                     </div>
+
+
+                    <!-- 북마크 카테고리 이동 -->
+                    <v-btn @click="changeCatg()"></v-btn>
+
+
+
                 </div>
                 <!-- 북마크가 없을 때 -->
                 <div class="wrap_box" v-else>
@@ -103,6 +113,13 @@
               alert(err);
           });
         },
+
+        changeCatg(){
+            
+        },
+
+
+
 
       //피드 디테일로 이동
       goFeedDetail(postId,writer) {

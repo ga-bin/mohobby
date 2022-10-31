@@ -407,6 +407,19 @@ public class SnsController {
       }
     }
     
+    //북마크 이동
+    public String changeCatg(@RequestBody SnsBookmarkVO bmkVO) {
+        try {
+            service.changeCatg(bmkVO);
+            System.out.println("컬렉션수정 완료");
+            return "success";
+          } catch (Exception e) {
+              e.printStackTrace();
+              System.out.println("컬렉션수정 실패");
+              return "fail";
+          }
+    }
+    
     //북마크 삭제
     @DeleteMapping("/collection/bookmark/{postId}/{memberId}")
     public String deleteBookmark(@PathVariable int postId, @PathVariable String memberId) {
@@ -443,7 +456,7 @@ public class SnsController {
     
     
     /*
-     * 검색기록
+     * 검색기록(펑예)
      */
     //검색기록 저장
     @PostMapping("/search/history")

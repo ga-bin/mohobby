@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.mohobby.mapper.sns.SnsMapper;
@@ -28,6 +29,8 @@ import com.yedam.mohobby.service.user.MemberVO;
  * @author sunjin
  * @title sns controller
  */
+
+@ControllerAdvice
 @Service
 public class SnsServiceImpl implements SnsService{
 
@@ -35,18 +38,21 @@ public class SnsServiceImpl implements SnsService{
     SnsMapper mapper;
    /*
      * 게시물
-     */
-    //게시물 아이디 가져오기
+   */
+    //게시물 아이디 생성
    @Override
    public int getPostId() {
       return mapper.getPostId();
    }
+
+   
     //미디어 등록
     @Transactional
     @Override
     public boolean regFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
-       System.out.println("filesize : " + fileList.size());
-       snspostVO.setPostId(getPostId());
+       
+        snspostVO.setPostId(getPostId());
+        
        try {
           MultipartFile getFirstFile = fileList.get(0);
           String getFirstFileName = getFirstFile.getOriginalFilename();
@@ -56,9 +62,8 @@ public class SnsServiceImpl implements SnsService{
           
          //고유번호로 변환된 파일이름
          getFirstFileName = "0" + type;
-         System.out.println("변경되어 저장되는 thumbnail명: " + getFirstFileName);
           
-          //snsPost info 등록
+         //snsPost info 등록
          SnsPostVO snsVo = new SnsPostVO();
          snsVo.setPostId(snspostVO.getPostId());
          snsVo.setMemberId(snspostVO.getMemberId());
@@ -90,9 +95,6 @@ public class SnsServiceImpl implements SnsService{
           }
           
           for(int i = 0; i < fileList.size(); i++) {
-             System.out.println(folder);
-             System.out.println(path);
-             
              
              MultipartFile file = fileList.get(i);
              
@@ -102,14 +104,8 @@ public class SnsServiceImpl implements SnsService{
              //확장자를 추출
              String extension = fileRealName.substring(fileRealName.indexOf("."), fileRealName.length());
              
-             System.out.println("저장할 폴더 경로: " + path);
-             System.out.println("실제 파일명: " + fileRealName);
-             System.out.println("폴더명: " + dirName);
-             System.out.println("확장자: " + extension);
-             
              //파일이름 = 인덱스번호 + 확장자
              String fileName = i + extension;
-             System.out.println("변경되어 저장되는 파일명: " + fileName);
              
              //업로드한 파일을 서버 컴퓨터의 지정한 경로에 저장
              File saveFile = new File(path + "/" + fileName);
@@ -152,6 +148,36 @@ public class SnsServiceImpl implements SnsService{
    public int deleteFeed(int postId) {
       return mapper.deleteFeed(postId);
    }
+   
+   //미디어 삭제
+//   @Override
+//   public int deleteMedia(int postId) {
+//       
+//       //경로찾기
+//       String path = this.getClass().getResource("/").getPath();
+//       path = path.substring(0, path.lastIndexOf("mohobby"));
+//       path = path.substring(0, path.lastIndexOf("mohobby")+"mohobby".length());
+//       
+//       
+//       path += "/mohobby/mohobby/src/assets/image/sns/" + postId;
+//
+//       
+//       File deleteFile = new File(path);
+//       
+//       // 파일이 존재하는지 체크 존재할경우 true, 존재하지않을경우 false
+//       if(deleteFile.exists()) {
+//           
+//           // 파일을 삭제합니다.
+//           deleteFile.delete(); 
+//           
+//           System.out.println("파일을 삭제하였습니다.");
+//           
+//       } else {
+//           System.out.println("파일이 존재하지 않습니다.");
+//       }
+//
+//       return 0;
+//   }
    
    //인기강사피드조회
    @Override
@@ -394,6 +420,13 @@ public class SnsServiceImpl implements SnsService{
         return mapper.addBookmark(bmkVO);
     }
     
+    
+    //북마크 이동
+    @Override
+    public int changeCatg(SnsBookmarkVO bmkVO) {
+        return mapper.changeCatg(bmkVO);
+    }
+    
     //북마크 삭제
     @Override
     public int deleteBookmark(int postId, String memberId) {
@@ -446,6 +479,8 @@ public class SnsServiceImpl implements SnsService{
 		System.out.println("firstIdx : " + firstIdx);
 		return mapper.allListPaging(firstIdx);
 	}
+
+
 
 
 

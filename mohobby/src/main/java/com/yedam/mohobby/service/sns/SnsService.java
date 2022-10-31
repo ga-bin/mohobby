@@ -175,6 +175,9 @@ public interface SnsService {
     //북마크 삭제
     public int deleteBookmark(int postId, String memberId);
     
+    //북마크 이동
+    public int changeCatg(SnsBookmarkVO bmkVO);
+    
     //북마크 여부조회
     public int isBookmark(int postId, String memberId);
     

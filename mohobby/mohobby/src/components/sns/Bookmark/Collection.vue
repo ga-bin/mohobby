@@ -35,22 +35,20 @@
                   <span v-else class="mx-auto text-h8">컬렉션 만들기</span>
                 </v-card-title>
                     <v-card-text>
-                      <v-container>
-                          <v-row>
+                          <div>
 
                             <!-- 수정 dialog -->
-                            <v-col cols="12" v-if="editMode == true">
+                            <template v-if="editMode == true">
                               <v-text-field
                                 v-model="editedCatgName"
                                 @change ="editedCatgName"
                                 label="*수정할 이름을 입력해주세요!"
                                 :rules="rules"
                                 hide-details="auto" />
-                              <!-- <v-text-field  v-model="editedCatgName" label="*수정할 컬렉션이름을 입력해주세요!" required /> -->
-                            </v-col>
+                            </template>
 
                             <!-- 생성 dialog -->
-                            <v-col cols="12" v-else>
+                            <template v-else>
                               <v-text-field
                                 width="300"
                                 v-model="newCatgName"
@@ -58,10 +56,9 @@
                                 :rules="rules"
                                 hide-details="auto" />
                               <!-- <v-text-field  v-model="catgName" label="*컬렉션이름을 입력해주세요!" required /> -->
-                            </v-col>
+                            </template>
 
-                          </v-row>
-                        </v-container>
+                          </div>
                       </v-card-text>
 
                       <!-- 수정모드 dialog -->
@@ -222,10 +219,12 @@
         },
 
 
+        //dialog 수정
         cancel(){
           this.dialog = false;
           this.editedCatgName = "";
         },
+
 
         //컬렉션리스트
         getCollectionList(memberId){
@@ -236,10 +235,10 @@
                 }
             }).then(res => {
                 
-                if(res.data.length == 0){//리스트 불러올 데이터가 없으면 디폴트 컬렉션 생성
+                if(res.data.length == 0){ // 만들어놓은 컬렉션이 존재하지 않으면 디폴트 컬렉션 생성
                   this.createDefaultCollection(memberId);
 
-                }else{
+                }else{ // 만든 컬렉션이 존재하면 이름만 뽑아서 바인딩
 
                   for(let i=0; i<res.data.length; i++){
                     let isCatgName = res.data[i].catgName;
@@ -247,19 +246,13 @@
 
                   }
 
-                    console.log("내 컬렉션들--> ");
-                    console.log(this.catgNames);
-
-                    this.collections = res.data;//or not 생성되어있는 리스트 호출
-
-                    console.log("컬렉션리스트 호출 성공!");
+                    this.collections = res.data;
 
                 }
 
             }).catch(err => {
                 alert(err);
             });
-
         },
 
 
@@ -273,7 +266,6 @@
               catgName : 'default',
               thumbnail : thumbnail,
           }).then(res => {
-              console.log("디폴트컬렉션생성 성공!"+res);
               this.getCollectionList(memberId);
           }).catch(err => {
               alert(err);
@@ -286,15 +278,15 @@
         createCollection(memberId){     
 
             const thumbnail = 'bookmark_default.png'
-
             this.dialog = false;
+
             this.axios.post('/sns/collection', {
                 memberId : memberId,
                 catgName : this.newCatgName,
                 thumbnail : thumbnail,
+
             }).then(res => { 
 
-                console.log("컬렉션생성 성공!"+res);
                 this.dialog = false;
                 this.newCatgName = ""
                 this.getCollectionList(memberId);

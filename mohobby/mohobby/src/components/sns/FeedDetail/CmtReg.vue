@@ -30,15 +30,17 @@
             @click="$router.push({ path: '/snsUserFeed?userId=' + cmt.memberId }).catch(() => { $router.go(0); })" />
         </v-avatar>
         <input type="hidden" class="cmtId" value="cmt.commId" />
-        <div class="user text-overline">
-          {{ cmt.memberId }}
+        <div class="text-overline">
+          <span class="user" @click="$router.push({ path: '/snsUserFeed?userId=' + cmt.memberId }).catch(() => { $router.go(0); })">
+            {{ cmt.memberId }}
+          </span>
           <small class="date">
             <span style="font-size: 1em">
               {{ writeDate(cmt.writeDate) }}
             </span>
           </small>
           <!-- 버튼: 저장, 답장, 수정, 삭제 
-            댓글 쓴 사람과 로그인세션 아이디가 같을 떄 -> 수정, 삭제, 답장 버튼
+            댓글 쓴 사람과 로그인세션 아이디가 같을 떄  수정, 삭제, 답장 버튼
            -->
           <div class="btn">
             <v-btn v-if="btnStatus[idx].replyBtn == true" x-small outlined color="dark-grey" class="mr-3"
@@ -51,7 +53,7 @@
             <v-btn v-if="cmt.memberId == memberId && btnStatus[idx].deleteBtn == true" x-small outlined color="error"
               @click="deleteCmt(cmt.commId, cmt.targetId, idx)">
               삭제</v-btn>
-            <v-btn v-if="cmt.memberId == memberId && btnStatus[idx].cancelBtn == true"
+            <v-btn v-if="btnStatus[idx].cancelBtn == true"
               @click="cancleEdit(idx)" x-small outlined color="success" class="mr-3">취소</v-btn>
           </div>
           <!-- 댓글 버튼 끝 -->
