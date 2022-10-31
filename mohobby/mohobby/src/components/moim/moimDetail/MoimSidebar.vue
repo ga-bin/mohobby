@@ -12,11 +12,11 @@
       <div class="right" v-if="right == 0">
         <v-btn text @click="checkForJoin()">
           <v-icon small color="white">mdi-plus-circle-outline</v-icon>
-          <div style="color: white">가입하기</div>
+          <div style="color: #2b2b2b; font-weight: bolder;">가입하기</div>
         </v-btn>
       </div>
       <div class="right" v-if="right == 1">
-        <v-btn text @click="">
+        <v-btn text @click="delmoim()">
           <v-icon small color="white">mdi-plus-circle-outline</v-icon>
           <div style="color: white">탈퇴하기</div>
         </v-btn>
@@ -161,6 +161,11 @@ export default {
     this.getMoimOneInfo();
     this.getMoimMemberCount();
   },
+  watch: {
+    right() {
+      this.joincheck();
+    }
+  },
   methods: {
     joincheck() {
       this.axios.get("/joincheck", {
@@ -171,7 +176,6 @@ export default {
       })
       .then((resp)=> {
         console.log(resp)
-        console.log("33")
         if(resp.data.length == 0) {
           this.right = 0
         } else {
@@ -208,7 +212,7 @@ export default {
         this.profileImg = "comfuck.jpg";
         return;
       } else if (this.memberId == "admin") {
-        this.profileImg = "female.png";
+        this.profileImg = "logo-color.png";
       } else if (this.memberId != "" && this.memberId != "admin") {
         await this.getMemberInfo();
         this.profileImg = this.memberInfo.profileImg;
@@ -222,11 +226,6 @@ export default {
       })
         .then(function (response) {
           vm.memberInfo = response.data;
-          console.log(vm.memberInfo);
-          console.log(vm.memberInfo);
-          console.log(vm.memberInfo);
-          console.log(vm.memberInfo);
-          console.log(vm.memberInfo);
 
         })
         .catch(function (error) {
@@ -272,10 +271,6 @@ export default {
     },
     checkForJoin() {
       const vm = this;
-      console.log(this.moimInfo.maxAge);
-      console.log(this.moimInfo.maxAge);
-      console.log(this.moimInfo.gender);
-      console.log(this.memberInfo.gender);
       if (this.memberId == "비회원") {
         this.$swal
           .fire({
@@ -319,10 +314,10 @@ export default {
           })
           .then((result) => {
             if (result.isConfirmed) {
+              vm.updatecnt()
+              console.log("확인")
               this.$swal.fire(vm.insertMoim(),"가입이 완료되었습니다.");
             }
-            vm.updatecnt()
-            vm.joincheck()
           });
       }
       // 모입 가입조건 있는 경우
@@ -371,10 +366,9 @@ export default {
           })
           .then((result) => {
             if (result.isConfirmed) {
+              vm.updatecnt()
               this.$swal.fire(vm.insertMoim(),"가입이 완료되었습니다.");
             }
-            vm.updatecnt()
-            vm.joincheck();
           });
         }
       }
@@ -413,6 +407,7 @@ export default {
         moimId: this.moimId,
       }).then((resp) => {
         console.log(resp);
+        this.joincheck();
       }).catch((error) => {
         console.log(error);
       });
@@ -421,11 +416,6 @@ export default {
     moimFlagging() {
           const vm = this;
           this.moimFlagModal = false;
-          console.log(this.selectedCode);
-          console.log(this.selectedCode);
-          console.log(this.selectedCode);
-          console.log(this.selectedCode);
-          console.log(this.selectedCode);
           if (this.selectedCode == "mo6") {
             this.$swal.fire({
                 title: '신고 이유를 입력하세요',
@@ -469,6 +459,7 @@ export default {
               console.log(error);
             });
         },
+
         updatecnt() {
           this.axios.put("/updatecnt", {
             moimId : this.moimId
@@ -481,13 +472,40 @@ export default {
             console.log(err)
 
           })
+        },
+        deletecnt() {
+          this.axios.put("/deletecnt", {
+            moimId : this.moimId
+          })
+          .then((resp)=> {
+            console.log(resp)
+          })
+          .catch((err)=> {
+            console.log(err)
+          })
+        },
+        delmoim() {
+          this.axios.delete(("/delmoim"), {
+            params : {
+              memberId : this.memberId,
+              moimId : this.moimId
+            }
+          })
+          .then((resp)=> {
+            console.log(resp)
+            this.deletecnt()
+            this.joincheck()
+          })
+          .catch((err)=> {
+            console.log(err)
+          })
         }
   },
 };
 </script>
 <style scoped>
 .text-center {
-  background-color: #2ac187;
+  background-color: #e9e9ec;
 }
 
 .mb-4 {

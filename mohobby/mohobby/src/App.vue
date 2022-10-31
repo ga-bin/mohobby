@@ -1,20 +1,10 @@
 <template>
   <v-app id="inspire">
-    
     <Header></Header>
     <v-main> 
-     <v-container fluid style="padding: 0px;">
-       <router-view></router-view>
-        <!-- <div class='loader'>
-            <HashLoader
-              class="custom-class"
-              :loading="$store.state.loading"
-              :color="color"
-              :size="size"
-              :sizeUnit="sizeUnit"
-            />
-          </div> -->
-    </v-container> 
+      <v-container fluid style="padding: 0px;">
+        <router-view></router-view>
+      </v-container> 
      </v-main>
   </v-app>
 </template>

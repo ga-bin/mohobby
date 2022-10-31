@@ -479,13 +479,6 @@ const routes = [
         props: true,
       },
       {
-        //사진첩
-        path: "moimPhoto",
-        name: "moimPhoto",
-        component: () => import("@/views/moim/photo/MoimPhotoView"),
-        props: true,
-      },
-      {
         //공지사항
         path: "moimNotice",
         name: "moimNotice",

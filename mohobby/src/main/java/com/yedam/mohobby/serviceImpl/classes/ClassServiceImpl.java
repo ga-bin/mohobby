@@ -392,9 +392,6 @@ public class ClassServiceImpl implements ClassService {
     // qr코드 생성
     @Override
     public String createCodeImg(String link) {
-    	System.out.println("!!!!!!!!!!!!!!!!");
-    	System.out.println(link);
-    	
         int width = 400;
         int height = 400;
         String base64 = "";

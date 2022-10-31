@@ -17,4 +17,5 @@ public class MoimVO {
 	private int minAge; //가입 최소나이
 	private int gender; //성별
 	private int maxPeople; //가입 최대인원
+	private int moimMemberId; //인조식별키
 }

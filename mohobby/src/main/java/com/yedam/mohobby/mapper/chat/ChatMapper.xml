@@ -182,13 +182,14 @@
 		#{memberId}
 		)
 	</insert>
-	<!-- sns채팅방 조회 -->
+	<!-- sns채팅방 생성및 조회 -->
 	<select id="getSnsChatRoomNo"
 		parameterType="com.yedam.mohobby.service.chat.CreateRoomVO" statementType="CALLABLE">
 		{
-		call pr_get_room_id(
-		#{myId,mode=IN},#{targetId,mode=IN},#{vRoomNo,mode=OUT,jdbcType=INTEGER}
-		)
+			call pr_get_room_id
+			(
+				#{myId,mode=IN},#{targetId,mode=IN},#{vRoomNo,mode=OUT,jdbcType=INTEGER}
+			)
 		}
 	</select>
 	<!-- moim채팅방 조회 -->
@@ -200,7 +201,12 @@
 		)
 		}
 	</select>
-	
+	 <update id="updateCalc" parameterType="String">
+      UPDATE moim_dutch_ptp
+      SET calc_check =#{calcCheck}
+      WHERE member_id = #{memberId}
+      and dutch_id = #{dutchId};
+   </update>
 	<update id="updateCheckTime"
 		parameterType="com.yedam.mohobby.service.chat.ChatUserVO">
 		update room set check_time = sysdate
