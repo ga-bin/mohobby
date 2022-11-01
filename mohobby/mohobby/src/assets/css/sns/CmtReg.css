@@ -8,6 +8,7 @@
   border:none;
   outline:none;
 }
+
 .reCmt{
   
   display: none;
@@ -43,9 +44,10 @@ v-avatar {
 }
 
 .member_id {
-  color: #2ac187;
+  color: #2255b1;
+  background-color: aliceblue;
   font-weight: 300;
- /* // cursor: pointer; */
+  cursor: pointer;
 }
 
 .user {

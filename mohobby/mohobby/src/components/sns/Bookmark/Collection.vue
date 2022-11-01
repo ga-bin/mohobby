@@ -5,25 +5,16 @@
       공백, 특수문자 안들어가게 막기
 
 
-
-
-
-
-      
-
-
   -->
-    <div>
-        <h1 class="main-title">북마크 페이지입니다</h1>
-
+    <div class="main-title">
 
         <!-- 북마크 생성, 수정 모달 시작 -->
         <div>
           <v-row justify="center">
               <v-dialog v-model="dialog" scrollable max-width="350px">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-if="editMode == false" color="#2ac187" dark v-bind="attrs" v-on="on">컬렉션 만들기</v-btn>
-                  <v-btn v-else disabled color="#2ac187" dark v-bind="attrs" v-on="on">컬렉션 만들기</v-btn>
+                  <v-btn v-if="editMode == false" color="#2255b1" dark v-bind="attrs" v-on="on">컬렉션 만들기</v-btn>
+                  <v-btn v-else style="display:none;" color="#2255b1" dark v-bind="attrs" v-on="on">컬렉션 만들기</v-btn>
                   <div>
                     <v-btn v-if="editMode == true" @click="manager()">북마크관리 OFF</v-btn>
                     <v-btn v-else @click="manager()">북마크관리 ON</v-btn>
@@ -55,7 +46,6 @@
                                 label="*컬렉션이름을 입력해주세요!"
                                 :rules="rules"
                                 hide-details="auto" />
-                              <!-- <v-text-field  v-model="catgName" label="*컬렉션이름을 입력해주세요!" required /> -->
                             </template>
 
                           </div>
@@ -100,14 +90,14 @@
                   <v-img  v-if ='collection.postId == ""'
                           class="white--text align-end rounded-sm dark" 
                           aspect-ratio="1.2" 
-                          @click="goBookmark(collection.catgId, collection.catgName)"
-                        :src="require('@/assets/image/sns/default/bookmark_default.png')" />
+                         @click="goBookmark(collection.catgId, collection.catgName)"
+                         :src="require('@/assets/image/sns/default/bookmark_default.png')" />
 
                   <!-- 저장 포스트의 첫번째 썸네일 커버사진으로  -->
                   <v-img v-else class="white--text align-end rounded-sm dark" 
                           aspect-ratio="1.2"
-                          @click="goBookmark(collection.catgId, collection.catgName)"
-                          :src="require(`@/assets/image/sns/${collection.postId}/${collection.thumbnail}`)" />
+                         @click="goBookmark(collection.catgId, collection.catgName)"
+                         :src="require(`@/assets/image/sns/${collection.postId}/${collection.thumbnail}`)" />
 
                   <!-- 관리버튼 - 수정, 삭제 -->
                   <div  v-if="management == true" class="content-details fadeIn-bottom">
@@ -122,8 +112,7 @@
                             class="text--white" 
                             color="#2ac187" 
                             @click="swal(collection.memberId,collection.catgId)">삭제</v-btn>
-
-                    <!-- <h3 class="content-title">{{collection.catgName}}</h3> -->
+                    <h3 v-if='collection.catgName == "default"' class="content-title">{{collection.catgName}}</h3>
                   </div>
 
                   <div v-else class="content-details">
@@ -310,18 +299,7 @@
         //컬렉션수정(이름)
         editCollection(catgId, memberId){
 
-          // if (this.editedCatgName == "" || this.editedCatgName == undefined) {
-          //   return;
-          // }
-          // else if(this.catgNames.indexOf(this.editedCatgName) == -1){
-          //   return;
-          // }
-          // else if(this.catgName.length > 11){
-          //   return;
-
-          // } else { }
           this.axios
-
             .put("/sns/collection", {
               catgId:catgId,
               catgName: this.editedCatgName,

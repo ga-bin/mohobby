@@ -64,7 +64,7 @@
               <span class="mr-2 mt-1">{{ items.likes }}</span>
               <v-icon class="mr-2">mdi-chat-outline</v-icon>
               <span class="mr-2 mt-1">{{ cmtCount }}</span>
-              <v-icon v-if="this.$store.state.id != items.memberId" @click="send" color="#2ac187">mdi-send</v-icon>
+              <v-icon v-if="this.$store.state.id != items.memberId" @click="send" color="#2255b1">mdi-send</v-icon>
             </div>
           </v-col>
           <v-col cols="8">
@@ -74,17 +74,17 @@
             <!-- 카카오톡 공유 - 따로 권한 X-->
             <div class="d-flex justify-end ma-2">
               <v-btn @click="sendLink()" icon>
-                <v-icon color="#2ac187">mdi-share-variant</v-icon>
+                <v-icon color="#2255b1">mdi-share-variant</v-icon>
               </v-btn>
               <!-- 카카오톡 공유 끝 -->
 
               
               <!-- 북마크아이콘 -->
               <v-btn v-if="mark === 1" @click="bookmarkDel(items.postId, memberId)" icon>
-                <v-icon size="25" color="#2ac187">mdi-bookmark</v-icon>
+                <v-icon size="25" color="#2255b1">mdi-bookmark</v-icon>
               </v-btn>
               <v-btn v-else @click="markLogin(memberId,1)" icon>
-                <v-icon color="#2ac187">mdi-bookmark-outline</v-icon>
+                <v-icon color="#2255b1">mdi-bookmark-outline</v-icon>
               </v-btn>
               <!-- 북마크아이콘 끝 -->
 
@@ -135,7 +135,7 @@
             </v-card-text>
             <v-row class="ma-4 justify-space-around">
               <v-btn color="white" dense rounded dark @click="dialog3 = !dialog3">
-                <v-icon color="#2ac187">mdi-plus</v-icon>
+                <v-icon color="#2255b1">mdi-plus</v-icon>
               </v-btn>
             </v-row>
             <v-card-actions>
@@ -169,8 +169,11 @@
               <v-container>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field v-model="catgName" label="*컬렉션이름을 입력해주세요!" required />
-                    <!-- @change="inputE()" -->
+                    <v-text-field v-model="catgName" 
+                                  label="*컬렉션이름을 입력해주세요!" 
+                                  required
+                                  :rules="rules" />
+
                   </v-col>
                 </v-row>
               </v-container>
@@ -211,8 +214,8 @@
         <v-chip-group id="hashtagGroup" class="ml-8">
           <v-chip
             v-for="hashtag in hashtags" :key="hashtag" :color="`${colors[nonce - 1]} lighten-3`"
-            @click="search($event)" dark label small>
-            #{{ hashtag }}
+            @click="search($event)"  label small>
+            <span style="color:#2255b1;">#{{ hashtag }}</span>
           </v-chip>
         </v-chip-group>
         <br />
@@ -266,7 +269,7 @@ export default {
       postId: this.$route.query.postId,
       show: true,
       targetId: "",
-      colors: ["teal", "orange", "green", "purple", "indigo", "cyan"], //tag color
+      colors: ["grey", "green", "purple", "indigo", "cyan"], //tag color
       nonce: 1,
       lists:[], //dot list 목록
 
@@ -286,6 +289,14 @@ export default {
       catgNames:[], //이미 존재하는 컬렉션 이름들
       selectedCollection: "", //북마크를 저장할 컬렉션
       catgName: "", //새로 생성할 컬렉션 이름
+      rules: [
+                value => !!value || '이름은 입력 부탁드립니다🙏', //이름 없으면
+                value => (value && value.length <= 10) || '10글자 이내로 부탁드립니다🙏', //10글자 이내이면
+                value => (this.catgNames.indexOf(value) == -1) || '이미 존재하는 이름입니다🙏', //이미 존재하는 이름이면
+                value => (this.checkSpace(value) == false) || '공백은 자제 부탁드립니다🙏', //공백이 있으면
+                value => (this.checkSpecial(value) == false) || '특수문자는 사용 자제 부탁드립니다🙏', //특수문자가 있으면
+              ],
+
       notifications: false,
       sound: true,
       widgets: false,
@@ -304,10 +315,7 @@ export default {
     this.postId = this.$route.query.postId;
     this.showDetail(this.postId, this.writer); //게시글 상세 로드
     this.detailImg(this.postId); //게시글 이미지 로드
-    console.log(this.writer);
-    console.log(this.memberId);
-    console.log(this.postId);
-    console.log(this.lists);
+
   },
 
   watch: {
@@ -356,8 +364,6 @@ export default {
       },
         
 
-
-
       //세션유무 검증
       confirmMember(memberId){  
         if(memberId){
@@ -369,6 +375,8 @@ export default {
           return false;
         }
       },
+
+
       //로그인 검증 모달
       loginConfirm(){
         this.$swal({
@@ -376,8 +384,8 @@ export default {
           text: "🙏로그인화면으로 이동부탁드립니다🙏",
           icon: "warning",
           showCancelButton: true,
-          confirmButtonColor: "#2ac187",
-          cancelButtonColor: "d3#3",
+          confirmButtonColor: "#2255b1",
+          cancelButtonColor: "#F36A3E",
           cancelButtonText: "취소",
           confirmButtonText: "이동",
         }).then((result) => {
@@ -402,13 +410,11 @@ export default {
       })
         .then((res) => {
           if(this.confirmMember(this.memberId) == true ){
-            console.log("로그인세션을 확인합니다");
             this.getBookmarkStatus(postId);
             this.getCollectionList(this.memberId);
           }
           console.log();
           this.items = res.data;
-          console.log("비밀글여부: "+ this.items.secPost);
 
           //자신의 게시물이면 dot list 세팅
           this.lists.push({title: "수정"});
@@ -475,8 +481,8 @@ export default {
           text: "삭제된 게시글은 복구가 불가합니다🙏",
           icon: "warning",
           showCancelButton: true,
-          confirmButtonColor: "#2ac187",
-          cancelButtonColor: "#d33",
+          confirmButtonColor: "#2255b1",
+          cancelButtonColor: "#F36A3E",
           cancelButtonText: "취소",
           confirmButtonText: "네, 삭제할게요!",
         }).then((result) => {
@@ -492,8 +498,8 @@ export default {
           text: "비밀글은 본인만 조회가 가능합니다🙏",
           icon: "warning",
           showCancelButton: true,
-          confirmButtonColor: "#2ac187",
-          cancelButtonColor: "#d33",
+          confirmButtonColor: "#2255b1",
+          cancelButtonColor: "#F36A3E",
           cancelButtonText: "취소",
           confirmButtonText: "네, 전환할래요!",
         }).then((result) => {

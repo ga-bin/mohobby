@@ -616,7 +616,15 @@
    
    <!-- 댓글조회 -->
    <select id="getCmtLists" resultType="com.yedam.mohobby.service.communal.CommentsVO">
-      SELECT m.profile_img, c.target_type, c.target_id, c.parent_comm_id, c.comm_id, c.member_id, c.content, c.write_date, c.parent_member_id
+      SELECT m.profile_img,
+	         c.target_type,
+	         c.target_id,
+	         c.parent_comm_id,
+	         c.comm_id,
+	         c.member_id,
+	         c.content,
+	         c.write_date,
+	         c.parent_member_id
         FROM member m, (  SELECT * FROM comments
                          WHERE target_id = #{ targetId }
                            AND target_type = 2
@@ -712,8 +720,8 @@
    <!-- 컬렉션리스트 -->
    <select id="getBookmarkCtgs" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
        SELECT *
-         FROM (SELECT c.catg_id, c.member_id, c.catg_name, b.post_id, b.thumbnail, b.save_date,
-                 RANK() OVER (PARTITION BY c.catg_id ORDER BY save_date DESC) AS RNK
+         FROM (SELECT c.catg_id, c.member_id, c.catg_name, b.post_id, b.thumbnail, b.bookmark_date,
+                 RANK() OVER (PARTITION BY c.catg_id ORDER BY bookmark_date DESC) AS RNK
                  FROM sns_bookmark_catg c, sns_bookmark b
                 WHERE c.catg_id = b.catg_id(+)
                   AND member_id = #{ memberId })
@@ -793,9 +801,9 @@
    
    <!-- 전체북마크조회 -->
    <select id="getAllBookmarks" parameterType="String" resultType="com.yedam.mohobby.service.sns.SnsBookmarkVO">
-      SELECT c.catg_id, b.post_id, b.thumbnail, s.member_id
-        FROM sns_bookmark b, sns_post s
-       WHERE b.post_id = s.post_id 
+      SELECT b.catg_id, b.post_id, b.thumbnail, c.member_id
+        FROM sns_bookmark b, sns_bookmark_catg c
+       WHERE b.catg_id = c.catg_id 
          AND c.member_id = #{ memberId }
       ORDER BY post_id DESC
    </select>
