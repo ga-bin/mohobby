@@ -41,7 +41,6 @@
                 </div>
               </v-list-item-content>
 
-
               <!-- 팔로우 = 내가 구독 안한상태면 활성화 -->
               <div v-if="followType == 1">
                 <v-btn v-if="followerCheck[i] == 1" @click="unfollow(user.followerId,user.followingId)" rounded

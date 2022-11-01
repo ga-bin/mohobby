@@ -16,6 +16,6 @@ public class ContentVO {
 	private String memberId;
 	private List<String> memberIds;
 	private String hour;
-	private String nickName;
+	private String nickname;
 	private String profileImg;
 }

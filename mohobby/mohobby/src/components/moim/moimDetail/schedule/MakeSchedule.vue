@@ -100,8 +100,7 @@ export default {
         return;
       }
       let vm = this
-      let myDate = new Date()
-    
+  
       this.axios
         .post("/scheduleInsert", {
           startDate: this.calendar.startDate,
@@ -133,10 +132,17 @@ export default {
       this.endTimer = false;
       this.startTimer = false;
     },
+
     allowedDates(val) {
-      let endDate = val.split('-').reduce((a, b) => a + b);
-      let startDate = this.calendar.startDate.split('-').reduce((a, b) => a + b);
+
+      let endDate 
+      = val.split('-').reduce((a, b) => a + b);
+    
+      let startDate 
+      = this.calendar.startDate.split('-').reduce((a, b) => a + b);
+
       return endDate >= startDate;
+
     }
   },
 

@@ -93,9 +93,6 @@ export default {
   },
   beforeCreate() {},
   created() {
-    for(let i=0;i<this.dataList.length;i++){
-    console.log(dataList[i])}
-    
   },
   beforeMount() {},
   mounted() {

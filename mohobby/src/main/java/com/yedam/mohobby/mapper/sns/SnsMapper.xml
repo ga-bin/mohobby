@@ -418,8 +418,8 @@
                   VALUES
                        (  
                         #{ followId },
-                        #{ followingId },
-                        #{ followerId }
+                        #{ followerId },
+                        #{ followingId }
                         )
    </insert>
    
@@ -427,8 +427,8 @@
    <!-- 언팔로우 -->
    <delete id="unfollow" parameterType="com.yedam.mohobby.service.sns.SnsFollowVO">
       DELETE FROM follow
-       WHERE follower_id = #{ followerId }
-         AND following_id = #{ followingId }
+       WHERE follower_id = #{ followingId }
+         AND following_id = #{ followerId }
    </delete>
    
    

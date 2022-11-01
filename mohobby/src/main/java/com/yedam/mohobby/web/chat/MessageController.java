@@ -43,36 +43,48 @@ public class MessageController {
 	public void send(ContentVO content) {
 		NoticeVO noticeVO = new NoticeVO();
 		ResNoticeVO resNotice = new ResNoticeVO();
+		content.setNickname(mService.getMember(content.getMemberId()).getNickName());
+		content.setProfileImg(mService.getMember(content.getMemberId()).getProfileImg());
+		System.out.println(content.getNickname());
+		sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
 		// 실시간 메시지 보내기
+
 		ChatListContentResVO res = new ChatListContentResVO();
 		for (int i = 0; i < content.getMemberIds().size(); i++) {
-			content.setNickName(mService.getMember(content.getMemberId()).getNickName());
-			content.setProfileImg(mService.getMember(content.getMemberId()).getProfileImg());
+
+		
 			sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i), content);
-			sendTemplate.convertAndSend("/topic/room/" + content.getRoomNo(), content);
-			// 상대방이 같은방에 없을때는 알림을 보낸다.
-			if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0) {
-				resNotice.setNoticeId(nService.getNoticeId());
-				resNotice.setNickname(mService.getMember(content.getMemberId()).getNickName());
-				resNotice.setNoticeType(2);
-				resNotice.setTargetId(content.getMemberIds().get(i));
-				resNotice.setPostId(content.getRoomNo());
-				if (cService.checkMoimId(content.getRoomNo()) == 0) {
-					resNotice.setContentType(0);
-					resNotice.setProfileImge(mService.getMember(content.getMemberIds().get(i)).getProfileImg());
-				} else {
-					resNotice.setContentType(1);
-					resNotice.setProfileImge(moService.getMoimInfo(content.getRoomNo()).getMoimImg());
+
+			if (!content.getMemberId().equals(content.getMemberIds().get(i))) {
+				// 상대방이 같은방에 없을때는 알림을 보낸다.
+
+				if (cService.getCheckIn(content.getRoomNo(), content.getMemberIds().get(i)) == 0) {
+					resNotice.setNoticeId(nService.getNoticeId());
+					resNotice.setNickname(mService.getMember(content.getMemberId()).getNickName());
+					resNotice.setNoticeType(2);
+					resNotice.setTargetId(content.getMemberIds().get(i));
+					resNotice.setMyId(content.getMemberId());
+					resNotice.setPostId(content.getRoomNo());
+					if (cService.checkMoimId(content.getRoomNo()) == 0) {
+						resNotice.setContentType(0);
+						resNotice.setProfileImge(mService.getMember(content.getMemberIds().get(i)).getProfileImg());
+					} else {
+						resNotice.setContentType(1);
+						resNotice.setProfileImge(moService.getMoimInfo(content.getRoomNo()).getMoimImg());
+					}
+					// db에 담을 정보
+					noticeVO.setMemberId(content.getMemberIds().get(i));
+					noticeVO.setAvatar(resNotice.getProfileImge());
+					noticeVO.setTitle(resNotice.getNickname() + "님으로 부터");
+					noticeVO.setSubtitle("새로운 메세지가 도착했습니다.");
+					noticeVO.setPostId(content.getRoomNo());
+					noticeVO.setNoticeType(2);
+					System.out.println("get memeber Id :  " + content.getMemberIds().get(i));
+
+					sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i) + "/notice", resNotice);
+					nService.insertNotice(noticeVO);
+
 				}
-				// db에 담을 정보
-				noticeVO.setMemberId(content.getMemberIds().get(i));
-				noticeVO.setAvatar(resNotice.getProfileImge());
-				noticeVO.setTitle(resNotice.getNickname()+"님으로 부터");
-				noticeVO.setSubtitle("새로운 메세지가 도착했습니다.");
-				noticeVO.setPostId(content.getRoomNo());
-				noticeVO.setNoticeType(2);
-				sendTemplate.convertAndSend("/queue/" + content.getMemberIds().get(i) + "/notice", resNotice);
-				nService.insertNotice(noticeVO);
 			}
 		}
 	}
@@ -80,15 +92,19 @@ public class MessageController {
 	@MessageMapping("/getSubscribeId")
 	public void getSubscribeId(String RoomNo) {
 		sendTemplate.convertAndSend("/topic/room/" + RoomNo, RoomNo);
+		
+		sendTemplate.convertAndSend("/queue/" + RoomNo + "/notice" ,"chatNotice");
 	}
+
 	@MessageMapping("/SubscribeId")
 	public void SubscribeId(String memberId) {
 		System.out.println(memberId);
-		sendTemplate.convertAndSend("/queue/" + memberId+"/notice", memberId);
+		sendTemplate.convertAndSend("/queue/" + memberId + "/notice", memberId);
 	}
+
 	@MessageMapping("/SubscribeIds")
 	public void SubscribeIds(String memberId) {
-		System.out.println("memberId : "+ memberId);
+		System.out.println("memberId : " + memberId);
 		sendTemplate.convertAndSend("/queue/" + memberId, memberId);
 	}
 
@@ -97,6 +113,9 @@ public class MessageController {
 	public void NoticeSns(ResNoticeVO resNotice) {
 		NoticeVO noticeVO = new NoticeVO();
 		if (!resNotice.getMyId().equals(resNotice.getTargetId())) {
+			System.out.println("문자열비교성공");
+			System.out.println(resNotice.getMyId());
+			System.out.println(resNotice.getTargetId());
 			if (resNotice.getMyId() != resNotice.getTargetId()) {
 				resNotice.setNoticeId(nService.getNoticeId());
 				noticeVO.setBoardType(resNotice.getBoardType());

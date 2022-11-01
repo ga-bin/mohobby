@@ -4,10 +4,8 @@
     <v-toolbar-title @click="$router.push('/').catch(() => { })" style="cursor: pointer;">
       <v-img src="../../../public/logo-dark.png" max-width="30"></v-img>
     </v-toolbar-title>
-    <v-toolbar-title 
-      style="font-weight: bolder; font-size: 1em; padding: 0px 10px; color: #1b243b;" 
-      v-if="this.$store.state.id"
-    >
+    <v-toolbar-title style="font-weight: bolder; font-size: 1em; padding: 0px 10px; color: #1b243b;"
+      v-if="this.$store.state.id">
       <span style="color: #2255b1">{{ this.$store.state.id }}</span>님, 오늘 모하비?
     </v-toolbar-title>
     <v-spacer />
@@ -25,6 +23,7 @@
     <v-spacer />
     <!-- <v-btn v-if="this.$store.state.id" icon/> -->
     <v-menu offset-y v-if="this.$store.state.id">
+
       <template style="margin-right:30px;" v-slot:activator="{ on, attrs }">
         <span id="bellspan" v-bind="attrs" v-on="on" style="cursor: pointer; margin-right:10px;">
           <v-badge v-if="!noticeCount" style="cursor: pointer;" offset-x="10" offset-y="10" color="transparent"
@@ -37,10 +36,11 @@
           </v-badge>
         </span>
       </template>
-      <v-list three-line width="400" height="400">
-        <v-toolbar color="#2ac187" dark>
+      <v-list three-line width="400" height="400" color="#fffff">
+        <v-toolbar color="#2255b1" dark>
           <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
           <v-toolbar-title>{{ this.$moment().format("YYYY-MM-DD") }}</v-toolbar-title>
+          <v-icon>mdi-bell</v-icon>
           <v-spacer></v-spacer>
           <v-btn color="white" class="black--text" rounded @click.prevent.stop="deleteAllNotice()">
             전체삭제
@@ -48,24 +48,25 @@
         </v-toolbar>
 
         <template v-for="(item, index) in items">
-            <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
-            <v-list-item v-else :key="item.title" @click="pageMove(item)">
-              <v-list-item-avatar>
-                <v-img :src="item.avatar"></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title v-html="item.title"></v-list-item-title>
-                <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-              </v-list-item-content>
-              <v-icon @click.prevent.stop="deleteNotice(item)" style="hover">close</v-icon>
-            </v-list-item>
+          {{                        items                        }}
+          <v-divider v-if="item.divider" :key="index" :inset="item.inset"></v-divider>
+          <v-list-item v-else :key="item.title" @click="pageMove(item)" style="background-color=red">
+            <v-list-item-avatar>
+              <v-img :src="item.avatar"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title v-html="item.title"></v-list-item-title>
+              <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+            </v-list-item-content>
+            <v-icon @click.prevent.stop="deleteNotice(item)" style="hover">close</v-icon>
+          </v-list-item>
         </template>
       </v-list>
     </v-menu>
     <v-btn v-if="!this.$store.state.id" @click="$router.push('/login')" elevation="0"
       style="margin-right:10px; border: none;" rounded color="#1b243b" dark>로그인</v-btn>
-    <v-btn v-if="!this.$store.state.id" @click="$router.push('/register')" elevation="0"
-      style="border: none;" rounded color="#1b243b" dark>회원가입</v-btn>
+    <v-btn v-if="!this.$store.state.id" @click="$router.push('/register')" elevation="0" style="border: none;" rounded
+      color="#1b243b" dark>회원가입</v-btn>
     <!-- <v-btn v-if="this.$store.state.id" icon> -->
     <v-menu offset-y v-if="this.$store.state.id">
       <template v-slot:activator="{ on, attrs }">
@@ -81,9 +82,10 @@
         </span>
       </template>
       <v-list three-line width="400" height="400">
-        <v-toolbar color="#2ac187" dark>
+        <v-toolbar color="#F36A3E" dark>
           <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
           <v-toolbar-title>{{ this.$moment().format("YYYY-MM-DD") }}</v-toolbar-title>
+          <v-icon>mail</v-icon>
           <v-spacer></v-spacer>
 
           <v-btn color="white" class="black--text" rounded @click.prevent.stop="deleteAllMsgNotice()">
@@ -116,8 +118,8 @@
     <v-btn v-if="this.$store.state.id" icon>
       <v-icon @click="$router.push('/mypageprofile')" color="#1b243b">mdi-account</v-icon>
     </v-btn>
-    <v-btn v-if="this.$store.state.id" @click="logout()" elevation="0"
-      style="border: none;" rounded color="#1b243b" dark>로그아웃</v-btn>
+    <v-btn v-if="this.$store.state.id" @click="logout()" elevation="0" style="border: none;" rounded color="#1b243b"
+      dark>로그아웃</v-btn>
   </v-app-bar>
 </template>
 <script>
@@ -148,7 +150,11 @@ export default {
       return this.$store.getters.getId
     }
   },
+
   watch: {
+
+
+
     getId(val, oldVal) {
       this.connect()
     }
@@ -166,6 +172,8 @@ export default {
 
       this.items = []
       this.messages = []
+
+      this.noticeMsgCount = 0;
       let vm = this;
       if (vm.$store.state.id != '') {
         this.axios
@@ -178,6 +186,7 @@ export default {
             for (let i = 0; i < res.data.length; i++) {
               if (res.data[i].noticeType == 2) {
                 let idx = vm.messages.findIndex(obj => obj.postId == res.data[i].postId)
+                console.log("idx : " + idx)
                 if (idx < 0) {
                   vm.messages.unshift({ divider: true, inset: true });
                   vm.messages.unshift({
@@ -225,7 +234,9 @@ export default {
               }
             }
             for (let i = 0; i < vm.messages.length - 1; i++) {
-              vm.noticeMsgCount = vm.noticeMsgCount + vm.messages[i].count
+              if (vm.messages[i].count) {
+                vm.noticeMsgCount = vm.noticeMsgCount + vm.messages[i].count
+              }
             }
             vm.noticeCount = ((vm.items.length) / 2)
             vm.stompClient.send("/app/SubscribeId", this.$store.state.id, (res) => {
@@ -240,153 +251,113 @@ export default {
     noticeRes() {
       let vm = this;
       if (vm.$store.state.id != '') {
+
         vm.stompClient.subscribe("/queue/" + this.$store.state.id + "/notice",
           function (res) {
             if (res.body == vm.$store.state.id) {
               vm.isUser = res.headers.subscription;
             }
+
             else {
               let resNotice = JSON.parse(res.body);
-              //sns 알림 처리
-              if (resNotice.noticeType == 0) {
-                vm.items.unshift({
-                  avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-                  title: resNotice.nickname + " 님이",
-                  subtitle: vm.subtitle,
-                  postId: resNotice.postId,
-                  noticeType: resNotice.noticeType,
-                  noticeId: resNotice.noticeId,
-                });
-                vm.items.unshift({ divider: true, inset: true })
-                ++vm.noticeCount
-              }
-              //소모임 알림 처리
-              else if (resNotice.noticeType == 1) {
-                //소모임 댓글 알림 처리
-                vm.items.unshift({ divider: true, inset: true })
-                if (resNotice.contentType == 0) {
-                  vm.subtitle = "댓글을 남기셨습니다."
-                } else if (resNotice.contentType == 1) {
-                  vm.subtitle = "새로운 게시글이 등록되었습니다."
-                }
-                vm.items.unshift({
-                  avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
-                  title: resNotice.nickname + " 님이",
-                  subtitle: vm.subtitle,
-                  postId: resNotice.postId,
-                  boardType: resNotice.boardType,
-                  moimId: resNotice.moimId,
-                  noticeType: resNotice.noticeType,
-                  noticeId: resNotice.noticeId,
-                });
-                ++vm.noticeCount;
-              }
-              //메신저 알림 처리
-              else if (resNotice.noticeType == 2) {
-                let idx = vm.messages.findIndex(obj => obj.postId == resNotice.postId)
-                if (idx < 0) {
-                  vm.messages.unshift({ divider: true, inset: true });
-                  vm.subtitle = "새로운 메세지가 도착했습니다.";
-                  vm.messages.unshift({
+              console.log("sId : " + vm.$store.state.id)
+              console.log("rId : " + resNotice.myId)
+
+              if (resNotice.myId !== vm.$store.state.id) {
+                console.log("TESTSTSETSETSET")
+                //sns 알림 처리
+                if (resNotice.noticeType == 0) {
+                  //sns - 좋아요 알림 처리
+                  if (resNotice.contentType == 0) {
+                    if (resNotice.likeStatus == 0) {
+                      vm.subtitle = "좋아요를 눌렀습니다.";
+                    } else if (resNotice.likeStatus == 1) {
+                      vm.subtitle = "좋아요를 취소했습니다.";
+                    }
+                  }  //sns - 댓글 알림 처리
+                  else if (resNotice.contentType == 1) {
+                    vm.subtitle = "댓글을 남겼습니다.";
+                  } else if (resNotice.contentType == 2) {
+                    vm.subtitle = "님이 언급했어요!"
+                  }
+                  vm.items.unshift({
                     avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-                    title: resNotice.nickname + "님으로 부터",
+                    title: resNotice.nickname + " 님이",
+                    subtitle: vm.subtitle,
+                    postId: resNotice.postId,
+                    noticeType: resNotice.noticeType,
+                    noticeId: resNotice.noticeId,
+                  });
+                  vm.items.unshift({ divider: true, inset: true })
+                  ++vm.noticeCount
+                  console.log("!!!!!!!!!!!!!!!")
+                  console.log(vm.noticeCount)
+                  console.log("!!!!!!!!!!!!!!!")
+                }
+                //소모임 알림 처리
+                else if (resNotice.noticeType == 1) {
+                  //소모임 댓글 알림 처리
+                  vm.items.unshift({ divider: true, inset: true })
+                  if (resNotice.contentType == 0) {
+                    vm.subtitle = "댓글을 남기셨습니다."
+                  } else if (resNotice.contentType == 1) {
+                    vm.subtitle = "새로운 게시글이 등록되었습니다."
+                  }
+                  vm.items.unshift({
+                    avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
+                    title: resNotice.nickname + " 님이",
                     subtitle: vm.subtitle,
                     postId: resNotice.postId,
                     boardType: resNotice.boardType,
                     moimId: resNotice.moimId,
                     noticeType: resNotice.noticeType,
                     noticeId: resNotice.noticeId,
-                    count: 1
-                  })
+                  });
+                  ++vm.noticeCount;
+
                 }
-                else {
-                  vm.messages[idx].count = vm.messages[idx].count + 1
-                  console.log("count : " + vm.messages[idx].count)
+                //메신저 알림 처리
+                else if (resNotice.noticeType == 2) {
+                  let idx = vm.messages.findIndex(obj => obj.postId == resNotice.postId)
+                  if (idx < 0) {
+                    vm.messages.unshift({ divider: true, inset: true });
+                    vm.subtitle = "새로운 메세지가 도착했습니다.";
+                    if (postId < 10000) {
+                      vm.messages.unshift({
+                        avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
+                        title: resNotice.nickname + "님으로 부터",
+                        subtitle: vm.subtitle,
+                        postId: resNotice.postId,
+                        boardType: resNotice.boardType,
+                        moimId: resNotice.moimId,
+                        noticeType: resNotice.noticeType,
+                        noticeId: resNotice.noticeId,
+                        count: 1
+                      })
+                    } else {
+                      vm.messages.unshift({
+                        avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
+                        title: resNotice.nickname + "님으로 부터",
+                        subtitle: vm.subtitle,
+                        postId: resNotice.postId,
+                        boardType: resNotice.boardType,
+                        moimId: resNotice.moimId,
+                        noticeType: resNotice.noticeType,
+                        noticeId: resNotice.noticeId,
+                        count: 1
+                      })
+                    }
+                  }
+                  else {
+                    vm.messages[idx].count = vm.messages[idx].count + 1
+                    console.log("count : " + vm.messages[idx].count)
+                  }
+                  vm.noticeMsgCount = vm.noticeMsgCount + 1
+                  console.log("noticeMsgCount: " + vm.noticeMsgCount)
                 }
-                vm.noticeMsgCount = vm.noticeMsgCount + 1
-                console.log("noticeMsgCount: " + vm.noticeMsgcount)
               }
             }
           });
-        // vm.stompClient.subscribe("/queue/" + this.$store.state.id + "/notice",
-        //   function (res) {
-        //     if(res.body==vm.$store.state.id){
-        //       vm.isUser = res.headers.subscription;}
-        //       else{
-        //       let resNotice = JSON.parse(res.body);
-        //       //sns 알림 처리
-        //       if (resNotice.noticeType == 0) {
-        //         //sns - 좋아요 알림 처리
-        //         if (resNotice.contentType == 0) {
-        //           if (resNotice.likeStatus == 0) {
-        //             vm.subtitle = "좋아요를 눌렀습니다.";
-        //           } else if (resNotice.likeStatus == 1) {
-        //             vm.subtitle = "좋아요를 취소했습니다.";
-        //           }
-        //         }  //sns - 댓글 알림 처리
-        //         else if (resNotice.contentType == 1) {
-        //           vm.subtitle = "댓글을 남겼습니다.";
-        //         } else if (resNotice.contentType == 2) {
-        //           vm.subtitle = "님이 언급했어요!"
-        //         }
-        //         vm.items.unshift({
-        //           avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-        //           title: resNotice.nickname + " 님이",
-        //           subtitle: vm.subtitle,
-        //           postId: resNotice.postId,
-        //           noticeType: resNotice.noticeType,
-        //           noticeId: resNotice.noticeId,
-        //         });
-        //         vm.items.unshift({ divider: true, inset: true })
-        //         ++vm.noticeCount
-        //       }
-        //       //소모임 알림 처리
-        //       else if (resNotice.noticeType == 1) {
-        //         //소모임 댓글 알림 처리
-        //         vm.items.unshift({ divider: true, inset: true })
-        //         if (resNotice.contentType == 0) {
-        //           vm.subtitle = "댓글을 남기셨습니다."
-        //         } else if (resNotice.contentType == 1) {
-        //           vm.subtitle = "새로운 게시글이 등록되었습니다."
-        //         }
-        //         vm.items.unshift({
-        //           avatar: require(`@/assets/image/moim/${resNotice.profileImge}`),
-        //           title: resNotice.nickname + " 님이",
-        //           subtitle: vm.subtitle,
-        //           postId: resNotice.postId,
-        //           boardType: resNotice.boardType,
-        //           moimId: resNotice.moimId,
-        //           noticeType: resNotice.noticeType,
-        //           noticeId: resNotice.noticeId,
-        //         });
-        //         ++vm.noticeCount;
-        //       }
-        //       //메신저 알림 처리
-        //       else if (resNotice.noticeType == 2) {
-        //         let idx = vm.messages.findIndex(obj => obj.postId == resNotice.postId)
-        //         if (idx < 0) {
-        //           vm.messages.unshift({ divider: true, inset: true });
-        //           vm.subtitle = "새로운 메세지가 도착했습니다.";
-        //           vm.messages.unshift({
-        //             avatar: require(`@/assets/image/user/${resNotice.profileImge}`),
-        //             title: resNotice.nickname + "님으로 부터",
-        //             subtitle: vm.subtitle,
-        //             postId: resNotice.postId,
-        //             boardType: resNotice.boardType,
-        //             moimId: resNotice.moimId,
-        //             noticeType: resNotice.noticeType,
-        //             noticeId: resNotice.noticeId,
-        //             count: 1
-        //           })
-        //         }
-        //         else {
-        //           vm.messages[idx].count = vm.messages[idx].count + 1
-        //           console.log("count : " +vm.messages[idx].count)
-        //         }
-        //         vm.noticeMsgCount=vm.noticeMsgCount+1
-        //         console.log("noticeMsgCount: "+ vm.noticeMsgcount)
-        //       }
-        //   }});
       }
     },
     //알림 삭제
