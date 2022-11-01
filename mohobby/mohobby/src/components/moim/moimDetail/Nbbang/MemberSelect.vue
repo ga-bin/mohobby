@@ -26,7 +26,7 @@
             <v-col cols="12" sm="6" md="4" class="mt-5">
               <div>전체선택</div>
             </v-col>
-            <v-col cols="12" sm="6" md="6" class="mt-5">
+            <v-col cols="12" sm="6" md="6">
               <v-spacer></v-spacer>
               <div class="select">
                 <v-checkbox id="check" v-model="test1" @click="selectAll()" color="light-green" hide-details></v-checkbox>
@@ -40,14 +40,14 @@
           <v-row v-for="(member, idx) in members" :key="idx">
             <v-col cols="12" sm="6" md="2">
               <v-avatar class="mb-4" color="grey darken-1" size="64">
-                <v-img aspect-ratio="30" :src="src"></v-img>
+                <v-img :src="profile[idx].avatar"></v-img>
               </v-avatar>
             </v-col>
             <v-col cols="12" sm="6" md="4" class="mt-5" id="check">
               <div>{{ member.memberId }}</div>
             </v-col>
 
-            <v-col cols="12" sm="6" md="6" class="mt-5">
+            <v-col cols="12" sm="6" md="6">
               <v-spacer></v-spacer>
               <div class="select">
                 <v-checkbox v-model="select" @click="minus()" color="light-green" :value="member.memberId" hide-details></v-checkbox>
@@ -78,6 +78,7 @@ export default {
       members: [], //멤버 전체 조회
       select: [], //선택된 멤버 담는 배열
       checked: [],
+      profile : [] ,
       moimId: this.$route.params.moimId,
       memberId: "",
       dialog: false,
@@ -105,6 +106,7 @@ export default {
       this.$emit('update:totalPrice', this.newPrice)
     },
     selectMember() {
+      let vm = this
       this.axios
         .get("/moimMemberList", {
           params: {
@@ -117,6 +119,18 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+        }).finally(()=>{
+          for(let i=0; i<vm.members.length; i++){
+            vm.axios.get("/getImg",{
+              params:{
+                memberId : vm.members[i].memberId
+              }
+            }).then((response)=>{
+              this.profile.push({avatar: require(`@/assets/image/user/${response.data}`)})
+            }).catch((err)=>{
+              console.log(err)
+            })
+          }
         });
     },
     searchMember() {

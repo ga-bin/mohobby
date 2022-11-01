@@ -45,7 +45,7 @@
 	<!-- 인기소모임 조회 -->
 	<select id="moimPopularSelect"
 		resultType="com.yedam.mohobby.service.moim.MoimVO">
-		SELECT * FROM moim <![CDATA[where rownum <= 6]]>
+		SELECT * FROM moim 
 		ORDER BY reg_cnt DESC
 	</select>
 
@@ -523,11 +523,11 @@
 	<!-- 소모임 가입조건 수정 -->
 	<update id="updateSetting"
 		parameterType="com.yedam.mohobby.service.moim.MoimVO">
-		update moim set max_age = #{maxAge},
+		UPDATE moim SET max_age = #{maxAge},
 		min_age = #{minAge},
 		gender = #{gender},
 		max_people = #{maxPeople}
-		where moim_id = #{moimId}
+		WHERE moim_id = #{moimId}
 	</update>
 
 	<!-- 게시글 삭제 -->
@@ -593,7 +593,7 @@
       UPDATE moim_dutch_ptp
       SET calc_check =#{calcCheck}
       WHERE member_id = #{memberId}
-      and dutch_id = #{dutchId}
+      AND dutch_id = #{dutchId}
    </update>
 
 	<!-- 게시판 수정 -->
