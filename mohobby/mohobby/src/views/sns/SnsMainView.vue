@@ -115,8 +115,6 @@ data() {
             noResult: false, //검색결과 없음 페이지
 
             followType: Number,
-        }
-    },
         keyword: "", //v-model키워드값
         temp: "", //임시 키워드 저장소
         member: this.$store.state.id,
@@ -207,7 +205,6 @@ methods: {
         }).catch(function (err) {
             console.log(err)
         })
-    },
 
             this.temp = "'" + keyword + "'에 대한 검색결과입니다";
             this.axios('/sns/search/user', {
