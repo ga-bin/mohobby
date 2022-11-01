@@ -7,8 +7,8 @@
         <v-tab @click="show=true">팔로워 목록</v-tab>
         <v-tab @click="show=false">팔로잉 목록</v-tab>
       </v-tabs>
-      <Follow v-if="show == true" :userResult = "followerLists" :keyword = "follower" :followerCheck ="followerCheck" />
-      <Follow v-else :userResult = "followingLists" :keyword = "following" :followerCheck ="followerCheck" />
+      <Follow v-if="show == true" :userResult = "followerLists" :keyword = "follower" :followerCheck ="followerCheck" :followType =1 @updateFollow="updateFollow" />
+      <Follow v-else :userResult = "followingLists" :keyword = "following"  :followType =0 @updateFollow="updateFollow" />
 
       <NoFollow v-show="noShow == true" :keyword="keyword" />
 
@@ -35,7 +35,7 @@
         followerLists: [], //나를 구독하는 사람들
         follower:"",
         following:"",
-
+        
         followers: [],
         followings: [],
 
@@ -63,7 +63,10 @@
   
     },
     methods: {
-
+      updateFollow(){
+        console.log(1231312321321321321)
+        this.getFollowerList();
+      },
       //손절 체크
       checkFollowState(){
         this.followerCheck= []; //쌓이지 않게 초기화
