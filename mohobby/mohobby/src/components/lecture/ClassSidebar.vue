@@ -18,6 +18,7 @@
         :key="link.index"
         :prepend-icon="link.icon"
         no-action
+        color="#2255b1"
       >
         <template v-slot:activator>
           <v-list-item-content>
@@ -26,7 +27,7 @@
         </template>
 
         <v-list shaped subheader>
-          <v-list-item-group color="primary">
+          <v-list-item-group color="#2255b1">
             <template v-for="subheader in link.subheaders">
               <v-subheader :key="subheader.text" v-if="subheader.text != ''">{{
                 subheader.text

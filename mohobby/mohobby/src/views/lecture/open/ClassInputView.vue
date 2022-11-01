@@ -392,7 +392,7 @@ export default {
       step3: false,
       step4: false,
       step5: false,
-      step6: true,
+      step6: false,
       step7: false,
       startTime: 8,
       endTime: 17,

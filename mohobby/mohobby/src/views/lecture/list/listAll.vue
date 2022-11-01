@@ -52,7 +52,7 @@
                 v-for="item in itemList"
                 :key="item.classId"
                 :content="item.classType === 0 ? 'ONLINE' : 'OFFLINE'"
-                :color="item.classType === 0 ? 'green' : 'red'"
+                :color="item.classType === 0 ? '#2255b1' : '#F36A3E'"
                 style="padding: 15px"
             >
                 <div>
@@ -66,7 +66,7 @@
                     >
                 
                         <v-btn
-                            :color="item.jjim == 1 ? 'pink' : 'gray'"
+                            :color="item.jjim == 1 ? '#ec68a5' : 'gray'"
                             icon
                             small
                             absolute
@@ -132,7 +132,7 @@ export default {
                 {
                     title: 'All',
                     click: true,
-                    color: 'green',
+                    color: '#2255b1',
                 },
                 {
                     title: 'ON',
@@ -176,7 +176,7 @@ export default {
 
             for(let i = 0 ; i < btnList.length; i++) {
                 if(btnList[i] === current) {
-                    this.selectList[i].color='green';
+                    this.selectList[i].color='#2255b1';
                     this.selectList[i].click=true;
 
                 } else {

@@ -1,66 +1,64 @@
 <template>
+<v-app>
+    <v-container style="max-width: 350px;">
+        <v-layout row style="padding: 40px 0px 0px 0px;">
+            <v-flex xs12>
+            <v-card elevation="0">
+                <div>
+                <h1 style="text-align: center">
+                    출결
+                </h1>
+                <form v-on:submit.prevent="checkMember">
+                    <v-text-field
+                    label="아이디"
+                    prepend-inner-icon="mdi-account"
+                    color="#2255b1"
+                    v-model="memberId"
+                    ></v-text-field>
+                    <v-text-field
+                    color="#2255b1"
+                    prepend-inner-icon="mdi-lock"
+                    type="password"
+                    label="비밀번호"
+                    v-model="password"
+                    >
+                    </v-text-field>
+                    <v-btn
+                    type="submit"
+                    color="#F9E000"
+                    depressed
+                    large
+                    block
+                    class="mb-3"
+                    >
+                    Login
+                    </v-btn>
+                    <br />
+                    <div class="d-flex justify-center">
 
-    <!-- The content half -->
-    <div id="login">
-        <!-- Demo content-->
-            <v-app 
-                id="inspire" 
-                style="margin-top: -70px;"
-            >
-                <!-- login component -->
-                <v-container 
-                    style="max-width: 300px" 
-                    fill-height
-                >
-                    <v-flex>
-                    <v-card outlined>
-                        <div class="pa-10">
-                        <h1 style="text-align: center">
-                            Login
-                        </h1>
-                        <v-text-field
-                            label="아이디"
-                            prepend-inner-icon="mdi-account"
-                            color="#2ac187"
-                            v-model="memberId"
-                        ></v-text-field>
-                        <v-text-field
-                            color="#2ac187"
-                            prepend-inner-icon="mdi-lock"
-                            type="password"
-                            label="비밀번호"
-                            v-model="password"
-                        >
-                        </v-text-field>
-                        <v-btn
-                            color="#2ac187"
-                            large
-                            block
-                            dark
-                            class="my-3"
-                            id="loginbtn"
-                            @click="checkMember()"
-                        >
-                            Login
-                        </v-btn>
-                        <p style="text-align: center;">
+                    <!-- <p style="text-align: center;"> -->
                         <a id="custom-login-btn" @click="kakaoLogin()">
                         <img
                             src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png"
-                            style="height: 50px; width: 195px;"
+                            style="height: 40px;
+                            width: 185px;
+                            margin-right: 5px;
+                            "
                         />
                         </a>
-                        </p>
+                    </div>
+                    <div class="d-flex justify-center">
+                        <!-- </p> -->
                         <!-- <p style="text-align: center;"> -->
                         <div id="naverIdLogin"></div>
-                        </div>
-                    </v-card>
-                    </v-flex>
-                </v-container>
-            </v-app>
-        <!-- End -->
-    </div>
-    <!-- End -->
+                    </div>
+                </form>
+                </div>
+            </v-card>
+            </v-flex>
+        </v-layout>
+        </v-container>
+    </v-app>
 </template>
 
 <script>
@@ -86,11 +84,53 @@ export default {
                 4: 'EXIT_DATE',     //퇴실
                 5: 'COMEBACK_DATE'  //복귀
             },
+            naverLogin: null,
         }
     },
     mounted() {
+            // login페이지 띄울때 무조건 로그아웃
+        this.$store.commit("setIsLoginFalse");
+        this.$store.commit("logout");
+        this.$store.commit("setUserData", null);
+
+        this.naverLogin = new window.naver.LoginWithNaverId({
+        clientId: "qtK4gDKw7gcdHhTwYZpV",
+        callbackUrl: "http://localhost:8080/login",
+        isPopup: false, // 팝업을 통한 연동 처리여부
+        loginButton: {
+            color: "green",
+            type: 3,
+            height: 40,
+            width: 150,
+        }, // 로그인 버튼의 타입을 지정
+        });
+
+        // 설정 정보를 초기화하고 연동을 준비
+        this.naverLogin.init();
+
+        this.naverLogin.getLoginStatus((status) => {
+        const vm = this;
+        if (status) {
+            console.log(status);
+            console.log(this.naverLogin.user);
+
+            // 필수적으로 받아야하는 프로필 정보가 있다면 callback처리 시점에 체크
+            var email = this.naverLogin.user.getEmail();
+            if (email == "undifined" || email == null) {
+            alert("이메일은 필수 정보입니다. 정보 제공을 동의해주세요.");
+            // 사용자 정보 재동의를 위해 다시 네이버 동의 페이지로 이동함
+            this.naverLogin.reprompt();
+            return;
+            }
+            vm.email = email;
+            vm.checkMemberByEmail();
+        } else {
+            console.log("callback 처리에 실패하였습니다.");
+        }
+        });
     },
     created() {
+        document.querySelector("header").innerHTML='';
         this.checkTimeLimit();
     },
     methods: {

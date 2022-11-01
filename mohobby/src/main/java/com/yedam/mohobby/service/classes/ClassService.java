@@ -18,6 +18,9 @@ public interface ClassService {
 	//전체조회
 	public List<ClassesVO> listAll(ClassListRequestVO req);
 	
+	//모집중인 강의 조회
+	public List<ClassesVO> listOnClass();
+	
 	//단건조회
     public ClassesVO listOne(ClassListRequestVO req);
     

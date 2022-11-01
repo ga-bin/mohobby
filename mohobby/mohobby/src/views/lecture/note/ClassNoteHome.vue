@@ -58,6 +58,11 @@
 import Vue from "vue";
 export default Vue.extend({
   name: "MyNoteHome",
+  data() {
+    return{
+      info: {},
+    }
+  },
 });
 </script>
 

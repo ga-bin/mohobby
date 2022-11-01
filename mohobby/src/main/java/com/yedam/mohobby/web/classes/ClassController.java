@@ -98,6 +98,11 @@ public class ClassController {
 	    return classService.listAll(req);
 	}
 	
+	//모집중인 강의 조회
+	@GetMapping("/class/on")
+	public @ResponseBody List<ClassesVO> listOnClass() {
+		return classService.listOnClass();
+	}
 	
 	//강의 단건 조회
 	/**
