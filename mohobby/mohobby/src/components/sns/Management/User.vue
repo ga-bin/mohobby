@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="mx-auto" width="800" min-height="520">
-      <v-toolbar color="#2ac187" dark> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ keyword }}</v-toolbar>
+      <v-toolbar color="#2255b1" dark> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ keyword }}</v-toolbar>
       <v-list three-line>
         <div v-for="(user, i) in userResult" :key="i">
           <template>
@@ -9,53 +9,48 @@
             <v-list-item>
               <v-list-item-avatar>
                 <!-- 팔로워 목록 클릭시 -->
-                <v-img v-if="followType" @click="goUserProfile(user.followerId)"
+                <v-img v-if="followType === 1" @click="goUserProfile(user.followingId)"
                   :src="require(`@/assets/image/user/${user.profileImg}`)" />
 
                 <!-- 팔로잉 목록 클릭시 -->
-                <v-img v-else-if="!followType" @click="goUserProfile(user.followingId)"
+                <v-img v-else-if="followType === 2" @click="goUserProfile(user.followerId)"
                   :src="require(`@/assets/image/user/${user.profileImg}`)" />
 
                 <!-- 유저검색 -->
-                <!-- <v-img v-if= "user.memberId" @click="goUserProfile(user.memberId)" :src="require(`@/assets/image/user/${user.profileImg}`)" /> -->
+                <v-img v-else-if="followType === 3" @click="goUserProfile(user.memberId)" :src="require(`@/assets/image/user/${user.profileImg}`)" />
               </v-list-item-avatar>
               <v-list-item-content>
 
 
-                <div v-if="followType">
+                <div v-if="followType === 1">
                   <!-- 팔로워 목록 : followerId -> 구독 당하는 사람이 나임  -->
                   <v-list-item-title v-html="user.followingId" />
                 </div>
+
+                
                 <!-- 팔로잉 목록 : followingId -> 구독 하는 사람이 나임 -->
-                <div v-else-if="!followType">
+                <div v-else-if="followType === 2">
                   <v-list-item-title v-html="user.followerId" />
                 </div>
+
+
+                <!-- 유저검색 목록: memberId -->
                 <div v-else>
-                  <!-- 유저검색 목록: memberId -->
                   <v-list-item-title v-show="user.memberId" v-html="user.memberId" />
                   <v-list-item-subtitle v-html="user.nickname" />
                 </div>
               </v-list-item-content>
 
-              <!-- 팔로우 = 구독 -> 내가 구독 안한상태면 활성화 -->
-              <!-- 0을 이해할 수 없는 오류 -->
-              <!-- <v-btn v-show="followerCheck[i] === 0"
-                        @click="follow(memberId,users[i].followingId)"
-                        rounded color="white" class="#2ac187--text">팔로우</v-btn> -->
-              <!-- 언팔로 - 팔로워 -->
-              <!-- 구독하는 사람이 나고,  팔로체크 1 맞팔 userId = users[i].followerId -->
-
-              <div v-if="followType">
-                <v-btn v-if="followerCheck[i] == 1" @click="unfollow( user.followerId,user.followingId)" rounded
-                  color="#2ac187" class="white--text">언팔로우</v-btn>
+              <!-- 팔로우 = 내가 구독 안한상태면 활성화 -->
+              <div v-if="followType == 1">
+                <v-btn v-if="followerCheck[i] == 1" @click="unfollow(user.followerId,user.followingId)" rounded
+                  color="#F36A3E" class="white--text">언팔로우</v-btn>
 
                 <v-btn v-else-if="followerCheck[i] == 0" @click="followup(user.followingId, user.followerId)" rounded
-                  color="#2ac187" class="white--text">팔로우</v-btn>
+                  color="#2255b1" class="white--text">팔로우</v-btn>
               </div>
               <div v-else>
-                <!-- 언팔로 - 팔로잉리스트엔 전부 -->
-                <!-- 구독하는 사람이 나임. userId = users[i].followingId -->
-                <v-btn @click="unfollow(user.followerId,user.followingId)" rounded color="#2ac187" class="white--text">언팔로우
+                <v-btn @click="unfollow(user.followerId,user.followingId)" rounded color="#2ac187" class="white--text"> 언팔로우
                 </v-btn>
               </div>
             </v-list-item>
@@ -71,7 +66,7 @@ export default {
   name: "UserResult",
   components: { CmtReg },
   props: {
-    followType: Boolean,
+    followType: Number,
     userResult: [], //유저검색 결과
     keyword: String, //키워드
     followerCheck: [], //팔로우 여부 체크 . 1:맞팔
@@ -136,7 +131,7 @@ export default {
       
           console.log("언팔로우 성공! " + res);
      
-this.$emit("updateFollow")
+      this.$emit("updateFollow")
         })
         .catch((err) => {
           console.log(err);
@@ -145,4 +140,3 @@ this.$emit("updateFollow")
   }
 }
 </script>
-

@@ -1,59 +1,47 @@
 <template>
-    <v-container id="main">
+        <v-container id="main">
 
 
-            <!-- 검색창 끝 -->
-            <div class="mx-auto" style="width:500px;">
-                <v-text-field class="rounded-xl mx-auto" v-model="keyword" label="해시태그나 유저 아이디를 검색해보세요!" dense
-                    outlined append-icon="mdi-magnify" @keydown.enter="search(keyword)" style="height:50px" />
+                <!-- 검색창 끝 -->
+                <div class="mx-auto" style="width:500px;">
+                    <v-text-field class="rounded-xl mx-auto" v-model="keyword" label="해시태그나 유저 아이디를 검색해보세요!" dense
+                        outlined append-icon="mdi-magnify" @keydown.enter="search(keyword)" style="height:50px" />
 
-                <!-- 상단바 HOT해시태그 (키워드검색) -->
-                <div id="chip" style="width:500px;">
-                    <v-sheet ref="getHashtag">
-                        <v-chip-group active-class="primary--text">
-                            <v-chip @click="searchHashtag(item.hashtag)" justify="space-around"
-                                v-for="(item, i) in items" :key="i" color="#1862C9"
-                                class="mx-auto white--text font-weight-bold">
-                                #{{ item.hashtag }}
-                            </v-chip>
-                        </v-chip-group>
-                    </v-sheet>
+                    <!-- 상단바 HOT해시태그 (키워드검색) -->
+                    <div id="chip" style="width:500px;">
+                        <v-sheet ref="getHashtag">
+                            <v-chip-group active-class="primary--text">
+                                <v-chip @click="searchHashtag(item.hashtag)" justify="space-around"
+                                    v-for="(item, i) in items" :key="i" color="#1862C9"
+                                    class="mx-auto white--text font-weight-bold">
+                                    #{{ item.hashtag }}
+                                </v-chip>
+                            </v-chip-group>
+                        </v-sheet>
+                    </div>
                 </div>
-            </div>
-            <div v-show = "member" style="float:right">
-                    <!-- 내 피드 버튼 -->
-                    <v-btn  @click="goMyFeed(member)"
-                            title="내 프로필로"
-                            icon
-                            style="position:relative; font-size: 1px;" 
-                            class="mr-5 mx-auto black--text font-weight-bold">
-                            <v-icon color="#2255b1"
-                                    class="mx-auto mb-1"
-                                    style="position:absolute;"
-                                    outline
-                                    left>mdi-robot-love
-                            </v-icon>
-                        </v-btn>
-                        
-                        <!-- 글쓰기 버튼 -->
-                        <v-btn @click="regFeedForm(member)"
-                                title="글쓰기"
-                                icon 
-                                class="mx-auto black--text font-weight-bold">
-                            <v-icon color="#2255b1" left>mdi-lead-pencil</v-icon>
-                        </v-btn>
-            </div>
-
-
-            <!-- 검색컴포넌트 
-            검색결과가 있을땐 show를 트루로 바꿔서 HotList가 안보이게되도록.
-        -->
-
-            <!-- HOT강의리스트 -->
-            <div v-if="hotLectureFeeds == true">
-                <div>
-                    <h3>추천 만능 재주꾼들 피드</h3>
-                    <HotLecturer name="this.items" />
+                <div v-show = "member" style="float:right">
+                        <!-- 내 피드 버튼 -->
+                        <v-btn  @click="goMyFeed(member)"
+                                title="내 프로필로"
+                                icon
+                                style="position:relative; font-size: 1px;" 
+                                class="mr-5 mx-auto black--text font-weight-bold">
+                                <v-icon color="#2255b1"
+                                        class="mx-auto mb-1"
+                                        style="position:absolute;"
+                                        outline
+                                        left>mdi-robot-love
+                                </v-icon>
+                            </v-btn>
+                            
+                            <!-- 글쓰기 버튼 -->
+                            <v-btn @click="regFeedForm(member)"
+                                    title="글쓰기"
+                                    icon 
+                                    class="mx-auto black--text font-weight-bold">
+                                <v-icon color="#2255b1" left>mdi-lead-pencil</v-icon>
+                            </v-btn>
                 </div>
 
                 <!-- 피드 -->
@@ -79,10 +67,10 @@
             </div>
 
 
-            <!-- 유저 검색 페이지-->
-            <div v-if="userSearch == true">
-                <UserResult :userResult="userResult" :followType =2 :keyword="temp" :followerCheck="followerCheck" />
-            </div>
+                <!-- 유저 검색 페이지-->
+                <div v-if="userSearch == true">
+                    <UserResult :userResult="userResult" :followType = "followType" :keyword="temp" />
+                </div>
 
             <div v-if="noResult == true">
                 <NoResult :keyword="temp" />
@@ -119,16 +107,20 @@ data() {
 
         // searchResult: "",//검색창에서 받아온 결과
 
+            //컴포넌트 v-if조건
+            tagSearch: false, //해시태그검색페이지
+            userSearch: false, //유저검색페이지
+            hotLectureFeeds: false, //HOT LIST 페이지
+            randomFeeds: false, //ALL LIST 페이지
+            noResult: false, //검색결과 없음 페이지
+
+            followType: Number,
+        }
+    },
         keyword: "", //v-model키워드값
         temp: "", //임시 키워드 저장소
         member: this.$store.state.id,
 
-        //컴포넌트 v-if조건
-        tagSearch: false, //해시태그검색페이지
-        userSearch: false, //유저검색페이지
-        hotLectureFeeds: false, //HOT LIST 페이지
-        randomFeeds: false, //ALL LIST 페이지
-        noResult: false, //검색결과 없음 페이지
 
         //팔로우관리
         followerLists: [],
@@ -217,18 +209,31 @@ methods: {
         })
     },
 
-    /*
-        로그인 한 회원    
-    */
-    //팔로잉 리스트조회
-    getFollowingList() {
+            this.temp = "'" + keyword + "'에 대한 검색결과입니다";
+            this.axios('/sns/search/user', {
+                params: {
+                    memberId: keyword
+                }
+            }).then(res => {
+               
+                this.userResult = res.data;
+                this.followType = 3;
+                this.keyword = "";
 
-        this.axios('/sns/main/followingFeeds/' + this.member)
-            .then(res => {
-                console.log(res.data);
-                this.feeds = res.data;
-                if (this.feeds.length < 1) { //피드값이 없으면 전체리스트 호출
-                    this.getAllList();
+                //페이지 노출여부 컨트롤
+                if (this.userResult.length < 1) {
+                    this.noResult = true;
+                    this.userSearch = false;
+                    this.tagSearch = false;
+                    this.hotLectureFeeds = false;
+                    this.randomFeeds = false;
+
+                } else {
+                    this.userSearch = true;
+                    this.tagSearch = false;
+                    this.hotLectureFeeds = false;
+                    this.randomFeeds = false;
+                    this.noResult = false;
                 }
                 console.log("팔로잉목록 호출 성공");
             }).catch(err => {

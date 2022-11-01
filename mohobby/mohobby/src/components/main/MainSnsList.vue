@@ -17,8 +17,9 @@
                 <img class="card-photo" :src="require(`@/assets/image/sns/${info.postId}/${info.thumbnail}`)" alt="썸네일">
               </div>
               <p class="card-text">{{ info.content }}</p>
-              <div class="card-like" height="32" width="32">
-                <div style="width:130px;"><v-icon color="#2ac187">mdi-heart</v-icon> {{ info.likes }} likes</div>       
+              <div class="card-like" height="32" width="100">
+                <div style="width:130px;">
+                  <v-icon color="#bdbdbd">mdi-heart</v-icon> {{ info.likes }} likes</div>
               </div>
               <button class="card-button">More</button>
             </div>

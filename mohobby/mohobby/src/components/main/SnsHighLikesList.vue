@@ -24,9 +24,8 @@
                 <v-spacer></v-spacer>
 
                 <v-btn icon>
-                  <v-icon color="red">mdi-heart</v-icon>
+                  <v-icon color="#bdbdbd">mdi-heart</v-icon>
                 </v-btn>
-
                 <span>{{ snsfeed.likes }}</span>
               </v-card-actions>
             </v-card>

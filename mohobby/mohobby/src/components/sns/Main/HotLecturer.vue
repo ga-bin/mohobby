@@ -6,9 +6,9 @@
     <v-slide-group class="pa-2">
         <v-slide-item  v-for="(info,i) in infoList" :key="i" style="width:280px;">
           <div class="card card-first">
-            <div class="card-header-wrapper" @click="goMyFeed(info.memberId)">
+            <div class="card-header-wrapper" @click="goUserFeed(info.memberId)">
                 <h2 class="card-title"></h2>
-                <h4 class="card-subtitle" style="cursor:pointer;">{{info.memberId}}</h4>
+                <h4 class="card-subtitle"><span class="subtitle_userId">{{info.memberId}}</span></h4>
                 <div class="card-avatar-wrapper" style="width:200px;">
                     <img class="card-avatar" :src="require(`@/assets/image/user/${info.profileImg}`)" alt="프로필사진" style="cursor:pointer;">
                 </div>
@@ -20,9 +20,9 @@
             <p class="card-text">{{ info.content }}</p>
             <div class="card-like" height="32" width="32">
                 <div style="width:130px;">
-                  <v-icon color="#bdbdbd">mdi-heart</v-icon> {{ info.likes }} likes
+                  <v-icon color="#bdbdbd">mdi-heart</v-icon> {{ info.likes }} 좋아요
                   <v-icon color="#bdbdbd" class="ml-1 mr-1">mdi-chat-outline</v-icon>
-                  <span class="mr-2 mt-1">{{ info.cmts }}</span>
+                  <span class="mr-2 mt-1">{{ info.cmts }} 개</span>
                 </div>
             </div>
             <button class="card-button" @click="getFeedDetail(info.memberId, info.postId)">More</button>
@@ -77,7 +77,7 @@ export default {
 
 
     //유저피드로 이동
-    goMyFeed(userId) {
+    goUserFeed(userId) {
       this.$router.push({ path: "/snsUserFeed", query: { userId: userId } });
     },
   },

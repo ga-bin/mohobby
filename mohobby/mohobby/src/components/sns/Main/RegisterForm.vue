@@ -167,7 +167,7 @@
         </v-container>
       </form>
     </v-card>
-    <v-btn @click="uploadImage" rounded color="#2ac187" class="white--text">가보자고</v-btn>
+    <v-btn @click="uploadImage" rounded color="#2ac187" class="white--text" style="float:right;">등록</v-btn>
   </div>
 </template>
 
@@ -317,12 +317,12 @@ methods: {
 
 
     //파일 이름 중복 검사
-    if(this.fileList.length > 1 && this.fListName.indexOf(file.name) !== -1){
-      this.$swal("중복되는 파일은 등록이 불가합니다🙏");
-      this.file = "";
-      this.fListName = [];
-      return;
-    }
+    // if(this.fileList.length > 1 && this.fListName.indexOf(file.name) !== -1){
+    //   this.$swal("중복되는 파일은 등록이 불가합니다🙏");
+    //   this.file = "";
+    //   this.fListName = [];
+    //   return;
+    // }
 
     
     //파일 형식 검사

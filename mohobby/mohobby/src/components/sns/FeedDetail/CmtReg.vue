@@ -15,7 +15,7 @@
         <v-spacer></v-spacer>
         <!-- 댓글 등록버튼 -->
         <div style="margin-right: 80px">
-          <v-btn @click="regCmt()" class="ma-2 white--text" color="#2ac187" dense rounded>등록</v-btn>
+          <v-btn @click="regCmt()" class="ma-2 white--text" color="#2255b1" dense rounded>등록</v-btn>
         </div>
       </v-card-actions>
     </div>
@@ -43,14 +43,14 @@
             댓글 쓴 사람과 로그인세션 아이디가 같을 떄  수정, 삭제, 답장 버튼
            -->
           <div class="btn">
-            <v-btn v-if="btnStatus[idx].replyBtn == true" x-small outlined color="dark-grey" class="mr-3"
+            <v-btn v-if="btnStatus[idx].replyBtn == true" x-small color="#e9e9ec" class="mr-3"
               @click="showRegReCmt(cmt.commId, cmt.memberId, idx)">답장
             </v-btn>
-            <v-btn v-if="cmt.memberId == memberId && btnStatus[idx].saveBtn == true" x-small outlined color="success"
+            <v-btn v-if="cmt.memberId == memberId && btnStatus[idx].saveBtn == true" x-small outlined color="#2255b1"
               class="mr-3" @click="editCmt(cmt.commId, idx)">저장</v-btn>
-            <v-btn v-if="cmt.memberId == memberId && btnStatus[idx].editBtn == true" x-small outlined color="success"
+            <v-btn v-if="cmt.memberId == memberId && btnStatus[idx].editBtn == true" x-small outlined color="#2255b1"
               class="mr-3" @click="showEditForm(cmt.commId, idx)">수정</v-btn>
-            <v-btn v-if="cmt.memberId == memberId && btnStatus[idx].deleteBtn == true" x-small outlined color="error"
+            <v-btn v-if="cmt.memberId == memberId && btnStatus[idx].deleteBtn == true" x-small outlined color="#F36A3E"
               @click="deleteCmt(cmt.commId, cmt.targetId, idx)">
               삭제</v-btn>
             <v-btn v-if="btnStatus[idx].cancelBtn == true"
@@ -79,13 +79,13 @@
           <div v-if="btnStatus[idx].replyForm == true">
             <v-card-actions>
               <v-col cols="10">
-                <v-text-field class="m1-11" filled rounded solo dense hide-details :prefix="cmtMemberId"
+                <v-text-field class="m1-11" dense filled rounded solo hide-details :prefix="cmtMemberId"
                   v-model="inputReCmt" name="content" @keydown.enter="regReCmt(cmt.commId, cmt.memberId)" />
               </v-col>
               <v-spacer></v-spacer>
               <!-- 대댓글 등록버튼 -->
               <div style="margin-right: 80px">
-                <v-btn class="ma-2 white--text" color="#2ac187" rounded @click="regReCmt(cmt.commId, cmt.memberId)">등록
+                <v-btn small class="ma-2 white--text" color="#2255b1" rounded @click="regReCmt(cmt.commId, cmt.memberId)">등록
                 </v-btn>
               </div>
             </v-card-actions>
@@ -145,8 +145,8 @@ export default {
         text: "🙏로그인화면으로 이동부탁드립니다🙏",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#2ac187",
-        cancelButtonColor: "#d33",
+        confirmButtonColor: "#2255b1",
+        cancelButtonColor: "#F36A3E",
         cancelButtonText: "취소",
         confirmButtonText: "이동",
       }).then((result) => {

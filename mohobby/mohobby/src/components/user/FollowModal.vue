@@ -11,23 +11,27 @@
             </template>
             <template v-slot:default="dialog">
               <v-card>
-                <v-toolbar color="#2ac187" dark>{{ text }} list</v-toolbar>
-                <v-list three-line>
-                  <template v-for="(data, index) in dataList">
-                    <v-subheader
-                      v-if="data.header"
-                      :key="data.header"
-                      v-text="data.header"
-                    />
-                    <v-divider
-                      v-else-if="data.divider"
-                      :key="data.followId"
-                      :inset="data.inset"
-                    />
-                    <v-list-item v-else :key="index">
-                      <v-list-item-avatar>
-                        <v-img
-                          :src="
+                <v-toolbar color="#2255b1" dark>{{ text }} list</v-toolbar>
+
+
+                <div v-if = "dataList.length !== 0">
+
+                  <v-list three-line>
+                    <template v-for="(data, index) in dataList">
+                      <v-subheader
+                        v-if="data.header"
+                        :key="data.header"
+                        v-text="data.header"
+                      />
+                      <v-divider
+                        v-else-if="data.divider"
+                        :key="data.followId"
+                        :inset="data.inset"
+                      />
+                      <v-list-item v-else :key="index">
+                        <v-list-item-avatar>
+                          <v-img
+                            :src="
                             require(`@/assets/image/user/${data.profileImg}`)
                           "
                         ></v-img>
@@ -48,6 +52,14 @@
                     </v-list-item>
                   </template>
                 </v-list>
+
+              </div>
+              <div v-else style="text-align:center; padding: 50px 20px;">
+                <v-icon large>mdi-account-multiple</v-icon><br>
+                팔로우 내역이 없습니다!
+              </div>
+
+              
                 <v-card-actions class="justify-end">
                   <v-btn text @click="dialog.value = false"> Close </v-btn>
                 </v-card-actions>
