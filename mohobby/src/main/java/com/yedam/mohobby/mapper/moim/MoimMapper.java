@@ -162,7 +162,7 @@ public interface MoimMapper {
 	public void delNbbang(int dutchId);
 	
 	//n빵 체크 수정
-	public void updateCalc(@Param("memberId") String memberId, @Param("dutchId") String dutchId, @Param("calcCheck")String calcCheck);
+	public void updateCalc(@RequestBody MoimDutchPtpSoloVO vo);
 	
 	//소모임 게시글 수정
 	public void updateBoard(MoimBoardVO vo);

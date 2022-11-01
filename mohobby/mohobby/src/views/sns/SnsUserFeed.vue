@@ -11,7 +11,7 @@
         </div>
         <!-- 프로필이미지 끝 -->
 
-{{follower}}
+        
         <!-- 내 게시물 정보(닉네임, 개시물, 팔로워, 팔로잉 개수) -->
         <div class="profile-user-settings">
           <h1 class="profile-user-name">{{ infoes.memberId }}</h1>
@@ -73,7 +73,7 @@
             <li><span class="profile-real-name">{{ infoes.nickname }}</span></li>
           </ul>
           <ul>
-            <li><span class="profile-stat-count">{{ infoes.postCnt }}</span> posts</li>
+            <li><span >{{ infoes.postCnt }}</span> posts</li>
             <li>
               <FollowModal :text="followertext" :dataList="follower" :follow="follow" />
             </li>
@@ -91,28 +91,33 @@
             <li></li>
             <!-- 소개 끝 -->
           </ul>
-        </div>
-
-        <!-- 버튼 컴포넌트: 유저본인이냐에 따라 버튼 바뀜 -->
-        <div class="profile-bio">
           <ul v-if="sessionId && sessionId == infoes.memberId">
             <button class="btn profile-edit-btn" @click="goMypage(sessionId)">
               Edit Profile
             </button>
           </ul>
           <ul v-else>
-            <button v-if="followStatus === 0" @click="followup(sessionId, infoes.memberId)"
+            <button v-if="followStatus === 0" 
+             @click="followup(sessionId, infoes.memberId)"
               class="btn profile-edit-btn2">
               Follow
             </button>
-            <button v-else style="background-color: #2ac187; color: white" @click="unfollow(sessionId, infoes.memberId)"
+            <button v-else 
+              id="unfollow_btn" 
+             @click="unfollow(sessionId, infoes.memberId)"
               class="btn profile-edit-btn2">
               Unfollow
             </button>
-            <button class="btn profile-edit-btn2" @click="send(sessionId)">
+            <button class="btn profile-edit-btn2" 
+             @click="send(sessionId)">
               Message
             </button>
           </ul>
+        </div>
+
+        <!-- 버튼 컴포넌트: 유저본인이냐에 따라 버튼 바뀜 -->
+        <div class="profile-bio">
+
         </div>
 
 
@@ -218,8 +223,8 @@ export default {
         text: "🙏로그인화면으로 이동부탁드립니다🙏",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#2ac187",
-        cancelButtonColor: "#d33",
+        confirmButtonColor: "#2255b1",
+        cancelButtonColor: "#F36A3E",
         cancelButtonText: "취소",
         confirmButtonText: "이동",
       }).then((result) => {

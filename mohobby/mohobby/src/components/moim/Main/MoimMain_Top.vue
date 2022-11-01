@@ -12,7 +12,7 @@
   <template v-slot:activator="{ on, attrs }">
   <v-btn text>
   <v-chip
-    color="success"
+    color="#D66B43"
     outlined
     v-bind="attrs"
     v-on="on"
@@ -57,7 +57,7 @@
   <v-spacer></v-spacer>
   <v-btn text>
   <v-chip
-    color="success"
+    color="#D66B43"
     outlined
     @click="select"
   >
@@ -72,8 +72,8 @@
     <div>
       <!-- moimRight : {{moimRight}} newRight : {{newRight}} moimLength : {{moimLength}} -->
     <!-- 소모임 유저별 모임 리스트 -->
-    <MyMoim_user v-if="(moimRight == 1 || moimRight == 0) && (newRight == 1 || moimLength == 0)"></MyMoim_user>
-    <MyMoim_leader v-else-if="(moimRight == 2 || moimRight == 3) && (newRight == 1 || moimLength == 1)"></MyMoim_leader>
+    <MyMoim_leader v-if="(moimRight == 2 || moimRight == 3) && (newRight == 1 || moimLength == 1)"></MyMoim_leader>
+    <MyMoim_user v-else-if="(moimRight == 1 || moimRight == 0) && (newRight == 1)"></MyMoim_user>
     <MyMoim_none v-else-if="moimRight == '' || newRight == 0 || moimLength == 0"></MyMoim_none>
   </div>
     <!-- 소모임 검색창 -->
@@ -88,7 +88,7 @@
     <v-col cols="12" sm="30" md="30">
       <v-sheet class="py-4 px-1">
         <v-chip-group active-class="primary--text">
-          <v-chip v-for="catg in catgs" :key="catg" :value="catg" @click="chipclick">
+          <v-chip v-for="catg in catgs" :key="catg" :value="catg" @click="chipclick" color="rgb(34, 85, 177)" text-color="white">
             {{ catg }}
           </v-chip>
         </v-chip-group>

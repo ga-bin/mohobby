@@ -1,5 +1,7 @@
 package com.yedam.mohobby.service.sns;
 
+import java.sql.Date;
+
 import lombok.Data;
 
 @Data

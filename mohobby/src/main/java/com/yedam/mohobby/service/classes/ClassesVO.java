@@ -46,4 +46,5 @@ public class ClassesVO {
 	private int startTime;
 	private int endTime;
 	private String needs;
+	private int reviewyn;
 }

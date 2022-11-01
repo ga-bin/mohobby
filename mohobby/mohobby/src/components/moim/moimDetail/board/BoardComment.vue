@@ -3,7 +3,7 @@
   <div>
     <div class="profile" v-for="(item,idx) in items" :key="item.commId">
       <v-avatar class="ml-10 my-5 mr-4" color="grey darken-1" size="30">
-        <!-- <v-img aspect-ratio="30" :src="item.src" /> -->
+        <v-img :src="profile[idx].avatar"></v-img>
       </v-avatar>
       <div class="user text-overline" style="width:600px">{{item.commentWriter}}
         <small class="date">{{item.commentDate | moment('YYYY-MM-DD HH:mm')}}</small>
@@ -62,6 +62,7 @@ export default {
       boardType: this.$route.query.boardType,
       profile : [],
       items: [],
+      profile: [],
       memberId: this.$store.state.id,
       targetId: '',
       content: '',
@@ -102,6 +103,7 @@ export default {
       })
     },
     getBoard() {
+      let vm = this;
       this.axios.get("/detailComment", {
         params : {
           moimId : this.moimId,
@@ -117,7 +119,20 @@ export default {
       .catch((err) => {
         console.log(this.items)
         console.log(err)
-      })
+      }).finally((response)=>{
+          console.log(response)
+          for(let i=0; i<vm.items.length; i++){
+            vm.axios.get("/getImg",{
+              params:{
+                memberId : vm.items[i].commentWriter
+              }
+            }).then((response)=>{
+              this.profile.push({avatar: require(`@/assets/image/user/${response.data}`)})
+            }).catch((err)=>{
+              console.log(err)
+            })
+          }
+        })
     },
       updateComment(commId, contents) {
         if(commId == this.editForm){ //수정창닫기
@@ -217,28 +232,6 @@ export default {
   created() {
     this.getBoard()
   },
-  filters: {
-    // filter로 쓸 filter ID 지정
-    yyyyMMdd: function (value) {
-      // 들어오는 value 값이 공백이면 그냥 공백으로 돌려줌
-      if (value == "") return "";
-      // 현재 Date 혹은 DateTime 데이터를 javaScript date 타입화
-      var js_date = new Date(value);
-      // 연도, 월, 일 추출
-      var year = js_date.getFullYear();
-      var month = js_date.getMonth() + 1;
-      var day = js_date.getDate();
-      // 월, 일의 경우 한자리 수 값이 있기 때문에 공백에 0 처리
-      if (month < 10) {
-        month = "0" + month;
-      }
-      if (day < 10) {
-        day = "0" + day;
-      }
-      // 최종 포맷 (ex - '2021/10/08')
-      return year + "/" + month + "/" + day;
-    },
-  }
 }
 </script>
 <style scoped>

@@ -5,6 +5,7 @@
       <v-container>
        <v-text-field label="글 내용 검색" v-model="boardSearch" @keyup.enter="Search" single-line solo></v-text-field>
       </v-container>
+      <div v-if="items.length != 0">
     <v-card
       class="mx-auto mb-8"
       max-width="800"
@@ -14,7 +15,9 @@
       @click="goPost(idx)"
     >
       <v-list-item three-line>
-        <v-list-item-avatar tile size="80" color="grey"></v-list-item-avatar>
+        <v-list-item-avatar tile size="60" class="rounded-pill">
+          <v-img :src="profile[idx].avatar"></v-img>
+        </v-list-item-avatar>
         <v-list-item-content>
           <div class="text-overline mt-6">
             {{ item.memberId }}
@@ -32,6 +35,12 @@
       </v-card-actions>
     </v-card>
     </div>
+    <div v-else class="nodata">
+        🙏<br>
+        공지사항이 없습니다<br>
+        관리자에게 문의해주세요
+      </div>
+    </div>
   </div>
   </div>
 </template>
@@ -45,7 +54,8 @@ export default {
       moimRight: 1,
       moimId : this.$route.params.moimId,
       boardType : 0,
-      boardSearch : ""
+      boardSearch : "",
+      profile: []
     };
   },
   methods: {
@@ -53,6 +63,7 @@ export default {
       this.$router.push({ name: "moimPost", query : { moimId : this.moimId, boardId: this.items[idx].boardId, boardType: 0}});
     },
     getNotice() {
+      let vm = this
       this.axios.get("/noticeList", {
         params : {
           moimId : this.moimId,
@@ -67,7 +78,20 @@ export default {
       .catch((err) => {
         console.log(this.items)
         console.log(err)
-      })
+      }).finally((response)=>{
+          console.log(response)
+          for(let i=0; i<vm.items.length; i++){
+            vm.axios.get("/getImg",{
+              params:{
+                memberId : vm.items[i].memberId
+              }
+            }).then((response)=>{
+              this.profile.push({avatar: require(`@/assets/image/user/${response.data}`)})
+            }).catch((err)=>{
+              console.log(err)
+            })
+          }
+        })
       }
     },
     Search() {
@@ -96,5 +120,13 @@ export default {
 <style scoped>
 .container {
   width: 91%;
+}
+.nodata {
+  width : 85%;
+  height: 300px;
+  margin-top : 250px;
+  margin-left: 75px;
+  font-weight: bold;
+  text-align: center;
 }
 </style>

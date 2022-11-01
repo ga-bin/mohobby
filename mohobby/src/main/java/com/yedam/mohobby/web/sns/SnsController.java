@@ -47,7 +47,6 @@ public class SnsController {
     //게시물 등록 - 테스트완료
     @PostMapping(value = "/myfeed", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public String insertFeed(SnsPostVO snspostVO, SnsMediaVO snsmediaVO, List<MultipartFile> fileList) {
-       System.out.println(snspostVO); //******해시태그에 값이 들어오지 않음. - 수정중
        
        service.regFeed(snspostVO, snsmediaVO, fileList);
         return "success";
@@ -59,11 +58,9 @@ public class SnsController {
         try {
             snsPostVO.setPostId(postId);
             service.updateFeed(snsPostVO);
-            System.out.println("글 수정 완료");
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("글 수정 실패");
             return "fail";
         }
     }
@@ -90,7 +87,6 @@ public class SnsController {
     }
     
    //전체피드조회 - 테스트완료
-    //페이징처리할것 ************* 페이징을 안할거면 최대 보낼 페이지 지정해서 걸어주기
     @GetMapping("/main/allFeeds")
     public List<SnsPostVO> allList() {
         return service.allList();
@@ -196,11 +192,9 @@ public class SnsController {
     public String follow(@RequestBody SnsFollowVO followVO) {
         try {
             service.follow(followVO);
-            System.out.println("팔로우 완료");
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("팔로우 실패");
             return "fail";        
         }
     }
@@ -210,11 +204,9 @@ public class SnsController {
     public String unfollow(@PathVariable String followerId, @PathVariable String followingId) {
         try {
             service.unfollow(followerId,followingId);
-            System.out.println("언팔로우 완료");
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("언팔로우 실패");
             return "fail";        
         }
     }
@@ -348,11 +340,9 @@ public class SnsController {
     public String createBookmarkCtg(@RequestBody SnsBookmarkVO bmCtgVO) {
           try {
                service.createBookmarkCtg(bmCtgVO);
-               System.out.println("컬렉션추가 완료");
                return "success";
           } catch (Exception e) {
              e.printStackTrace();
-             System.out.println("컬렉션추가 실패");
              return "fail";
           }
     }
@@ -362,11 +352,9 @@ public class SnsController {
     public String updateReCmt(@RequestBody SnsBookmarkVO bmCtgVO) {
         try {
           service.updateBookmarkCtgName(bmCtgVO);
-          System.out.println("컬렉션수정 완료");
           return "success";
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("컬렉션수정 실패");
             return "fail";
         }
     }
@@ -376,11 +364,9 @@ public class SnsController {
     public String deleteBookmarkCtg(@PathVariable int catgId) {
          try {
              service.deleteBookmarkCtg(catgId);
-             System.out.println("컬렉션삭제 완료");
              return "success";
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("컬렉션삭제 실패");
             return "fail";
         }
     }
@@ -388,8 +374,7 @@ public class SnsController {
     //컬렉션리스트 호출
     @GetMapping("/collection/{memberId}")
     public List<SnsBookmarkVO> getCollectionList(@PathVariable String memberId){
-        System.out.println(memberId);
-        System.out.println(service.getBookmarkCtgs(memberId));
+
         return service.getBookmarkCtgs(memberId);
     }
     
@@ -408,6 +393,7 @@ public class SnsController {
     }
     
     //북마크 이동
+    @PutMapping("/collection/bookmark")
     public String changeCatg(@RequestBody SnsBookmarkVO bmkVO) {
         try {
             service.changeCatg(bmkVO);

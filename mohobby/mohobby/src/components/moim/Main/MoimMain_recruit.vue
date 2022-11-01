@@ -18,7 +18,7 @@
             </div>
             <v-list-item-subtitle>{{ item.moimInfo }}</v-list-item-subtitle>
           </v-list-item-content>
-          <v-list-item-avatar tile size="80">
+          <v-list-item-avatar tile size="80" class="rounded">
             <img :src="require(`@/assets/image/moim/${item.moimImg}`)" />
           </v-list-item-avatar>
         </v-list-item>
@@ -42,7 +42,7 @@
           <v-dialog v-model="noneuser" width="500">
             <template v-slot:activator="{ on, attrs }">
               <v-btn text>
-                <v-chip color="success" outlined v-bind="attrs" v-on="on">
+                <v-chip color="#D66B43" outlined v-bind="attrs" v-on="on">
                   <v-icon left> mdi-plus </v-icon>
                   새로운 소모임 모집하기
                 </v-chip>
@@ -71,7 +71,7 @@
       <v-card-actions v-else>
         <v-spacer></v-spacer>
         <v-btn text>
-          <v-chip color="success" outlined @click="select">
+          <v-chip color="#D66B43" outlined @click="select">
             <v-icon left> mdi-plus </v-icon>
             새로운 소모임 모집하기
           </v-chip>
@@ -193,7 +193,7 @@ export default {
   cursor: pointer;
 }
 .people {
-  border-left: 2px solid green;
+  border-left: 2px solid rgb(34, 85, 177);
   padding-left: 10px;
 }
 .moreMoim {

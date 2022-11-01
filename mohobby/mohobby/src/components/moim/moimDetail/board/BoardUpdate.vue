@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       editorStyle: {
-        'height': '300px',
+        'height': '500px',
       },
       content: '',
       boardType: this.$route.query.boardType,

@@ -96,7 +96,11 @@ export default {
           this.content = '';
           document.querySelector(".ql-editor").style.display = 'block';
         }
+        if(this.boardType == 1) { 
         this.$router.push({ name: "moimBoard" });
+        } else {
+          this.$router.push({ name: "moimNotice" })
+        }
       }).catch((error) => {
         console.log(`error: ${error}`);
       })

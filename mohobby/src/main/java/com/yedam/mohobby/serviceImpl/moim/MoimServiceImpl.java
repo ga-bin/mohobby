@@ -532,8 +532,8 @@ public class MoimServiceImpl implements MoimService {
 	
 	//n빵 체크 수정
 	@Override
-	public void updateCalc(String memberId, String dutchId, String calcCheck) {
-		mapper.updateCalc(memberId, dutchId, calcCheck);
+	public void updateCalc(MoimDutchPtpSoloVO vo) {
+		mapper.updateCalc(vo);
 	}
 	
 	//게시글 수정

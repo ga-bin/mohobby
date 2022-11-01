@@ -58,7 +58,7 @@
                                 <div>{{ '* 5개월 할부 시' }}</div>
                             </v-col>
                             <v-col cols="auto">
-                                <v-btn depressed dark color="#2ac187" @click="goPayBtn">
+                                <v-btn depressed dark color="#2255b1" @click="goPayBtn">
                                     수강하기
                                 </v-btn>
                             </v-col>
@@ -68,7 +68,7 @@
             </v-row>
         </div>
         <div style="padding: 120px 0px 20px 0px">
-            <v-tabs color="#2ac187" v-model="active_tab">
+            <v-tabs color="#2255b1" v-model="active_tab">
                 <v-tab v-for="tab of tabs" :key="tab.index" @click="$router.push({ path: tab.route })">
                     <h3>{{tab.name}}</h3>
                     <div v-if="tab.index == 3" style="padding-left: 5px">

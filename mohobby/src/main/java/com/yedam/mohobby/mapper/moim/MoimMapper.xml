@@ -589,7 +589,7 @@
 	</delete>
 
 	<!-- n빵 체크 업데이트 -->
-	<update id="updateCalc" parameterType="String">
+	<update id="updateCalc" parameterType="com.yedam.mohobby.service.moim.MoimDutchPtpSoloVO">
       UPDATE moim_dutch_ptp
       SET calc_check =#{calcCheck}
       WHERE member_id = #{memberId}

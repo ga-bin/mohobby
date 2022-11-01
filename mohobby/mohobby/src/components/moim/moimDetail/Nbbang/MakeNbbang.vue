@@ -25,7 +25,7 @@
             <v-avatar class="mb-4" color="grey darken-1" size="64">
               <v-img aspect-ratio="30" :src="src"></v-img>
             </v-avatar>
-            <div>{{ writer }}</div>
+            <div class="ml-4 font-weight-bold">{{ writer }}</div>
           </v-col>
           <v-spacer></v-spacer>
           <v-col cols="12" sm="6" md="4">
@@ -37,10 +37,10 @@
           </v-col>
         </v-row>
         <hr class="mt-5 mb-5" />
-        <v-row v-for="(list,idx) in empty" key="idx">
+        <v-row v-for="(list,idx) in empty" :key="idx">
           <v-col cols="12" sm="6" md="1">
             <v-avatar class="mb-4" color="grey darken-1" size="64">
-              <v-img aspect-ratio="30" :src="src"></v-img>
+              <v-img aspect-ratio="30" :src="srcselect[idx].avatar"></v-img>
             </v-avatar>
           </v-col>
           <v-col cols="12" sm="6" md="10" class="ml-5">
@@ -65,7 +65,7 @@
           </v-col>
         </v-row>
         <v-row justify="center" class="mt-12">
-          <v-btn color="success" @click="allInsert()"> 짜잔 </v-btn>
+          <v-btn color="success" @click="allInsert()">생성 하기</v-btn>
         </v-row>
       </v-container>
     </v-card-text>
@@ -79,21 +79,46 @@ export default {
       writer: this.$store.state.id, //작성자
       title: "",
       empty: [], //멤버 담는 배열
+      srcselect : [],
       price: "", //총 금액
       totalPrice: "", //나눠서 뿌리는 값
       moimId: this.$route.params.moimId,
       calcPrice: "", //하위컴포넌트 나눈값 (n빵 금액)
       calcCheck: "",
-      src: "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5a/d0/5c/e0/5ad05ce00110d2738de6.jpg",
+      src: "",
     };
   },
   components: { MemberSelect },
   methods: {
+    userImg() {
+    this.axios.get("/getImg",{
+              params:{
+                memberId : this.writer
+              }
+            }).then((response)=>{
+              this.src = require(`@/assets/image/user/${response.data}`)
+            }).catch((err)=>{
+              console.log(err)
+            })
+          },
+      async selectImg() {
+      for(let i=0; i<this.empty.length; i++){
+      this.axios.get("/getImg",{
+              params:{
+                memberId : this.empty[i]
+              }
+            }).then((response)=>{
+              this.srcselect.push({avatar: require(`@/assets/image/user/${response.data}`)})
+            }).catch((err)=>{
+              console.log(err)
+            })       
+    }
+  },
     allInsert() {
       if (
         this.price === "" ||
-         this.title === "" ||
-        this.member.length === 0
+        this.title === "" ||
+        this.empty.length === 0
       ) {
         this.$swal("필수항목이 입력되지 않았습니다.");
         return;
@@ -105,7 +130,7 @@ export default {
           calcPrice: this.totalPrice,
           memberId: this.writer,
           moimId: this.moimId,
-          people: this.member.length
+          people: this.empty.length
         })
         .then((resp) => {
           if(resp.status == 200) {
@@ -137,8 +162,14 @@ export default {
   watch: {
     price(val) {
       this.totalPrice = this.price / this.empty.length;
+    },
+    empty() {
+      this.selectImg();
     }
   },
+  created() {
+    this.userImg()
+  }
 };
 </script>
 <style scoped>

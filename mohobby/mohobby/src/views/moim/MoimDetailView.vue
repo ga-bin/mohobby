@@ -56,7 +56,4 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  width: 75%;
-}
 </style>

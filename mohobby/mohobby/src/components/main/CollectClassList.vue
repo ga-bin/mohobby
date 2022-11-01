@@ -1,36 +1,48 @@
 <template>
   <v-container fluid>
-    <v-sheet max-width="2000">
+    <v-sheet style="background-color: inherit;" max-width="2200">
       <v-slide-group class="pa-2">
         <v-slide-item
-          v-for="oneClass in collectClassList.data"
-          :key="oneClass.index"
+          v-for="(item, i) in items"
+          :key="i"
+          class="mr-5"
         >
           <div class="displayflex">
             <v-card
-              class="mx-auto"
+              class="ma-10"
               max-width="320px"
-              @click="
-                $router.push({
-                  name: 'moimBoard',
-                  params: { boardId: oneClass.classId },
-                })
-              "
+              @click.stop="goDetail(item)"
             >
-              <v-img
-                :src="require(`@/assets/image/class/thumb/1/1.jpg`)"
-                height="200px"
-              ></v-img>
+            <v-badge
+                overlap
+                left
+                offset-x="90"
+                offset-y="45"
+                :content="item.classType === 0 ? 'ONLINE' : 'OFFLINE'"
+                :color="item.classType === 0 ? '#2255b1' : '#F36A3E'"
+                style="padding: 15px"
+            >
+              <div>
 
-              <v-card-subtitle v-text="oneClass.className"></v-card-subtitle>
+                <v-img
+                  :src="require(`@/assets/image/class/thumb/${item.classId}/0.jpg`)"
+                  max-width="290"
+                  min-height="180"
+                  max-height="180"
+                ></v-img>
+              </div>
+            </v-badge>
+
+              <v-card-subtitle v-text="item.className"></v-card-subtitle>
               <v-spacer />
-              <v-chip outlined rounded text>
-                {{ oneClass.keywordName }}
-              </v-chip>
-              <span
-                style="margin-left: 100px"
-                v-text="oneClass.classPrice"
-              ></span>
+              <!-- <v-chip outlined rounded text>
+                {{ item.keywordName }}
+              </v-chip> -->
+              <v-card-subtitle 
+                class="d-flex justify-center text-h6"
+              >
+                수강료 {{ item.classPrice | comma | won }}
+              </v-card-subtitle>
             </v-card>
           </div>
         </v-slide-item>
@@ -41,21 +53,33 @@
 <script>
 export default {
   props: {
-    collectClassList: {
-      type: [],
-      required: true,
-    },
   },
   data() {
     return {
       show: false,
+      items: [],
     };
   },
   setup() {},
-  created() {},
+  created() {
+    this.getItems();
+  },
   mounted() {},
   unmounted() {},
-  methods: {},
+  methods: {
+    getItems() {
+      this.axios('/class/on').then(res => {
+        this.items = res.data;
+      })
+    },
+    goDetail(item) {
+        if(item.classType === 0) {
+            this.$router.push({ path: '/class/on/'+item.classId+'/info', }).catch(()=>{$router.go(0)});
+        } else if(item.classType === 1) {
+            this.$router.push({ path: '/class/off/'+item.classId+'/info', }).catch(()=>{$router.go(0)});
+        }
+    }
+  },
 };
 </script>
 <style scoped>
@@ -81,7 +105,7 @@ export default {
 
 .displayflex {
   display: inline-block;
-  width: 270px;
+  width: 320px;
   max-width: 100%;
 }
 </style>

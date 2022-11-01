@@ -1,23 +1,5 @@
 <template>
         <v-container id="main">
-          
-            <v-spacer></v-spacer>
-            <div v-show = "member" style="float:right">
-                <!-- 내 피드 버튼 -->
-                <v-btn  @click="goMyFeed(member)"
-                        color="grey" icon class="mx-auto black--text font-weight-bold">
-                        <v-icon left>mdi-account</v-icon>
-                    </v-btn>
-                    <!-- 내 피드 버튼 끝 -->
-
-
-                    <!-- 글쓰기 버튼 -->
-                    <v-btn @click="regFeedForm(member)" color="grey" icon class="mx-auto black--text font-weight-bold">
-                        <v-icon left>mdi-lead-pencil</v-icon>
-                    </v-btn>
-                    <!-- 글쓰기 버튼 끝 -->
-                </div>
-
 
 
                 <!-- 검색창 끝 -->
@@ -30,13 +12,36 @@
                         <v-sheet ref="getHashtag">
                             <v-chip-group active-class="primary--text">
                                 <v-chip @click="searchHashtag(item.hashtag)" justify="space-around"
-                                    v-for="(item, i) in items" :key="i" color="#2ac187"
+                                    v-for="(item, i) in items" :key="i" color="#1862C9"
                                     class="mx-auto white--text font-weight-bold">
                                     #{{ item.hashtag }}
                                 </v-chip>
                             </v-chip-group>
                         </v-sheet>
                     </div>
+                </div>
+                <div v-show = "member" style="float:right">
+                        <!-- 내 피드 버튼 -->
+                        <v-btn  @click="goMyFeed(member)"
+                                title="내 프로필로"
+                                icon
+                                style="position:relative; font-size: 1px;" 
+                                class="mr-5 mx-auto black--text font-weight-bold">
+                                <v-icon color="#2255b1"
+                                        class="mx-auto mb-1"
+                                        style="position:absolute;"
+                                        outline
+                                        left>mdi-robot-love
+                                </v-icon>
+                            </v-btn>
+                            
+                            <!-- 글쓰기 버튼 -->
+                            <v-btn @click="regFeedForm(member)"
+                                    title="글쓰기"
+                                    icon 
+                                    class="mx-auto black--text font-weight-bold">
+                                <v-icon color="#2255b1" left>mdi-lead-pencil</v-icon>
+                            </v-btn>
                 </div>
 
 
@@ -76,7 +81,7 @@
 
                 <!-- 유저 검색 페이지-->
                 <div v-if="userSearch == true">
-                    <UserResult :userResult="userResult" :keyword="temp" />
+                    <UserResult :userResult="userResult" :followType = "followType" :keyword="temp" />
                 </div>
 
                 <div v-if="noResult == true">
@@ -124,6 +129,8 @@ export default {
             hotLectureFeeds: false, //HOT LIST 페이지
             randomFeeds: false, //ALL LIST 페이지
             noResult: false, //검색결과 없음 페이지
+
+            followType: Number,
         }
     },
 
@@ -322,7 +329,8 @@ export default {
                 }
             }).then(res => {
                
-                this.userResult = res.data; 
+                this.userResult = res.data;
+                this.followType = 3;
                 this.keyword = "";
 
                 //페이지 노출여부 컨트롤

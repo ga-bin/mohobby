@@ -23,7 +23,7 @@
             </div>
             <v-list-item-subtitle>{{ item.moimInfo }}</v-list-item-subtitle>
           </v-list-item-content>
-          <v-list-item-avatar tile size="80">
+          <v-list-item-avatar tile size="80" class="rounded">
             <img :src="require(`@/assets/image/moim/${item.moimImg}`)" />
           </v-list-item-avatar>
         </v-list-item>
@@ -112,7 +112,7 @@ export default {
 }
 
 .people {
-  border-left: 2px solid green;
+  border-left: 2px solid rgb(34, 85, 177);
   padding-left: 10px;
 }
 

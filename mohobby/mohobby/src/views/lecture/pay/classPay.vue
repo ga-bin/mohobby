@@ -3,40 +3,6 @@
         결제하기
         <v-stepper v-model="e1" flat>
             <v-stepper-header>
-                <v-stepper-step
-                    :complete="e1 > 1"
-                    :rules="[(classInfo) => {
-                        if(classInfo.classType == 0) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }]"
-                    step="1"
-                    color="#2ac187"
-                >
-                    준비물 구매
-                </v-stepper-step>
-
-                <v-divider></v-divider>
-
-                <v-stepper-step
-                    :complete="e1 > 2"
-                    step="2"
-                    :rules="[(classInfo) => {
-                        if(classInfo.classType == 0) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }]"
-                    color="#2ac187"
-                >
-                    배송지 입력
-                </v-stepper-step>
-
-                <v-divider></v-divider>
-
                     <v-stepper-step step="3" color="#2ac187">
                         결제하기
                     </v-stepper-step>
@@ -259,7 +225,7 @@ export default {
     },
     data() {
         return {
-            e1: 1,
+            e1: 3,
             needsList: [],
             needsPickList: [],
             needsPickPrice: '',

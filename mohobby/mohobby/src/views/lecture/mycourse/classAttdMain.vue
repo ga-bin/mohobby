@@ -22,28 +22,28 @@
                             <div>{{ $moment(info.startDate).format('YYYY-MM-DD') + ' ~ ' + $moment(info.endDate).format('YYYY-MM-DD') }} </div>
                         </v-row>
                         <v-row class="d-flex justify-center mt-10">
-                            <v-btn small outlined color="#2ac187" 
+                            <v-btn small outlined color="#2255b1" 
                                 @click="attdBtn"
                                 v-if="(!info.outDate && !info.attdDate) || info.exitDate"
                             >
                                 출석
                             </v-btn>
-                            <v-btn small outlined color="#2ac187" 
+                            <v-btn small outlined color="#2255b1" 
                                 @click="exitBtn"
                                 v-if="(info.attdDate && !info.leaveDate && !info.exitDate) || (info.outDate && !info.comebackDate) || (info.attdDate && !info.exitDate)"
                             >
                                 퇴실
                             </v-btn>
-                            <v-btn small outlined color="#2ac187" 
+                            <v-btn small outlined color="#2255b1" 
                                 @click="comebackBtn"
                                 v-if="info.outDate != null && info.comebackDate == null"
                             >
                                 복귀
                             </v-btn>
-                            <v-btn small outlined class="mx-4" @click="outBtn">
+                            <v-btn small outlined class="mx-4" color="#2b2b2b" @click="outBtn">
                                 외출
                             </v-btn>
-                            <v-btn small outlined @click="leaveBtn">
+                            <v-btn small outlined color="#2b2b2b" @click="leaveBtn">
                                 조퇴
                             </v-btn>
                         </v-row>
@@ -87,7 +87,7 @@
                         <v-row class="d-flex justify-center pt-10">
                             <v-col class="pl-10">
                                 <v-avatar
-                                    color="#507864"
+                                    color="#1b243b"
                                     size="56"
                                 >
                                     <h4 style="color: white">{{ info.sumAttd }}</h4>
@@ -96,7 +96,7 @@
                             </v-col>
                             <v-col>
                                 <v-avatar
-                                    color="#507864"
+                                    color="#1b243b"
                                     size="56"
                                 >
                                     <h4 style="color: white">{{ info.sumLate }}</h4>
@@ -105,7 +105,7 @@
                             </v-col>
                             <v-col>
                                 <v-avatar
-                                    color="#507864"
+                                    color="#1b243b"
                                     size="56"
                                 >
                                     <h4 style="color: white">{{ info.sumLeave }}</h4>
@@ -114,7 +114,7 @@
                             </v-col>
                             <v-col>
                                 <v-avatar
-                                    color="#507864"
+                                    color="#1b243b"
                                     size="56"
                                 >
                                     <h4 style="color: white">{{ info.sumOut }}</h4>
@@ -123,7 +123,7 @@
                             </v-col>
                             <v-col>
                                 <v-avatar
-                                    color="#507864"
+                                    color="#1b243b"
                                     size="56"
                                 >
                                     <h4 style="color: white">{{ info.sumAbsent }}</h4>
@@ -149,7 +149,7 @@
                                 <v-progress-linear 
                                     height="20" 
                                     :value="Math.round(info.sumAttd/info.total*100, 1)" 
-                                    color="#2ac187" 
+                                    color="#2255b1" 
                                     dark 
                                     style="font-size: 0.8em;"
                                 >
@@ -174,7 +174,7 @@
                                 <v-progress-linear 
                                     height="20" 
                                     :value="info.progress" 
-                                    color="#2ac187" 
+                                    color="#2255b1" 
                                     dark 
                                     style="font-size: 0.8em;"
                                 >

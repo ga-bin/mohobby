@@ -3,17 +3,17 @@
     <v-row>
       <v-col cols="12" sm="6" md="6">
         <div>
-          <h3>내가 운영중인 소모임</h3>
+          <h4>내가 운영중인 소모임</h4>
           <v-sheet max-width="500">
             <v-slide-group class="pa-2">
               <v-slide-item v-for="item, idx in items" :key="idx">
                 <v-card elevation="0" class="mr-5" max-width="160">
                   <div class="box" @click="box(idx)">
-                    <v-list-item-avatar tile size="160">
+                    <v-list-item-avatar tile size="140" class="rounded">
                       <img :src="require(`@/assets/image/moim/${item.moimImg}`)" />
                     </v-list-item-avatar>
                   </div>
-                  <div class="text-md-center">
+                  <div class="text-md-center font-weight-bold">
                     {{ item.moimName }}
                   </div>
                 </v-card>
@@ -25,13 +25,13 @@
       <!--두번째 슬라이드 -->
       <v-col cols="12" sm="6" md="6">
         <div>
-          <h3>내가 참여중인 소모임</h3>
+          <h4>내가 참여중인 소모임</h4>
           <v-sheet  v-if="chamyeo.length != 0" max-width="500">
             <v-slide-group class="pa-2">
               <v-slide-item v-for="(item, index) in chamyeo" :key="index">
                 <v-card elevation="0" class="mr-5" max-width="160">
                   <div class="box" @click="box2(index)">
-                    <v-list-item-avatar tile size="160">
+                    <v-list-item-avatar tile size="140" class="rounded">
                       <img :src="require(`@/assets/image/moim/${item.moimImg}`)" /><br>
                     </v-list-item-avatar>
                   </div>

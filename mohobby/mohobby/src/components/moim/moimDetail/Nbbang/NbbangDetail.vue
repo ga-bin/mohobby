@@ -121,13 +121,10 @@ export default {
         } else if (this.items[i].calcCheck == false) {
           this.items[i].calcCheck = 0;
         }
-        this.axios
-          .get("/updateCalc", {
-            params: {
+        this.axios.put("/updateCalc", {
               dutchId: this.dutchId,
               memberId: this.items[i].moneyTarget,
               calcCheck: this.items[i].calcCheck,
-            },
           })
           .then((resp) => {
             console.log(resp);

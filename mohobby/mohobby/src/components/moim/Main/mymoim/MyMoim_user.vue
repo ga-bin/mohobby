@@ -6,12 +6,12 @@
         <v-slide-group class="pa-2">
           <v-slide-item v-for="(item,idx) in items" :key="idx">
             <v-card elevation="0"  class="mr-5" max-width="160">
-            <div class="box" @click="box(index)">
-              <v-list-item-avatar tile size="160">
+            <div class="box" @click="box(idx)">
+              <v-list-item-avatar tile size="140" class="rounded">
                 <img :src="require(`@/assets/image/moim/${item.moimImg}`)" />
               </v-list-item-avatar>
             </div>
-            <div class="text-md-center">
+            <div class="text-md-center font-weight-bold">
               {{ item.moimName }}
             </div>
           </v-card>
@@ -56,14 +56,14 @@ export default {
           console.log(error);
         });
     },
-    async box(idx) {
-      await this.getOneMoim(idx);
+    box(idx) {
+       this.getOneMoim(idx);
       if (this.moimOneInfo.moimOpen == 1) {
         this.$swal.fire("관리자에 의해 접근 금지된 모임입니다.");
       } else {
         this.$router.push({
           name: "moimBoard",
-          params: { moimId: this.chamyeo[idx].moimId, boardType: 1 },
+          params: { moimId: this.items[idx].moimId, moimName: this.items[idx].moimName, boardType: 1 },
         });
       }
     },

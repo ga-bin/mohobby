@@ -18,7 +18,7 @@
               </div>
               <p class="card-text">{{ info.content }}</p>
               <div class="card-like" height="32" width="32">
-                <div style="width:130px;"><v-icon color="#2ac187">mdi-heart</v-icon> {{ info.likes }} likes</div>       
+                <div style="width:130px;"><v-icon color="#e9e9ec">mdi-heart</v-icon> {{ info.likes }} likes</div>       
               </div>
               <button class="card-button">More</button>
             </div>

@@ -528,13 +528,10 @@ public class MoimController {
     }
     
     //n빵 calc체크 수정
-    @GetMapping("/updateCalc")
-    public String updateCalc(@RequestParam String memberId, @RequestParam String dutchId,@RequestParam String calcCheck) {
-       System.out.println("memberId : " + memberId );
-       System.out.println("dutchId : " + dutchId);
-       System.out.println("calcCheck : " + calcCheck);
+    @PutMapping("/updateCalc")
+    public String updateCalc(@RequestBody MoimDutchPtpSoloVO vo ) {
        try {
-          service.updateCalc(memberId, dutchId, calcCheck);
+          service.updateCalc(vo);
           return "success";
        } catch(Exception e) {
           return "error";
