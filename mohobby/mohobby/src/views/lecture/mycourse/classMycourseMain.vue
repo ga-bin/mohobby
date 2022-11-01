@@ -1,6 +1,6 @@
 <template>
      <v-container fluid style="margin: 20px 40px;">
-        <v-tabs color="#2ac187" v-model="active_tab">
+        <v-tabs color="#2255b1" v-model="active_tab">
             <v-tab
                 v-for="tab of tabs"
                 :key="tab.index"

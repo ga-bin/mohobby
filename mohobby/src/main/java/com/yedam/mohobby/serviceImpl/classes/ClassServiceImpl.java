@@ -55,6 +55,12 @@ public class ClassServiceImpl implements ClassService {
     public List<ClassesVO> listAll(ClassListRequestVO req) {
         return classMapper.listAll(req);
     }
+    
+    // 모집중인 강의 조회
+    @Override
+    public List<ClassesVO> listOnClass() {
+    	return classMapper.listOnClass();
+    }
 
     // 단건조회
     @Override

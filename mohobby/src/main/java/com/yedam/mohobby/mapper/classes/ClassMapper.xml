@@ -186,6 +186,14 @@
 		order by class_id desc
 	</select>
 	
+	<!-- 모집중인 강의 조회 -->
+	<select id="listOnClass" resultType="com.yedam.mohobby.service.classes.ClassesVO">
+		select * 
+		from class
+		where audit_status = 2
+		and (end_date > current_date or class_type=0)
+	</select>
+	
 	<!-- 단건조회 -->
 	<select id="listOne" parameterType="com.yedam.mohobby.service.classes.ClassListRequestVO" resultType="com.yedam.mohobby.service.classes.ClassesVO">
 		select
@@ -458,7 +466,7 @@
 	
 	<!-- 내 강의 목록 조회 -->
 	<select id="getMyCourse" resultType="com.yedam.mohobby.service.classes.ClassesVO">
-		select c.*
+		select c.*, nvl((select board_id from class_board where class_id = c.class_id and  member_id = 'user1' and board_type = 4), 0) reviewyn
 		from class c
 		where class_id in (select class_id
 		                    from class_pay

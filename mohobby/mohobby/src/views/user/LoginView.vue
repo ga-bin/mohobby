@@ -1,104 +1,94 @@
 <template>
-  <div class="container-fluid">
-    <div class="row no-gutter">
-      <!-- The image half -->
-      <div class="col-md-6 d-none d-md-flex bg-image"></div>
-
-      <!-- The content half -->
-      <div class="col-md-6 bg-light">
-        <div class="login d-flex align-items-center py-5">
-          <!-- Demo content-->
-          <div class="container">
-            <v-app id="inspire">
-              <v-main class="lighten-4">
-                <!-- login component -->
-                <v-container style="max-width: 450px" fill-height>
-                  <v-layout align-center row wrap>
-                    <v-flex xs12>
-                      <v-card>
-                        <div class="pa-10">
-                          <h1 style="text-align: center" class="mb-10">
-                            Login
-                          </h1>
-                          <form v-on:submit.prevent="checkMember">
-                            <v-text-field
-                              label="아이디"
-                              prepend-inner-icon="mdi-account"
-                              color="#2ac187"
-                              v-model="memberId"
-                            ></v-text-field>
-                            <v-text-field
-                              color="#2ac187"
-                              prepend-inner-icon="mdi-lock"
-                              type="password"
-                              label="비밀번호"
-                              v-model="password"
-                            >
-                            </v-text-field>
-                            <v-btn
-                              type="submit"
-                              color="#2ac187"
-                              depressed
-                              large
-                              block
-                              dark
-                              class="mb-3"
-                            >
-                              Login
-                            </v-btn>
-                            <v-btn
-                              color="#2ac187"
-                              depressed
-                              large
-                              block
-                              dark
-                              @click="$router.push('/register')"
-                            >
-                              Sign Up
-                            </v-btn>
-                            <br />
-                            <span
-                              style="margin-left: 70px; font-weight: bold"
-                              @click="findMemberId()"
-                            >
-                              아이디찾기</span
-                            >
-                            <span
-                              style="margin-left: 70px; font-weight: bold"
-                              @click="findMemberPassword()"
-                            >
-                              비밀번호 찾기</span
-                            >
-                            <br />
-                            <br />
-                            <!-- <p style="text-align: center;"> -->
-                            <a id="custom-login-btn" @click="kakaoLogin()">
-                              <img
-                                src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png"
-                                style="
-                                  height: 40px;
-                                  width: 170px;
-                                  margin-right: 30px;
-                                "
-                              />
-                            </a>
-                            <!-- </p> -->
-                            <!-- <p style="text-align: center;"> -->
-                            <div id="naverIdLogin"></div>
-                          </form>
-                        </div>
-                      </v-card>
-                    </v-flex>
-                  </v-layout>
-                </v-container>
-              </v-main>
-            </v-app>
-          </div>
-          <!-- End -->
-        </div>
-      </div>
-      <!-- End -->
-    </div>
+  <div style="background-color: #E9E8EA">
+      <v-img
+        :src="require('@/assets/image/web/login-1.jpg')"
+      />
+    <!-- login component -->
+    <v-container style="max-width: 450px;" fill-height>
+      <v-layout align-center row wrap style="padding: 20px 0px 60px 0px;">
+        <v-flex xs12>
+          <v-card elevation="0">
+            <div class="pa-10">
+              <h1 style="text-align: center" class="mb-10">
+                Login
+              </h1>
+              <form v-on:submit.prevent="checkMember">
+                <v-text-field
+                  label="아이디"
+                  prepend-inner-icon="mdi-account"
+                  color="#2255b1"
+                  v-model="memberId"
+                ></v-text-field>
+                <v-text-field
+                  color="#2255b1"
+                  prepend-inner-icon="mdi-lock"
+                  type="password"
+                  label="비밀번호"
+                  v-model="password"
+                >
+                </v-text-field>
+                <v-btn
+                  type="submit"
+                  color="#F9E000"
+                  depressed
+                  large
+                  block
+                  class="mb-3"
+                >
+                  Login
+                </v-btn>
+                <v-btn
+                  color="#2255b1"
+                  depressed
+                  large
+                  block
+                  dark
+                  @click="$router.push('/register')"
+                >
+                  Sign Up
+                </v-btn>
+                <div class="d-flex justify-center">
+                  <v-btn
+                    style="font-weight: bold"
+                    @click="findMemberId()"
+                    text
+                  >
+                    아이디찾기</v-btn
+                  >
+                  <v-btn
+                    style="font-weight: bold"
+                    @click="findMemberPassword()"
+                    text
+                  >
+                    비밀번호 찾기</v-btn
+                  >
+                </div>
+                <br />
+                <!-- <p style="text-align: center;"> -->
+                <div class="d-flex justify-center">
+                    <a id="custom-login-btn" @click="kakaoLogin()">
+                      <img
+                        src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png"
+                        style="
+                          height: 40px;
+                          width: 170px;
+                          margin-right: 30px;
+                        "
+                      />
+                    </a>
+                    <!-- </p> -->
+                    <!-- <p style="text-align: center;"> -->
+                    <div id="naverIdLogin"></div>
+                </div>
+              </form>
+            </div>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-img
+      :src="require('@/assets/image/web/footer.jpg')"
+    />
   </div>
 </template>
 

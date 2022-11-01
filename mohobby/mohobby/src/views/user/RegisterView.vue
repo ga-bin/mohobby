@@ -1,218 +1,205 @@
 <template>
-  <div class="container-fluid">
-    <div class="row no-gutter">
-      <!-- The image half -->
-      <div class="col-md-6 d-none d-md-flex bg-image"></div>
+  <div style="background-color: #E9E8EA">
+    <v-img
+      :src="require('@/assets/image/web/login-1.jpg')"
+    />
+    <!-- login component -->
+    <v-container style="max-width: 450px" fill-height>
+      <v-layout align-center row wrap style="padding: 20px 0px 50px 0px;">
+        <v-flex xs12>
+          <v-card elevation="0">
+            <div class="pa-10">
+              <h1 style="text-align: center" class="mb-10">
+                회원가입
+              </h1>
+              <h6 style="text-align: center">
+                모든 요소는 필수적으로 입력해 주셔야합니다.
+              </h6>
+              <!-- 아이디입력 -->
+              <v-text-field
+                label="아이디"
+                prepend-inner-icon="mdi-account"
+                color="#2255b1"
+                v-model="memberId"
+                @input="checkId()"
+                :messages="idCheckMessage"
+                oninput="javascript: this.value= this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '');"
+              ></v-text-field>
+              <!-- 비밀번호입력 -->
+              <v-text-field
+                color="#2255b1"
+                prepend-inner-icon="mdi-lock"
+                type="password"
+                label="비밀번호"
+                v-model="password"
+                @input="checkPassword()"
+                :messages="passwordCheckMessage"
+                oninput="javascript: if (this.value.length > 12) this.value = this.value.slice(0, 12);"
+              ></v-text-field>
+              <!-- 비밀번호확인입력 -->
+              <v-text-field
+                color="#2255b1"
+                prepend-inner-icon="mdi-lock"
+                type="password"
+                label="비밀번호 확인"
+                v-model="password2"
+                @input="checkPassword2()"
+                :messages="password2CheckMessage"
+                oninput="javascript: if (this.value.length > 12) this.value = this.value.slice(0, 12);"
+              >
+              </v-text-field>
+              <!-- 이름입력 -->
+              <v-text-field
+                color="#2255b1"
+                prepend-inner-icon="mdi-account-outline"
+                label="이름"
+                v-model="memberName"
+              >
+              </v-text-field>
+              <!-- 닉네임입력 -->
+              <v-text-field
+                color="#2255b1"
+                prepend-inner-icon="mdi-account-outline"
+                label="닉네임"
+                v-model="nickName"
+              >
+              </v-text-field>
+              <!-- 생년월일입력 -->
+              <v-col cols="24" sm="20" md="20">
+                <v-dialog
+                  ref="dialog"
+                  color="#2255b1"
+                  v-model="modal"
+                  :return-value.sync="birth"
+                  persistent
+                  width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      color="#2255b1"
+                      v-model="birth"
+                      label="Picker in dialog"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    color="#2255b1"
+                    v-model="birth"
+                    scrollable
+                  >
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      text
+                      color="#2255b1"
+                      @click="modal = false"
+                    >
+                      Cancel
+                    </v-btn>
+                    <v-btn
+                      text
+                      color="#2255b1"
+                      @click="$refs.dialog.save(birth)"
+                    >
+                      OK
+                    </v-btn>
+                  </v-date-picker>
+                </v-dialog>
+              </v-col>
+              <!-- 성별입력 -->
+              <v-col>
+                <v-radio-group label="성별" row v-model="gender">
+                  <v-radio
+                    label="여성"
+                    value="2"
+                    color="#2255b1"
+                  ></v-radio>
+                  <v-radio
+                    label="남성"
+                    value="1"
+                    color="#2255b1"
+                  ></v-radio>
+                  <v-radio
+                    label="선택안함"
+                    value="0"
+                    color="#2255b1"
+                  ></v-radio>
+                </v-radio-group>
+              </v-col>
 
-      <!-- The content half -->
-      <div class="col-md-6 bg-light">
-        <div class="login d-flex align-items-center py-5">
-          <!-- Demo content-->
-          <div class="container">
-            <v-app id="inspire">
-              <v-main class="lighten-4">
-                <!-- login component -->
-                <v-container style="max-width: 450px" fill-height>
-                  <v-layout align-center row wrap>
-                    <v-flex xs12>
-                      <v-card>
-                        <div class="pa-10">
-                          <h1 style="text-align: center" class="mb-10">
-                            회원가입
-                          </h1>
-                          <h6 style="text-align: center">
-                            모든 요소는 필수적으로 입력해 주셔야합니다.
-                          </h6>
-                          <!-- 아이디입력 -->
-                          <v-text-field
-                            label="아이디"
-                            prepend-inner-icon="mdi-account"
-                            color="#2ac187"
-                            v-model="memberId"
-                            @input="checkId()"
-                            :messages="idCheckMessage"
-                            oninput="javascript: this.value= this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '');"
-                          ></v-text-field>
-                          <!-- 비밀번호입력 -->
-                          <v-text-field
-                            color="#2ac187"
-                            prepend-inner-icon="mdi-lock"
-                            type="password"
-                            label="비밀번호"
-                            v-model="password"
-                            @input="checkPassword()"
-                            :messages="passwordCheckMessage"
-                            oninput="javascript: if (this.value.length > 12) this.value = this.value.slice(0, 12);"
-                          ></v-text-field>
-                          <!-- 비밀번호확인입력 -->
-                          <v-text-field
-                            color="#2ac187"
-                            prepend-inner-icon="mdi-lock"
-                            type="password"
-                            label="비밀번호 확인"
-                            v-model="password2"
-                            @input="checkPassword2()"
-                            :messages="password2CheckMessage"
-                            oninput="javascript: if (this.value.length > 12) this.value = this.value.slice(0, 12);"
-                          >
-                          </v-text-field>
-                          <!-- 이름입력 -->
-                          <v-text-field
-                            color="#2ac187"
-                            prepend-inner-icon="mdi-account-outline"
-                            label="이름"
-                            v-model="memberName"
-                          >
-                          </v-text-field>
-                          <!-- 닉네임입력 -->
-                          <v-text-field
-                            color="#2ac187"
-                            prepend-inner-icon="mdi-account-outline"
-                            label="닉네임"
-                            v-model="nickName"
-                          >
-                          </v-text-field>
-                          <!-- 생년월일입력 -->
-                          <v-col cols="24" sm="20" md="20">
-                            <v-dialog
-                              ref="dialog"
-                              color="#2ac187"
-                              v-model="modal"
-                              :return-value.sync="birth"
-                              persistent
-                              width="290px"
-                            >
-                              <template v-slot:activator="{ on, attrs }">
-                                <v-text-field
-                                  color="#2ac187"
-                                  v-model="birth"
-                                  label="Picker in dialog"
-                                  prepend-icon="mdi-calendar"
-                                  readonly
-                                  v-bind="attrs"
-                                  v-on="on"
-                                ></v-text-field>
-                              </template>
-                              <v-date-picker
-                                color="#2ac187"
-                                v-model="birth"
-                                scrollable
-                              >
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                  text
-                                  color="#2ac187"
-                                  @click="modal = false"
-                                >
-                                  Cancel
-                                </v-btn>
-                                <v-btn
-                                  text
-                                  color="#2ac187"
-                                  @click="$refs.dialog.save(birth)"
-                                >
-                                  OK
-                                </v-btn>
-                              </v-date-picker>
-                            </v-dialog>
-                          </v-col>
-                          <!-- 성별입력 -->
-                          <v-col>
-                            <v-radio-group label="성별" row v-model="gender">
-                              <v-radio
-                                label="여성"
-                                value="2"
-                                color="#2ac187"
-                              ></v-radio>
-                              <v-radio
-                                label="남성"
-                                value="1"
-                                color="#2ac187"
-                              ></v-radio>
-                              <v-radio
-                                label="선택안함"
-                                value="0"
-                                color="#2ac187"
-                              ></v-radio>
-                            </v-radio-group>
-                          </v-col>
+              <!-- 지역 입력 -->
+              <v-col>
+                <v-select
+                  v-if="regionList"
+                  :items="regionList"
+                  :item-text="'keywordName'"
+                  :item-value="'keywordId'"
+                  v-model="regionId"
+                  label="지역"
+                  dense
+                >
+                </v-select>
+              </v-col>
 
-                          <!-- 지역 입력 -->
-                          <v-col>
-                            <v-select
-                              v-if="regionList"
-                              :items="regionList"
-                              :item-text="'keywordName'"
-                              :item-value="'keywordId'"
-                              v-model="regionId"
-                              label="지역"
-                              dense
-                            >
-                            </v-select>
-                          </v-col>
-
-                          <!-- 이메일입력 -->
-                          <v-text-field
-                            id="email"
-                            color="#2ac187"
-                            prepend-inner-icon="mdi-email"
-                            type="text"
-                            label="이메일"
-                            v-model="email"
-                            @input="checkEmail()"
-                            :messages="emailCheckMessage"
-                          ></v-text-field>
-                          <!-- 휴대전화번호 입력 -->
-                          <v-text-field
-                            color="#2ac187"
-                            prepend-inner-icon="mdi-cellphone"
-                            type="text"
-                            label="휴대전화"
-                            v-model="phoneNum"
-                            @input="inputPhoneNumber()"
-                            oninput="javascript: if (this.value.length > 13) this.value = this.value.slice(0, 13);"
-                            :messages="'-를 제외하고 입력해주세요'"
-                          ></v-text-field>
-                          <!-- 본인인증버튼 -->
-                          <v-btn
-                            type="submit"
-                            color="#2ac187"
-                            depressed
-                            large
-                            block
-                            dark
-                            class="mb-3"
-                            @click="CertBtn()"
-                          >
-                            본인인증
-                          </v-btn>
-                          <!-- 회원가입버튼 -->
-                          <v-btn
-                            type="submit"
-                            color="#2ac187"
-                            depressed
-                            large
-                            block
-                            dark
-                            class="mb-3"
-                            @click="register()"
-                          >
-                            회원가입
-                          </v-btn>
-                        </div>
-                      </v-card>
-                    </v-flex>
-                  </v-layout>
-                </v-container>
-              </v-main>
-            </v-app>
-          </div>
-          <!-- End -->
-        </div>
-      </div>
-      <!-- End -->
-    </div>
-  </div>
+              <!-- 이메일입력 -->
+              <v-text-field
+                id="email"
+                color="#2255b1"
+                prepend-inner-icon="mdi-email"
+                type="text"
+                label="이메일"
+                v-model="email"
+                @input="checkEmail()"
+                :messages="emailCheckMessage"
+              ></v-text-field>
+              <!-- 휴대전화번호 입력 -->
+              <v-text-field
+                color="#2255b1"
+                prepend-inner-icon="mdi-cellphone"
+                type="text"
+                label="휴대전화"
+                v-model="phoneNum"
+                @input="inputPhoneNumber()"
+                oninput="javascript: if (this.value.length > 13) this.value = this.value.slice(0, 13);"
+                :messages="'-를 제외하고 입력해주세요'"
+              ></v-text-field>
+              <!-- 본인인증버튼 -->
+              <br />
+              <v-btn
+                type="submit"
+                color="#2255b1"
+                depressed
+                large
+                block
+                dark
+                class="mb-3"
+                @click="CertBtn()"
+              >
+                본인인증
+              </v-btn>
+              <!-- 회원가입버튼 -->
+              <v-btn
+                type="submit"
+                color="#eacf3f"
+                depressed
+                large
+                block
+                class="mb-3"
+                @click="register()"
+              >
+                회원가입
+              </v-btn>
+            </div>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-img
+      :src="require('@/assets/image/web/footer.jpg')"
+    />
+</div>
 </template>
 <style scoped>
 .login,
@@ -228,8 +215,8 @@
 }
 
 .btn-primary {
-  background-color: #2ac187;
-  border: #2ac187;
+  background-color: #2255b1;
+  border: #2255b1;
 }
 </style>
 

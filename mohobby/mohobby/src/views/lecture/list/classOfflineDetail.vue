@@ -51,16 +51,10 @@
           justify="center"
           align="center"
         >
-          <v-card-text v-if="(this.classInfo.classType = 0)">
-            <v-icon size="90" color="#2b2b2b"> mdi-youtube </v-icon>
-            <h2>
-              {{ "총 " + classInfo.currTotal + "회 영상" }}
-            </h2>
-          </v-card-text>
-          <v-card-text v-if="(this.classInfo.classType = 1)">
+          <v-card-text>
             <v-icon size="90" color="#2b2b2b"> mdi-timer-outline </v-icon>
             <h2>
-              {{ "주 " + chapterCount + "  회 X  " + weeks + "주" }}
+              {{ "주 " + classInfo.weekTimes + "  회 X  " + classInfo.weeks + "주" }}
             </h2>
           </v-card-text>
         </v-card>
@@ -106,7 +100,7 @@
                 <div>{{ "* 5개월 할부 시" }}</div>
               </v-col>
               <v-col cols="auto">
-                <v-btn depressed dark color="#2ac187" @click="goPayBtn"> 수강하기 </v-btn>
+                <v-btn depressed dark color="#2255b1" @click="goPayBtn"> 수강하기 </v-btn>
               </v-col>
             </v-row>
           </v-card-text>
@@ -114,7 +108,7 @@
       </v-row>
     </div>
     <div style="padding: 120px 0px 20px 0px">
-      <v-tabs color="#2ac187" v-model="active_tab">
+      <v-tabs color="#2255b1" v-model="active_tab">
         <v-tab
           v-for="tab of tabs"
           :key="tab.index"
