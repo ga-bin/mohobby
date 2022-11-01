@@ -75,16 +75,6 @@ export default {
     },
     Nbbangdetail: function(dutchId){
       this.dutchId = dutchId,
-      console.log(dutchId);
-      console.log(dutchId);
-      console.log(dutchId);
-      console.log(dutchId);
-      console.log(dutchId);
-      console.log(this.dutchId);
-      console.log(this.dutchId);
-      console.log(this.dutchId);
-      console.log(this.dutchId);
-      console.log(this.dutchId);
       this.$router.push({ name: "nBBangDetail", query : { moimId : this.moimId, dutchId : this.dutchId }})
     }
   },
