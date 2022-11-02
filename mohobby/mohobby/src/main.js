@@ -20,13 +20,13 @@ import { VueSpinners } from "@saeris/vue-spinners";
 
 window.Kakao.init("157b38874395f658a48c02cc8473066b"); // 카카오 로그인 앱 키
 
-axios.defaults.baseURL = "http://4.230.17.129:8080/";
+axios.defaults.baseURL = "http://4.230.17.129:85/";
 
 const serverURL = "http://4.230.17.129:85/sock";
 let socket = new SockJS(serverURL);
 let stompClient = Stomp.over(socket);
 
-const url = "http://4.230.17.129:8080/";
+const url = "http://4.230.17.129:85/";
 Vue.prototype.$url = url;
 
 Vue.prototype.stompClient = stompClient;
