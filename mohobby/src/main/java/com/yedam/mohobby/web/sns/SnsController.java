@@ -163,7 +163,7 @@ public class SnsController {
     //게시물전체 조회 페이징
    @GetMapping("/main/allFeed")
    public List<SnsPostVO> allListpageing(@RequestParam int firstIdx){
-    	return service.allListPaging(firstIdx);
+       return service.allListPaging(firstIdx);
     } 
     
     /*

@@ -1,50 +1,53 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway);
-  
-*, *:before, *:after{
 
+*,
+*:before,
+*:after {
   margin: 0;
   padding: 0;
   -webkit-box-sizing: border-box;
-  -moz-box-sizing:border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-body{
+body {
   background: #f9f9f9;
   font-size: 16px;
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
 }
 
-img { 
-filter: brightness(50%); 
+img {
+  filter: brightness(50%);
 }
 
-.main-title{
+.main-title {
   color: #2d2d2d;
   text-align: center;
   text-transform: capitalize;
   padding: 0.7em 0;
+  width: 80%;
+  margin: 0 auto;
 }
 
-.container{
+.container {
   padding: 1em 0;
   float: left;
   width: 50%;
 }
-@media screen and (max-width: 640px){
-  .container{
+@media screen and (max-width: 640px) {
+  .container {
     display: block;
     width: 100%;
   }
 }
 
-@media screen and (min-width: 900px){
-  .container{
+@media screen and (min-width: 900px) {
+  .container {
     width: 33.33333%;
   }
 }
 
-.container .title{
+.container .title {
   color: #1a1a1a;
   text-align: center;
   margin-bottom: 10px;
@@ -59,7 +62,7 @@ filter: brightness(50%);
 }
 
 .content .content-overlay {
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   position: absolute;
   height: 99%;
   width: 100%;
@@ -73,11 +76,11 @@ filter: brightness(50%);
   transition: all 0.4s ease-in-out 0s;
 }
 
-.content:hover .content-overlay{
+.content:hover .content-overlay {
   opacity: 1;
 }
 
-.content-image{
+.content-image {
   width: 100%;
 }
 
@@ -98,43 +101,41 @@ filter: brightness(50%);
   transition: all 0.3s ease-in-out 0s;
 }
 
-.content .content-details{
+.content .content-details {
   top: 50%;
   left: 50%;
   opacity: 1;
 }
 
-/* .content:hover .content-details{
+.content:hover .content-details {
   top: 50%;
   left: 50%;
   opacity: 1;
-} */
+}
 
-.content-details h3{
-  color: #fff;
-  font-weight: 500;
+.content-details h3 {
+  color: #2b2b2b;
   letter-spacing: 0.15em;
   margin-bottom: 0.5em;
   text-transform: uppercase;
+  font-weight: 3.5rem;
+  margin-top: 30px;
+  background-color: #f9f9f992;
+  padding: 1rem;
 }
 
-.content-details p{
-  color: #fff;
-  font-size: 0.8em;
-}
-
-.fadeIn-bottom{
+.fadeIn-bottom {
   top: 80%;
 }
 
-.fadeIn-top{
+.fadeIn-top {
   top: 20%;
 }
 
-.fadeIn-left{
+.fadeIn-left {
   left: 20%;
 }
 
-.fadeIn-right{
+.fadeIn-right {
   left: 80%;
-} 
+}

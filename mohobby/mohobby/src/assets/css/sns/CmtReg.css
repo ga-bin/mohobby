@@ -4,15 +4,24 @@
   margin-left: 30px;
   width: 90%;
 }
-.cmt{
-  border:none;
-  outline:none;
+
+.cmt {
+  border: none;
+  outline: none;
 }
 
-.reCmt{
-  
+.reCmt {
   display: none;
+  width: 230px;
+  border-radius: 25px;
+  padding: 2px 8px;
+  margin-left: 3px;
 }
+
+input:focus {
+  /* outline: 1px solid #2254b191; */
+}
+
 .profile::after {
   content: "";
   position: absolute;

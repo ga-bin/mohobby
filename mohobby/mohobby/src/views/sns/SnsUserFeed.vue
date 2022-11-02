@@ -6,25 +6,37 @@
         <!-- 프로필이미지 -->
         <div class="profile-image">
           <v-avatar class="ml-10 my-10 mr-4" color="grey darken-1" size="150">
-            <v-img aspect-ratio="30" :src="require(`@/assets/image/user/${infoes.profileImg}`)" alt="profile_img" />
+            <v-img
+              aspect-ratio="30"
+              :src="require(`@/assets/image/user/${infoes.profileImg}`)"
+              alt="profile_img"
+            />
           </v-avatar>
         </div>
         <!-- 프로필이미지 끝 -->
 
-        
         <!-- 내 게시물 정보(닉네임, 개시물, 팔로워, 팔로잉 개수) -->
         <div class="profile-user-settings">
           <h1 class="profile-user-name">{{ infoes.memberId }}</h1>
           <!-- 권한 마크 ---- 일반: 0/ 강사 : 1/ 소모임관리자 : 2/ 둘 다: 3-->
-          <div title="강의를 개설한 만능 재주꾼에게만 주어지는 마크입니다" v-if="infoes.role == 1 || infoes.role == 3"
-            class="btn profile-settings-btn" aria-label="profile settings">
-            <v-icon color="blue">mdi-shield-check</v-icon><i class="fas fa-cog" aria-hidden="true"></i>
+          <div
+            title="강의를 개설한 만능 재주꾼에게만 주어지는 마크입니다"
+            v-if="infoes.role == 1 || infoes.role == 3"
+            class="btn profile-settings-btn"
+            aria-label="profile settings"
+          >
+            <v-icon color="blue">mdi-shield-check</v-icon
+            ><i class="fas fa-cog" aria-hidden="true"></i>
           </div>
-          <div title="모임을 운영하는 투철한 모험가에게만 주어지는 마크입니다" v-if="infoes.role == 2 || infoes.role == 3"
-            class="btn profile-settings-btn" aria-label="profile settings">
-            <v-icon color="green">mdi-shield-star</v-icon><i class="fas fa-cog" aria-hidden="true"></i>
+          <div
+            title="모임을 운영하는 투철한 모험가에게만 주어지는 마크입니다"
+            v-if="infoes.role == 2 || infoes.role == 3"
+            class="btn profile-settings-btn"
+            aria-label="profile settings"
+          >
+            <v-icon color="green">mdi-shield-star</v-icon
+            ><i class="fas fa-cog" aria-hidden="true"></i>
           </div>
-
 
           <!-- 메뉴팝업(신고)-->
           <v-menu v-if="sessionId && sessionId != infoes.memberId">
@@ -36,28 +48,52 @@
             <v-list>
               <v-list-item v-for="(list, i) in lists" :key="i">
                 <v-list-item-title style="cursor: pointer" @click="listBtn(i)">
-                  <v-dialog v-model="userFlagModal" scrollable max-width="300px">
+                  <v-dialog
+                    v-model="userFlagModal"
+                    scrollable
+                    max-width="300px"
+                  >
                     <template v-slot:activator="{ on, attrs }">
                       <div v-bind="attrs" v-on="on">{{ list.title }}</div>
                     </template>
                     <v-card>
                       <v-card-title>Select Country</v-card-title>
                       <v-divider></v-divider>
-                      <v-card-text style="height: 300px;">
+                      <v-card-text style="height: 300px">
                         <v-radio-group v-model="selectedCode" column>
-                          <v-radio label="부적절한 게시물 개시" value="us1"></v-radio>
-                          <v-radio label="다른 유저에게 욕설, 비방" value="us2"></v-radio>
-                          <v-radio label="게시글, 댓글 도배" value="us3"></v-radio>
-                          <v-radio label="홍보성 게시물 반복적 개시" value="us4"></v-radio>
+                          <v-radio
+                            label="부적절한 게시물 개시"
+                            value="us1"
+                          ></v-radio>
+                          <v-radio
+                            label="다른 유저에게 욕설, 비방"
+                            value="us2"
+                          ></v-radio>
+                          <v-radio
+                            label="게시글, 댓글 도배"
+                            value="us3"
+                          ></v-radio>
+                          <v-radio
+                            label="홍보성 게시물 반복적 개시"
+                            value="us4"
+                          ></v-radio>
                           <v-radio label="기타" value="us5"></v-radio>
                         </v-radio-group>
                       </v-card-text>
                       <v-divider></v-divider>
                       <v-card-actions>
-                        <v-btn color="blue darken-1" text @click="userFlagModal = false">
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="userFlagModal = false"
+                        >
                           Close
                         </v-btn>
-                        <v-btn color="blue darken-1" text @click="userFlagging()">
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="userFlagging()"
+                        >
                           Save
                         </v-btn>
                       </v-card-actions>
@@ -70,15 +106,19 @@
         </div>
         <div class="profile-stats">
           <ul>
-            <li><span class="profile-real-name">{{ infoes.nickname }}</span></li>
+            <li>
+              <span class="profile-real-name">{{ infoes.nickname }}</span>
+            </li>
           </ul>
           <ul>
-            <li><span >{{ infoes.postCnt }}</span> posts</li>
             <li>
-              <FollowModal :text="followertext" :dataList="follower" :follow="follow" />
+              <span class="profile-stat-count">{{ infoes.postCnt }}</span> posts
             </li>
             <li>
-              <FollowModal :text="followingtext" :dataList="following" :follow="follow" />
+              <FollowModal :text="followertext" :dataList="follower" />
+            </li>
+            <li>
+              <FollowModal :text="followingtext" :dataList="following" />
             </li>
           </ul>
 
@@ -86,43 +126,58 @@
           <ul>
             <!-- 소개 -->
             <li>
-              <p class="profile-bio">{{ infoes.intro }} 📷✈️🏕️</p>
+              <p class="profile-bio">{{ infoes.intro }}</p>
             </li>
             <li></li>
             <!-- 소개 끝 -->
           </ul>
+        </div>
+
+        <!-- 유저취미 -->
+        <v-chip-group id="hobbyGroup" class="ml-8">
+          <v-chip
+            v-for="(hobby, i) in hobbies"
+            :key="i"
+            :color="`${colors[nonce - 1]} lighten-3`"
+            @click="search($event)"
+            dark
+            label
+          >
+            {{ hobby.keywordName }}
+          </v-chip>
+        </v-chip-group>
+        <br />
+
+        <!-- 버튼 : 유저본인이냐에 따라 버튼 바뀜 -->
+        <div class="profile-bio">
           <ul v-if="sessionId && sessionId == infoes.memberId">
             <button class="btn profile-edit-btn" @click="goMypage(sessionId)">
               Edit Profile
             </button>
           </ul>
           <ul v-else>
-            <button v-if="followStatus === 0" 
-             @click="followup(sessionId, infoes.memberId)"
-              class="btn profile-edit-btn2">
-              Follow
-            </button>
-            <button v-else 
-              id="unfollow_btn" 
-             @click="unfollow(sessionId, infoes.memberId)"
-              class="btn profile-edit-btn2">
-              Unfollow
-            </button>
-            <button class="btn profile-edit-btn2" 
-             @click="send(sessionId)">
-              Message
-            </button>
+            <div id="btn_wrap">
+              <button
+                v-if="followStatus === 0"
+                @click="followup(sessionId, infoes.memberId)"
+                class="btn profile-edit-btn2"
+              >
+                Follow
+              </button>
+              <button
+                v-else
+                style="background-color: #2ac187; color: white"
+                @click="unfollow(sessionId, infoes.memberId)"
+                class="btn profile-edit-btn2"
+              >
+                Unfollow
+              </button>
+              <button class="btn profile-edit-btn2" @click="send(sessionId)">
+                Message
+              </button>
+            </div>
           </ul>
         </div>
-
-        <!-- 버튼 컴포넌트: 유저본인이냐에 따라 버튼 바뀜 -->
-        <div class="profile-bio">
-
-        </div>
-
-
-        <!-- <ProfileBtn :userId="userId" /> -->
-        <!-- 버튼 컴포넌트 끝 -->
       </div>
     </div>
     <!-- 피드 컴포넌트 -->
@@ -143,6 +198,10 @@ export default {
   components: { SnsSidebar, Feeds, FollowModal },
   data() {
     return {
+      colors: ["pink", "orange", "green", "purple", "indigo", "cyan"], //tag color
+      nonce: 1,
+      hobbies: [],
+
       infoes: [],
       sessionId: this.$store.state.id,
       sessionInfo: this.$store.state.user,
@@ -152,23 +211,21 @@ export default {
       following: [],
       followertext: "follower",
       followingtext: "following",
-      lists: [  //메뉴 리스트
+      lists: [
+        //메뉴 리스트
         { title: "신고하기" },
       ],
       followStatus: Number,
       followerCnt: "",
       followingCnt: "",
-      follow: [
-        { "followerCnt": "" },
-        { "followingCnt": "" },
-      ],
+      follow: [{ followerCnt: "" }, { followingCnt: "" }],
       // 신고
-      selectedCode: '',
+      selectedCode: "",
       userFlagModal: false,
       memberId: this.$store.state.id,
-      flagedUser: 'user11',
+      flagedUser: "user11",
       flagReason: "",
-    }
+    };
   },
 
   created() {
@@ -176,33 +233,42 @@ export default {
     this.userId = this.$route.query.userId; //넘겨받은 유저아이디 바인딩
     console.log(this.$route.query.userId);
     this.loadUserProfile(this.userId);
+    this.getUserHobby(this.userId);
     this.followCheck(this.sessionId, this.userId);
     this.getFollowing(this.userId);
     this.getFollower(this.userId);
   },
   //팔로우를 실행하면 follower모달의 다시실행된 getFollowingList값을 받아와 보내줘야함
   watch: {
-
-    getFollowing() {
-
-    }
-
+    getFollowing() {},
   },
 
   methods: {
-
-    //프로필 업로드
-    loadUserProfile(userId) {
-      this.axios('/sns/user/profile/' + userId)
-        .then(res => {
-          this.infoes = res.data;
-          console.log('infoes : ' + this.infoes)
-          console.log(this.infoes);
-        }).catch(err => {
+    //취미조회
+    getUserHobby(userId) {
+      this.axios("/sns/user/hobbies/" + userId)
+        .then((res) => {
+          this.hobbies = res.data;
+          console.log("infoes ---> ");
+          console.log(this.hobbies);
+        })
+        .catch((err) => {
           console.log(err);
         });
     },
 
+    //프로필 업로드
+    loadUserProfile(userId) {
+      this.axios("/sns/user/profile/" + userId)
+        .then((res) => {
+          this.infoes = res.data;
+          console.log("infoes : " + this.infoes);
+          console.log(this.infoes);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
 
     //세션유무 검증
     confirmMember(memberId) {
@@ -214,7 +280,6 @@ export default {
         return false;
       }
     },
-
 
     //로그인 검증 모달
     loginConfirm() {
@@ -234,7 +299,6 @@ export default {
       });
     },
 
-
     //팔로우 상태 조회
     followCheck(memberId, userId) {
       this.axios("/sns/follow/check", {
@@ -252,11 +316,9 @@ export default {
         });
     },
 
-
     //팔로우
     followup(memberId, userId) {
-      this.follower= [],
-      console.log(memberId);
+      (this.follower = []), console.log(memberId);
       if (this.confirmMember(memberId) == false) {
         this.loginConfirm();
       } else {
@@ -275,10 +337,9 @@ export default {
       }
     },
 
-
     //언팔로우
     unfollow(memberId, userId) {
-      this.follower= []
+      this.follower = [];
       if (this.confirmMember(memberId) == false) {
         this.loginConfirm();
       } else {
@@ -294,18 +355,17 @@ export default {
       }
     },
 
-    
     // 팔로워 목록 불러오기
     getFollower(userId) {
       const vm = this;
-      console.log("getFollowerTEST")
-     // vm.follower=[]
+      console.log("getFollowerTEST");
+      // vm.follower=[]
       this.axios({
         url: "/mypagefollower/" + userId,
         method: "get",
       })
         .then(function (response) {
-          console.log("response.data : " +response.data)
+          console.log("response.data : " + response.data);
           for (let i = 0; i < response.data.length; i++) {
             vm.follower.push(response.data[i]);
             vm.follower.push({ divider: true, inset: true });
@@ -322,7 +382,7 @@ export default {
     // 팔로잉 목록 불러오기
     getFollowing(userId) {
       const vm = this;
-      vm.following=[]
+      vm.following = [];
       this.axios({
         url: "/mypagefollowing/" + userId,
         method: "get",
@@ -334,7 +394,7 @@ export default {
             vm.following.push({ divider: true, inset: true });
           }
           console.log("vm.following" + vm.following);
-          console.log("followin")
+          console.log("followin");
         })
         .catch(function (error) {
           console.log(error);
@@ -342,13 +402,14 @@ export default {
     },
 
     //취미 검색
-    search(e){
-        //유저 취미 누르면 같은 값 가진 모든 포스트뜸
-        let getHobby = e.target.innerText; //선택한 해시태그
-        this.$router.push({ name: "mainsearch", query: { searchText : getHobby },
+    search(e) {
+      //유저 취미 누르면 같은 값 가진 모든 포스트뜸
+      let getHobby = e.target.innerText; //선택한 해시태그
+      this.$router.push({
+        name: "mainsearch",
+        query: { searchText: getHobby },
       });
     },
-
 
     //마이페이지로 이동
     goMypage(memberId) {
@@ -381,32 +442,36 @@ export default {
       }
     },
     /*
-    * Kim ga bin
-    * MyPage followingList 확인하기
-    */
+     * Kim ga bin
+     * MyPage followingList 확인하기
+     */
 
     // 신고
     userFlagging() {
       const vm = this;
       this.userFlagModal = false;
       if (this.selectedCode == "us5") {
-        this.$swal.fire({
-          title: '신고 이유를 입력하세요',
-          html: `<input type="text" id="flagReason" class="swal2-input" placeholder="신고 이유">`,
-          confirmButtonText: '제출하기',
-          focusConfirm: false,
-          preConfirm: () => {
-            const flagReason = this.$swal.getPopup().querySelector('#flagReason').value
-            if (!flagReason) {
-              this.$swal.showValidationMessage(`신고이유를 입력해 주세요`)
-            }
-            return { flagReason: flagReason }
-          }
-        }).then((result) => {
-          vm.flagReason = result.value.flagReason;
-          console.log(vm.flagReason);
-          this.insertFlag();
-        })
+        this.$swal
+          .fire({
+            title: "신고 이유를 입력하세요",
+            html: `<input type="text" id="flagReason" class="swal2-input" placeholder="신고 이유">`,
+            confirmButtonText: "제출하기",
+            focusConfirm: false,
+            preConfirm: () => {
+              const flagReason = this.$swal
+                .getPopup()
+                .querySelector("#flagReason").value;
+              if (!flagReason) {
+                this.$swal.showValidationMessage(`신고이유를 입력해 주세요`);
+              }
+              return { flagReason: flagReason };
+            },
+          })
+          .then((result) => {
+            vm.flagReason = result.value.flagReason;
+            console.log(vm.flagReason);
+            this.insertFlag();
+          });
       } else {
         this.insertFlag();
       }
@@ -421,23 +486,20 @@ export default {
           flagTo: this.flagedUser,
           flagCode: this.selectedCode,
           flagReason: this.flagReason,
-        }
+        },
       })
         .then(function (response) {
           console.log(vm.flagReason);
           console.log(response);
-          vm.$swal.fire('유저 신고가 완료되었습니다.');
+          vm.$swal.fire("유저 신고가 완료되었습니다.");
         })
         .catch(function (error) {
           console.log(error);
         });
     },
-    invite() {
-
-    }
-  }
+    invite() {},
+  },
 };
 </script>
-  
 
 <style scoped lang="css" src="@/assets/css/sns/SnsUserFeed.css" />
