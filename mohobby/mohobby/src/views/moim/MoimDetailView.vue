@@ -37,7 +37,7 @@ export default {
     getMoimOneInfo() {
       const vm = this;
        this.axios({
-        url: "http://localhost:8088/java/moimOneInfo/" + this.Id,
+        url: "/moimOneInfo/" + this.Id,
         method: "get",
       })
         .then(function (response) {
