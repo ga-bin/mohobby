@@ -9,50 +9,35 @@
         ></v-carousel-item>
       </v-carousel>
     </div>
-    <v-img
-      :src="require('@/assets/image/web/back-1.jpg')"
-      max-height="900"
-    >
+    <v-img :src="require('@/assets/image/web/back-1.jpg')" max-height="900">
       <v-container fluid class="mt-10">
         <div class="d-flex justify-center">
           <v-chip :ripple="false" class="pa-4" large dark color="#2255b1">
-            <h1 style="font-weight: bolder;">Best Feed in SNS</h1>
+            <h1 style="font-weight: bolder">Best Feed in SNS</h1>
           </v-chip>
         </div>
         <MainSnsList :snsHighLikesList="snsHighLikesList"></MainSnsList>
       </v-container>
     </v-img>
-    <v-img
-      :src="require('@/assets/image/web/back-2.jpg')"
-    />
-    <v-img
-      :src="require('@/assets/image/web/back-3.jpg')"
-      max-height="700"
-    >
+    <v-img :src="require('@/assets/image/web/back-2.jpg')" />
+    <v-img :src="require('@/assets/image/web/back-3.jpg')" max-height="700">
       <div class="d-flex justify-center pb-10">
         <v-chip :ripple="false" class="pa-4" large dark color="#2255b1">
-          <h1 style="font-weight: bolder;">Best CLUB</h1>
+          <h1 style="font-weight: bolder">Best CLUB</h1>
         </v-chip>
       </div>
       <moimPopularList :moimPopularList="moimPopularList"></moimPopularList>
     </v-img>
-    <v-img
-      :src="require('@/assets/image/web/back-4.jpg')"
-    />
-    <v-img
-      :src="require('@/assets/image/web/back-5.jpg')"
-      max-height="700"
-    >
+    <v-img :src="require('@/assets/image/web/back-4.jpg')" />
+    <v-img :src="require('@/assets/image/web/back-5.jpg')" max-height="700">
       <div class="d-flex justify-center">
         <v-chip :ripple="false" class="pa-4" large dark color="#2255b1">
-          <h1 style="font-weight: bolder;">Take a CLASS</h1>
+          <h1 style="font-weight: bolder">Take a CLASS</h1>
         </v-chip>
       </div>
       <collectClassList :collectClassList="collectClassList"></collectClassList>
     </v-img>
-    <v-img
-      :src="require('@/assets/image/web/footer.jpg')"
-    />
+    <v-img :src="require('@/assets/image/web/footer.jpg')" />
   </div>
 </template>
 
@@ -67,7 +52,7 @@ export default {
     moimPopularList,
     snsHighLikesList,
     collectClassList,
-    MainSnsList
+    MainSnsList,
   },
 
   data() {
@@ -77,7 +62,7 @@ export default {
           src: "https://image.idus.com/image/files/945cc30fe6474be4aa0595b0fa10c663.jpg",
         },
         {
-          src: "https://image.idus.com/image/files/4e22bce11c114e84a139e9625bced2dd.jpg",
+          src: "https://image.idus.com/image/files/69748f9c370d4f73937ec70d4dc14b9c.jpg",
         },
         {
           src: "https://image.idus.com/image/files/980f79a053774b1fb38c3200f73c4152.jpg",
@@ -121,7 +106,7 @@ export default {
         method: "get",
       })
         .then(function (response) {
-          for(let i = 0; i < response.data.length; i++) {
+          for (let i = 0; i < response.data.length; i++) {
             response.data[i].show = false;
           }
           vm.moimPopularList = response;
